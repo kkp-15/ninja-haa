@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>声と表情で当てるゲーム｜お題29種・投票と集計までスマホ1台</title>
+<meta name="description" content="「はぁ」だけで気持ちを演じ分けて当て合うパーティーゲームを、スマホ1台で。お題29種・シチュエーション232通り。配役の配布から投票・集計・得点までアプリなしで完結します。">
+<link rel="canonical" href="https://haa.kkpwebninja.com/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#e8843a">
+
+<meta property="og:title" content="声と表情で当てるゲーム｜スマホ1台で投票・集計まで">
+<meta property="og:description" content="同じ一言を、それぞれ違う気持ちで演じて当て合う。配役の配布から得点計算までスマホ1台で完結する無料ツール。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://haa.kkpwebninja.com/">
+<meta property="og:site_name" content="声と表情で当てるゲーム">
+<meta property="og:image" content="https://haa.kkpwebninja.com/ogp.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://haa.kkpwebninja.com/ogp.png">
+
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"声と表情で当てるゲーム","url":"https://haa.kkpwebninja.com/","applicationCategory":"GameApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"author":{"@type":"Organization","name":"web忍者の砦"},"publisher":{"@type":"Organization","name":"web忍者の砦","url":"https://kkpwebninja.com/"}}
+</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2LM85GJN0L"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2LM85GJN0L');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1298304917726270" crossorigin="anonymous"></script>
+
+<style>
+:root{
+  --orange:#ff8a3d; --orange-d:#e07b39; --cream:#fff8f0; --paper:#fffdf9;
+  --ink:#3b2c22; --muted:#8a7560; --line:#f0e2cc; --ok:#5b9e6e; --ng:#c0603f;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--cream);color:var(--ink);
+  font-family:"Hiragino Maru Gothic ProN","ヒラギノ丸ゴ ProN",system-ui,sans-serif;
+  font-size:16px;line-height:1.75;-webkit-text-size-adjust:100%;
+}
+.wrap{max-width:640px;margin:0 auto;padding:16px 14px 56px}
+
+header{text-align:center;padding:.4rem 0 .2rem}
+h1{font-size:1.2rem;line-height:1.45;margin:0 0 .3rem;text-wrap:balance}
+header p{font-size:.85rem;color:var(--muted);margin:0}
+body.returning header p,
+body.returning header .hbadges{display:none}
+body.returning header h1{font-size:1.02rem}
+
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;
+  padding:1rem .9rem 1.1rem;margin:0 0 1rem}
+.card.hidden{display:none}
+h2{font-size:1rem;margin:0 0 .5rem;display:flex;align-items:center;gap:.5rem}
+.step-label{background:var(--orange);color:#fff;font-size:.68rem;font-weight:800;
+  padding:.15rem .55rem;border-radius:999px;letter-spacing:.04em;flex:none}
+
+.stats-bar{display:flex;flex-wrap:nowrap;align-items:baseline;gap:.6rem;
+  margin:0 0 .7rem;padding:.32rem .7rem;background:#fffaf2;border:1px solid var(--line);
+  border-radius:9px;font-size:.79rem;color:var(--muted);overflow-x:auto}
+.stats-bar b{color:var(--orange-d);font-weight:800;font-size:.9rem}
+.stats-bar>*{flex:none}
+.stats-bar .sb-r{margin-left:auto;white-space:nowrap}
+.stats-bar.hidden{display:none}
+
+.num{display:flex;align-items:center;justify-content:center;gap:.8rem;margin:.2rem 0}
+.num .val{font-size:2rem;font-weight:900;color:var(--orange-d);min-width:2.2rem;text-align:center}
+.num .unit{font-size:.85rem;color:var(--muted)}
+.btn-ghost{width:46px;height:46px;border-radius:50%;border:2px solid var(--line);
+  background:#fff;font-size:1.3rem;color:var(--orange-d);cursor:pointer;line-height:1}
+.hint{text-align:center;font-size:.8rem;color:var(--muted);margin:.1rem 0 .2rem}
+
+/* カテゴリは横スライド（縦に積むと選ぶ前に画面を使い切る） */
+.cat-scroll{position:relative;margin:0 -0.9rem .6rem}
+.cat-scroll::after{content:"";position:absolute;top:0;right:0;bottom:.4rem;width:26px;
+  pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,253,249,.96))}
+.cat-grid{display:flex;gap:.4rem;overflow-x:auto;padding:.15rem 1.2rem .5rem .9rem;
+  scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.cat-grid::-webkit-scrollbar{display:none}
+.cat-btn{flex:0 0 auto;scroll-snap-align:start;white-space:nowrap;
+  background:#fff5e6;border:2px solid var(--line);color:var(--ink);
+  padding:.45rem .8rem;border-radius:999px;font:inherit;font-size:.88rem;cursor:pointer}
+.cat-btn.active{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:700}
+.cat-desc{font-size:.78rem;color:var(--muted);text-align:center;margin:0 0 .6rem}
+
+/* お題の3択（1つずつ引かせるより選ばせる方が早く決まる） */
+.pick-list{display:flex;flex-direction:column;gap:.4rem}
+.pick-item{display:block;width:100%;text-align:left;cursor:pointer;padding:.55rem .75rem;
+  border:1.5px solid var(--line);border-radius:10px;background:#fffdf9;font:inherit;line-height:1.45}
+.pick-item[aria-pressed="true"]{border-color:var(--orange);background:#fff3e2}
+.pick-item .pi-w{display:block;font-weight:800;font-size:1.05rem;color:var(--orange-d)}
+.pick-item .pi-s{display:block;font-size:.74rem;color:var(--muted);margin-top:.1rem}
+.pick-more{display:block;margin:.5rem auto 0;padding:.25rem .8rem;background:none;border:none;
+  color:var(--muted);font:inherit;font-size:.78rem;text-decoration:underline;cursor:pointer}
+
+.btn-primary{display:block;width:100%;padding:.85rem;border:none;border-radius:999px;
+  background:var(--orange);color:#fff;font:inherit;font-weight:800;font-size:1.02rem;
+  cursor:pointer;box-shadow:0 4px 12px rgba(224,123,57,.28);margin-top:.8rem}
+.btn-sub{display:block;width:100%;padding:.7rem;border:2px solid var(--line);border-radius:999px;
+  background:#fff;color:var(--ink);font:inherit;font-size:.92rem;cursor:pointer;margin-top:.5rem}
+
+/* 配役カード：itoと同じ「回して見る」 */
+.deal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:.55rem;margin-top:.6rem}
+.deal-card{aspect-ratio:3/4;border-radius:14px;border:1.5px solid rgba(255,255,255,.9);
+  background:url('/img/paper.webp') 0 0/128px 128px repeat,
+    linear-gradient(145deg,rgba(255,255,255,.28),transparent 38%,rgba(0,0,0,.10)),
+    var(--pc,linear-gradient(135deg,#ff8a3d,#ff6b9d));
+  background-blend-mode:soft-light,normal,normal;
+  box-shadow:0 8px 18px rgba(38,23,11,.2),inset 0 0 0 1px rgba(255,255,255,.45);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;
+  color:#fff;font:inherit;font-weight:800;cursor:pointer;position:relative;overflow:hidden}
+.deal-card::before{content:"タップ";position:absolute;top:6px;left:50%;transform:translateX(-50%);
+  padding:2px 7px;border-radius:999px;background:rgba(20,15,10,.66);font-size:.56rem;letter-spacing:.06em}
+.deal-card .n{font-size:1.5rem;line-height:1;text-shadow:0 1px 3px rgba(0,0,0,.28)}
+.deal-card .who{font-size:.7rem;opacity:.95}
+.deal-card.done{filter:saturate(.55) brightness(.92)}
+.deal-card.done::after{content:"確認ずみ";position:absolute;bottom:6px;left:50%;transform:translateX(-50%);
+  font-size:.56rem;background:rgba(20,15,10,.6);padding:2px 6px;border-radius:999px}
+
+/* 自分の配役を見る画面。紫グラデは他の画面から浮くので藍の和紙にする */
+.reveal{position:fixed;inset:0;z-index:1000;display:none;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;padding:1.4rem;color:#fff;
+  background:#16213a url('/img/reveal-bg.webp') center/cover no-repeat}
+.reveal.show{display:flex}
+.reveal .who{font-size:1rem;opacity:.9;margin-bottom:.6rem}
+.reveal .word{font-size:1.1rem;opacity:.85;margin-bottom:.2rem}
+.reveal .act{background:#fff;color:var(--ink);border-radius:16px;padding:1.1rem 1.3rem;
+  font-size:1.45rem;font-weight:900;line-height:1.4;box-shadow:0 14px 34px rgba(0,0,0,.42);
+  max-width:22rem;border:5px solid var(--orange)}
+.reveal .warn{margin-top:.8rem;font-size:.86rem;color:#ffd8a8}
+.reveal .btn-w{background:#fff;color:var(--ink);border:none;border-radius:999px;
+  padding:.75rem 1.6rem;font:inherit;font-weight:800;font-size:1rem;cursor:pointer;margin-top:1.1rem}
+
+/* 投票：カード版でいちばん面倒なところ。ここをスマホが引き受ける */
+.vote-who{font-weight:800;text-align:center;margin:.2rem 0 .5rem;font-size:1rem}
+.vote-list{display:flex;flex-direction:column;gap:.4rem}
+.vote-item{display:block;width:100%;text-align:left;padding:.6rem .8rem;border:1.5px solid var(--line);
+  border-radius:10px;background:#fffdf9;font:inherit;cursor:pointer;line-height:1.4}
+.vote-item[aria-pressed="true"]{border-color:var(--orange);background:#fff3e2;font-weight:700}
+.vote-prog{text-align:center;font-size:.8rem;color:var(--muted);margin:.5rem 0 0}
+
+.res-row{display:flex;align-items:center;gap:.6rem;padding:.55rem .2rem;border-top:1px solid var(--line)}
+.res-row .nm{font-weight:800;min-width:4.2rem}
+.res-row .act{flex:1;font-size:.88rem}
+.res-row .mk{font-weight:800;font-size:.9rem}
+.res-row .mk.o{color:var(--ok)}
+.res-row .mk.x{color:var(--ng)}
+.score{margin-top:.8rem;padding:.7rem .9rem;background:#fffaf2;border:1px solid var(--line);border-radius:12px}
+.score h3{margin:0 0 .35rem;font-size:.92rem}
+.score .sr{display:flex;justify-content:space-between;font-size:.9rem;padding:.15rem 0}
+.score .sr b{color:var(--orange-d)}
+
+.shop{margin:1.2rem 0 0;padding:.9rem 1rem;background:var(--paper);border:1px solid var(--line);border-radius:12px}
+.shop h3{font-size:.95rem;margin:0 0 .1rem}
+.shop .pr{display:block;font-size:10.5px;color:var(--muted);letter-spacing:.06em;margin-bottom:.6rem}
+.shop p{margin:0 0 .5rem;font-size:.85rem;color:var(--muted);line-height:1.7}
+.shop .buy{display:inline-block;margin:0 .5rem .4rem 0;padding:.35rem .9rem;font-size:.82rem;
+  border:1px solid var(--orange);border-radius:999px;color:var(--orange-d);text-decoration:none;background:#fff}
+.shop .buy.alt{border-color:var(--line);color:var(--muted)}
+
+.ad-slot{margin:1.4rem 0;padding:12px 0;text-align:center;
+  border-top:1px dashed var(--line);border-bottom:1px dashed var(--line)}
+.ad-label{font-size:10.5px;letter-spacing:.14em;color:var(--muted);margin-bottom:6px}
+.ad-slot ins.adsbygoogle{display:block;width:320px;height:100px;margin:0 auto}
+@media(min-width:760px){.ad-slot ins.adsbygoogle{width:728px;height:90px}}
+
+details.block{background:var(--paper);border:1px solid var(--line);border-radius:12px;
+  padding:.1rem .9rem;margin:0 0 .7rem}
+details.block summary{cursor:pointer;font-weight:700;padding:.6rem 0;font-size:.95rem}
+details.block h2{display:inline;font-size:.95rem;margin:0}
+dl{margin:0 0 .6rem}
+dt{font-weight:700;margin-top:.7rem;font-size:.9rem}
+dd{margin:.2rem 0 0;font-size:.86rem;color:#5c4b3c}
+.note{font-size:.8rem;color:var(--muted);text-align:center;line-height:1.7}
+a{color:#1565c0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>声と表情で当てるゲーム</h1>
+  <p>同じ一言を、それぞれ違う気持ちで演じて当て合う。<br>スマホ1台で配役から得点まで。</p>
+</header>
+
+<main>
+
+<!-- STEP 1 -->
+<section class="card" id="step-setup">
+  <div class="stats-bar hidden" id="statsBar"></div>
+
+  <h2><span class="step-label">STEP 1</span>人数を選ぶ</h2>
+  <div class="num">
+    <button class="btn-ghost" id="dec" aria-label="1人減らす">−</button>
+    <span class="val" id="playerCount">4</span>
+    <span class="unit">人</span>
+    <button class="btn-ghost" id="inc" aria-label="1人増やす">＋</button>
+  </div>
+  <p class="hint">3〜8人で遊べます。4〜6人がいちばん当てにくいです</p>
+
+  <h2 style="margin-top:1rem"><span class="step-label">STEP 2</span>お題を選ぶ</h2>
+  <div class="cat-scroll">
+    <div class="cat-grid" id="catGrid" role="tablist" aria-label="お題のカテゴリ"></div>
+  </div>
+  <p class="cat-desc" id="catDesc"></p>
+  <div class="pick-list" id="pickList"></div>
+  <button class="pick-more" id="pickMore" type="button">↺ 別の3つを見る</button>
+
+  <button class="btn-primary" id="startGame">この一言で始める</button>
+  <p class="hint" style="margin-top:.5rem">お題を選ばなくても自動で決まります</p>
+</section>
+
+<!-- STEP 2 配役 -->
+<section class="card hidden" id="step-deal">
+  <h2><span class="step-label">STEP 3</span>順番にタップして自分の役を見る</h2>
+  <p class="hint">全員が同じ「<b id="dealWord"></b>」を言います。<br>気持ちだけが1人ずつ違います。他の人に見られないように！</p>
+  <div class="deal-grid" id="dealGrid"></div>
+  <button class="btn-sub" id="toPerform" disabled>全員見終わった → 演じる</button>
+  <button class="btn-sub" id="dealBack">↺ 設定に戻る</button>
+</section>
+
+<!-- STEP 3 演技 -->
+<section class="card hidden" id="step-perform">
+  <h2><span class="step-label">STEP 4</span>順番に演じる</h2>
+  <p class="hint">身振りは使わず、<b>声と表情だけ</b>で。<br>1人ずつ「<b id="performWord"></b>」と言ってください。</p>
+  <div id="performList"></div>
+  <button class="btn-primary" id="toVote">全員演じ終わった → 投票へ</button>
+</section>
+
+<!-- STEP 4 投票（ここがカード版でいちばん面倒なところ） -->
+<section class="card hidden" id="step-vote">
+  <h2><span class="step-label">STEP 5</span>投票</h2>
+  <p class="hint">スマホを回して、1人ずつ投票します。<br>自分以外の人が「どの気持ち」だったかを選んでください。</p>
+  <p class="vote-who" id="voteWho"></p>
+  <p class="hint" id="voteTarget"></p>
+  <div class="vote-list" id="voteList"></div>
+  <p class="vote-prog" id="voteProg"></p>
+</section>
+
+<!-- STEP 5 結果 -->
+<section class="card hidden" id="step-result">
+  <h2><span class="step-label">STEP 6</span>答え合わせ</h2>
+  <div id="resultBody"></div>
+  <div class="score" id="scoreBox"></div>
+  <button class="btn-primary" id="newGame">もう1回遊ぶ</button>
+  <button class="btn-sub" id="resultBack">↺ 設定に戻る</button>
+
+  <div class="post-only" id="postOnly">
+    <div class="ad-slot">
+      <div class="ad-label">広告</div>
+      <ins class="adsbygoogle" style="display:block"
+           data-ad-client="ca-pub-1298304917726270"
+           data-ad-format="horizontal" data-full-width-responsive="false"></ins>
+    </div>
+
+    <div class="shop">
+      <h3>もっと遊びたくなったら</h3>
+      <span class="pr">PR・アフィリエイト広告を含みます</span>
+      <p>このゲームの原型になっている市販のカードゲームがあります。演じるお題がさらに増え、カードを配るだけで遊べます。</p>
+      <a class="buy" href="https://www.amazon.co.jp/s?k=%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazonで探す</a>
+      <a class="buy alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F" target="_blank" rel="nofollow sponsored noopener">楽天で探す</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<details class="block">
+  <summary><h2>遊び方（30秒で読めます）</h2></summary>
+  <div>
+    <p>1. 人数とお題を決めます。お題は「はぁ」「えっ」のような短い一言です。</p>
+    <p>2. スマホを回して、各自が自分の<b>気持ち</b>をこっそり確認します。全員ちがう気持ちが配られます。</p>
+    <p>3. 順番に、その一言だけを言います。<b>身振りは使わず、声と表情だけ</b>で表現してください。</p>
+    <p>4. 全員の演技が終わったら、もう一度スマホを回して投票します。誰がどの気持ちだったかを当てます。</p>
+    <p>5. 正解発表。当てた人にも、当ててもらえた人にも点が入ります。</p>
+  </div>
+</details>
+
+<details class="block">
+  <summary><h2>よくある質問</h2></summary>
+  <div><dl id="faqBody"></dl></div>
+</details>
+
+<p class="note" style="margin-top:1.2rem">
+  声と表情で演じ分けて当て合う遊びを、スマホ1台でできるようにした非公式のツールです。<br>
+  お題はすべて当サイトのオリジナルで、市販品の内容は含みません。
+</p>
+
+<!-- WEBNINJA_RELATED_APPS -->
+<div style="max-width:680px;margin:2rem auto 0;padding:1rem 1.2rem;background:#fffcf7;border:1px solid #f0e6d2;border-radius:12px;font-family:inherit;">
+  <div style="font-weight:800;color:#8b6b3d;font-size:0.9rem;margin-bottom:0.3rem;">あわせて使えるアプリ</div>
+  <a href="https://wordwolf.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ワードウルフ — 少数派をさがす定番パーティーゲーム</a>
+  <a href="https://ito.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ito お題と数字の配布 — スマホ1台で遊べる協力ゲーム</a>
+  <a href="https://gesture.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ジェスチャーおでこ当て — 言葉を使わずお題を伝える</a>
+  <a href="https://bingomachine.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ビンゴマシン — 1〜75を重複なしで抽選</a>
+</div>
+
+<!-- WEBNINJA_UNIFIED_FOOTER -->
+<footer style="text-align:center;padding:2rem 1rem 2.5rem;font-size:0.78rem;color:#94a3b8;line-height:2;border-top:1px solid #f0e6d2;margin-top:2.5rem;background:#fffcf7;">
+  <div style="font-weight:800;color:#8b6b3d;font-size:0.85rem;margin-bottom:0.4rem;">web忍者の砦</div>
+  <div>
+    <a href="https://kkpwebninja.com/" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">本丸トップ</a>·
+    <a href="https://privacypolicy.kkpwebninja.com/" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">プライバシーポリシー</a>·
+    <a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">お問い合わせ</a>·
+    <a href="https://x.com/kkp_webninja" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">@kkp_webninja</a>
+  </div>
+  <div style="margin-top:0.5rem;color:#bfa97a;">© 2025-2026 web忍者の砦</div>
+</footer>
+
+</div>
+
+<!-- 自分の役を見る画面 -->
+<div class="reveal" id="reveal">
+  <div class="who" id="revealWho"></div>
+  <div class="word" id="revealWordLine"></div>
+  <div class="act" id="revealAct"></div>
+  <div class="warn">誰にも見せないでください</div>
+  <button class="btn-w" id="revealClose">覚えた！次の人へ</button>
+</div>
+
+<!-- DATA:BEGIN 自動生成。編集は data.js を直して build.py を実行 -->
+<script>
+/* お題データ（すべてオリジナル）
+   公式カードのお題は使わない。ゲームのルールはアイデアなので問題ないが、
+   お題そのものは著作物なので、こちらで一から設計する。
+
+   構造: { word: 全員が言う一言, acts: [8つのシチュエーション] }
+   人数が8人未満のときは acts の先頭から必要数だけ使う。
+   だから「先頭ほど分かりやすく、後ろほど難しい」順に並べる。 */
+const THEMES = {
+  teiban: {
+    label: '定番',
+    desc: 'はじめての人はここから。日常でよく聞く言い方ばかり。',
+    list: [
+      { word: 'はぁ', acts: ['納得の「はぁ」','怒りの「はぁ」','ため息の「はぁ」','聞き返す「はぁ」','感心の「はぁ」','あきれた「はぁ」','照れかくしの「はぁ」','安心した「はぁ」'] },
+      { word: 'えっ', acts: ['驚きの「えっ」','聞こえなかった「えっ」','うれしい「えっ」','信じられない「えっ」','いやな予感の「えっ」','照れた「えっ」','怒りをこらえた「えっ」','冗談だと思った「えっ」'] },
+      { word: 'あー', acts: ['思い出した「あー」','がっかりの「あー」','納得の「あー」','疲れた「あー」','気持ちいい「あー」','面倒くさい「あー」','ごまかす「あー」','感動の「あー」'] },
+      { word: 'うん', acts: ['素直な「うん」','しぶしぶの「うん」','考えながらの「うん」','聞いていない「うん」','うれしい「うん」','心配な「うん」','あきらめの「うん」','決意の「うん」'] },
+      { word: 'ねぇ', acts: ['甘える「ねぇ」','怒っている「ねぇ」','呼びかける「ねぇ」','内緒話の「ねぇ」','不安な「ねぇ」','からかう「ねぇ」','急かす「ねぇ」','なだめる「ねぇ」'] },
+      { word: 'まぁ', acts: ['納得の「まぁ」','しかたない「まぁ」','驚きの「まぁ」','ごまかす「まぁ」','あきれた「まぁ」','なぐさめる「まぁ」','遠慮する「まぁ」','うれしい「まぁ」'] },
+    ]
+  },
+  aisatsu: {
+    label: 'あいさつ',
+    desc: '同じ挨拶でも、相手と場面で声が変わる。',
+    list: [
+      { word: 'おはよう', acts: ['寝起きの「おはよう」','元気いっぱいの「おはよう」','気まずい「おはよう」','久しぶりの「おはよう」','忙しい時の「おはよう」','照れた「おはよう」','怒っている「おはよう」','心配している「おはよう」'] },
+      { word: 'ありがとう', acts: ['心からの「ありがとう」','社交辞令の「ありがとう」','照れた「ありがとう」','しぶしぶの「ありがとう」','感動の「ありがとう」','皮肉の「ありがとう」','別れぎわの「ありがとう」','小声の「ありがとう」'] },
+      { word: 'すみません', acts: ['呼びかけの「すみません」','深く謝る「すみません」','軽い「すみません」','納得いかない「すみません」','恐縮した「すみません」','人混みをかき分ける「すみません」','電話ごしの「すみません」','間違えて声をかけた「すみません」'] },
+      { word: 'おつかれさま', acts: ['退社時の「おつかれさま」','ねぎらう「おつかれさま」','形式的な「おつかれさま」','心配する「おつかれさま」','うらやましい「おつかれさま」','からかう「おつかれさま」','久しぶりに会った「おつかれさま」','疲れきった「おつかれさま」'] },
+      { word: 'いってらっしゃい', acts: ['朝の「いってらっしゃい」','見送る「いってらっしゃい」','そっけない「いってらっしゃい」','心配な「いってらっしゃい」','うれしそうな「いってらっしゃい」','眠そうな「いってらっしゃい」','いたずらっぽい「いってらっしゃい」','しんみりした「いってらっしゃい」'] },
+    ]
+  },
+  shigoto: {
+    label: '仕事',
+    desc: '職場の懇親会や研修で。誰も傷つけずに盛り上がる。',
+    list: [
+      { word: 'お世話になっております', acts: ['電話の第一声','取引先への挨拶','よく知る相手への挨拶','初対面の緊張','クレーム対応の入り','急いでいる時','間違い電話に気づいた','久しぶりの相手'] },
+      { word: '承知しました', acts: ['気持ちよく引き受ける','納得できない','無理そうだけど受ける','聞き流している','責任を感じている','慣れた対応','驚きながら','うれしい依頼'] },
+      { word: 'なるほど', acts: ['本当に納得','分かったふり','感心している','納得できない','考えをまとめている','相手を持ち上げる','聞き返したい','早く終わらせたい'] },
+      { word: 'ちょっといいですか', acts: ['軽い相談','言いにくい報告','怒っている','助けを求める','雑談を始める','急ぎの用件','遠慮がち','いたずらっぽい'] },
+      { word: 'お先に失礼します', acts: ['定時で帰る','気まずく帰る','疲れきって帰る','うれしそうに帰る','忙しい人を残して帰る','急いで帰る','初出勤の日','最終日'] },
+    ]
+  },
+  gakkou: {
+    label: '学校',
+    desc: '教室でそのまま使える。子どもでも演じ分けやすい。',
+    list: [
+      { word: 'はい', acts: ['元気な返事','眠い返事','しぶしぶの返事','怒られている時','手をあげる時','聞き返す「はい」','電話に出る「はい」','うれしい返事'] },
+      { word: 'いいよ', acts: ['気持ちよく許す','しぶしぶ許す','あきらめの「いいよ」','照れた「いいよ」','怒っている「いいよ」','投げやりな「いいよ」','うれしい「いいよ」','心配しながらの「いいよ」'] },
+      { word: 'あっ', acts: ['忘れ物に気づいた','人にぶつかった','思い出した','見つけた','失敗した','ひらめいた','危ないと思った','恥ずかしい'] },
+      { word: 'やった', acts: ['大喜び','小さくガッツポーズ','信じられない','ほっとした','人前で控えめに','からかい混じり','疲れきった達成感','思わず出た'] },
+      { word: 'ごめん', acts: ['本気で謝る','軽く謝る','しぶしぶ謝る','照れながら謝る','言い訳まじり','大失敗のあと','断るときの「ごめん」','小声の「ごめん」'] },
+    ]
+  },
+  nomikai: {
+    label: '飲み会',
+    desc: '大人数でも回る。演じるほど笑いになる言葉。',
+    list: [
+      { word: 'うわー', acts: ['感動の「うわー」','ドン引きの「うわー」','痛がる「うわー」','驚きの「うわー」','うんざりの「うわー」','うらやましい「うわー」','こわい「うわー」','うれしい「うわー」'] },
+      { word: 'それな', acts: ['心から同意','軽く流す','無理やり合わせる','食い気味に同意','しみじみ同意','からかう','聞いていない','初めて聞いた'] },
+      { word: 'まじで', acts: ['本気で驚く','疑っている','感心する','あきれる','うれしい','こわい話を聞いた','聞き返す','冗談だと思っている'] },
+      { word: 'いやいや', acts: ['謙遜する','否定する','照れる','あきれる','止めようとする','怒っている','笑いをこらえる','困っている'] },
+      { word: 'かんぱい', acts: ['盛り上がった乾杯','静かな乾杯','形式的な乾杯','うれしい乾杯','送別の乾杯','疲れた乾杯','初対面の乾杯','再会の乾杯'] },
+    ]
+  },
+  kaomane: {
+    label: '表情だけ',
+    desc: '声を出さずに表情だけで演じる上級編。',
+    list: [
+      { word: '（無言）', acts: ['見てはいけないものを見た','おいしいものを食べた','眠すぎる','急に思い出した','こらえきれない笑い','納得いかない','感動している','ひどく緊張している'] },
+      { word: '（うなずくだけ）', acts: ['心から同意','聞いていない','しぶしぶ','考えながら','うれしい','あきらめ','急いでいる','ごまかしている'] },
+      { word: '（笑い声だけ）', acts: ['心から笑う','愛想笑い','ごまかし笑い','こらえきれない笑い','あきれ笑い','照れ笑い','悪だくみの笑い','泣き笑い'] },
+    ]
+  },
+};
+</script>
+<!-- DATA:END -->
+<script>
+(function(){
+'use strict';
+const $ = id => document.getElementById(id);
+
+// 色は人を見分けるためだけのもの。名前を入れなくても誰の番か分かるようにする
+const COLORS = [
+  {n:'あか',   bg:'linear-gradient(135deg,#ff6b6b,#e03131)'},
+  {n:'あお',   bg:'linear-gradient(135deg,#4c6ef5,#3b5bdb)'},
+  {n:'みどり', bg:'linear-gradient(135deg,#51cf66,#2f9e44)'},
+  {n:'きいろ', bg:'linear-gradient(135deg,#ffd43b,#f59f00)'},
+  {n:'むらさき',bg:'linear-gradient(135deg,#cc5de8,#9c36b5)'},
+  {n:'みずいろ',bg:'linear-gradient(135deg,#74c0fc,#4dabf7)'},
+  {n:'オレンジ',bg:'linear-gradient(135deg,#ff922b,#e8590c)'},
+  {n:'ピンク', bg:'linear-gradient(135deg,#f783ac,#e64980)'}
+];
+
+const S = {
+  players: 4,
+  cat: Object.keys(THEMES)[0],
+  theme: null,        // {word, acts}
+  assign: [],         // 各プレイヤーに配られた acts のインデックス
+  seen: [],           // 役を確認済みか
+  order: [],          // 演技の順番
+  votes: {},          // votes[voter][target] = actIndex
+  voter: 0, target: 0
+};
+
+// ===== 通算の記録（端末内だけ。まだ出していないお題が次に開く理由になる） =====
+const STATS_KEY = 'haa-stats';
+let STATS = { plays:0, seen:[] };
+try {
+  const st = JSON.parse(localStorage.getItem(STATS_KEY) || 'null');
+  if (st && typeof st === 'object') {
+    STATS.plays = +st.plays || 0;
+    STATS.seen = Array.isArray(st.seen) ? st.seen : [];
+  }
+} catch(e){}
+function saveStats(){ try{ localStorage.setItem(STATS_KEY, JSON.stringify(STATS)); }catch(e){} }
+function totalWords(){ return Object.values(THEMES).reduce((t,v)=>t+v.list.length,0); }
+function renderStats(){
+  const box = $('statsBar'); if(!box) return;
+  document.body.classList.toggle('returning', STATS.plays >= 1);
+  if (STATS.plays < 1){ box.classList.add('hidden'); return; }
+  const total = totalWords();
+  box.innerHTML = '<b>'+STATS.plays+'</b> 回目'
+    + '<span class="sb-r">お題 <b>'+STATS.seen.length+'</b> / '+total+'</span>';
+  box.classList.remove('hidden');
+}
+function track(n,p){ try{ if(typeof gtag==='function') gtag('event',n,p||{}); }catch(e){} }
+
+// ===== 設定 =====
+function setPlayers(n){
+  S.players = Math.max(3, Math.min(8, n));
+  $('playerCount').textContent = S.players;
+}
+$('inc').addEventListener('click', ()=>setPlayers(S.players+1));
+$('dec').addEventListener('click', ()=>setPlayers(S.players-1));
+
+function renderCats(){
+  const g = $('catGrid'); g.innerHTML = '';
+  Object.keys(THEMES).forEach(k=>{
+    const b = document.createElement('button');
+    b.type='button'; b.className='cat-btn'+(k===S.cat?' active':'');
+    b.textContent = THEMES[k].label; b.dataset.cat=k;
+    b.setAttribute('role','tab');
+    b.addEventListener('click', ()=>{
+      S.cat = k;
+      document.querySelectorAll('.cat-btn').forEach(x=>x.classList.toggle('active', x.dataset.cat===k));
+      b.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+      $('catDesc').textContent = THEMES[k].desc;
+      renderPick();
+    });
+    g.appendChild(b);
+  });
+  $('catDesc').textContent = THEMES[S.cat].desc;
+}
+
+// お題は3つ見せて選ばせる。1つずつ引かせると決まるまでに時間がかかる
+function renderPick(){
+  const wrap = $('pickList');
+  let list = THEMES[S.cat].list.slice();
+  const fresh = list.filter(t => STATS.seen.indexOf(t.word) < 0);
+  if (fresh.length >= 3) list = fresh;
+  const bag = list.slice(), picked = [];
+  while (picked.length < 3 && bag.length) picked.push(bag.splice(Math.floor(Math.random()*bag.length),1)[0]);
+  wrap.innerHTML = '';
+  picked.forEach(t=>{
+    const b = document.createElement('button');
+    b.type='button'; b.className='pick-item';
+    b.setAttribute('aria-pressed', String(S.theme && S.theme.word===t.word));
+    const w = document.createElement('span'); w.className='pi-w'; w.textContent='「'+t.word+'」';
+    const s2 = document.createElement('span'); s2.className='pi-s';
+    s2.textContent = t.acts.slice(0,3).join('／')+' …ほか';
+    b.appendChild(w); b.appendChild(s2);
+    b.addEventListener('click', ()=>{
+      S.theme = t;
+      wrap.querySelectorAll('.pick-item').forEach(x=>x.setAttribute('aria-pressed','false'));
+      b.setAttribute('aria-pressed','true');
+      track('haa_pick',{word:t.word,cat:S.cat});
+    });
+    wrap.appendChild(b);
+  });
+  if (!S.theme || !picked.some(t=>t.word===S.theme.word)) S.theme = picked[0] || null;
+}
+$('pickMore').addEventListener('click', ()=>{ track('haa_pick_reroll'); renderPick(); });
+
+// ===== 配役 =====
+function startGame(){
+  if (!S.theme) renderPick();
+  const t = S.theme;
+  // acts から人数ぶんを取る。先頭ほど分かりやすい順に並べてあるので前から使う
+  const idx = t.acts.map((_,i)=>i).slice(0, S.players);
+  for (let i=idx.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [idx[i],idx[j]]=[idx[j],idx[i]]; }
+  S.assign = idx;
+  S.seen = new Array(S.players).fill(false);
+  S.order = Array.from({length:S.players},(_,i)=>i);
+  for (let i=S.order.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [S.order[i],S.order[j]]=[S.order[j],S.order[i]]; }
+  S.votes = {};
+  STATS.plays++;
+  if (STATS.seen.indexOf(t.word) < 0) STATS.seen.push(t.word);
+  saveStats(); renderStats();
+  track('haa_start',{word:t.word,cat:S.cat,players:S.players});
+  $('dealWord').textContent = t.word;
+  $('performWord').textContent = t.word;
+  renderDeal();
+  show('deal');
+}
+$('startGame').addEventListener('click', startGame);
+
+function renderDeal(){
+  const g = $('dealGrid'); g.innerHTML='';
+  for (let i=0;i<S.players;i++){
+    const c = COLORS[i%COLORS.length];
+    const b = document.createElement('button');
+    b.type='button'; b.className='deal-card'+(S.seen[i]?' done':'');
+    b.style.setProperty('--pc', c.bg);
+    b.innerHTML = '<span class="n">'+(i+1)+'</span><span class="who">'+c.n+'</span>';
+    b.setAttribute('aria-label', (i+1)+'人目 '+c.n+' の役を見る');
+    b.addEventListener('click', ()=>openReveal(i));
+    g.appendChild(b);
+  }
+  $('toPerform').disabled = S.seen.some(v=>!v);
+}
+
+function openReveal(i){
+  const c = COLORS[i%COLORS.length];
+  $('revealWho').textContent = (i+1)+'人目・'+c.n+' のあなた';
+  $('revealWordLine').textContent = '言う言葉は「'+S.theme.word+'」';
+  $('revealAct').textContent = S.theme.acts[S.assign[i]];
+  $('reveal').classList.add('show');
+  $('reveal').dataset.i = i;
+}
+$('revealClose').addEventListener('click', ()=>{
+  const i = +$('reveal').dataset.i;
+  S.seen[i] = true;
+  $('reveal').classList.remove('show');
+  renderDeal();
+});
+
+$('toPerform').addEventListener('click', ()=>{
+  renderPerform(); show('perform');
+});
+$('dealBack').addEventListener('click', ()=>show('setup'));
+
+function renderPerform(){
+  const w = $('performList'); w.innerHTML='';
+  S.order.forEach((p,n)=>{
+    const c = COLORS[p%COLORS.length];
+    const row = document.createElement('div');
+    row.className='res-row';
+    row.innerHTML = '<span class="nm">'+(n+1)+'番目</span><span class="act">'+(p+1)+'人目・'+c.n+'</span>';
+    w.appendChild(row);
+  });
+}
+$('toVote').addEventListener('click', ()=>{ S.voter=0; S.target=-1; nextVote(); show('vote'); });
+
+// ===== 投票（カード版でいちばん面倒なところ） =====
+function nextVote(){
+  // 自分以外の全員に投票する。1人ぶん終わったら次の人へスマホを回す
+  do {
+    S.target++;
+    if (S.target >= S.players){ S.target = 0; S.voter++; }
+    if (S.voter >= S.players) return finish();
+  } while (S.target === S.voter);
+  renderVote();
+}
+function renderVote(){
+  const vc = COLORS[S.voter%COLORS.length], tc = COLORS[S.target%COLORS.length];
+  $('voteWho').textContent = '📱 '+(S.voter+1)+'人目・'+vc.n+' さんの番';
+  $('voteTarget').innerHTML = '<b>'+(S.target+1)+'人目・'+tc.n+'</b> さんは、どの気持ちだった？';
+  const w = $('voteList'); w.innerHTML='';
+  const used = S.assign.slice().sort((a,b)=>a-b);
+  used.forEach(ai=>{
+    const b = document.createElement('button');
+    b.type='button'; b.className='vote-item';
+    b.textContent = S.theme.acts[ai];
+    b.addEventListener('click', ()=>{
+      S.votes[S.voter] = S.votes[S.voter] || {};
+      S.votes[S.voter][S.target] = ai;
+      nextVote();
+    });
+    w.appendChild(b);
+  });
+  const total = S.players*(S.players-1);
+  let done = 0;
+  Object.values(S.votes).forEach(v=>done += Object.keys(v).length);
+  $('voteProg').textContent = '投票 '+done+' / '+total;
+}
+
+// ===== 結果 =====
+function finish(){
+  const body = $('resultBody'); body.innerHTML='';
+  // 誰がどの気持ちだったかを開示
+  for (let i=0;i<S.players;i++){
+    const c = COLORS[i%COLORS.length];
+    const row = document.createElement('div');
+    row.className='res-row';
+    row.innerHTML = '<span class="nm">'+(i+1)+'人目</span>'
+      + '<span class="act">'+c.n+'：'+S.theme.acts[S.assign[i]]+'</span>';
+    body.appendChild(row);
+  }
+  // 得点：当てた人に1点、当ててもらえた人にも1点（カード版と同じ考え方）
+  const sc = new Array(S.players).fill(0);
+  for (let v=0;v<S.players;v++){
+    for (let t=0;t<S.players;t++){
+      if (v===t) continue;
+      const g = S.votes[v] && S.votes[v][t];
+      if (g === undefined) continue;
+      if (g === S.assign[t]){ sc[v]++; sc[t]++; }
+    }
+  }
+  const box = $('scoreBox');
+  const max = Math.max.apply(null, sc);
+  let h = '<h3>得点</h3>';
+  sc.map((v,i)=>({i,v})).sort((a,b)=>b.v-a.v).forEach(o=>{
+    const c = COLORS[o.i%COLORS.length];
+    h += '<div class="sr"><span>'+(o.i+1)+'人目・'+c.n+(o.v===max&&max>0?' 👑':'')+'</span><b>'+o.v+'点</b></div>';
+  });
+  box.innerHTML = h;
+  track('haa_finish',{word:S.theme.word,players:S.players});
+  show('result');
+}
+
+$('newGame').addEventListener('click', ()=>{ renderPick(); startGame(); });
+$('resultBack').addEventListener('click', ()=>{ renderPick(); show('setup'); });
+
+function show(name){
+  ['setup','deal','perform','vote','result'].forEach(s=>{
+    const el = $('step-'+s); if (el) el.classList.toggle('hidden', s!==name);
+  });
+  document.body.classList.toggle('playing', name!=='setup');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// FAQ（構造化データと本文で同じ内容を出す）
+const FAQ = [
+ ['カードがなくても遊べますか？','遊べます。スマホ1台を順番に回すだけで、各自の配役をこっそり確認できます。投票と得点計算も自動なので、チップや紙は要りません。'],
+ ['何人から遊べますか？','3人から8人まで遊べます。4〜6人がいちばん当てにくく盛り上がります。人数に合わせて配役の数も自動で調整されます。'],
+ ['どうやって遊ぶの？','全員が同じ一言（例：「はぁ」）を、それぞれ違うシチュエーションで演じます。声と表情だけを使い、身振りは使いません。演技のあと、誰がどのシチュエーションだったかを全員で当てます。'],
+ ['お題は何種類ありますか？','29種類のお題に、それぞれ8通りのシチュエーションを用意しています（全232通り）。すべてこのサイトのオリジナルです。'],
+ ['市販のカードゲームとの関係は？','これは市販のカードゲームを持っていない場面のために作った非公式のツールです。お題はすべて独自に作成しており、市販品の内容は含みません。']
+];
+$('faqBody').innerHTML = FAQ.map(f=>'<dt>'+f[0]+'</dt><dd>'+f[1]+'</dd>').join('');
+
+// Init
+renderStats();
+renderCats();
+renderPick();
+setPlayers(4);
+
+// 広告は枠ぶんだけ読み込む
+try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
+})();
+</script>
+</body>
+</html>
