@@ -125,6 +125,13 @@ T = [
  ('3〜8人で遊べます。4〜6人がいちばん当てにくいです', '3 to 8 players. 4 to 6 is the hardest to read'),
  ('お題を選ばなくても自動で決まります', 'Skip this and one will be picked for you'),
  ('↺ 別の3つを見る', '↺ Show three others'),
+ # 共有ブロック。英語ではLINEを出さず、ラベルも英語にする
+ ('<div data-fortress-share\n       data-site="ninja-haa"\n       data-trigger="result"\n       data-label="この結果を教える"\n       data-text-fn="getShareText"\n       data-hashtags="#パーティーゲーム #飲み会ゲーム"></div>',
+  '<div data-fortress-share\n       data-site="ninja-haa-en"\n       data-lang="en"\n       data-trigger="result"\n       data-label="Share this round"\n       data-text-fn="getShareText"\n       data-hashtags="#partygames #icebreaker"></div>'),
+ ("'「'+S.theme.word+'」を'+S.players+'人で演じ分けました。\\n'",
+  "'We each said \\u201c'+S.theme.word+'\\u201d a different way, '+S.players+' of us.\\n'"),
+ ("(max===0 ? 'まさかの全員はずれ。声だけで気持ちを伝えるの、むずかしい'\n                    : '最高'+max+'点。同じ一言でも、人によって全然ちがう')",
+  "(max===0 ? 'Nobody guessed a single one. Voice alone is harder than it looks'\n                    : 'Top score '+max+'. Same word, very different people')"),
  ('<button class="btn-primary" id="startGame">おまかせで始める</button>',
   '<button class="btn-primary" id="startGame">Start</button>'),
  ("'「'+S.theme.word+'」で始める' : 'お題を選んで始める'",

@@ -261,6 +261,13 @@ a{color:#1565c0}
   <h2><span class="step-label">STEP 6</span>Reveal</h2>
   <div id="resultBody"></div>
   <div class="score" id="scoreBox"></div>
+  <div data-fortress-share
+       data-site="ninja-haa-en"
+       data-lang="en"
+       data-trigger="result"
+       data-label="Share this round"
+       data-text-fn="getShareText"
+       data-hashtags="#partygames #icebreaker"></div>
   <button class="btn-primary" id="newGame">Play again</button>
   <button class="btn-sub" id="resultBack">↺ Back to setup</button>
 
@@ -698,7 +705,14 @@ function finish(){
     h += '<div class="sr"><span>player '+(o.i+1)+' · '+c.n+(o.v===max&&max>0?' 👑':'')+'</span><b>'+o.v+'</b></div>';
   });
   box.innerHTML = h;
-  track('haa_finish',{word:S.theme.word,players:S.players});
+  // シェア文は結果の数字を入れる。「全員当てられた」のような一言が読み手に効く
+  const hits = sc.reduce((t,v)=>t+v,0);
+  window.getShareText = function(){
+    return 'We each said \u201c'+S.theme.word+'\u201d a different way, '+S.players+' of us.\n'
+         + (max===0 ? 'Nobody guessed a single one. Voice alone is harder than it looks'
+                    : 'Top score '+max+'. Same word, very different people');
+  };
+  track('haa_finish',{word:S.theme.word,players:S.players,hits:hits});
   show('result');
 }
 
@@ -733,5 +747,6 @@ setPlayers(4);
 try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
 })();
 </script>
+<script src="https://kkpwebninja.com/shared/fortress-share.js" defer></script>
 </body>
 </html>

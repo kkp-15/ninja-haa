@@ -24,6 +24,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://haa.kkpwebninja.com/ogp.png?d=20260905">
 
+<link rel="stylesheet" href="https://kkpwebninja.com/shared/fortress-share.css">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -264,6 +265,12 @@ a{color:#1565c0}
   <h2><span class="step-label">STEP 6</span>答え合わせ</h2>
   <div id="resultBody"></div>
   <div class="score" id="scoreBox"></div>
+  <div data-fortress-share
+       data-site="ninja-haa"
+       data-trigger="result"
+       data-label="この結果を教える"
+       data-text-fn="getShareText"
+       data-hashtags="#パーティーゲーム #飲み会ゲーム"></div>
   <button class="btn-primary" id="newGame">もう1回遊ぶ</button>
   <button class="btn-sub" id="resultBack">↺ 設定に戻る</button>
 
@@ -728,7 +735,14 @@ function finish(){
     h += '<div class="sr"><span>'+(o.i+1)+'人目・'+c.n+(o.v===max&&max>0?' 👑':'')+'</span><b>'+o.v+'点</b></div>';
   });
   box.innerHTML = h;
-  track('haa_finish',{word:S.theme.word,players:S.players});
+  // シェア文は結果の数字を入れる。「全員当てられた」のような一言が読み手に効く
+  const hits = sc.reduce((t,v)=>t+v,0);
+  window.getShareText = function(){
+    return '「'+S.theme.word+'」を'+S.players+'人で演じ分けました。\n'
+         + (max===0 ? 'まさかの全員はずれ。声だけで気持ちを伝えるの、むずかしい'
+                    : '最高'+max+'点。同じ一言でも、人によって全然ちがう');
+  };
+  track('haa_finish',{word:S.theme.word,players:S.players,hits:hits});
   show('result');
 }
 
@@ -763,5 +777,6 @@ setPlayers(4);
 try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
 })();
 </script>
+<script src="https://kkpwebninja.com/shared/fortress-share.js" defer></script>
 </body>
 </html>
