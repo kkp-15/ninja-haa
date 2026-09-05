@@ -95,7 +95,10 @@ h2{font-size:1rem;margin:0 0 .5rem;display:flex;align-items:center;gap:.5rem}
   background:#fff5e6;border:2px solid var(--line);color:var(--ink);
   padding:.45rem .8rem;border-radius:999px;font:inherit;font-size:.88rem;cursor:pointer}
 .cat-btn.active{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:700}
+/* 選択中のタブをもう一度押すと別の3つが出る。それが分かるように印を出す */
+.cat-btn.active::after{content:" ↺";font-weight:400;opacity:.9}
 .cat-desc{font-size:.78rem;color:var(--muted);text-align:center;margin:0 0 .6rem}
+body.returning .cat-desc{display:none}
 
 /* お題の3択（1つずつ引かせるより選ばせる方が早く決まる） */
 .pick-list{display:flex;flex-direction:column;gap:.4rem}
@@ -104,8 +107,10 @@ h2{font-size:1rem;margin:0 0 .5rem;display:flex;align-items:center;gap:.5rem}
 .pick-item[aria-pressed="true"]{border-color:var(--orange);background:#fff3e2}
 .pick-item .pi-w{display:block;font-weight:800;font-size:1.05rem;color:var(--orange-d)}
 .pick-item .pi-s{display:block;font-size:.74rem;color:var(--muted);margin-top:.1rem}
-.pick-more{display:block;margin:.5rem auto 0;padding:.25rem .8rem;background:none;border:none;
-  color:var(--muted);font:inherit;font-size:.78rem;text-decoration:underline;cursor:pointer}
+/* 入れ替わったことを一瞬の動きで伝える（押しても変化が見えないと二度押されない） */
+@keyframes pick-in{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+.pick-list.swap .pick-item{animation:pick-in .18s ease both}
+@media (prefers-reduced-motion:reduce){.pick-list.swap .pick-item{animation:none}}
 
 .btn-primary{display:block;width:100%;padding:.85rem;border:none;border-radius:999px;
   background:var(--orange);color:#fff;font:inherit;font-weight:800;font-size:1.02rem;
@@ -220,10 +225,8 @@ a{color:#1565c0}
   </div>
   <p class="cat-desc" id="catDesc"></p>
   <div class="pick-list" id="pickList"></div>
-  <button class="pick-more" id="pickMore" type="button">↺ Show three others</button>
 
-  <button class="btn-primary" id="startGame">Start with this line</button>
-  <p class="hint" style="margin-top:.5rem">Skip this and one will be picked for you</p>
+  <button class="btn-primary" id="startGame">Start</button>
 </section>
 
 <!-- STEP 2 配役 -->
@@ -518,6 +521,13 @@ function renderCats(){
 }
 
 // お題は3つ見せて選ばせる。1つずつ引かせると決まるまでに時間がかかる
+// 開始ボタンには、いま何で始まるのかを出す。
+// 以前は「この一言で始める」とだけ書いてあり、3択の先頭が黙って使われていた。
+function updateStartLabel(){
+  const b = $('startGame');
+  if (b) b.textContent = S.theme ? 'Start with \u201c'+S.theme.word+'\u201d' : 'Pick a line to start';
+}
+
 function renderPick(){
   const wrap = $('pickList');
   let list = THEMES[S.cat].list.slice();
@@ -525,6 +535,10 @@ function renderPick(){
   if (fresh.length >= 3) list = fresh;
   const bag = list.slice(), picked = [];
   while (picked.length < 3 && bag.length) picked.push(bag.splice(Math.floor(Math.random()*bag.length),1)[0]);
+
+  // 引き直したときは、いまの選択を持ち越さず先頭を選び直す
+  S.theme = picked[0] || null;
+
   wrap.innerHTML = '';
   picked.forEach(t=>{
     const b = document.createElement('button');
@@ -538,13 +552,18 @@ function renderPick(){
       S.theme = t;
       wrap.querySelectorAll('.pick-item').forEach(x=>x.setAttribute('aria-pressed','false'));
       b.setAttribute('aria-pressed','true');
+      updateStartLabel();
       track('haa_pick',{word:t.word,cat:S.cat});
     });
     wrap.appendChild(b);
   });
-  if (!S.theme || !picked.some(t=>t.word===S.theme.word)) S.theme = picked[0] || null;
+  updateStartLabel();
+
+  // 中身が入れ替わったことを一瞬の動きで伝える
+  wrap.classList.remove('swap');
+  void wrap.offsetWidth;
+  wrap.classList.add('swap');
 }
-$('pickMore').addEventListener('click', ()=>{ track('haa_pick_reroll'); renderPick(); });
 
 // ===== 配役 =====
 function startGame(){
