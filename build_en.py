@@ -73,9 +73,8 @@ html = re.sub(r'\s*<div class="shop">.*?</div>\s*(?=</div>)', '\n  ', html, flag
 RELATED = '''<!-- WEBNINJA_RELATED_APPS -->
 <div style="max-width:680px;margin:2rem auto 0;padding:1rem 1.2rem;background:#fffcf7;border:1px solid #f0e6d2;border-radius:12px;font-family:inherit;">
   <div style="font-weight:800;color:#8b6b3d;font-size:0.9rem;margin-bottom:0.3rem;">More one-phone party games</div>
-  <a href="https://wordwolf.kkpwebninja.com/en/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">Word Wolf — find the one player with a different word</a>
+  <!-- 英語版が実在するものだけ並べる。/en/ が日本語ページを返すサイトを入れない -->
   <a href="https://ito.kkpwebninja.com/en/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ito — line up your secret numbers without saying them</a>
-  <a href="https://gesture.kkpwebninja.com/en/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">Forehead Charades — guess the word held to your head</a>
 </div>'''
 html = re.sub(r'<!-- WEBNINJA_RELATED_APPS -->.*?\n</div>', RELATED, html, count=1, flags=re.S)
 
