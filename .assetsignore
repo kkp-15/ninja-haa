@@ -8,3 +8,6 @@ CNAME
 build.py
 data.js
 _meta.json
+build_en.py
+data.en.js
+scripts_build_odai.py

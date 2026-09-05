@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Say It With Feeling — the guess-the-emotion game for one phone</title>
+<meta name="description" content="Everyone says the same line. Each person is secretly given a different emotion. Pass one phone around, act, then vote — roles, voting and scoring are all handled for you. 47 prompts, 376 ways to say them. Free, no sign-up, no app.">
+<link rel="canonical" href="https://haa.kkpwebninja.com/en/">
+<link rel="alternate" hreflang="ja" href="https://haa.kkpwebninja.com/">
+<link rel="alternate" hreflang="en" href="https://haa.kkpwebninja.com/en/">
+<link rel="alternate" hreflang="x-default" href="https://haa.kkpwebninja.com/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#e8843a">
+
+<meta property="og:title" content="Say It With Feeling — one phone, one line, eight emotions">
+<meta property="og:description" content="Say the same word eight different ways and see who can tell them apart. Roles, voting and scoring on a single phone.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://haa.kkpwebninja.com/en/">
+<meta property="og:site_name" content="Say It With Feeling">
+<meta property="og:image" content="https://haa.kkpwebninja.com/ogp.png?d=20260906">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://haa.kkpwebninja.com/ogp.png?d=20260906">
+
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Say It With Feeling","url":"https://haa.kkpwebninja.com/en/","applicationCategory":"GameApplication","operatingSystem":"Web","inLanguage":"en","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Organization","name":"web忍者の砦"},"publisher":{"@type":"Organization","name":"web忍者の砦","url":"https://kkpwebninja.com/"}}
+</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2LM85GJN0L"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2LM85GJN0L');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1298304917726270" crossorigin="anonymous"></script>
+
+<style>
+:root{
+  --orange:#ff8a3d; --orange-d:#e07b39; --cream:#fff8f0; --paper:#fffdf9;
+  --ink:#3b2c22; --muted:#8a7560; --line:#f0e2cc; --ok:#5b9e6e; --ng:#c0603f;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--cream);color:var(--ink);
+  font-family:"Nunito","Avenir Next","Segoe UI",system-ui,sans-serif;
+  font-size:16px;line-height:1.75;-webkit-text-size-adjust:100%;
+}
+.wrap{max-width:640px;margin:0 auto;padding:16px 14px 56px}
+
+header{text-align:center;padding:.4rem 0 .2rem}
+h1{font-size:1.2rem;line-height:1.45;margin:0 0 .3rem;text-wrap:balance}
+header p{font-size:.85rem;color:var(--muted);margin:0}
+body.returning header p,
+body.returning header .hbadges{display:none}
+body.returning header h1{font-size:1.02rem}
+
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;
+  padding:1rem .9rem 1.1rem;margin:0 0 1rem}
+.card.hidden{display:none}
+h2{font-size:1rem;margin:0 0 .5rem;display:flex;align-items:center;gap:.5rem}
+.step-label{background:var(--orange);color:#fff;font-size:.68rem;font-weight:800;
+  padding:.15rem .55rem;border-radius:999px;letter-spacing:.04em;flex:none}
+
+.stats-bar{display:flex;flex-wrap:nowrap;align-items:baseline;gap:.6rem;
+  margin:0 0 .7rem;padding:.32rem .7rem;background:#fffaf2;border:1px solid var(--line);
+  border-radius:9px;font-size:.79rem;color:var(--muted);overflow-x:auto}
+.stats-bar b{color:var(--orange-d);font-weight:800;font-size:.9rem}
+.stats-bar>*{flex:none}
+.stats-bar .sb-r{margin-left:auto;white-space:nowrap}
+.stats-bar.hidden{display:none}
+
+.num{display:flex;align-items:center;justify-content:center;gap:.8rem;margin:.2rem 0}
+.num .val{font-size:2rem;font-weight:900;color:var(--orange-d);min-width:2.2rem;text-align:center}
+.num .unit{font-size:.85rem;color:var(--muted)}
+.btn-ghost{width:46px;height:46px;border-radius:50%;border:2px solid var(--line);
+  background:#fff;font-size:1.3rem;color:var(--orange-d);cursor:pointer;line-height:1}
+.hint{text-align:center;font-size:.8rem;color:var(--muted);margin:.1rem 0 .2rem}
+
+/* カテゴリは横スライド（縦に積むと選ぶ前に画面を使い切る） */
+.cat-scroll{position:relative;margin:0 -0.9rem .6rem}
+.cat-scroll::after{content:"";position:absolute;top:0;right:0;bottom:.4rem;width:26px;
+  pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,253,249,.96))}
+.cat-grid{display:flex;gap:.4rem;overflow-x:auto;padding:.15rem 1.2rem .5rem .9rem;
+  scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.cat-grid::-webkit-scrollbar{display:none}
+.cat-btn{flex:0 0 auto;scroll-snap-align:start;white-space:nowrap;
+  background:#fff5e6;border:2px solid var(--line);color:var(--ink);
+  padding:.45rem .8rem;border-radius:999px;font:inherit;font-size:.88rem;cursor:pointer}
+.cat-btn.active{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:700}
+.cat-desc{font-size:.78rem;color:var(--muted);text-align:center;margin:0 0 .6rem}
+
+/* お題の3択（1つずつ引かせるより選ばせる方が早く決まる） */
+.pick-list{display:flex;flex-direction:column;gap:.4rem}
+.pick-item{display:block;width:100%;text-align:left;cursor:pointer;padding:.55rem .75rem;
+  border:1.5px solid var(--line);border-radius:10px;background:#fffdf9;font:inherit;line-height:1.45}
+.pick-item[aria-pressed="true"]{border-color:var(--orange);background:#fff3e2}
+.pick-item .pi-w{display:block;font-weight:800;font-size:1.05rem;color:var(--orange-d)}
+.pick-item .pi-s{display:block;font-size:.74rem;color:var(--muted);margin-top:.1rem}
+.pick-more{display:block;margin:.5rem auto 0;padding:.25rem .8rem;background:none;border:none;
+  color:var(--muted);font:inherit;font-size:.78rem;text-decoration:underline;cursor:pointer}
+
+.btn-primary{display:block;width:100%;padding:.85rem;border:none;border-radius:999px;
+  background:var(--orange);color:#fff;font:inherit;font-weight:800;font-size:1.02rem;
+  cursor:pointer;box-shadow:0 4px 12px rgba(224,123,57,.28);margin-top:.8rem}
+.btn-sub{display:block;width:100%;padding:.7rem;border:2px solid var(--line);border-radius:999px;
+  background:#fff;color:var(--ink);font:inherit;font-size:.92rem;cursor:pointer;margin-top:.5rem}
+
+/* 配役カード：itoと同じ「回して見る」 */
+.deal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:.55rem;margin-top:.6rem}
+.deal-card{aspect-ratio:3/4;border-radius:14px;border:1.5px solid rgba(255,255,255,.9);
+  background:url('/img/paper.webp') 0 0/128px 128px repeat,
+    linear-gradient(145deg,rgba(255,255,255,.28),transparent 38%,rgba(0,0,0,.10)),
+    var(--pc,linear-gradient(135deg,#ff8a3d,#ff6b9d));
+  background-blend-mode:soft-light,normal,normal;
+  box-shadow:0 8px 18px rgba(38,23,11,.2),inset 0 0 0 1px rgba(255,255,255,.45);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;
+  color:#fff;font:inherit;font-weight:800;cursor:pointer;position:relative;overflow:hidden}
+.deal-card::before{content:"tap";position:absolute;top:6px;left:50%;transform:translateX(-50%);
+  padding:2px 7px;border-radius:999px;background:rgba(20,15,10,.66);font-size:.56rem;letter-spacing:.06em}
+.deal-card .n{font-size:1.5rem;line-height:1;text-shadow:0 1px 3px rgba(0,0,0,.28)}
+.deal-card .who{font-size:.7rem;opacity:.95}
+.deal-card.done{filter:saturate(.55) brightness(.92)}
+.deal-card.done::after{content:"done";position:absolute;bottom:6px;left:50%;transform:translateX(-50%);
+  font-size:.56rem;background:rgba(20,15,10,.6);padding:2px 6px;border-radius:999px}
+
+/* 自分の配役を見る画面。紫グラデは他の画面から浮くので藍の和紙にする */
+.reveal{position:fixed;inset:0;z-index:1000;display:none;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;padding:1.4rem;color:#fff;
+  background:#16213a url('/img/reveal-bg.webp') center/cover no-repeat}
+.reveal.show{display:flex}
+.reveal .who{font-size:1rem;opacity:.9;margin-bottom:.6rem}
+.reveal .word{font-size:1.1rem;opacity:.85;margin-bottom:.2rem}
+.reveal .act{background:#fff;color:var(--ink);border-radius:16px;padding:1.1rem 1.3rem;
+  font-size:1.45rem;font-weight:900;line-height:1.4;box-shadow:0 14px 34px rgba(0,0,0,.42);
+  max-width:22rem;border:5px solid var(--orange)}
+.reveal .warn{margin-top:.8rem;font-size:.86rem;color:#ffd8a8}
+.reveal .btn-w{background:#fff;color:var(--ink);border:none;border-radius:999px;
+  padding:.75rem 1.6rem;font:inherit;font-weight:800;font-size:1rem;cursor:pointer;margin-top:1.1rem}
+
+/* 投票：カード版でいちばん面倒なところ。ここをスマホが引き受ける */
+.vote-who{font-weight:800;text-align:center;margin:.2rem 0 .5rem;font-size:1rem}
+.vote-list{display:flex;flex-direction:column;gap:.4rem}
+.vote-item{display:block;width:100%;text-align:left;padding:.6rem .8rem;border:1.5px solid var(--line);
+  border-radius:10px;background:#fffdf9;font:inherit;cursor:pointer;line-height:1.4}
+.vote-item[aria-pressed="true"]{border-color:var(--orange);background:#fff3e2;font-weight:700}
+.vote-prog{text-align:center;font-size:.8rem;color:var(--muted);margin:.5rem 0 0}
+
+.res-row{display:flex;align-items:center;gap:.6rem;padding:.55rem .2rem;border-top:1px solid var(--line)}
+.res-row .nm{font-weight:800;min-width:4.2rem}
+.res-row .act{flex:1;font-size:.88rem}
+.res-row .mk{font-weight:800;font-size:.9rem}
+.res-row .mk.o{color:var(--ok)}
+.res-row .mk.x{color:var(--ng)}
+.score{margin-top:.8rem;padding:.7rem .9rem;background:#fffaf2;border:1px solid var(--line);border-radius:12px}
+.score h3{margin:0 0 .35rem;font-size:.92rem}
+.score .sr{display:flex;justify-content:space-between;font-size:.9rem;padding:.15rem 0}
+.score .sr b{color:var(--orange-d)}
+
+.shop{margin:1.2rem 0 0;padding:.9rem 1rem;background:var(--paper);border:1px solid var(--line);border-radius:12px}
+.shop h3{font-size:.95rem;margin:0 0 .1rem}
+.shop .pr{display:block;font-size:10.5px;color:var(--muted);letter-spacing:.06em;margin-bottom:.6rem}
+.shop p{margin:0 0 .5rem;font-size:.85rem;color:var(--muted);line-height:1.7}
+.shop .buy{display:inline-block;margin:0 .5rem .4rem 0;padding:.35rem .9rem;font-size:.82rem;
+  border:1px solid var(--orange);border-radius:999px;color:var(--orange-d);text-decoration:none;background:#fff}
+.shop .buy.alt{border-color:var(--line);color:var(--muted)}
+
+.ad-slot{margin:1.4rem 0;padding:12px 0;text-align:center;
+  border-top:1px dashed var(--line);border-bottom:1px dashed var(--line)}
+.ad-label{font-size:10.5px;letter-spacing:.14em;color:var(--muted);margin-bottom:6px}
+.ad-slot ins.adsbygoogle{display:block;width:320px;height:100px;margin:0 auto}
+@media(min-width:760px){.ad-slot ins.adsbygoogle{width:728px;height:90px}}
+
+details.block{background:var(--paper);border:1px solid var(--line);border-radius:12px;
+  padding:.1rem .9rem;margin:0 0 .7rem}
+details.block summary{cursor:pointer;font-weight:700;padding:.6rem 0;font-size:.95rem}
+details.block h2{display:inline;font-size:.95rem;margin:0}
+dl{margin:0 0 .6rem}
+dt{font-weight:700;margin-top:.7rem;font-size:.9rem}
+dd{margin:.2rem 0 0;font-size:.86rem;color:#5c4b3c}
+.note{font-size:.8rem;color:var(--muted);text-align:center;line-height:1.7}
+a{color:#1565c0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Say It With Feeling</h1>
+  <p>Everyone says the same line with a different feeling.<br>One phone handles the roles, the voting and the score.</p>
+  <p style="font-size:.8rem;margin:.4rem 0 0"><a href="/en/" style="color:#8a7560">English version</a></p>
+  <p style="font-size:.8rem;margin:.4rem 0 0"><a href="/" style="color:#8a7560">日本語版はこちら</a></p>
+</header>
+
+<main>
+
+<!-- STEP 1 -->
+<section class="card" id="step-setup">
+  <div class="stats-bar hidden" id="statsBar"></div>
+
+  <h2><span class="step-label">STEP 1</span>Players</h2>
+  <div class="num">
+    <button class="btn-ghost" id="dec" aria-label="one fewer player">−</button>
+    <span class="val" id="playerCount">4</span>
+    <span class="unit">players</span>
+    <button class="btn-ghost" id="inc" aria-label="one more player">＋</button>
+  </div>
+  <p class="hint">3 to 8 players. 4 to 6 is the hardest to read</p>
+
+  <h2 style="margin-top:1rem"><span class="step-label">STEP 2</span>Pick a line</h2>
+  <div class="cat-scroll">
+    <div class="cat-grid" id="catGrid" role="tablist" aria-label="prompt categories"></div>
+  </div>
+  <p class="cat-desc" id="catDesc"></p>
+  <div class="pick-list" id="pickList"></div>
+  <button class="pick-more" id="pickMore" type="button">↺ Show three others</button>
+
+  <button class="btn-primary" id="startGame">Start with this line</button>
+  <p class="hint" style="margin-top:.5rem">Skip this and one will be picked for you</p>
+</section>
+
+<!-- STEP 2 配役 -->
+<section class="card hidden" id="step-deal">
+  <h2><span class="step-label">STEP 3</span>Tap in turn to see your role</h2>
+  <p class="hint">Everyone says the same "<b id="dealWord"></b>".<br>Only the feeling differs. Do not let anyone else see!</p>
+  <div class="deal-grid" id="dealGrid"></div>
+  <button class="btn-sub" id="toPerform" disabled>Everyone has looked → perform</button>
+  <button class="btn-sub" id="dealBack">↺ Back to setup</button>
+</section>
+
+<!-- STEP 3 演技 -->
+<section class="card hidden" id="step-perform">
+  <h2><span class="step-label">STEP 4</span>Perform in turn</h2>
+  <p class="hint"><b>Voice and face only</b> — no gestures.<br>Take turns saying "<b id="performWord"></b>".</p>
+  <div id="performList"></div>
+  <button class="btn-primary" id="toVote">Everyone has performed → vote</button>
+</section>
+
+<!-- STEP 4 投票（ここがカード版でいちばん面倒なところ） -->
+<section class="card hidden" id="step-vote">
+  <h2><span class="step-label">STEP 5</span>Vote</h2>
+  <p class="hint">Pass the phone and vote one at a time.<br>Choose the feeling you think each of the others had.</p>
+  <p class="vote-who" id="voteWho"></p>
+  <p class="hint" id="voteTarget"></p>
+  <div class="vote-list" id="voteList"></div>
+  <p class="vote-prog" id="voteProg"></p>
+</section>
+
+<!-- STEP 5 結果 -->
+<section class="card hidden" id="step-result">
+  <h2><span class="step-label">STEP 6</span>Reveal</h2>
+  <div id="resultBody"></div>
+  <div class="score" id="scoreBox"></div>
+  <button class="btn-primary" id="newGame">Play again</button>
+  <button class="btn-sub" id="resultBack">↺ Back to setup</button>
+
+  <div class="post-only" id="postOnly">
+    <div class="ad-slot">
+      <div class="ad-label">Advertisement</div>
+      <ins class="adsbygoogle" style="display:block"
+           data-ad-client="ca-pub-1298304917726270"
+           data-ad-format="horizontal" data-full-width-responsive="false"></ins>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<details class="block">
+  <summary><h2>How to play (30 seconds)</h2></summary>
+  <div>
+    <p>1. Pick the number of players and a line. The lines are short — "Huh?", "Oh.", "Sure."</p>
+    <p>2. Pass the phone around. Each player privately checks the <b>feeling</b> they were given. Everyone gets a different one.</p>
+    <p>3. Take turns saying that one line. <b>No gestures</b> — voice and face only.</p>
+    <p>4. Once everyone has performed, pass the phone again and vote on who had which feeling.</p>
+    <p>5. Reveal. You score for guessing right, and for being guessed right.</p>
+  </div>
+</details>
+
+<details class="block">
+  <summary><h2>Questions</h2></summary>
+  <div><dl id="faqBody"></dl></div>
+</details>
+
+<p class="note" style="margin-top:1.2rem">
+  An unofficial tool that puts this acting-and-guessing game on a single phone.<br>
+  Every prompt here is our own writing.
+</p>
+
+<!-- WEBNINJA_RELATED_APPS -->
+<div style="max-width:680px;margin:2rem auto 0;padding:1rem 1.2rem;background:#fffcf7;border:1px solid #f0e6d2;border-radius:12px;font-family:inherit;">
+  <div style="font-weight:800;color:#8b6b3d;font-size:0.9rem;margin-bottom:0.3rem;">More one-phone party games</div>
+  <a href="https://wordwolf.kkpwebninja.com/en/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">Word Wolf — find the one player with a different word</a>
+  <a href="https://ito.kkpwebninja.com/en/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ito — line up your secret numbers without saying them</a>
+  <a href="https://gesture.kkpwebninja.com/en/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">Forehead Charades — guess the word held to your head</a>
+</div>
+
+<!-- WEBNINJA_UNIFIED_FOOTER -->
+<footer style="text-align:center;padding:2rem 1rem 2.5rem;font-size:0.78rem;color:#94a3b8;line-height:2;border-top:1px solid #f0e6d2;margin-top:2.5rem;background:#fffcf7;">
+  <div style="font-weight:800;color:#8b6b3d;font-size:0.85rem;margin-bottom:0.4rem;">web忍者の砦</div>
+  <div>
+    <a href="https://kkpwebninja.com/" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">All our free web apps</a>·
+    <a href="https://privacypolicy.kkpwebninja.com/" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">Privacy policy</a>·
+    <a href="https://x.com/kkp_webninja" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">@kkp_webninja</a>
+  </div>
+  <div style="margin-top:0.5rem;color:#bfa97a;">© 2025-2026 web忍者の砦</div>
+</footer>
+
+</div>
+
+<!-- 自分の役を見る画面 -->
+<div class="reveal" id="reveal">
+  <div class="who" id="revealWho"></div>
+  <div class="word" id="revealWordLine"></div>
+  <div class="act" id="revealAct"></div>
+  <div class="warn">Keep this to yourself</div>
+  <button class="btn-w" id="revealClose">Got it — next player</button>
+</div>
+
+<!-- DATA:BEGIN generated. edit data.en.js and run build_en.py -->
+<script>
+/* Prompts for the English edition — all original.
+
+   This is not a translation of the Japanese set. The whole game rests on how a
+   word *sounds*, so the lines had to be rebuilt from English interjections that
+   native speakers actually stretch and bend ("Huh?", "Sure.", "No way!").
+
+   Shape: { word: the line everyone says, acts: [8 ways to say it] }
+   With fewer than 8 players we take acts from the top, so the earlier ones are
+   the easier reads and the later ones are the tricky ones. */
+const THEMES = {
+  basics: {
+    label: 'Basics',
+    desc: 'Start here. One syllable, eight completely different meanings.',
+    list: [
+      { word: 'Huh?', acts: ['Confused','You did not hear it','Annoyed','Suspicious','Amazed','Bored','Playfully teasing','Genuinely shocked'] },
+      { word: 'Oh.', acts: ['Disappointed','It just clicked','Impressed','Pretending to care','Quietly hurt','Relieved','Suspicious','Delighted'] },
+      { word: 'Wow.', acts: ['Truly amazed','Sarcastic','Horrified','Proud of someone','Faking enthusiasm','Overwhelmed','Jealous','Deeply moved'] },
+      { word: 'Hey.', acts: ['Greeting a friend','Warning someone off','Trying to get attention','Angry','Surprised to see them','Flirting','Calming someone down','Suspicious'] },
+      { word: 'Okay.', acts: ['Agreeing','Reluctant','Annoyed','Not really listening','Worried','Making up your mind','Confused','Sarcastic'] },
+      { word: 'Yeah.', acts: ['Enthusiastic','Unsure','Bored','Sarcastic','Relieved','Reluctant','Excited','Half asleep'] },
+      { word: 'Really?', acts: ['Genuinely surprised','Doubtful','Delighted','Disappointed','Sarcastic','Worried','Bored','Hearing gossip'] },
+      { word: 'Hmm.', acts: ['Thinking it over','Suspicious','Impressed','Politely disagreeing','Bored','Tasting something good','Pretending to listen','Worried'] },
+      { word: 'Sure.', acts: ['Happy to help','Reluctant','Sarcastic','Doubtful','Distracted','Firm and final','Shy','Annoyed'] },
+      { word: 'Fine.', acts: ['Actually fine','Clearly not fine','Giving in','Annoyed','Relieved','Ice cold','Cheerful','Completely drained'] },
+    ]
+  },
+  greetings: {
+    label: 'Greetings',
+    desc: 'The same hello changes with who is standing there.',
+    list: [
+      { word: 'Good morning.', acts: ['Cheerful','Barely awake','Awkward','To your boss','To a whole room','Annoyed','To someone you missed','Worried about them'] },
+      { word: 'Thank you.', acts: ['Deeply grateful','Polite and formal','Sarcastic','Shy','In a rush','Close to tears','Reluctant','To a small child'] },
+      { word: 'Sorry.', acts: ['Sincere','Not sorry at all','Embarrassed','Apologising for someone else','Squeezing past','Heartbroken','A light bump','In real trouble'] },
+      { word: 'Excuse me.', acts: ['Politely','Trying to get past','Angry','Getting attention','You did not hear','Interrupting','Shocked at rudeness','Shy'] },
+      { word: 'Goodbye.', acts: ['Casual','Final','Sad','Relieved','In a rush','To a child','Cold','Holding back tears'] },
+      { word: 'Nice to meet you.', acts: ['Genuine','Nervous','At a formal event','Not interested','Meeting your hero','Awkward','Warm','Rushed'] },
+    ]
+  },
+  work: {
+    label: 'At work',
+    desc: 'Safe for the office. Nobody gets embarrassed.',
+    list: [
+      { word: 'No problem.', acts: ['Genuinely happy to','Hiding irritation','Exhausted','Reassuring them','Dismissive','Confident','Not sure at all','In a rush'] },
+      { word: 'Got it.', acts: ['Confident','Lost but pretending','Annoyed','Excited','Tired','Polite','Relieved','Suspicious'] },
+      { word: 'Interesting.', acts: ['Genuinely','Politely disagreeing','Bored','Suspicious','Impressed','Sarcastic','Distracted','Truly intrigued'] },
+      { word: 'Let me check.', acts: ['Helpful','Buying time','Annoyed','Nervous','Confident','Distracted','Very polite','Worried'] },
+      { word: 'That is a good question.', acts: ['Impressed','Stalling','Annoyed','Genuinely curious','To a child','Nervous','Amused','Brushing it off'] },
+    ]
+  },
+  school: {
+    label: 'At school',
+    desc: 'Works as a classroom warm-up. Easy lines, big reactions.',
+    list: [
+      { word: 'I know.', acts: ['Confident','Annoyed','Desperate to answer','Bluffing','Bored','Quietly hurt','Warmly agreeing','Sarcastic'] },
+      { word: 'Can I?', acts: ['Shy','Excited','Begging','Testing the limits','Polite','Impatient','Worried','Up to something'] },
+      { word: 'My bad.', acts: ['Sincere','Joking','Embarrassed','Not sorry','In a rush','To a teacher','To a friend','The same mistake again'] },
+      { word: 'Done!', acts: ['Proud','Relieved','Exhausted','Surprised it worked','In a rush','Disappointed','Showing off','Matter of fact'] },
+    ]
+  },
+  party: {
+    label: 'Party',
+    desc: 'Loud rooms, big groups. The lines everyone already says.',
+    list: [
+      { word: 'Cheers!', acts: ['Loud and happy','Quiet','Formal','A farewell','A reunion','Exhausted','To a stranger','Celebrating big news'] },
+      { word: 'No way!', acts: ['Disbelief','Excited','Horrified','Joking','Refusing flatly','Impressed','Suspicious','Dreading it'] },
+      { word: 'Seriously?', acts: ['Shocked','Annoyed','Delighted','Doubtful','Worried','Joking','Disgusted','Impressed'] },
+      { word: 'Same.', acts: ['Relating deeply','Casual','Joking','Half listening','Relieved','Embarrassed','Enthusiastic','Too tired to explain'] },
+      { word: 'Oh my god.', acts: ['Shocked','Delighted','Horrified','Embarrassed','Annoyed','Moved','Joking','Completely drained'] },
+    ]
+  },
+  faceonly: {
+    label: 'No words',
+    desc: 'Hard mode. Your face has to do all of it.',
+    list: [
+      { word: '(silence)', acts: ['You saw something you should not have','Tasting something delicious','Too sleepy to speak','Suddenly remembering','Holding in laughter','Not convinced','Deeply moved','Extremely nervous'] },
+      { word: '(just a nod)', acts: ['Full agreement','Not listening','Reluctant','Still thinking','Happy','Giving up','In a hurry','Hiding something'] },
+      { word: '(just a laugh)', acts: ['Genuine','Polite','Nervous','Cannot stop','Disbelieving','Shy','Mischievous','Laughing through tears'] },
+      { word: '(just a sigh)', acts: ['Exhausted','Relieved','Exasperated','Moved','Bored','The tension just broke','Torn','Holding back anger'] },
+    ]
+  },
+  family: {
+    label: 'At home',
+    desc: 'What gets said in every house, every single day.',
+    list: [
+      { word: 'Dinner!', acts: ['Calling everyone','Impatient','Asking what it is','Too tired to cook','Excited','It has gone cold','To the dog','Asking for the third time'] },
+      { word: 'I am home.', acts: ['Exhausted','Happy','Sneaking in','Still angry','Half asleep','A child bursting in','Apologetic','Just routine'] },
+      { word: 'Later.', acts: ['Putting it off','Gently','A real promise','Dodging the question','Annoyed','In a hurry','Looking forward to it','A soft no'] },
+      { word: 'No.', acts: ['Firm','Gentle','Troubled','Embarrassed','Joking','Given up','Worried','Angry'] },
+    ]
+  },
+  feelings: {
+    label: 'Feelings',
+    desc: 'Where the words say one thing and the voice says another.',
+    list: [
+      { word: 'Nothing.', acts: ['Truly nothing','Angry','Embarrassed','Sulking','Not interested','Very much something','Covering it up','Sad'] },
+      { word: 'Maybe.', acts: ['Unsure','Hopeful','Genuinely torn','Testing them','Not interested','Shy','Worried','Secretly excited'] },
+      { word: 'I like it.', acts: ['A confession','Shy','Casual','About food','Sincere','Covering up','As a joke','Working up the courage'] },
+      { word: 'Whatever.', acts: ['Dismissive','Quietly hurt','Joking','Exhausted','Angry','Genuinely fine with it','Sulking','Defeated'] },
+    ]
+  },
+  kids: {
+    label: 'Kids',
+    desc: 'Short words that younger players can read and act out.',
+    list: [
+      { word: 'No!', acts: ['Total refusal','Playful','Shy','Scared','Sleepy','Angry','Joking','Troubled'] },
+      { word: 'Look!', acts: ['Showing off','Asking for help','Surprised','Delighted','Scared','Sharing a secret','In a hurry','Sulking'] },
+      { word: 'I did it!', acts: ['Triumphant','Finally','Shy','Showing off','Relieved','Surprised at yourself','Matter of fact','Not what you expected'] },
+      { word: 'Again!', acts: ['Begging','Angry','Delighted','Not convinced','Sleepy','Shy','Wanting to check','One last time'] },
+      { word: 'Ouch.', acts: ['Real pain','Exaggerating','Holding it in','It hurt your feelings','Ticklish','Startled','Wanting attention','Cannot hold it back'] },
+    ]
+  },
+};
+</script>
+<!-- DATA:END -->
+<script>
+(function(){
+'use strict';
+const $ = id => document.getElementById(id);
+
+// 色は人を見分けるためだけのもの。名前を入れなくても誰の番か分かるようにする
+const COLORS = [
+  {n:'Red',   bg:'linear-gradient(135deg,#ff6b6b,#e03131)'},
+  {n:'Blue',   bg:'linear-gradient(135deg,#4c6ef5,#3b5bdb)'},
+  {n:'Green', bg:'linear-gradient(135deg,#51cf66,#2f9e44)'},
+  {n:'Yellow', bg:'linear-gradient(135deg,#ffd43b,#f59f00)'},
+  {n:'Purple',bg:'linear-gradient(135deg,#cc5de8,#9c36b5)'},
+  {n:'Sky',bg:'linear-gradient(135deg,#74c0fc,#4dabf7)'},
+  {n:'Orange',bg:'linear-gradient(135deg,#ff922b,#e8590c)'},
+  {n:'Pink', bg:'linear-gradient(135deg,#f783ac,#e64980)'}
+];
+
+const S = {
+  players: 4,
+  cat: Object.keys(THEMES)[0],
+  theme: null,        // {word, acts}
+  assign: [],         // 各プレイヤーに配られた acts のインデックス
+  seen: [],           // 役を確認済みか
+  order: [],          // 演技の順番
+  votes: {},          // votes[voter][target] = actIndex
+  voter: 0, target: 0
+};
+
+// ===== 通算の記録（端末内だけ。まだ出していないお題が次に開く理由になる） =====
+const STATS_KEY = 'haa-stats';
+let STATS = { plays:0, seen:[] };
+try {
+  const st = JSON.parse(localStorage.getItem(STATS_KEY) || 'null');
+  if (st && typeof st === 'object') {
+    STATS.plays = +st.plays || 0;
+    STATS.seen = Array.isArray(st.seen) ? st.seen : [];
+  }
+} catch(e){}
+function saveStats(){ try{ localStorage.setItem(STATS_KEY, JSON.stringify(STATS)); }catch(e){} }
+function totalWords(){ return Object.values(THEMES).reduce((t,v)=>t+v.list.length,0); }
+function renderStats(){
+  const box = $('statsBar'); if(!box) return;
+  document.body.classList.toggle('returning', STATS.plays >= 1);
+  if (STATS.plays < 1){ box.classList.add('hidden'); return; }
+  const total = totalWords();
+  box.innerHTML = 'game <b>'+STATS.plays+'</b>'
+    + '<span class="sb-r">lines <b>'+STATS.seen.length+'</b> / '+total+'</span>';
+  box.classList.remove('hidden');
+}
+function track(n,p){ try{ if(typeof gtag==='function') gtag('event',n,p||{}); }catch(e){} }
+
+// ===== 設定 =====
+function setPlayers(n){
+  S.players = Math.max(3, Math.min(8, n));
+  $('playerCount').textContent = S.players;
+}
+$('inc').addEventListener('click', ()=>setPlayers(S.players+1));
+$('dec').addEventListener('click', ()=>setPlayers(S.players-1));
+
+function renderCats(){
+  const g = $('catGrid'); g.innerHTML = '';
+  Object.keys(THEMES).forEach(k=>{
+    const b = document.createElement('button');
+    b.type='button'; b.className='cat-btn'+(k===S.cat?' active':'');
+    b.textContent = THEMES[k].label; b.dataset.cat=k;
+    b.setAttribute('role','tab');
+    b.addEventListener('click', ()=>{
+      S.cat = k;
+      document.querySelectorAll('.cat-btn').forEach(x=>x.classList.toggle('active', x.dataset.cat===k));
+      b.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+      $('catDesc').textContent = THEMES[k].desc;
+      renderPick();
+    });
+    g.appendChild(b);
+  });
+  $('catDesc').textContent = THEMES[S.cat].desc;
+}
+
+// お題は3つ見せて選ばせる。1つずつ引かせると決まるまでに時間がかかる
+function renderPick(){
+  const wrap = $('pickList');
+  let list = THEMES[S.cat].list.slice();
+  const fresh = list.filter(t => STATS.seen.indexOf(t.word) < 0);
+  if (fresh.length >= 3) list = fresh;
+  const bag = list.slice(), picked = [];
+  while (picked.length < 3 && bag.length) picked.push(bag.splice(Math.floor(Math.random()*bag.length),1)[0]);
+  wrap.innerHTML = '';
+  picked.forEach(t=>{
+    const b = document.createElement('button');
+    b.type='button'; b.className='pick-item';
+    b.setAttribute('aria-pressed', String(S.theme && S.theme.word===t.word));
+    const w = document.createElement('span'); w.className='pi-w'; w.textContent='\u201c'+t.word+'\u201d';
+    const s2 = document.createElement('span'); s2.className='pi-s';
+    s2.textContent = t.acts.slice(0,3).join(' / ')+' …and more';
+    b.appendChild(w); b.appendChild(s2);
+    b.addEventListener('click', ()=>{
+      S.theme = t;
+      wrap.querySelectorAll('.pick-item').forEach(x=>x.setAttribute('aria-pressed','false'));
+      b.setAttribute('aria-pressed','true');
+      track('haa_pick',{word:t.word,cat:S.cat});
+    });
+    wrap.appendChild(b);
+  });
+  if (!S.theme || !picked.some(t=>t.word===S.theme.word)) S.theme = picked[0] || null;
+}
+$('pickMore').addEventListener('click', ()=>{ track('haa_pick_reroll'); renderPick(); });
+
+// ===== 配役 =====
+function startGame(){
+  if (!S.theme) renderPick();
+  const t = S.theme;
+  // acts から人数ぶんを取る。先頭ほど分かりやすい順に並べてあるので前から使う
+  const idx = t.acts.map((_,i)=>i).slice(0, S.players);
+  for (let i=idx.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [idx[i],idx[j]]=[idx[j],idx[i]]; }
+  S.assign = idx;
+  S.seen = new Array(S.players).fill(false);
+  S.order = Array.from({length:S.players},(_,i)=>i);
+  for (let i=S.order.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [S.order[i],S.order[j]]=[S.order[j],S.order[i]]; }
+  S.votes = {};
+  STATS.plays++;
+  if (STATS.seen.indexOf(t.word) < 0) STATS.seen.push(t.word);
+  saveStats(); renderStats();
+  track('haa_start',{word:t.word,cat:S.cat,players:S.players});
+  $('dealWord').textContent = t.word;
+  $('performWord').textContent = t.word;
+  renderDeal();
+  show('deal');
+}
+$('startGame').addEventListener('click', startGame);
+
+function renderDeal(){
+  const g = $('dealGrid'); g.innerHTML='';
+  for (let i=0;i<S.players;i++){
+    const c = COLORS[i%COLORS.length];
+    const b = document.createElement('button');
+    b.type='button'; b.className='deal-card'+(S.seen[i]?' done':'');
+    b.style.setProperty('--pc', c.bg);
+    b.innerHTML = '<span class="n">'+(i+1)+'</span><span class="who">'+c.n+'</span>';
+    b.setAttribute('aria-label', 'player '+(i+1)+' '+c.n+' — see your role');
+    b.addEventListener('click', ()=>openReveal(i));
+    g.appendChild(b);
+  }
+  $('toPerform').disabled = S.seen.some(v=>!v);
+}
+
+function openReveal(i){
+  const c = COLORS[i%COLORS.length];
+  $('revealWho').textContent = 'You are player '+(i+1)+' · '+c.n;
+  $('revealWordLine').textContent = 'Your line: \u201c'+S.theme.word+'\u201d';
+  $('revealAct').textContent = S.theme.acts[S.assign[i]];
+  $('reveal').classList.add('show');
+  $('reveal').dataset.i = i;
+}
+$('revealClose').addEventListener('click', ()=>{
+  const i = +$('reveal').dataset.i;
+  S.seen[i] = true;
+  $('reveal').classList.remove('show');
+  renderDeal();
+});
+
+$('toPerform').addEventListener('click', ()=>{
+  renderPerform(); show('perform');
+});
+$('dealBack').addEventListener('click', ()=>show('setup'));
+
+function renderPerform(){
+  const w = $('performList'); w.innerHTML='';
+  S.order.forEach((p,n)=>{
+    const c = COLORS[p%COLORS.length];
+    const row = document.createElement('div');
+    row.className='res-row';
+    row.innerHTML = '<span class="nm">#'+(n+1)+'</span><span class="act">player '+(p+1)+' · '+c.n+'</span>';
+    w.appendChild(row);
+  });
+}
+$('toVote').addEventListener('click', ()=>{ S.voter=0; S.target=-1; nextVote(); show('vote'); });
+
+// ===== 投票（カード版でいちばん面倒なところ） =====
+function nextVote(){
+  // 自分以外の全員に投票する。1人ぶん終わったら次の人へスマホを回す
+  do {
+    S.target++;
+    if (S.target >= S.players){ S.target = 0; S.voter++; }
+    if (S.voter >= S.players) return finish();
+  } while (S.target === S.voter);
+  renderVote();
+}
+function renderVote(){
+  const vc = COLORS[S.voter%COLORS.length], tc = COLORS[S.target%COLORS.length];
+  $('voteWho').textContent = '📱 player '+(S.voter+1)+' · '+vc.n+', your turn';
+  $('voteTarget').innerHTML = 'How did <b>player '+(S.target+1)+' · '+tc.n+'</b> feel?';
+  const w = $('voteList'); w.innerHTML='';
+  const used = S.assign.slice().sort((a,b)=>a-b);
+  used.forEach(ai=>{
+    const b = document.createElement('button');
+    b.type='button'; b.className='vote-item';
+    b.textContent = S.theme.acts[ai];
+    b.addEventListener('click', ()=>{
+      S.votes[S.voter] = S.votes[S.voter] || {};
+      S.votes[S.voter][S.target] = ai;
+      nextVote();
+    });
+    w.appendChild(b);
+  });
+  const total = S.players*(S.players-1);
+  let done = 0;
+  Object.values(S.votes).forEach(v=>done += Object.keys(v).length);
+  $('voteProg').textContent = 'votes '+done+' / '+total;
+}
+
+// ===== 結果 =====
+function finish(){
+  const body = $('resultBody'); body.innerHTML='';
+  // 誰がどの気持ちだったかを開示
+  for (let i=0;i<S.players;i++){
+    const c = COLORS[i%COLORS.length];
+    const row = document.createElement('div');
+    row.className='res-row';
+    row.innerHTML = '<span class="nm">player '+(i+1)+'</span>'
+      + '<span class="act">'+c.n+'：'+S.theme.acts[S.assign[i]]+'</span>';
+    body.appendChild(row);
+  }
+  // 得点：当てた人に1点、当ててもらえた人にも1点（カード版と同じ考え方）
+  const sc = new Array(S.players).fill(0);
+  for (let v=0;v<S.players;v++){
+    for (let t=0;t<S.players;t++){
+      if (v===t) continue;
+      const g = S.votes[v] && S.votes[v][t];
+      if (g === undefined) continue;
+      if (g === S.assign[t]){ sc[v]++; sc[t]++; }
+    }
+  }
+  const box = $('scoreBox');
+  const max = Math.max.apply(null, sc);
+  let h = '<h3>Score</h3>';
+  sc.map((v,i)=>({i,v})).sort((a,b)=>b.v-a.v).forEach(o=>{
+    const c = COLORS[o.i%COLORS.length];
+    h += '<div class="sr"><span>player '+(o.i+1)+' · '+c.n+(o.v===max&&max>0?' 👑':'')+'</span><b>'+o.v+'</b></div>';
+  });
+  box.innerHTML = h;
+  track('haa_finish',{word:S.theme.word,players:S.players});
+  show('result');
+}
+
+$('newGame').addEventListener('click', ()=>{ renderPick(); startGame(); });
+$('resultBack').addEventListener('click', ()=>{ renderPick(); show('setup'); });
+
+function show(name){
+  ['setup','deal','perform','vote','result'].forEach(s=>{
+    const el = $('step-'+s); if (el) el.classList.toggle('hidden', s!==name);
+  });
+  document.body.classList.toggle('playing', name!=='setup');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// FAQ（構造化データと本文で同じ内容を出す）
+const FAQ = [
+ ['Do we need the card game to play?','No. Pass one phone around and each player sees their role privately. Voting and scoring are automatic, so there are no chips or paper to keep track of.'],
+ ['How many players?','Three to eight. Four to six is the sweet spot — hard to read, easy to run. The number of roles adjusts to your group.'],
+ ['How does it actually work?','Everyone says the same short line, but each player is secretly given a different feeling to put behind it. Voice and face only, no gestures. Then everyone votes on who had which feeling.'],
+ ['Can I use this in an English class?','Yes — that is what the school and greetings sets are for. It drills intonation and emotional register with real speaking time for every student, and the phone handles the admin.'],
+ ['How many prompts are there?','47 prompts with 8 ways to say each one — 376 in total. All written by us.']
+];
+$('faqBody').innerHTML = FAQ.map(f=>'<dt>'+f[0]+'</dt><dd>'+f[1]+'</dd>').join('');
+
+// Init
+renderStats();
+renderCats();
+renderPick();
+setPlayers(4);
+
+// Advertisementは枠ぶんだけ読み込む
+try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
+})();
+</script>
+</body>
+</html>
