@@ -70,7 +70,7 @@ page_ld = json.dumps({'@context':'https://schema.org','@type':'Article',
   'publisher':{'@type':'Organization','name':'web忍者の砦','url':'https://kkpwebninja.com/'}}, ensure_ascii=False)
 faq_html = ''.join(f'<dt>{esc(q)}</dt><dd>{esc(a)}</dd>' for q,a in FAQ)
 
-TITLE = f'声と表情で演じるお題一覧【全{N_WORD}お題・{N_ACT}通り】'
+TITLE = f'はぁって言うゲーム風のオリジナルお題一覧【全{N_WORD}お題・{N_ACT}通り】（非公式）'
 DESC  = (f'はぁって言うゲームのように、同じ一言を演じ分けて当て合う遊びのお題一覧。「はぁ」「えっ」など{N_WORD}のお題に8通りずつ、'
          f'全{N_ACT}通り。すべてオリジナル（非公式・市販品のお題は含みません）。学級レクや授業での進め方も。')
 
@@ -151,7 +151,7 @@ a{{color:#1565c0}}
 <body>
 <div class="wrap">
 
-<h1>声と表情で演じるお題一覧<span class="c">【全{N_WORD}お題・{N_ACT}通り】</span></h1>
+<h1>はぁって言うゲーム風のオリジナルお題一覧<span class="c">【全{N_WORD}お題・{N_ACT}通り】声と表情で演じる・非公式</span></h1>
 <p class="upd">更新日 <time datetime="{UPDATED}">{UPDATED}</time></p>
 <p class="lead">『はぁって言うゲーム』のように、同じ一言をそれぞれ違う気持ちで演じ分けて当て合う遊びのお題です。
 1つのお題につき8通りのシチュエーションを用意しています。
