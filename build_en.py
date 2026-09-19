@@ -94,11 +94,13 @@ html = re.sub(r'<!-- WEBNINJA_UNIFIED_FOOTER -->.*?</footer>', FOOTER, html, cou
 # 長いものから当てる（短い語が先に食うと崩れる）
 T = [
  # head 以外に残る大物
- ('<h1>声と表情で当てるゲーム</h1>', '<h1>Say It With Feeling</h1>'),
- ('<p>同じ一言を、それぞれ違う気持ちで演じて当て合う。<br>スマホ1台で配役から得点まで。</p>',
+ ('<h1>はぁって言うゲームをスマホ1台で<span class="h1-sub">声と表情で当てるゲーム</span></h1>', '<h1>Say It With Feeling</h1>'),
+ ('<p>同じ一言を、それぞれ違う気持ちで演じて当て合う。<br>配役から得点まで。非公式の無料ツールです。</p>',
   '<p>Everyone says the same line with a different feeling.<br>One phone handles the roles, the voting and the score.</p>'),
  # 遊び方
  ('遊び方（30秒で読めます）', 'How to play (30 seconds)'),
+ # 日本の市販カードゲームに触れる導入は、英語版では出さない（英語圏では知られていないため）
+ ('    <p>『はぁって言うゲーム』（幻冬舎のカードゲーム）と同じように、同じ一言を声と表情だけで演じ分け、誰がどの気持ちだったかを当て合う遊びです。ここではカードの代わりにスマホ1台で進めます。</p>\n', ''),
  ('1. 人数とお題を決めます。お題は「はぁ」「えっ」のような短い一言です。',
   '1. Pick the number of players and a line. The lines are short — "Huh?", "Oh.", "Sure."'),
  ('2. スマホを回して、各自が自分の<b>気持ち</b>をこっそり確認します。全員ちがう気持ちが配られます。',
@@ -110,9 +112,9 @@ T = [
  ('5. 正解発表。当てた人にも、当ててもらえた人にも点が入ります。',
   '5. Reveal. You score for guessing right, and for being guessed right.'),
  ('よくある質問', 'Questions'),
- ('声と表情で演じ分けて当て合う遊びを、スマホ1台でできるようにした非公式のツールです。<br>',
+ ('『はぁって言うゲーム』のような、声と表情で演じ分けて当て合う遊びを、スマホ1台でできるようにした非公式のツールです。<br>',
   'An unofficial tool that puts this acting-and-guessing game on a single phone.<br>'),
- ('お題はすべて当サイトのオリジナルで、市販品の内容は含みません。',
+ ('幻冬舎および公式とは関係ありません。お題はすべて当サイトのオリジナルで、市販品の内容は含みません。',
   'Every prompt here is our own writing.'),
  # 画面
  ('STEP 1</span>人数を選ぶ</h2>', 'STEP 1</span>Players</h2>'),
@@ -191,15 +193,26 @@ for a, b in T:
 # お題一覧ページへのリンクは英語版にまだ無いので、行ごと落とす
 html = re.sub(r'\s*<p style="text-align:center;font-size:\.85rem;margin-top:\.8rem">\s*<a href="/odai/".*?</a>\s*</p>', '', html, flags=re.S)
 
-# FAQ を差し替え
-FAQ = """const FAQ = [
- ['Do we need the card game to play?','No. Pass one phone around and each player sees their role privately. Voting and scoring are automatic, so there are no chips or paper to keep track of.'],
- ['How many players?','Three to eight. Four to six is the sweet spot — hard to read, easy to run. The number of roles adjusts to your group.'],
- ['How does it actually work?','Everyone says the same short line, but each player is secretly given a different feeling to put behind it. Voice and face only, no gestures. Then everyone votes on who had which feeling.'],
- ['Can I use this in an English class?','Yes — that is what the school and greetings sets are for. It drills intonation and emotional register with real speaking time for every student, and the phone handles the admin.'],
- ['How many prompts are there?','%d prompts with 8 ways to say each one — %d in total. All written by us.']
-];""" % (n_word, n_act)
-html = re.sub(r'const FAQ = \[.*?\];', lambda m: FAQ, html, count=1, flags=re.S)
+# FAQ を差し替え（日本語版は build.py が静的HTMLで差し込んでいるので、そのブロックごと英語に置き換える）
+FAQ = [
+ ('Do we need the card game to play?',
+  'No. Pass one phone around and each player sees their role privately. Voting and scoring are automatic, so there are no chips or paper to keep track of.'),
+ ('How many players?',
+  'Three to eight. Four to six is the sweet spot — hard to read, easy to run. The number of roles adjusts to your group.'),
+ ('How does it actually work?',
+  'Everyone says the same short line, but each player is secretly given a different feeling to put behind it. Voice and face only, no gestures. Then everyone votes on who had which feeling.'),
+ ('Can I use this in an English class?',
+  'Yes — that is what the school and greetings sets are for. It drills intonation and emotional register with real speaking time for every student, and the phone handles the admin.'),
+ ('How many prompts are there?',
+  '%d prompts with 8 ways to say each one — %d in total. All written by us.'),
+]
+FAQ[-1] = (FAQ[-1][0], FAQ[-1][1] % (n_word, n_act))
+faq_block = '\n'.join('    <dt>%s</dt><dd>%s</dd>' % (q, a) for q, a in FAQ)
+html, n_faq = re.subn(r'<!-- FAQ:BEGIN.*?<!-- FAQ:END -->', lambda m: faq_block, html, count=1, flags=re.S)
+if n_faq != 1:
+    sys.exit('[NG] FAQ の差し込み位置（FAQ:BEGIN〜END）が見つかりません')
+# 日本語の FAQPage 構造化データは英語版に持ち込まない
+html = re.sub(r'<!-- FAQLD:BEGIN.*?<!-- FAQLD:END -->\n?', '', html, count=1, flags=re.S)
 
 # 言語切り替えリンクを header に足す
 html = html.replace('</header>',

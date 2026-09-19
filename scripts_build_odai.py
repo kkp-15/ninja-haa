@@ -10,6 +10,8 @@ import os, re, json, html
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SITE = 'https://haa.kkpwebninja.com'
 GA, PUB = 'G-2LM85GJN0L', 'ca-pub-1298304917726270'
+# 公開日と更新日。更新日は中身（お題・本文）を変えた日に手で進める。再生成しただけでは進めない
+PUBLISHED, UPDATED = '2026-09-05', '2026-09-19'
 
 src = open(os.path.join(ROOT, 'data.js'), encoding='utf-8').read()
 
@@ -46,8 +48,8 @@ for cid, label, desc in order:
 FAQ = [
  ('お題は自由に使えますか？',
   'この一覧のお題はすべて当サイトのオリジナルです。紙に書き写して遊んでいただいてかまいません。ただし、そのまま転載して配布することはご遠慮ください。'),
- ('市販のカードゲームのお題と同じですか？',
-  '違います。市販品のお題は一切含んでいません。すべて独自に作成したものです。'),
+ ('市販のカードゲーム『はぁって言うゲーム』のお題と同じですか？',
+  '違います。当サイトは非公式で、市販品のお題は一切含んでいません。すべて独自に作成したものです。'),
  ('シチュエーションは何通りありますか？',
   f'{N_WORD}のお題に、それぞれ8通りのシチュエーションを用意しています（全{N_ACT}通り）。人数が8人未満のときは上から必要な数だけ使います。'),
  ('自分でお題を作るコツは？',
@@ -55,11 +57,22 @@ FAQ = [
 ]
 faq_ld = json.dumps({'@context':'https://schema.org','@type':'FAQPage','mainEntity':[
   {'@type':'Question','name':q,'acceptedAnswer':{'@type':'Answer','text':a}} for q,a in FAQ]}, ensure_ascii=False)
+# 学級レク・授業で使うとき（カテゴリが無くなったらビルドを止める）
+for need in ('gakkou', 'kodomo'):
+    if need not in data:
+        raise SystemExit(f'[NG] 学級レク節からリンクしているカテゴリ {need} が data.js にありません')
+page_ld = json.dumps({'@context':'https://schema.org','@type':'Article',
+  'headline': f'声と表情で演じるお題一覧【全{N_WORD}お題・{N_ACT}通り】',
+  'datePublished': PUBLISHED, 'dateModified': UPDATED, 'inLanguage':'ja',
+  'mainEntityOfPage': f'{SITE}/odai/',
+  'image': f'{SITE}/ogp.png',
+  'author':{'@type':'Organization','name':'web忍者の砦','url':'https://kkpwebninja.com/'},
+  'publisher':{'@type':'Organization','name':'web忍者の砦','url':'https://kkpwebninja.com/'}}, ensure_ascii=False)
 faq_html = ''.join(f'<dt>{esc(q)}</dt><dd>{esc(a)}</dd>' for q,a in FAQ)
 
 TITLE = f'声と表情で演じるお題一覧【全{N_WORD}お題・{N_ACT}通り】'
-DESC  = (f'「はぁ」「えっ」など{N_WORD}のお題と、それぞれ8通りのシチュエーションを一覧にしました。'
-         f'全{N_ACT}通り。すべてオリジナルで、そのままスマホ1台で配れます。')
+DESC  = (f'はぁって言うゲームのように、同じ一言を演じ分けて当て合う遊びのお題一覧。「はぁ」「えっ」など{N_WORD}のお題に8通りずつ、'
+         f'全{N_ACT}通り。すべてオリジナル（非公式・市販品のお題は含みません）。学級レクや授業での進め方も。')
 
 out = f'''<!DOCTYPE html>
 <html lang="ja">
@@ -79,6 +92,7 @@ out = f'''<!DOCTYPE html>
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<script type="application/ld+json">{page_ld}</script>
 <script type="application/ld+json">{faq_ld}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id={GA}"></script>
 <script>
@@ -89,60 +103,74 @@ out = f'''<!DOCTYPE html>
 </script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={PUB}" crossorigin="anonymous"></script>
 <style>
-:root{{--orange:#ff8a3d;--orange-d:#e07b39;--cream:#fff8f0;--paper:#fffdf9;
-  --ink:#3b2c22;--muted:#8a7560;--line:#f0e2cc}}
+/* 読み物ページ：地は白、本文16px・#333・行間1.8。クリームは見出し帯とボタンまわりだけ */
+:root{{--orange:#ff8a3d;--orange-d:#e07b39;--cream:#fff8f0;
+  --ink:#333;--muted:#6b5a48;--line:#e6dccb}}
 *{{box-sizing:border-box}}
-body{{margin:0;background:var(--cream);color:var(--ink);
+body{{margin:0;background:#fff;color:var(--ink);
   font-family:"Hiragino Maru Gothic ProN","ヒラギノ丸ゴ ProN",system-ui,sans-serif;
   font-size:16px;line-height:1.8;-webkit-text-size-adjust:100%}}
-.wrap{{max-width:760px;margin:0 auto;padding:18px 14px 60px}}
-h1{{font-size:1.24rem;line-height:1.5;margin:.2rem 0 .5rem;text-wrap:balance}}
-h1 .c{{color:var(--orange-d)}}
-.lead{{font-size:.9rem;color:var(--muted);margin:0 0 1rem}}
-.cta{{display:block;text-align:center;background:var(--orange);color:#fff;font-weight:800;
-  padding:.75rem 1rem;border-radius:12px;text-decoration:none;margin:0 0 1.2rem;
-  box-shadow:0 4px 12px rgba(224,123,57,.28)}}
-.toc{{display:flex;flex-wrap:wrap;gap:.4rem;margin:0 0 1.4rem}}
-.toc a{{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .7rem;background:var(--paper);
-  border:1px solid var(--line);border-radius:999px;color:var(--ink);text-decoration:none;
-  font-size:.82rem;white-space:nowrap}}
-.toc a span{{color:var(--muted);font-size:.74rem}}
-.cat{{margin:0 0 1.8rem}}
-.cat h2{{font-size:1.04rem;margin:0 0 .2rem;display:flex;align-items:baseline;gap:.5rem}}
-.cat h2 .n{{font-size:.76rem;color:var(--muted);font-weight:400}}
-.cd{{font-size:.82rem;color:var(--muted);margin:0 0 .7rem}}
-.w{{background:var(--paper);border:1px solid var(--line);border-radius:12px;
-  padding:.7rem .9rem .8rem;margin:0 0 .6rem}}
-.w h3{{margin:0 0 .35rem;font-size:1.05rem;color:var(--orange-d)}}
-.w ol{{margin:0;padding-left:1.3rem;font-size:.88rem;line-height:1.9}}
-.w li{{color:#5c4b3c}}
-.play{{margin:.4rem 0 0;text-align:right}}
-.play .btn{{display:inline-block;font-size:.8rem;color:var(--orange-d);text-decoration:none;
-  border:1px solid var(--orange);border-radius:999px;padding:.25rem .8rem}}
-details.block{{background:var(--paper);border:1px solid var(--line);border-radius:12px;
-  padding:.1rem .9rem;margin:0 0 .7rem}}
-details.block summary{{cursor:pointer;font-weight:700;padding:.6rem 0;font-size:.95rem}}
-details.block h2{{display:inline;font-size:.95rem;margin:0}}
-dt{{font-weight:700;margin-top:.7rem;font-size:.9rem}}
-dd{{margin:.2rem 0 0;font-size:.86rem;color:#5c4b3c}}
+.wrap{{max-width:760px;margin:0 auto;padding:18px 16px 60px}}
+h1{{font-size:1.4rem;line-height:1.5;margin:.2rem 0 .4rem}}
+h1 .c{{display:block;font-size:1rem;color:var(--muted);font-weight:700}}
+.upd{{font-size:.85rem;color:var(--muted);margin:0 0 .8rem}}
+.lead{{margin:0 0 1rem}}
+.cta{{display:block;text-align:center;background:var(--orange);color:#fff;font-weight:800;font-size:.95rem;
+  padding:.75rem .5rem;border-radius:8px;text-decoration:none;margin:0 0 1.2rem}}
+.toc{{margin:0 0 1.6rem;padding:.5rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}}
+.toc a{{display:inline-block;padding:.35rem 0;margin-right:1.1rem;white-space:nowrap}}
+.toc a span{{color:var(--muted);font-size:.85rem;margin-left:.2rem}}
+h2{{font-size:20px;line-height:1.5;margin:0 0 .5rem;padding-left:.6rem;border-left:4px solid var(--orange)}}
+.cat,.sec{{margin:0 0 2.4rem}}
+.cat h2 .n{{font-size:.85rem;color:var(--muted);font-weight:400;margin-left:.6rem}}
+.cd{{margin:0 0 .8rem}}
+.sec ol{{margin:0 0 .8rem;padding-left:1.4rem}}
+.sec li{{margin:0 0 .3rem}}
+.w{{margin:0 0 1.2rem}}
+.w h3{{margin:0 0 .3rem;font-size:1.1rem;line-height:1.5;background:var(--cream);padding:.25rem .6rem}}
+.w ol{{margin:0;padding-left:2rem}}
+.play{{margin:.4rem 0 0}}
+.play .btn{{display:inline-block;font-size:.95rem;color:#b3541a;text-decoration:none;font-weight:700;
+  background:var(--cream);border:1px solid var(--orange);border-radius:6px;padding:.3rem .9rem}}
+details.block{{border-top:1px solid var(--line);padding:.2rem 0;margin:0}}
+details.block:last-of-type{{border-bottom:1px solid var(--line)}}
+details.block summary{{cursor:pointer;padding:.6rem 0}}
+details.block h2{{display:inline;border:0;padding:0;margin:0}}
+details.block p{{margin:0 0 .8rem}}
+dt{{font-weight:700;margin-top:1rem}}
+dd{{margin:.2rem 0 0}}
+dl{{margin:0 0 1rem}}
 a{{color:#1565c0}}
 .ad-slot{{margin:1.6rem 0 0;padding:12px 0;text-align:center;
   border-top:1px dashed var(--line);border-bottom:1px dashed var(--line)}}
 .ad-label{{font-size:10.5px;letter-spacing:.14em;color:var(--muted);margin-bottom:6px}}
 .ad-slot ins.adsbygoogle{{display:block;width:320px;height:100px;margin:0 auto}}
-@media(min-width:760px){{.ad-slot ins.adsbygoogle{{width:728px;height:90px}}}}
+@media(min-width:760px){{h2{{font-size:22px}}.ad-slot ins.adsbygoogle{{width:728px;height:90px}}}}
 </style>
 </head>
 <body>
 <div class="wrap">
 
 <h1>声と表情で演じるお題一覧<span class="c">【全{N_WORD}お題・{N_ACT}通り】</span></h1>
-<p class="lead">同じ一言を、それぞれ違う気持ちで演じ分けるゲームのお題です。
-1つのお題につき8通りのシチュエーションを用意しています。すべてオリジナルです。</p>
+<p class="upd">更新日 <time datetime="{UPDATED}">{UPDATED}</time></p>
+<p class="lead">『はぁって言うゲーム』のように、同じ一言をそれぞれ違う気持ちで演じ分けて当て合う遊びのお題です。
+1つのお題につき8通りのシチュエーションを用意しています。
+お題はすべて当サイトのオリジナルで、市販のカードのお題は含みません（非公式のページです）。</p>
 
 <a class="cta" href="{SITE}/">このお題でいますぐ遊ぶ（無料・登録不要）</a>
 
 <nav class="toc" aria-label="カテゴリ目次">{toc}</nav>
+
+<section class="sec" id="class">
+<h2>学級レク・授業で使うとき</h2>
+<ol>
+<li>3〜8人の班に分かれ、班ごとにスマホかタブレットを1台用意して<a href="{SITE}/">ツール</a>を開きます。配役の配布から投票・得点まで端末がやるので、カードやチップの準備は要りません。</li>
+<li>カテゴリは<a href="#gakkou">「学校」（{len(data['gakkou'])}お題）</a>か<a href="#kodomo">「こども」（{len(data['kodomo'])}お題）</a>から選びます。</li>
+<li>演じるのは声と表情だけで、身振りは使いません。全員が演じ終わったら端末を回して投票します。</li>
+<li>端末が教室に1台だけのときは、この一覧をスクリーンに映し、演じる人にだけ番号を伝えて、見ている全員が何番かを当てる形でも進められます。</li>
+</ol>
+<p>お題は紙やカードに書き写して使ってかまいません。</p>
+</section>
 
 {''.join(blocks)}
 
