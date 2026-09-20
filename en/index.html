@@ -57,6 +57,7 @@ body{
 
 header{text-align:center;padding:.4rem 0 .2rem}
 h1{font-size:1.2rem;line-height:1.45;margin:0 0 .3rem;text-wrap:balance}
+h1 .h1-sub{display:block;font-size:.82rem;font-weight:400;color:var(--ink);margin-top:.1rem}
 header p{font-size:.85rem;color:var(--muted);margin:0}
 body.returning header p,
 body.returning header .hbadges{display:none}
@@ -180,17 +181,19 @@ body.returning .cat-desc{display:none}
 .ad-slot{margin:1.4rem 0;padding:12px 0;text-align:center;
   border-top:1px dashed var(--line);border-bottom:1px dashed var(--line)}
 .ad-label{font-size:10.5px;letter-spacing:.14em;color:var(--muted);margin-bottom:6px}
-.ad-slot ins.adsbygoogle{display:block;width:320px;height:100px;margin:0 auto}
-@media(min-width:760px){.ad-slot ins.adsbygoogle{width:728px;height:90px}}
+.ad-slot ins.adsbygoogle{display:block;width:300px;height:250px;margin:0 auto}
+@media(min-width:760px){.ad-slot ins.adsbygoogle{width:336px;height:280px}}
 
-details.block{background:var(--paper);border:1px solid var(--line);border-radius:12px;
-  padding:.1rem .9rem;margin:0 0 .7rem}
-details.block summary{cursor:pointer;font-weight:700;padding:.6rem 0;font-size:.95rem}
-details.block h2{display:inline;font-size:.95rem;margin:0}
+/* 読み物部分（遊び方・FAQ・注記）：白地・16px・#333・行間1.8 */
+details.block{background:#fff;border:1px solid var(--line);border-radius:8px;
+  padding:.1rem .9rem;margin:0 0 .7rem;color:#333;font-size:16px;line-height:1.8}
+details.block summary{cursor:pointer;font-weight:700;padding:.6rem 0;font-size:20px;line-height:1.5}
+details.block h2{display:inline;font-size:20px;margin:0;color:#333}
+details.block p{margin:0 0 .8rem}
 dl{margin:0 0 .6rem}
-dt{font-weight:700;margin-top:.7rem;font-size:.9rem}
-dd{margin:.2rem 0 0;font-size:.86rem;color:#5c4b3c}
-.note{font-size:.8rem;color:var(--muted);text-align:center;line-height:1.7}
+dt{font-weight:700;margin-top:1rem;font-size:16px;color:#333}
+dd{margin:.2rem 0 0;font-size:16px;color:#333}
+.note{font-size:.88rem;color:#333;text-align:left;line-height:1.8}
 a{color:#1565c0}
 </style>
 </head>
@@ -276,7 +279,8 @@ a{color:#1565c0}
       <div class="ad-label">Advertisement</div>
       <ins class="adsbygoogle" style="display:block"
            data-ad-client="ca-pub-1298304917726270"
-           data-ad-format="horizontal" data-full-width-responsive="false"></ins>
+           data-ad-slot="2937937957"
+           data-ad-format="rectangle" data-full-width-responsive="false"></ins>
     </div>
   </div>
 </section>
@@ -296,7 +300,13 @@ a{color:#1565c0}
 
 <details class="block">
   <summary><h2>Questions</h2></summary>
-  <div><dl id="faqBody"></dl></div>
+  <div><dl id="faqBody">
+    <dt>Do we need the card game to play?</dt><dd>No. Pass one phone around and each player sees their role privately. Voting and scoring are automatic, so there are no chips or paper to keep track of.</dd>
+    <dt>How many players?</dt><dd>Three to eight. Four to six is the sweet spot — hard to read, easy to run. The number of roles adjusts to your group.</dd>
+    <dt>How does it actually work?</dt><dd>Everyone says the same short line, but each player is secretly given a different feeling to put behind it. Voice and face only, no gestures. Then everyone votes on who had which feeling.</dd>
+    <dt>Can I use this in an English class?</dt><dd>Yes — that is what the school and greetings sets are for. It drills intonation and emotional register with real speaking time for every student, and the phone handles the admin.</dd>
+    <dt>How many prompts are there?</dt><dd>47 prompts with 8 ways to say each one — 376 in total. All written by us.</dd>
+  </dl></div>
 </details>
 
 <p class="note" style="margin-top:1.2rem">
@@ -723,19 +733,15 @@ function show(name){
   ['setup','deal','perform','vote','result'].forEach(s=>{
     const el = $('step-'+s); if (el) el.classList.toggle('hidden', s!==name);
   });
+  if (name === 'result' && !window.__adPushed) {
+    window.__adPushed = true;
+    try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
+  }
   document.body.classList.toggle('playing', name!=='setup');
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// FAQ（構造化データと本文で同じ内容を出す）
-const FAQ = [
- ['Do we need the card game to play?','No. Pass one phone around and each player sees their role privately. Voting and scoring are automatic, so there are no chips or paper to keep track of.'],
- ['How many players?','Three to eight. Four to six is the sweet spot — hard to read, easy to run. The number of roles adjusts to your group.'],
- ['How does it actually work?','Everyone says the same short line, but each player is secretly given a different feeling to put behind it. Voice and face only, no gestures. Then everyone votes on who had which feeling.'],
- ['Can I use this in an English class?','Yes — that is what the school and greetings sets are for. It drills intonation and emotional register with real speaking time for every student, and the phone handles the admin.'],
- ['How many prompts are there?','47 prompts with 8 ways to say each one — 376 in total. All written by us.']
-];
-$('faqBody').innerHTML = FAQ.map(f=>'<dt>'+f[0]+'</dt><dd>'+f[1]+'</dd>').join('');
+// FAQ は build.py が静的HTMLと構造化データの両方に差し込む（ここでは描画しない）
 
 // Init
 renderStats();
@@ -743,8 +749,8 @@ renderCats();
 renderPick();
 setPlayers(4);
 
-// Advertisementは枠ぶんだけ読み込む
-try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
+// Advertisementは結果画面が表示されてから1回だけ読み込む。
+// 読み込み時に押すと、枠が非表示（幅0）のままなのでAdvertisementが入らず、枠が死んでいた（2026-09-20 修正）。
 })();
 </script>
 <script src="https://kkpwebninja.com/shared/fortress-share.js" defer></script>

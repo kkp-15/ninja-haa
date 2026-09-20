@@ -285,6 +285,7 @@ a{color:#1565c0}
       <div class="ad-label">広告</div>
       <ins class="adsbygoogle" style="display:block"
            data-ad-client="ca-pub-1298304917726270"
+           data-ad-slot="2937937957"
            data-ad-format="rectangle" data-full-width-responsive="false"></ins>
     </div>
 
@@ -773,6 +774,10 @@ function show(name){
   ['setup','deal','perform','vote','result'].forEach(s=>{
     const el = $('step-'+s); if (el) el.classList.toggle('hidden', s!==name);
   });
+  if (name === 'result' && !window.__adPushed) {
+    window.__adPushed = true;
+    try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
+  }
   document.body.classList.toggle('playing', name!=='setup');
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -785,8 +790,8 @@ renderCats();
 renderPick();
 setPlayers(4);
 
-// 広告は枠ぶんだけ読み込む
-try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
+// 広告は結果画面が表示されてから1回だけ読み込む。
+// 読み込み時に押すと、枠が非表示（幅0）のままなので広告が入らず、枠が死んでいた（2026-09-20 修正）。
 })();
 </script>
 <script src="https://kkpwebninja.com/shared/fortress-share.js" defer></script>
