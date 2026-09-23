@@ -199,6 +199,13 @@ dt{font-weight:700;margin-top:1rem;font-size:16px;color:#333}
 dd{margin:.2rem 0 0;font-size:16px;color:#333}
 .note{font-size:.88rem;color:#333;text-align:left;line-height:1.8}
 a{color:#1565c0}
+
+/* 見た目の調整（2026-09-24・AIっぽさを消す）: 影・グラデーション・大きな角丸・英字の飾り見出しをやめる（測定から生成し、機能に関わる部品は手で除外）。元のルールは上に残し上書き。 */
+body { background: #fff; }
+#step-setup { border-radius: 8px; }
+span.step-label { border-radius: 3px; }
+button.cat-btn { border-radius: 6px; }
+#startGame { box-shadow: none; border-radius: 8px; }
 </style>
 </head>
 <body>
