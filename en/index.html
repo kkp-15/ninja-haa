@@ -196,12 +196,13 @@ dd{margin:.2rem 0 0;font-size:16px;color:#333}
 .note{font-size:.88rem;color:#333;text-align:left;line-height:1.8}
 a{color:#1565c0}
 
-/* 見た目の調整（2026-09-24・AIっぽさを消す）: 影・大きな角丸・クリーム全面の地をやめる（測定から生成し、機能・広告表示に関わる部品は手で除外）。元のルールは上に残し上書き。 */
+/* 見た目の調整（2026-09-24・AIっぽさを消す）: 影・グラデーション・大きな角丸・英字の飾り見出しをやめる（測定から生成し、機能に関わる部品は手で除外）。元のルールは上に残し上書き。 */
 body { background: #fff; }
 #step-setup { border-radius: 8px; }
 span.step-label { border-radius: 3px; }
 button.cat-btn { border-radius: 6px; }
 #startGame { box-shadow: none; border-radius: 8px; }
+.howto-pic{display:block;width:min(200px,60%);height:auto;margin:.2rem auto .8rem}
 </style>
 </head>
 <body>
@@ -271,13 +272,6 @@ button.cat-btn { border-radius: 6px; }
   <h2><span class="step-label">STEP 6</span>Reveal</h2>
   <div id="resultBody"></div>
   <div class="score" id="scoreBox"></div>
-  <div data-fortress-share
-       data-site="ninja-haa-en"
-       data-lang="en"
-       data-trigger="result"
-       data-label="Share this round"
-       data-text-fn="getShareText"
-       data-hashtags="#partygames #icebreaker"></div>
   <button class="btn-primary" id="newGame">Play again</button>
   <button class="btn-sub" id="resultBack">↺ Back to setup</button>
 
@@ -297,6 +291,8 @@ button.cat-btn { border-radius: 6px; }
 <details class="block">
   <summary><h2>How to play (30 seconds)</h2></summary>
   <div>
+    <!-- 挿し絵（2026-09-25・Codex制作・シリーズ共通の2人）。ルールどおり手は使わず、表情と声だけで演じている -->
+    <img class="howto-pic" src="/img/howto-duo.webp" width="400" height="328" alt="A boy saying one line with a big expression, and a girl tilting her head as she listens" loading="lazy" decoding="async">
     <p>1. Pick the number of players and a line. The lines are short — "Huh?", "Oh.", "Sure."</p>
     <p>2. Pass the phone around. Each player privately checks the <b>feeling</b> they were given. Everyone gets a different one.</p>
     <p>3. Take turns saying that one line. <b>No gestures</b> — voice and face only.</p>
@@ -722,13 +718,7 @@ function finish(){
     h += '<div class="sr"><span>player '+(o.i+1)+' · '+c.n+(o.v===max&&max>0?' 👑':'')+'</span><b>'+o.v+'</b></div>';
   });
   box.innerHTML = h;
-  // シェア文は結果の数字を入れる。「全員当てられた」のような一言が読み手に効く
   const hits = sc.reduce((t,v)=>t+v,0);
-  window.getShareText = function(){
-    return 'We each said \u201c'+S.theme.word+'\u201d a different way, '+S.players+' of us.\n'
-         + (max===0 ? 'Nobody guessed a single one. Voice alone is harder than it looks'
-                    : 'Top score '+max+'. Same word, very different people');
-  };
   track('haa_finish',{word:S.theme.word,players:S.players,hits:hits});
   show('result');
 }
@@ -760,6 +750,5 @@ setPlayers(4);
 // 読み込み時に押すと、枠が非表示（幅0）のままなのでAdvertisementが入らず、枠が死んでいた（2026-09-20 修正）。
 })();
 </script>
-<script src="https://kkpwebninja.com/shared/fortress-share.js" defer></script>
 </body>
 </html>
