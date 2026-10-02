@@ -33,8 +33,8 @@ n_word = len(re.findall(r"word: '", data))
 n_act  = sum(len(re.findall(r"'[^']*'", m)) for m in re.findall(r'acts: \[([^\]]+)\]', data))
 
 # ---- 2. head をまるごと英語版に ------------------------------------------
-HEAD = '''<title>Say It With Feeling — the guess-the-emotion game for one phone</title>
-<meta name="description" content="Everyone says the same line. Each person is secretly given a different emotion. Pass one phone around, act, then vote — roles, voting and scoring are all handled for you. %d prompts, %d ways to say them. Free, no sign-up, no app.">
+HEAD = '''<title>Emotion Charades Online — Say One Line With a Secret Feeling (Free, One Phone)</title>
+<meta name="description" content="Emotion charades for teens, adults and ESL classes. Everyone says the same line, each with a secret emotion — pass one phone around, act it out, then guess the emotion. Roles, voting and scoring are handled for you. %d prompts, %d ways to say them. Free, no sign-up, no app.">
 <link rel="canonical" href="https://haa.kkpwebninja.com/en/">
 <link rel="alternate" hreflang="ja" href="https://haa.kkpwebninja.com/">
 <link rel="alternate" hreflang="en" href="https://haa.kkpwebninja.com/en/">
@@ -42,11 +42,11 @@ HEAD = '''<title>Say It With Feeling — the guess-the-emotion game for one phon
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#e8843a">
 
-<meta property="og:title" content="Say It With Feeling — one phone, one line, eight emotions">
+<meta property="og:title" content="Emotion Charades Online — one phone, one line, a secret feeling">
 <meta property="og:description" content="Say the same word eight different ways and see who can tell them apart. Roles, voting and scoring on a single phone.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://haa.kkpwebninja.com/en/">
-<meta property="og:site_name" content="Say It With Feeling">
+<meta property="og:site_name" content="Emotion Charades">
 <meta property="og:image" content="https://haa.kkpwebninja.com/ogp.png?d=20260906">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -58,7 +58,7 @@ HEAD = '''<title>Say It With Feeling — the guess-the-emotion game for one phon
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebApplication","name":"Say It With Feeling","url":"https://haa.kkpwebninja.com/en/","applicationCategory":"GameApplication","operatingSystem":"Web","inLanguage":"en","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Organization","name":"web忍者の砦"},"publisher":{"@type":"Organization","name":"web忍者の砦","url":"https://kkpwebninja.com/"}}
+{"@context":"https://schema.org","@type":"WebApplication","name":"Emotion Charades Online","url":"https://haa.kkpwebninja.com/en/","applicationCategory":"GameApplication","operatingSystem":"Web","inLanguage":"en","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Organization","name":"web忍者の砦"},"publisher":{"@type":"Organization","name":"web忍者の砦","url":"https://kkpwebninja.com/"}}
 </script>''' % (n_word, n_act)
 
 head_start = html.index('<title>')
@@ -94,7 +94,7 @@ html = re.sub(r'<!-- WEBNINJA_UNIFIED_FOOTER -->.*?</footer>', FOOTER, html, cou
 # 長いものから当てる（短い語が先に食うと崩れる）
 T = [
  # head 以外に残る大物
- ('<h1>はぁって言うゲームをスマホ1台で<span class="h1-sub">声と表情で当てるゲーム</span></h1>', '<h1>Say It With Feeling</h1>'),
+ ('<h1>はぁって言うゲームをスマホ1台で<span class="h1-sub">声と表情で当てるゲーム</span></h1>', '<h1>Emotion Charades<span class="h1-sub">Say one line with a secret feeling</span></h1>'),
  ('<p>同じ一言を、それぞれ違う気持ちで演じて当て合う。<br>配役から得点まで。非公式の無料ツールです。</p>',
   '<p>Everyone says the same line with a different feeling.<br>One phone handles the roles, the voting and the score.</p>'),
  # 遊び方
