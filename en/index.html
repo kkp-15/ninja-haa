@@ -203,6 +203,14 @@ span.step-label { border-radius: 3px; }
 button.cat-btn { border-radius: 6px; }
 #startGame { box-shadow: none; border-radius: 8px; }
 .howto-pic{display:block;width:min(200px,60%);height:auto;margin:.2rem auto .8rem}
+/* じぶんで作る（2026-10-02） */
+.my-form label{display:block;font-size:.82rem;font-weight:700;margin:.5rem 0 .2rem}
+.my-form input,.my-form textarea{display:block;width:100%;box-sizing:border-box;font:inherit;font-size:16px;
+  padding:.5rem .6rem;border:1.5px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+.my-form textarea{min-height:9.5rem;line-height:1.6}
+.my-form .my-msg{font-size:.78rem;color:var(--muted);margin:.3rem 0 0}
+.my-form .my-msg.ng{color:var(--ng);font-weight:700}
+.quick-note{font-size:.85rem;color:var(--muted);margin:.6rem 0 0;line-height:1.6}
 </style>
 </head>
 <body>
@@ -255,6 +263,8 @@ button.cat-btn { border-radius: 6px; }
   <p class="hint"><b>Voice and face only</b> — no gestures.<br>Take turns saying "<b id="performWord"></b>".</p>
   <div id="performList"></div>
   <button class="btn-primary" id="toVote">Everyone has performed → vote</button>
+  <button class="btn-sub" id="toReveal">Skip voting — just reveal</button>
+  <p class="hint">Guess out loud first. Handy for big groups or young kids</p>
 </section>
 
 <!-- STEP 4 投票（ここがカード版でいちばん面倒なところ） -->
@@ -265,6 +275,7 @@ button.cat-btn { border-radius: 6px; }
   <p class="hint" id="voteTarget"></p>
   <div class="vote-list" id="voteList"></div>
   <p class="vote-prog" id="voteProg"></p>
+  <button class="btn-sub" id="voteSkip">Stop voting and reveal now</button>
 </section>
 
 <!-- STEP 5 結果 -->
@@ -308,6 +319,7 @@ button.cat-btn { border-radius: 6px; }
     <dt>How many players?</dt><dd>Three to eight. Four to six is the sweet spot — hard to read, easy to run. The number of roles adjusts to your group.</dd>
     <dt>How does it actually work?</dt><dd>Everyone says the same short line, but each player is secretly given a different feeling to put behind it. Voice and face only, no gestures. Then everyone votes on who had which feeling.</dd>
     <dt>Can I use this in an English class?</dt><dd>Yes — that is what the school and greetings sets are for. It drills intonation and emotional register with real speaking time for every student, and the phone handles the admin.</dd>
+    <dt>Can we make our own lines?</dt><dd>Yes. Choose "+ Make your own", type the line everyone will say and one feeling per player. Roles, voting and scoring work the same way. What you type stays on this device.</dd>
     <dt>How many prompts are there?</dt><dd>47 prompts with 8 ways to say each one — 376 in total. All written by us.</dd>
   </dl></div>
 </details>
@@ -517,27 +529,72 @@ function track(n,p){ try{ if(typeof gtag==='function') gtag('event',n,p||{}); }c
 function setPlayers(n){
   S.players = Math.max(3, Math.min(8, n));
   $('playerCount').textContent = S.players;
+  if (S.cat === MY_KEY && $('myMsg')) checkMine();
 }
 $('inc').addEventListener('click', ()=>setPlayers(S.players+1));
 $('dec').addEventListener('click', ()=>setPlayers(S.players-1));
 
+// 11〜1月は「お正月・帰省」を定番の次に出す（年末年始の集まりがいちばん多い時期）
+function catKeys(){
+  const keys = Object.keys(THEMES);
+  const m = new Date().getMonth()+1;
+  if (THEMES.nenmatsu && (m>=11 || m===1)){
+    keys.splice(keys.indexOf('nenmatsu'),1);
+    keys.splice(1,0,'nenmatsu');
+  }
+  keys.push(MY_KEY);
+  return keys;
+}
+function catDescOf(k){ return k===MY_KEY ? 'Use your own line and feelings. Saved on this device only.' : THEMES[k].desc; }
 function renderCats(){
   const g = $('catGrid'); g.innerHTML = '';
-  Object.keys(THEMES).forEach(k=>{
+  catKeys().forEach(k=>{
     const b = document.createElement('button');
     b.type='button'; b.className='cat-btn'+(k===S.cat?' active':'');
-    b.textContent = THEMES[k].label; b.dataset.cat=k;
+    b.textContent = k===MY_KEY ? '+ Make your own' : THEMES[k].label; b.dataset.cat=k;
     b.setAttribute('role','tab');
     b.addEventListener('click', ()=>{
       S.cat = k;
       document.querySelectorAll('.cat-btn').forEach(x=>x.classList.toggle('active', x.dataset.cat===k));
       b.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
-      $('catDesc').textContent = THEMES[k].desc;
+      $('catDesc').textContent = catDescOf(k);
       renderPick();
     });
     g.appendChild(b);
   });
-  $('catDesc').textContent = THEMES[S.cat].desc;
+  $('catDesc').textContent = catDescOf(S.cat);
+}
+
+// ===== じぶんで作る（手作りのお題） =====
+// 一言と、気持ちを1行に1つ。人数ぶん以上あれば始められる。外には送らず localStorage だけ
+const MY_KEY = 'mine', MY_STORE = 'haa-mine-en';
+function loadMine(){ try{ const v = JSON.parse(localStorage.getItem(MY_STORE)||'null'); if (v && typeof v.word==='string' && Array.isArray(v.acts)) return v; }catch(e){} return {word:'', acts:[]}; }
+function saveMine(v){ try{ localStorage.setItem(MY_STORE, JSON.stringify(v)); }catch(e){} }
+function readMine(){
+  const word = ($('myWord').value||'').trim().slice(0,30);
+  const acts = ($('myActs').value||'').split('\n').map(x=>x.trim()).filter(Boolean).slice(0,8);
+  return {word:word, acts:acts};
+}
+function checkMine(){
+  const v = readMine(); saveMine(v);
+  const msg = $('myMsg');
+  if (!v.word){ S.theme = null; msg.textContent = 'First, write the line everyone will say'; msg.className='my-msg ng'; }
+  else if (v.acts.length < S.players){ S.theme = null; msg.textContent = v.acts.length+' feelings. '+S.players+' players need at least '+S.players; msg.className='my-msg ng'; }
+  else { S.theme = {word:v.word, acts:v.acts, mine:true}; msg.textContent = v.acts.length+' feelings. Ready to start'; msg.className='my-msg'; }
+  updateStartLabel();
+}
+function renderMine(){
+  const wrap = $('pickList');
+  const v = loadMine();
+  wrap.innerHTML = '<div class="my-form">'
+    + '<label for="myWord">The line everyone says</label><input id="myWord" maxlength="30" placeholder="e.g. Congratulations" autocomplete="off">'
+    + '<label for="myActs">Feelings (one per line, at least one per player, up to 8)</label>'
+    + '<textarea id="myActs" placeholder="happy&#10;shy&#10;surprised&#10;bored"></textarea>'
+    + '<p class="my-msg" id="myMsg"></p></div>';
+  $('myWord').value = v.word; $('myActs').value = v.acts.join('\n');
+  $('myWord').addEventListener('input', checkMine);
+  $('myActs').addEventListener('input', checkMine);
+  checkMine();
 }
 
 // お題は3つ見せて選ばせる。1つずつ引かせると決まるまでに時間がかかる
@@ -549,6 +606,7 @@ function updateStartLabel(){
 }
 
 function renderPick(){
+  if (S.cat === MY_KEY) return renderMine();
   const wrap = $('pickList');
   let list = THEMES[S.cat].list.slice();
   const fresh = list.filter(t => STATS.seen.indexOf(t.word) < 0);
@@ -587,6 +645,7 @@ function renderPick(){
 
 // ===== 配役 =====
 function startGame(){
+  if (S.cat === MY_KEY){ checkMine(); if (!S.theme){ $('myMsg').scrollIntoView({block:'center'}); return; } }
   if (!S.theme) renderPick();
   const t = S.theme;
   // acts から人数ぶんを取る。先頭ほど分かりやすい順に並べてあるので前から使う
@@ -598,7 +657,7 @@ function startGame(){
   for (let i=S.order.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [S.order[i],S.order[j]]=[S.order[j],S.order[i]]; }
   S.votes = {};
   STATS.plays++;
-  if (STATS.seen.indexOf(t.word) < 0) STATS.seen.push(t.word);
+  if (!t.mine && STATS.seen.indexOf(t.word) < 0) STATS.seen.push(t.word);
   saveStats(); renderStats();
   track('haa_start',{word:t.word,cat:S.cat,players:S.players});
   $('dealWord').textContent = t.word;
@@ -654,6 +713,9 @@ function renderPerform(){
   });
 }
 $('toVote').addEventListener('click', ()=>{ S.voter=0; S.target=-1; nextVote(); show('vote'); });
+// 投票は人数×(人数−1)回スマホを回す（6人で30回）。そこで止まる人が多いので、口で当て合って答えだけ見る道を用意する
+$('toReveal').addEventListener('click', ()=>{ S.votes = {}; finish('quick'); });
+$('voteSkip').addEventListener('click', ()=>finish('partial'));
 
 // ===== 投票（カード版でいちばん面倒なところ） =====
 function nextVote(){
@@ -689,7 +751,8 @@ function renderVote(){
 }
 
 // ===== 結果 =====
-function finish(){
+function finish(mode){
+  mode = mode || 'vote';
   const body = $('resultBody'); body.innerHTML='';
   // 誰がどの気持ちだったかを開示
   for (let i=0;i<S.players;i++){
@@ -712,6 +775,12 @@ function finish(){
   }
   const box = $('scoreBox');
   const max = Math.max.apply(null, sc);
+  if (mode === 'quick'){
+    box.innerHTML = '<p class="quick-note">No votes this round. Check the answers against your guesses.</p>';
+    track('haa_finish',{word:S.theme.word,players:S.players,hits:0,mode:mode});
+    show('result');
+    return;
+  }
   let h = '<h3>Score</h3>';
   sc.map((v,i)=>({i,v})).sort((a,b)=>b.v-a.v).forEach(o=>{
     const c = COLORS[o.i%COLORS.length];
@@ -719,7 +788,7 @@ function finish(){
   });
   box.innerHTML = h;
   const hits = sc.reduce((t,v)=>t+v,0);
-  track('haa_finish',{word:S.theme.word,players:S.players,hits:hits});
+  track('haa_finish',{word:S.theme.word,players:S.players,hits:hits,mode:mode});
   show('result');
 }
 

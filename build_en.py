@@ -171,6 +171,22 @@ T = [
  ("'<h3>得点</h3>'", "'<h3>Score</h3>'"),
  ("'</span><b>'+o.v+'点</b></div>'", "'</span><b>'+o.v+'</b></div>'"),
  ("'<div class=\"sr\"><span>'+(o.i+1)+'人目・'+c.n", "'<div class=\"sr\"><span>player '+(o.i+1)+' · '+c.n"),
+ # 2026-10-02: 投票なしの答え合わせ・じぶんで作る
+ ('<button class="btn-sub" id="toReveal">投票しないで答えを見る</button>', '<button class="btn-sub" id="toReveal">Skip voting — just reveal</button>'),
+ ('口で当て合ったあとに。人数が多いときや小さい子がいるときに', 'Guess out loud first. Handy for big groups or young kids'),
+ ('投票をここでやめて答えを見る', 'Stop voting and reveal now'),
+ ("'みんなで考えた一言でも遊べます。この端末にだけ保存されます。'", "'Use your own line and feelings. Saved on this device only.'"),
+ ("'＋じぶんで作る'", "'+ Make your own'"),
+ # 日英は同じオリジンなので、自作お題の保存先を分ける（日本語の自作が英語画面に出ないように）
+ ("MY_STORE = 'haa-mine'", "MY_STORE = 'haa-mine-en'"),
+ ("'まず、全員が言う一言を書いてください'", "'First, write the line everyone will say'"),
+ ("'気持ちが '+v.acts.length+' 個。'+S.players+'人なら '+S.players+' 個以上いります'", "v.acts.length+' feelings. '+S.players+' players need at least '+S.players"),
+ ("'気持ち '+v.acts.length+' 個。このまま始められます'", "v.acts.length+' feelings. Ready to start'"),
+ ('<label for="myWord">全員が言う一言</label>', '<label for="myWord">The line everyone says</label>'),
+ ('placeholder="例：おめでとう"', 'placeholder="e.g. Congratulations"'),
+ ('<label for="myActs">気持ち（1行に1つ・人数ぶん以上・8個まで）</label>', '<label for="myActs">Feelings (one per line, at least one per player, up to 8)</label>'),
+ ('placeholder="うれしくて&#10;照れながら&#10;びっくりして&#10;そっけなく"', 'placeholder="happy&#10;shy&#10;surprised&#10;bored"'),
+ ("'<p class=\"quick-note\">投票なしで答え合わせしました。口で当てた答えと比べてみてください。</p>'", "'<p class=\"quick-note\">No votes this round. Check the answers against your guesses.</p>'"),
  # 色名
  ("{n:'あか',", "{n:'Red',"), ("{n:'あお',", "{n:'Blue',"),
  ("{n:'みどり',", "{n:'Green',"), ("{n:'きいろ',", "{n:'Yellow',"),
@@ -199,6 +215,8 @@ FAQ = [
   'Everyone says the same short line, but each player is secretly given a different feeling to put behind it. Voice and face only, no gestures. Then everyone votes on who had which feeling.'),
  ('Can I use this in an English class?',
   'Yes — that is what the school and greetings sets are for. It drills intonation and emotional register with real speaking time for every student, and the phone handles the admin.'),
+ ('Can we make our own lines?',
+  'Yes. Choose "+ Make your own", type the line everyone will say and one feeling per player. Roles, voting and scoring work the same way. What you type stays on this device.'),
  ('How many prompts are there?',
   '%d prompts with 8 ways to say each one — %d in total. All written by us.'),
 ]
