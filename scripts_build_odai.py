@@ -146,6 +146,11 @@ a{{color:#1565c0}}
 .ad-label{{font-size:10.5px;letter-spacing:.14em;color:var(--muted);margin-bottom:6px}}
 .ad-slot ins.adsbygoogle{{display:block;width:300px;height:250px;margin:0 auto}}
 @media(min-width:760px){{h2{{font-size:22px}}.ad-slot ins.adsbygoogle{{width:336px;height:280px}}}}
+/* 2026-10-03 UI/UX指針: 行間を1.7に、「遊ぶ」ボタンは44px以上 */
+body{{line-height:1.7}}
+.cta{{min-height:48px}}
+.play .btn{{min-height:44px;line-height:1.4;padding:.6rem 1rem}}
+details.block summary{{min-height:48px}}
 </style>
 </head>
 <body>

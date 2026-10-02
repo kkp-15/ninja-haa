@@ -187,6 +187,8 @@ T = [
  ('<label for="myActs">気持ち（1行に1つ・人数ぶん以上・8個まで）</label>', '<label for="myActs">Feelings (one per line, at least one per player, up to 8)</label>'),
  ('placeholder="うれしくて&#10;照れながら&#10;びっくりして&#10;そっけなく"', 'placeholder="happy&#10;shy&#10;surprised&#10;bored"'),
  ("'<p class=\"quick-note\">投票なしで答え合わせしました。口で当てた答えと比べてみてください。</p>'", "'<p class=\"quick-note\">No votes this round. Check the answers against your guesses.</p>'"),
+ # 2026-10-03: 画面下の主ボタン欄（#dock）の進み具合
+ ("'カードを順番にタップ（見た人 '+seenN+' / '+S.players+'人）'", "'Tap the cards in turn (seen '+seenN+' / '+S.players+')'"),
  # 色名
  ("{n:'あか',", "{n:'Red',"), ("{n:'あお',", "{n:'Blue',"),
  ("{n:'みどり',", "{n:'Green',"), ("{n:'きいろ',", "{n:'Yellow',"),

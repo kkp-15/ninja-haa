@@ -214,6 +214,37 @@ button.cat-btn { border-radius: 6px; }
 .my-form .my-msg{font-size:.78rem;color:var(--muted);margin:.3rem 0 0}
 .my-form .my-msg.ng{color:var(--ng);font-weight:700}
 .quick-note{font-size:.85rem;color:var(--muted);margin:.6rem 0 0;line-height:1.6}
+/* 使いやすさの調整（2026-10-03・UI/UX指針）: 余白を詰め、主ボタンは画面下の決まった場所に1つ。元のルールは上に残し上書き。
+   #dock は main の最後の子で position:sticky。main の外にある広告までは付いていかない */
+main{display:flex;flex-direction:column;min-height:calc(100svh - var(--mainTop,120px))}
+main .card{line-height:1.6}
+.card{padding:12px 14px;margin:0 0 12px}
+h2{line-height:1.35;margin:0 0 6px}
+header p a{display:inline-block;padding:10px 6px}
+.cat-btn{min-height:44px}
+.pick-item{min-height:48px}
+.vote-item{min-height:48px}
+.vote-who{margin:.1rem 0 .3rem}
+.btn-sub{min-height:44px}
+#step-setup>p:last-child{margin-top:2px!important}
+#step-setup>p:last-child a{display:inline-block;padding:13px 4px}
+.shop .buy{min-height:44px;display:inline-flex;align-items:center}
+#dock{position:sticky;bottom:0;z-index:50;margin:auto -14px 0;padding:8px 12px calc(8px + env(safe-area-inset-bottom));
+  background:rgba(255,253,249,.97);border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+#dock>button{display:none;margin:0;width:100%;min-height:52px;border-radius:8px;box-shadow:none;font-size:1.02rem}
+#dock>button.btn-sub{min-height:44px;font-size:.92rem}
+#dock[data-step=setup] #startGame,#dock[data-step=deal] #toPerform:not(:disabled),
+#dock[data-step=perform] #toVote,#dock[data-step=perform] #toReveal,
+#dock[data-step=vote] #voteSkip,#dock[data-step=result] #newGame{display:block}
+/* 全員が見終わったら、演じるへのボタンは主ボタンの色にする */
+#dock #toPerform{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:800;min-height:52px;font-size:1.02rem}
+#dockMsg{display:none;text-align:center;font-size:.92rem;font-weight:700;line-height:1.3;padding:8px 0}
+#dock[data-step=deal] #dockMsg:not([hidden]){display:block}
+body:not(.at-result) #postOnly{display:none}
+#postOnly .ad-slot{margin-top:24px}
+.deal-card::before,.deal-card.done::after{white-space:nowrap}
+@media(max-width:340px){#postOnly .ad-slot{margin-left:-14px;margin-right:-14px}}
+@media(min-width:768px){main{min-height:0}#dock{position:static;margin:0 0 12px;background:none;border:0;padding:0}#dock>button{max-width:420px;margin:0 auto}}
 </style>
 </head>
 <body>
@@ -292,26 +323,29 @@ button.cat-btn { border-radius: 6px; }
   <button class="btn-primary" id="newGame">もう1回遊ぶ</button>
   <button class="btn-sub" id="resultBack">↺ 設定に戻る</button>
 
-  <div class="post-only" id="postOnly">
-    <div class="ad-slot">
-      <div class="ad-label">広告</div>
-      <ins class="adsbygoogle" style="display:block"
-           data-ad-client="ca-pub-1298304917726270"
-           data-ad-slot="2937937957"
-           data-ad-format="rectangle" data-full-width-responsive="false"></ins>
-    </div>
-
-    <div class="shop">
-      <h3>もっと遊びたくなったら</h3>
-      <span class="pr">PR・アフィリエイト広告を含みます</span>
-      <p>このゲームの原型になっている市販のカードゲームがあります。演じるお題がさらに増え、カードを配るだけで遊べます。</p>
-      <a class="buy" href="https://www.amazon.co.jp/s?k=%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazonで探す</a>
-      <a class="buy alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F" target="_blank" rel="nofollow sponsored noopener">楽天で探す</a>
-    </div>
-  </div>
 </section>
-
+<!-- 主な操作は画面下のここに集める（ボタンはJSで各画面から移す）。main の外の広告までは付いていかない -->
+<div id="dock" data-step="setup"><div id="dockMsg"></div></div>
 </main>
+<!-- 広告と紹介は答え合わせのあとだけ出す（主ボタンの #dock より下・離して置く） -->
+<div class="post-only" id="postOnly">
+  <div class="ad-slot">
+    <div class="ad-label">広告</div>
+    <ins class="adsbygoogle" style="display:block"
+         data-ad-client="ca-pub-1298304917726270"
+         data-ad-slot="2937937957"
+         data-ad-format="rectangle" data-full-width-responsive="false"></ins>
+  </div>
+
+  <div class="shop">
+    <h3>もっと遊びたくなったら</h3>
+    <span class="pr">PR・アフィリエイト広告を含みます</span>
+    <p>このゲームの原型になっている市販のカードゲームがあります。演じるお題がさらに増え、カードを配るだけで遊べます。</p>
+    <a class="buy" href="https://www.amazon.co.jp/s?k=%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazonで探す</a>
+    <a class="buy alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F" target="_blank" rel="nofollow sponsored noopener">楽天で探す</a>
+  </div>
+</div>
+
 
 <details class="block">
   <summary><h2>遊び方（30秒で読めます）</h2></summary>
@@ -738,6 +772,21 @@ function renderDeal(){
     g.appendChild(b);
   }
   $('toPerform').disabled = S.seen.some(v=>!v);
+  const seenN = S.seen.filter(Boolean).length;
+  $('dockMsg').textContent = 'カードを順番にタップ（見た人 '+seenN+' / '+S.players+'人）';
+  $('dockMsg').hidden = seenN >= S.players;
+}
+// 主な操作を画面下の #dock に集める。ボタンはそのまま移すので、押したときの動きは変わらない
+function syncDock(name){
+  const dock = $('dock'); if (!dock) return;
+  if (!dock.dataset.ready){
+    ['startGame','toPerform','toVote','toReveal','voteSkip','newGame'].forEach(id=>{ const b=$(id); if (b) dock.appendChild(b); });
+    dock.dataset.ready = '1';
+  }
+  dock.dataset.step = name;
+  // ボタンの位置を画面ごとに動かさないため、main を画面の高さまで伸ばして #dock を下端に置く（2回目以降はヘッダーが畳まれるので毎回測る）
+  const mn = document.querySelector('main');
+  if (mn) document.documentElement.style.setProperty('--mainTop', Math.round(mn.getBoundingClientRect().top + scrollY) + 'px');
 }
 
 function openReveal(i){
@@ -857,6 +906,8 @@ function show(name){
   ['setup','deal','perform','vote','result'].forEach(s=>{
     const el = $('step-'+s); if (el) el.classList.toggle('hidden', s!==name);
   });
+  document.body.classList.toggle('at-result', name==='result');
+  syncDock(name);
   if (name === 'result' && !window.__adPushed) {
     window.__adPushed = true;
     try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
@@ -872,6 +923,7 @@ renderStats();
 renderCats();
 renderPick();
 setPlayers(4);
+syncDock('setup');
 
 // 広告は結果画面が表示されてから1回だけ読み込む。
 // 読み込み時に押すと、枠が非表示（幅0）のままなので広告が入らず、枠が死んでいた（2026-09-20 修正）。
