@@ -95,8 +95,8 @@ html = re.sub(r'<!-- WEBNINJA_UNIFIED_FOOTER -->.*?</footer>', FOOTER, html, cou
 T = [
  # head 以外に残る大物
  ('<h1>はぁって言うゲームをスマホ1台で<span class="h1-sub">声と表情で当てるゲーム</span></h1>', '<h1>Emotion Charades<span class="h1-sub">Say one line with a secret feeling</span></h1>'),
- ('<p>同じ一言を、それぞれ違う気持ちで演じて当て合う。<br>配役から得点まで。非公式の無料ツールです。</p>',
-  '<p>Everyone says the same line with a different feeling.<br>One phone handles the roles, the voting and the score.</p>'),
+ ('<p>同じ一言を、それぞれ違う気持ちで演じて当て合う。<br>アプリ不要で配役から得点まで。非公式の無料ツール。</p>',
+  '<p>Everyone says the same line with a different feeling.<br>One phone handles the roles, the voting and the score. No app, no sign-up.</p>'),
  # 遊び方
  ('遊び方（30秒で読めます）', 'How to play (30 seconds)'),
  # 日本の市販カードゲームに触れる導入は、英語版では出さない（英語圏では知られていないため）
@@ -217,6 +217,10 @@ FAQ = [
   'Everyone says the same short line, but each player is secretly given a different feeling to put behind it. Voice and face only, no gestures. Then everyone votes on who had which feeling.'),
  ('Can I use this in an English class?',
   'Yes — that is what the school and greetings sets are for. It drills intonation and emotional register with real speaking time for every student, and the phone handles the admin.'),
+ ('How do I run it with a whole class?',
+  'Split the class into groups of three to eight (four to six works best) and give each group one phone or tablet. Each group plays on its own, so every student gets speaking turns at the same time. If voting takes too long, tap "Skip voting — just reveal" and let students guess out loud.'),
+ ('Is it free? Do students need an app or an account?',
+  'Free, with no app and no sign-up. It runs in the browser on iPhone, Android, iPad or a Chromebook. There are ads on the page.'),
  ('Can we make our own lines?',
   'Yes. Choose "+ Make your own", type the line everyone will say and one feeling per player. Roles, voting and scoring work the same way. What you type stays on this device.'),
  ('How many prompts are there?',
@@ -230,7 +234,10 @@ if n_faq != 1:
 # 日本語の FAQPage 構造化データは英語版に持ち込まない
 html = re.sub(r'<!-- FAQLD:BEGIN.*?<!-- FAQLD:END -->\n?', '', html, count=1, flags=re.S)
 
-# 言語切り替えリンクを header に足す
+# 言語切り替えリンクを header に足す（日本語版にある「English version」＝英語版から自分自身へのリンクは外す）
+html, n_self = re.subn(r'\s*<p style="font-size:\.8rem;margin:\.4rem 0 0"><a href="/en/"[^>]*>English version</a></p>', '', html, count=1)
+if n_self != 1:
+    sys.exit('[NG] 日本語版の「English version」リンクが見つかりません（ヘッダーの言語切り替え）')
 html = html.replace('</header>',
   '  <p style="font-size:.8rem;margin:.4rem 0 0"><a href="/" style="color:#8a7560">日本語版はこちら</a></p>\n</header>')
 
