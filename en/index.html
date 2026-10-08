@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="msvalidate.01" content="EF6E7C7B123A3218DAE3B152F5B0764D" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Emotion Charades Online — Say One Line With a Secret Feeling (Free, One Phone)</title>
@@ -569,14 +570,18 @@ function setPlayers(n){
 $('inc').addEventListener('click', ()=>setPlayers(S.players+1));
 $('dec').addEventListener('click', ()=>setPlayers(S.players-1));
 
-// 11〜1月は「お正月・帰省」を定番の次に出す（年末年始の集まりがいちばん多い時期）
+// 季節のお題を定番の次に出す（年末年始の集まりがいちばん多い時期）
+// 11/1〜12/25: 忘年会・クリスマス・お正月／12/26〜1月: お正月・新年会
+function seasonKeys(){
+  const d = new Date(), m = d.getMonth()+1, day = d.getDate();
+  if (m===11 || (m===12 && day<=25)) return ['bounen','xmas','nenmatsu'];
+  if (m===12 || m===1) return ['nenmatsu','bounen'];
+  return [];
+}
 function catKeys(){
-  const keys = Object.keys(THEMES);
-  const m = new Date().getMonth()+1;
-  if (THEMES.nenmatsu && (m>=11 || m===1)){
-    keys.splice(keys.indexOf('nenmatsu'),1);
-    keys.splice(1,0,'nenmatsu');
-  }
+  const front = seasonKeys().filter(k=>THEMES[k]);
+  const keys = Object.keys(THEMES).filter(k=>!front.includes(k));
+  keys.splice(1,0,...front);
   keys.push(MY_KEY);
   return keys;
 }

@@ -11,7 +11,7 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 SITE = 'https://haa.kkpwebninja.com'
 GA, PUB = 'G-2LM85GJN0L', 'ca-pub-1298304917726270'
 # 公開日と更新日。更新日は中身（お題・本文）を変えた日に手で進める。再生成しただけでは進めない
-PUBLISHED, UPDATED = '2026-09-05', '2026-10-02'
+PUBLISHED, UPDATED = '2026-09-05', '2026-10-08'
 
 src = open(os.path.join(ROOT, 'data.js'), encoding='utf-8').read()
 
@@ -72,7 +72,7 @@ faq_html = ''.join(f'<dt>{esc(q)}</dt><dd>{esc(a)}</dd>' for q,a in FAQ)
 
 TITLE = f'はぁって言うゲーム風のオリジナルお題一覧【全{N_WORD}お題・{N_ACT}通り】（非公式）'
 DESC  = (f'はぁって言うゲームのように、同じ一言を演じ分けて当て合う遊びのお題一覧。「はぁ」「えっ」など{N_WORD}のお題に8通りずつ、'
-         f'全{N_ACT}通り。すべてオリジナル（非公式・市販品のお題は含みません）。お正月・帰省で3世代が遊べるお題、学級レクや授業での進め方も。')
+         f'全{N_ACT}通り。すべてオリジナル（非公式・市販品のお題は含みません）。忘年会・新年会、クリスマス会、お正月の帰省で使えるお題、学級レクや授業での進め方も。')
 
 out = f'''<!DOCTYPE html>
 <html lang="ja">
