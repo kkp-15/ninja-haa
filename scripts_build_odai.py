@@ -6,12 +6,13 @@
 お題を足したら data.js を直して build.py と このスクリプトの両方を実行する。
 """
 import os, re, json, html
+from urllib.parse import quote
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SITE = 'https://haa.kkpwebninja.com'
 GA, PUB = 'G-2LM85GJN0L', 'ca-pub-1298304917726270'
 # 公開日と更新日。更新日は中身（お題・本文）を変えた日に手で進める。再生成しただけでは進めない
-PUBLISHED, UPDATED = '2026-09-05', '2026-10-08'
+PUBLISHED, UPDATED = '2026-09-05', '2026-10-15'
 
 src = open(os.path.join(ROOT, 'data.js'), encoding='utf-8').read()
 
@@ -37,13 +38,13 @@ toc = ''.join(f'<a href="#{cid}">{esc(label)}<span>{len(data[cid])}</span></a>' 
 blocks = []
 for cid, label, desc in order:
     rows = ''.join(
-        f'<div class="w"><h3>「{esc(w)}」</h3><ol>' +
+        f'<div class="w"><h3>「{esc(w)}」<a class="pw" href="{SITE}/?cat={cid}&word={quote(w)}">このお題で遊ぶ</a></h3><ol>' +
         ''.join(f'<li>{esc(a)}</li>' for a in acts) + '</ol></div>'
         for w, acts in data[cid])
     blocks.append(
         f'<section class="cat" id="{cid}"><h2>{esc(label)}<span class="n">{len(data[cid])}お題</span></h2>'
         f'<p class="cd">{esc(desc)}</p>{rows}'
-        f'<p class="play"><a class="btn" href="{SITE}/">このお題で遊ぶ</a></p></section>')
+        f'<p class="play"><a class="btn" href="{SITE}/?cat={cid}">「{esc(label)}」のお題で遊ぶ</a></p></section>')
 
 FAQ = [
  ('お題は自由に使えますか？',
@@ -128,6 +129,7 @@ h2{{font-size:20px;line-height:1.5;margin:0 0 .5rem;padding-left:.6rem;border-le
 .sec li{{margin:0 0 .3rem}}
 .w{{margin:0 0 1.2rem}}
 .w h3{{margin:0 0 .3rem;font-size:1.1rem;line-height:1.5;background:var(--cream);padding:.25rem .6rem}}
+.w h3 .pw{{float:right;font-size:.8rem;font-weight:700;color:#b3541a;text-decoration:none;padding:.15rem .55rem;border:1px solid var(--orange);border-radius:6px;background:#fff;margin:.1rem 0 0 .6rem}}
 .w ol{{margin:0;padding-left:2rem}}
 .play{{margin:.4rem 0 0}}
 .play .btn{{display:inline-block;font-size:.95rem;color:#b3541a;text-decoration:none;font-weight:700;
