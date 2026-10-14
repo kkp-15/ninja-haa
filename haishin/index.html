@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>配信・実況で「はぁって言うゲーム」風の遊びをする方法｜離れた場所からでも遊べる（非公式）</title>
+<meta name="description" content="VTuber・ゲーム実況の配信で、同じ一言を声と表情で演じ分けて当て合う遊びをする方法。ブラウザだけで遊べ、離れた場所のコラボ相手には役をリンクで送れます。視聴者はコメントで番号を当てられます。">
+<link rel="canonical" href="https://haa.kkpwebninja.com/haishin/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:title" content="配信・実況で「はぁって言うゲーム」風の遊びをする方法｜離れた場所からでも遊べる（非公式）">
+<meta property="og:description" content="VTuber・ゲーム実況の配信で、同じ一言を声と表情で演じ分けて当て合う遊びをする方法。ブラウザだけで遊べ、離れた場所のコラボ相手には役をリンクで送れます。視聴者はコメントで番号を当てられます。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://haa.kkpwebninja.com/haishin/">
+<meta property="og:site_name" content="声と表情で当てるゲーム">
+<meta property="og:image" content="https://haa.kkpwebninja.com/ogp.png?d=20260905">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "配信・実況で声と表情で当てるゲームをする方法", "datePublished": "2026-10-15", "dateModified": "2026-10-15", "author": {"@type": "Organization", "name": "web忍者の砦"}, "publisher": {"@type": "Organization", "name": "web忍者の砦"}, "mainEntityOfPage": "https://haa.kkpwebninja.com/haishin/"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "配信で使ってもいいですか？許可はいりますか？", "acceptedAnswer": {"@type": "Answer", "text": "事前の連絡や許諾は不要です。配信・アーカイブ・切り抜き・収益化も可能です。概要欄にサイト名「web忍者の砦」とURLを書いてください。条件は配信・紹介・掲載のガイドラインにまとめています。"}}, {"@type": "Question", "name": "コラボ相手が別々の場所にいても遊べますか？", "acceptedAnswer": {"@type": "Answer", "text": "遊べます。役を見る画面で、演じる人のカードの下にある「リンクで送る」を押し、DMで送ってください。受け取った人の画面にだけ、その人の気持ちが出ます。配信画面には答えが出ません。"}}, {"@type": "Question", "name": "視聴者も参加できますか？", "acceptedAnswer": {"@type": "Answer", "text": "できます。演技の画面に気持ちの候補が番号つき（①②③）で出るので、視聴者はコメントで番号を書いて当てられます。「答えを見る」を押すと、3・2・1のカウントダウンのあとに答えが出ます。"}}, {"@type": "Question", "name": "1人の配信でも遊べますか？", "acceptedAnswer": {"@type": "Answer", "text": "遊べます。参加人数を1人にすると、配信者が演じて視聴者がコメントで当てる形になります。"}}, {"@type": "Question", "name": "配信画面に映すと、文字が小さくなりませんか？", "acceptedAnswer": {"@type": "Answer", "text": "パソコンの広い画面では「配信モード」が自動でオンになり、文字が大きくなって、遊んでいる間はゲーム以外の説明が隠れます。設定の画面で切り替えることもできます。"}}, {"@type": "Question", "name": "市販の『はぁって言うゲーム』と同じですか？", "acceptedAnswer": {"@type": "Answer", "text": "違います。このサイトは非公式の無料ツールで、お題はすべてオリジナルです。元のゲームの名称を配信で扱うときは、発売元の定めるガイドラインにも従ってください。"}}]}</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2LM85GJN0L"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2LM85GJN0L');
+</script>
+<style>
+/* 読み物ページ：地は白、本文16px・#333・行間1.8。クリームは見出し帯とボタンまわりだけ */
+:root{--orange:#ff8a3d;--orange-d:#e07b39;--cream:#fff8f0;
+  --ink:#333;--muted:#6b5a48;--line:#e6dccb}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:var(--ink);
+  font-family:"Hiragino Maru Gothic ProN","ヒラギノ丸ゴ ProN",system-ui,sans-serif;
+  font-size:16px;line-height:1.8;-webkit-text-size-adjust:100%}
+.wrap{max-width:760px;margin:0 auto;padding:18px 16px 60px}
+h1{font-size:1.4rem;line-height:1.5;margin:.2rem 0 .4rem}
+h1 .c{display:block;font-size:1rem;color:var(--muted);font-weight:700}
+.upd{font-size:.85rem;color:var(--muted);margin:0 0 .8rem}
+.lead{margin:0 0 1rem}
+.cta{display:block;text-align:center;background:var(--orange);color:#fff;font-weight:800;font-size:.95rem;
+  padding:.75rem .5rem;border-radius:8px;text-decoration:none;margin:0 0 1.2rem}
+.toc{margin:0 0 1.6rem;padding:.5rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.toc a{display:inline-block;padding:.35rem 0;margin-right:1.1rem;white-space:nowrap}
+.toc a span{color:var(--muted);font-size:.85rem;margin-left:.2rem}
+h2{font-size:20px;line-height:1.5;margin:0 0 .5rem;padding-left:.6rem;border-left:4px solid var(--orange)}
+.cat,.sec{margin:0 0 2.4rem}
+.cat h2 .n{font-size:.85rem;color:var(--muted);font-weight:400;margin-left:.6rem}
+.cd{margin:0 0 .8rem}
+.sec ol{margin:0 0 .8rem;padding-left:1.4rem}
+.sec li{margin:0 0 .3rem}
+.w{margin:0 0 1.2rem}
+.w h3{margin:0 0 .3rem;font-size:1.1rem;line-height:1.5;background:var(--cream);padding:.25rem .6rem}
+.w h3 .pw{float:right;font-size:.8rem;font-weight:700;color:#b3541a;text-decoration:none;padding:.15rem .55rem;border:1px solid var(--orange);border-radius:6px;background:#fff;margin:.1rem 0 0 .6rem}
+.w ol{margin:0;padding-left:2rem}
+.play{margin:.4rem 0 0}
+.play .btn{display:inline-block;font-size:.95rem;color:#b3541a;text-decoration:none;font-weight:700;
+  background:var(--cream);border:1px solid var(--orange);border-radius:6px;padding:.3rem .9rem}
+details.block{border-top:1px solid var(--line);padding:.2rem 0;margin:0}
+details.block:last-of-type{border-bottom:1px solid var(--line)}
+details.block summary{cursor:pointer;padding:.6rem 0}
+details.block h2{display:inline;border:0;padding:0;margin:0}
+details.block p{margin:0 0 .8rem}
+dt{font-weight:700;margin-top:1rem}
+dd{margin:.2rem 0 0}
+dl{margin:0 0 1rem}
+a{color:#1565c0}
+.ad-slot{margin:1.6rem 0 0;padding:12px 0;text-align:center;
+  border-top:1px dashed var(--line);border-bottom:1px dashed var(--line)}
+.ad-label{font-size:10.5px;letter-spacing:.14em;color:var(--muted);margin-bottom:6px}
+.ad-slot ins.adsbygoogle{display:block;width:300px;height:250px;margin:0 auto}
+@media(min-width:760px){h2{font-size:22px}.ad-slot ins.adsbygoogle{width:336px;height:280px}}
+/* 2026-10-03 UI/UX指針: 行間を1.7に、「遊ぶ」ボタンは44px以上 */
+body{line-height:1.7}
+.cta{min-height:48px}
+.play .btn{min-height:44px;line-height:1.4;padding:.6rem 1rem}
+details.block summary{min-height:48px}
+</style>
+<style>
+.steps{margin:0 0 1rem;padding-left:1.6rem}.steps li{margin:0 0 .5rem}
+.note-b{background:var(--cream);border-left:4px solid var(--orange);padding:.6rem .9rem;margin:0 0 1.2rem}
+.cta2{display:inline-block;margin:.2rem .4rem .6rem 0;padding:.6rem 1.1rem;border:1px solid var(--orange);border-radius:6px;color:#b3541a;font-weight:700;text-decoration:none;background:#fff}
+code{background:#f6efe4;padding:.05rem .35rem;border-radius:4px;font-size:.92em}
+dl dt{font-weight:700;margin-top:1rem} dl dd{margin:0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>配信・実況で遊ぶ方法<span class="c">声と表情で当てるゲーム（はぁって言うゲーム風・非公式）</span></h1>
+<p class="upd">更新日 <time datetime="2026-10-15">2026-10-15</time></p>
+<p class="lead">同じ一言を、それぞれ違う気持ちで演じて当て合う遊びを、ブラウザだけで配信に乗せられます。インストールも登録もいりません。コラボ相手が離れた場所にいても遊べて、視聴者はコメントで当てて参加できます。</p>
+
+<a class="cta" href="https://haa.kkpwebninja.com/">いますぐ開く（無料・登録不要）</a>
+
+<h2>配信の前に（1分）</h2>
+<ol class="steps">
+<li>パソコンのブラウザで <a href="https://haa.kkpwebninja.com/">haa.kkpwebninja.com</a> を開き、配信ソフト（OBSなど）の「ウィンドウキャプチャ」でブラウザを取り込みます</li>
+<li>広い画面では<b>配信モード</b>が自動でオンになります。文字が大きくなり、遊んでいる間はゲームだけが映ります（設定の画面で切り替えられます）</li>
+<li>参加人数を選び、「プレイヤー名を入れる」に名前を入れると、画面に名前が出ます</li>
+<li>交代で1人ずつ演じるなら「1回に演じる人：1人」にします</li>
+</ol>
+
+<h2>1回の流れ</h2>
+<ol class="steps">
+<li>演じる人が、自分の気持ちを確認する</li>
+<li>演じる。画面に「言う言葉」と気持ちの候補が番号つき（①②③）で大きく出ます</li>
+<li>ほかの人は口で、視聴者はコメントで、番号を当てる</li>
+<li>「答えを見る」で、3・2・1のあとに答えが出る</li>
+<li>「もう1回遊ぶ」で、次の人が演じる番になり、お題も変わる</li>
+</ol>
+<p>得点で勝負したいときは「投票して得点をつける」を選ぶと、1人ずつ投票して得点が出ます。</p>
+
+<h2>離れた場所からコラボするとき</h2>
+<p>配信者の画面で、ほかの人の気持ちを開くと答えが見えてしまいます。そのときは、役を見る画面で演じる人のカードの下にある<b>「リンクで送る」</b>を押して、DiscordなどのDMに貼ってください。受け取った人の画面にだけ、その人の気持ちが出ます。配信画面には答えが出ないので、映像を隠す必要もありません。</p>
+<div class="note-b">同じ部屋で遊ぶときは、カードを押して順番に見る形のままで大丈夫です。その場合、気持ちを見る画面には答えが出るので、配信ではそのあいだだけ映像を隠してください。</div>
+
+<h2>視聴者参加・1人配信</h2>
+<p>参加人数を1人にすると、配信者が演じて視聴者がコメントで当てる形になります。お題には「配信・実況」のカテゴリ（こんばんは／きた／おしい／おつかれ など）もあります。</p>
+<p><a class="cta2" href="https://haa.kkpwebninja.com/?cat=haishin">「配信・実況」のお題で開く</a><a class="cta2" href="/odai/">お題一覧（全120お題）</a></p>
+
+<h2>配信で使うときの条件</h2>
+<p>事前の連絡や許諾はいりません。収益化もできます。概要欄にサイト名「web忍者の砦」とURL（https://haa.kkpwebninja.com/）を書いてください。くわしくは<a href="https://kkpwebninja.com/guidelines">配信・紹介・掲載のガイドライン</a>をご覧ください。このサイトは『はぁって言うゲーム』（幻冬舎）とは関係のない非公式の無料ツールで、お題はすべてオリジナルです。</p>
+
+<h2>よくある質問</h2>
+<dl>
+<dt>配信で使ってもいいですか？許可はいりますか？</dt><dd>事前の連絡や許諾は不要です。配信・アーカイブ・切り抜き・収益化も可能です。概要欄にサイト名「web忍者の砦」とURLを書いてください。条件は配信・紹介・掲載のガイドラインにまとめています。</dd>
+<dt>コラボ相手が別々の場所にいても遊べますか？</dt><dd>遊べます。役を見る画面で、演じる人のカードの下にある「リンクで送る」を押し、DMで送ってください。受け取った人の画面にだけ、その人の気持ちが出ます。配信画面には答えが出ません。</dd>
+<dt>視聴者も参加できますか？</dt><dd>できます。演技の画面に気持ちの候補が番号つき（①②③）で出るので、視聴者はコメントで番号を書いて当てられます。「答えを見る」を押すと、3・2・1のカウントダウンのあとに答えが出ます。</dd>
+<dt>1人の配信でも遊べますか？</dt><dd>遊べます。参加人数を1人にすると、配信者が演じて視聴者がコメントで当てる形になります。</dd>
+<dt>配信画面に映すと、文字が小さくなりませんか？</dt><dd>パソコンの広い画面では「配信モード」が自動でオンになり、文字が大きくなって、遊んでいる間はゲーム以外の説明が隠れます。設定の画面で切り替えることもできます。</dd>
+<dt>市販の『はぁって言うゲーム』と同じですか？</dt><dd>違います。このサイトは非公式の無料ツールで、お題はすべてオリジナルです。元のゲームの名称を配信で扱うときは、発売元の定めるガイドラインにも従ってください。</dd>
+</dl>
+
+<p style="margin-top:2rem"><a class="cta" href="https://haa.kkpwebninja.com/">声と表情で当てるゲームを開く</a></p>
+
+</div>
+<!-- WEBNINJA_UNIFIED_FOOTER -->
+<footer style="text-align:center;padding:2rem 1rem 2.5rem;font-size:0.78rem;color:#94a3b8;line-height:2;border-top:1px solid #f0e6d2;margin-top:2.5rem;background:#fffcf7;">
+  <div style="font-weight:800;color:#8b6b3d;font-size:0.85rem;margin-bottom:0.4rem;">web忍者の砦</div>
+  <div>
+    <a href="https://kkpwebninja.com/" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">本丸トップ</a>·
+    <a href="https://privacypolicy.kkpwebninja.com/" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">プライバシーポリシー</a>·
+    <a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">お問い合わせ</a>·
+    <a href="https://x.com/kkp_webninja" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">@kkp_webninja</a>
+  </div>
+  <div style="margin-top:0.5rem;color:#bfa97a;">© 2025-2026 web忍者の砦</div>
+</footer>
+</div>
+<script>
+(function(){ try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {} })();
+</script>
+</body>
+</html>
