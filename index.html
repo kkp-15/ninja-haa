@@ -119,11 +119,13 @@ h2{font-size:1rem;margin:0 0 .5rem;display:flex;align-items:center;gap:.5rem}
 .stream-sw{display:none;align-items:center;gap:.5rem;justify-content:center;margin:.8rem 0 .2rem;font-size:.85rem;color:var(--muted);cursor:pointer}
 .stream-note{display:none}
 .cand-n{display:none}
-body.stream .cand-n{display:block}
+body.stream .cand-n,body[data-players="1"] .cand-n{display:block}
 body.stream .cand-n .act-lbl{display:block}
 body.stream .cand-n .act-lbl+.num{display:flex}
 @media(min-width:768px){.stream-note{display:block;margin-top:0}}
 body.stream .act-lbl,body.stream #actDec,body.stream #actInc,body.stream #actorCount,body.stream #actHint,body.stream .act-lbl+.num{display:none}
+/* 1人のときは「1回に演じる人」は選ぶ意味がないので隠す（候補の数の欄は残す） */
+body[data-players="1"] .act-lbl:not(.cand-n .act-lbl),body[data-players="1"] #actHint,body[data-players="1"] .act-lbl:not(.cand-n .act-lbl)+.num{display:none}
 body.stream #toVote,body.stream #postOnly{display:none!important}
 .stream-sw input{width:20px;height:20px;accent-color:var(--orange)}
 @media(min-width:768px){.stream-sw{display:flex}}
@@ -931,7 +933,7 @@ function setPlayers(n){
   document.body.dataset.players = S.players;
   $('playersHint').textContent = S.players >= 3
     ? '3〜8人がふつう。4〜6人がいちばん当てにくいです'
-    : (S.players === 1 ? '1人で演じて、視聴者やまわりの人が候補から当てる形。投票はありません'
+    : (S.players === 1 ? '1人で演じて、視聴者やまわりの人が候補から当てる形。投票はありません。候補の数は下で選べます'
                        : '2人なら、1人が演じてもう1人が当てる形。候補は3つ出ます');
   renderActors();
   renderNames();
@@ -940,7 +942,8 @@ function setPlayers(n){
 // 1回に演じる人数。配信（演者1人ずつ）や大人数向け。0のときは全員が演じる＝これまでどおり
 function actorsN(){ if (document.body.classList.contains('stream')) return 1; return S.actors ? Math.min(S.actors, S.players) : S.players; }
 // 投票で選ぶ候補の数。人数が少なくても3つは出す（1〜2人の配信・視聴者が当てる形）
-function poolN(){ return document.body.classList.contains('stream') ? S.cands : Math.max(3, S.players); }
+// 配信モードと1人で遊ぶとき（視聴者やまわりの人が当てる）は、候補の数を選べる。ふだんは人数ぶん
+function poolN(){ return (document.body.classList.contains('stream') || S.players === 1) ? S.cands : Math.max(3, S.players); }
 const CAND_KEY = 'haa-cands';
 try { const c = +localStorage.getItem(CAND_KEY); if (c >= 3 && c <= 8) S.cands = c; } catch(e){}
 function setCands(n){
@@ -983,7 +986,7 @@ function renderActors(){
   const k = actorsN();
   $('actorCount').textContent = k;
   $('actHint').textContent = k >= S.players
-    ? (S.players === 1 ? '演じるのはあなた1人。候補は3つ出ます' : 'ふつうは全員が演じます。配信や大人数では減らせます（演じない人は投票だけ）')
+    ? (S.players === 1 ? '演じるのはあなた1人です' : 'ふつうは全員が演じます。配信や大人数では減らせます（演じない人は投票だけ）')
     : '演じるのは'+k+'人（毎回交代）。ほかの'+(S.players-k)+'人は投票だけします。気持ちの候補は'+poolN()+'つから選びます';
 }
 function setActors(n){
