@@ -117,6 +117,12 @@ h2{font-size:1rem;margin:0 0 .5rem;display:flex;align-items:center;gap:.5rem}
 .cat-btn.active{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:700}
 /* 選択中のタブをもう一度押すと別の3つが出る。それが分かるように印を出す */
 .cat-btn.active::after{content:" ↺";font-weight:400;opacity:.9}
+.redraw{display:block;margin:.5rem auto 0;background:none;border:none;color:var(--orange-d);font:inherit;font-size:.85rem;font-weight:700;text-decoration:underline;cursor:pointer;padding:8px 12px;min-height:44px}
+body[data-cat="mine"] .redraw{display:none}
+.pick-item{position:relative}
+.pick-item[aria-pressed="true"]::after{content:"選択中";position:absolute;top:.5rem;right:.6rem;font-size:.68rem;font-weight:800;color:#fff;background:var(--orange);border-radius:999px;padding:.12rem .5rem}
+/* PCではカテゴリを折り返して全部見せる（横スクロールはマウスで動かしにくい） */
+@media(min-width:768px){.cat-scroll{margin:0 0 .6rem}.cat-scroll::after{display:none}.cat-grid{flex-wrap:wrap;overflow:visible;padding:.15rem 0 .3rem}}
 .cat-desc{font-size:.78rem;color:var(--muted);text-align:center;margin:0 0 .6rem}
 body.returning .cat-desc{display:none}
 
@@ -241,6 +247,7 @@ button.cat-btn { border-radius: 6px; }
 .sm-row .sm-note{flex:1 1 0;color:var(--muted);font-size:.74rem;min-width:0}
 .sm-link{flex:0 0 auto;padding:.25rem .6rem;border:1px solid var(--orange);border-radius:999px;color:var(--orange-d);text-decoration:none;font-size:.76rem;background:#fff;min-height:28px;display:inline-flex;align-items:center}
 .sm-link.alt{border-color:var(--line);color:var(--muted)}
+.sm-row .sm-links{flex:0 0 auto;display:flex;gap:.3rem;margin-left:auto}
 @media(max-width:420px){.sm-row{flex-wrap:wrap}.sm-row .sm-note{flex-basis:100%;order:3}}
 .cands .cw{font-size:1.25rem;font-weight:900;margin:0 0 .25rem}
 .unveil{margin:.4rem 0 .8rem}
@@ -358,6 +365,8 @@ body:not(.at-result) #postOnly{display:none}
   </div>
   <p class="cat-desc" id="catDesc"></p>
   <div class="pick-list" id="pickList"></div>
+  <!-- 3つだけ出している。別の3つが出ることを文字で示す（↺の記号だけでは伝わらない） -->
+  <button type="button" class="redraw" id="redraw">ほかの3つを見る ↺</button>
 
   <button class="btn-primary" id="startGame">おまかせで始める</button>
   <p style="text-align:center;font-size:.85rem;margin-top:.8rem">
@@ -367,9 +376,9 @@ body:not(.at-result) #postOnly{display:none}
   <!-- 市販のカード版（幻冬舎）。このツールは非公式なので、カードで遊びたい人は公式へ（2026-10-15 ユーザー指示で途中に置く） -->
   <div class="shop-mini">
     <div class="sm-h">カードで遊ぶなら市販版も <span class="pr">PR</span></div>
-    <div class="sm-row"><span class="sm-name">はぁって言うゲーム</span><span class="sm-note">定番。大人から子どもまで</span><a class="sm-link" href="https://www.amazon.co.jp/s?k=%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazon</a><a class="sm-link alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F" target="_blank" rel="nofollow sponsored noopener">楽天</a></div>
-    <div class="sm-row"><span class="sm-name">はぁって言うゲーム2</span><span class="sm-note">お題が別。1を遊び尽くした人に</span><a class="sm-link" href="https://www.amazon.co.jp/s?k=%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A02&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazon</a><a class="sm-link alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A02%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A02%2F" target="_blank" rel="nofollow sponsored noopener">楽天</a></div>
-    <div class="sm-row"><span class="sm-name">こどものはぁって言うゲーム</span><span class="sm-note">ひらがな・小さい子向け</span><a class="sm-link" href="https://www.amazon.co.jp/s?k=%E3%81%93%E3%81%A9%E3%82%82%E3%81%AE%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazon</a><a class="sm-link alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%2593%25E3%2581%25A9%25E3%2582%2582%25E3%2581%25AE%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%2593%25E3%2581%25A9%25E3%2582%2582%25E3%2581%25AE%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F" target="_blank" rel="nofollow sponsored noopener">楽天</a></div>
+    <div class="sm-row"><span class="sm-name">はぁって言うゲーム</span><span class="sm-note">定番。大人から子どもまで</span><span class="sm-links"><a class="sm-link" href="https://www.amazon.co.jp/s?k=%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazon</a><a class="sm-link alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F" target="_blank" rel="nofollow sponsored noopener">楽天</a></span></div>
+    <div class="sm-row"><span class="sm-name">はぁって言うゲーム2</span><span class="sm-note">お題が別。1を遊び尽くした人に</span><span class="sm-links"><a class="sm-link" href="https://www.amazon.co.jp/s?k=%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A02&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazon</a><a class="sm-link alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A02%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A02%2F" target="_blank" rel="nofollow sponsored noopener">楽天</a></span></div>
+    <div class="sm-row"><span class="sm-name">こどものはぁって言うゲーム</span><span class="sm-note">ひらがな・小さい子向け</span><span class="sm-links"><a class="sm-link" href="https://www.amazon.co.jp/s?k=%E3%81%93%E3%81%A9%E3%82%82%E3%81%AE%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazon</a><a class="sm-link alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%2593%25E3%2581%25A9%25E3%2582%2582%25E3%2581%25AE%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%2593%25E3%2581%25A9%25E3%2582%2582%25E3%2581%25AE%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F" target="_blank" rel="nofollow sponsored noopener">楽天</a></span></div>
   </div>
 </section>
 
@@ -866,6 +875,7 @@ function checkMine(){
 }
 function renderMine(){
   const wrap = $('pickList');
+  document.body.dataset.cat = MY_KEY;
   const v = loadMine();
   wrap.innerHTML = '<div class="my-form">'
     + '<label for="myWord">全員が言う一言</label><input id="myWord" maxlength="30" placeholder="例：おめでとう" autocomplete="off">'
@@ -889,6 +899,7 @@ function updateStartLabel(){
 function renderPick(){
   if (S.cat === MY_KEY) return renderMine();
   const wrap = $('pickList');
+  document.body.dataset.cat = S.cat;
   let list = THEMES[S.cat].list.slice();
   const fresh = list.filter(t => STATS.seen.indexOf(t.word) < 0);
   if (fresh.length >= 3) list = fresh;
@@ -1101,6 +1112,7 @@ function finish(mode){
 $('unveil').addEventListener('click', ()=>{ $('resultBody').classList.remove('veiled'); $('scoreBox').classList.remove('veiled'); $('unveil').hidden = true; track('haa_unveil',{players:S.players}); });
 $('newGame').addEventListener('click', ()=>{ renderPick(); startGame(); });
 $('resultBack').addEventListener('click', ()=>{ renderPick(); show('setup'); });
+$('redraw').addEventListener('click', ()=>{ renderPick(); track('haa_redraw',{cat:S.cat}); });
 
 function show(name){
   ['setup','deal','perform','vote','result'].forEach(s=>{
