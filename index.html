@@ -118,6 +118,10 @@ h2{font-size:1rem;margin:0 0 .5rem;display:flex;align-items:center;gap:.5rem}
   background:#fff;font-size:1.3rem;color:var(--orange-d);cursor:pointer;line-height:1}
 .stream-sw{display:none;align-items:center;gap:.5rem;justify-content:center;margin:.8rem 0 .2rem;font-size:.85rem;color:var(--muted);cursor:pointer}
 .stream-note{display:none}
+.cand-n{display:none}
+body.stream .cand-n{display:block}
+body.stream .cand-n .act-lbl{display:block}
+body.stream .cand-n .act-lbl+.num{display:flex}
 @media(min-width:768px){.stream-note{display:block;margin-top:0}}
 body.stream .act-lbl,body.stream #actDec,body.stream #actInc,body.stream #actorCount,body.stream #actHint,body.stream .act-lbl+.num{display:none}
 body.stream #toVote,body.stream #postOnly{display:none!important}
@@ -423,6 +427,17 @@ body:not(.at-result) #postOnly{display:none}
   </div>
   <p class="hint" id="actHint">ふつうは全員が演じます。配信や大人数では減らせます（演じない人は投票だけ）</p>
   <label class="stream-sw" id="streamSw"><input type="checkbox" id="streamToggle"> 配信モード（広告なし・文字を大きく）</label>
+  <!-- 配信モードだけ：候補の数（元のカードは8択。3択だと当たりやすすぎる） -->
+  <div class="cand-n">
+    <p class="act-lbl">気持ちの候補の数</p>
+    <div class="num">
+      <button class="btn-ghost" id="candDec" aria-label="候補を1つ減らす">−</button>
+      <span class="val" id="candCount">6</span>
+      <span class="unit">択</span>
+      <button class="btn-ghost" id="candInc" aria-label="候補を1つ増やす">＋</button>
+    </div>
+    <p class="hint">多いほど当てにくくなります（3〜8）</p>
+  </div>
   <p class="hint stream-note" id="streamNote">配信モードは、1人ずつ演じて、ほかの人と視聴者がコメントで番号を当てる遊び方だけになります（画面での投票・得点はなし）</p>
   <!-- 名前は任意。色だけだと誰の番か分かりにくい（itoと同じ作り）。入れなければ色の名前のまま。この端末にだけ保存 -->
   <details class="names-box" id="namesBox">
@@ -836,6 +851,7 @@ const COLORS = [
 const S = {
   players: 4,
   actors: 0,         // 1回に演じる人数（0＝全員）
+  cands: 6,           // 配信モードの候補の数（3〜8）
   rot: 0,             // 演じる人を減らしたとき、次に演じる人の先頭（毎回交代する）
   names: [],          // 任意のプレイヤー名
   cat: Object.keys(THEMES)[0],
@@ -886,7 +902,17 @@ function setPlayers(n){
 // 1回に演じる人数。配信（演者1人ずつ）や大人数向け。0のときは全員が演じる＝これまでどおり
 function actorsN(){ if (document.body.classList.contains('stream')) return 1; return S.actors ? Math.min(S.actors, S.players) : S.players; }
 // 投票で選ぶ候補の数。人数が少なくても3つは出す（1〜2人の配信・視聴者が当てる形）
-function poolN(){ return Math.max(3, S.players); }
+function poolN(){ return document.body.classList.contains('stream') ? S.cands : Math.max(3, S.players); }
+const CAND_KEY = 'haa-cands';
+try { const c = +localStorage.getItem(CAND_KEY); if (c >= 3 && c <= 8) S.cands = c; } catch(e){}
+function setCands(n){
+  S.cands = Math.max(3, Math.min(8, n));
+  $('candCount').textContent = S.cands;
+  try { localStorage.setItem(CAND_KEY, String(S.cands)); } catch(e){}
+}
+$('candInc').addEventListener('click', ()=>setCands(S.cands+1));
+$('candDec').addEventListener('click', ()=>setCands(S.cands-1));
+$('candCount').textContent = S.cands;
 // ===== プレイヤー名（任意・この端末にだけ保存） =====
 const NAMES_KEY = 'haa-player-names';
 try { const v = JSON.parse(localStorage.getItem(NAMES_KEY)||'[]'); S.names = Array.isArray(v) ? v : []; } catch(e){ S.names = []; }
@@ -1061,7 +1087,7 @@ function startGame(){
   const t = S.theme;
   // acts から人数ぶんを取る。先頭ほど分かりやすい順に並べてあるので前から使う
   // 演じる人が少ないときも、投票の候補は人数ぶん出す（候補が1つだと答えが分かってしまう）
-  const idx = t.acts.map((_,i)=>i).slice(0, poolN());
+  const idx = t.acts.map((_,i)=>i).slice(0, Math.min(poolN(), t.acts.length));
   S.pool = idx.slice();
   for (let i=idx.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [idx[i],idx[j]]=[idx[j],idx[i]]; }
   S.k = actorsN();
