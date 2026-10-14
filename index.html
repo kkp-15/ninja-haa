@@ -237,9 +237,41 @@ body.returning .cat-desc{display:none}
 .res-row .mk{font-weight:800;font-size:.9rem}
 .res-row .mk.o{color:var(--ok)}
 .res-row .mk.x{color:var(--ng)}
+/* 答えのカード：演技の舞台と同じ濃紺。番号と気持ちを大きく */
+.ans-grid{display:grid;grid-template-columns:1fr;gap:.6rem;margin:.2rem 0 .2rem}
+@media(min-width:560px){.ans-grid:not(.one){grid-template-columns:1fr 1fr}}
+.ans-grid.veiled{display:none}
+.ans-card{display:block;border:0;padding:.8rem .9rem .9rem;border-radius:14px;color:#fff;
+  background:#16213a url('/img/reveal-bg.webp') center/cover no-repeat;box-shadow:0 6px 16px rgba(22,33,58,.18)}
+.ans-top{display:flex;align-items:center;gap:.45rem;font-size:.85rem;opacity:.95}
+.ans-dot{width:.8rem;height:.8rem;border-radius:50%;background:var(--pc);flex:none;box-shadow:0 0 0 2px rgba(255,255,255,.7)}
+.ans-name{font-weight:800}
+.ans-word{margin-left:auto;opacity:.8}
+.ans-main{display:flex;align-items:center;gap:.6rem;background:#fff;color:var(--ink);border-radius:10px;
+  padding:.6rem .75rem;margin-top:.5rem;border:3px solid var(--orange)}
+.ans-no{font-size:1.9rem;font-weight:900;color:var(--orange-d);line-height:1}
+.ans-act{font-size:1.15rem;font-weight:900;line-height:1.35}
+.ans-votes{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.55rem}
+.vc{font-size:.78rem;font-weight:700;border-radius:999px;padding:.15rem .6rem}
+.vc.ok{background:#e6f4ea;color:#2f7a45}
+.vc.ng{background:rgba(255,255,255,.18);color:#fff}
+.vc small{opacity:.85}
+.sr-rk{font-size:.78rem;color:var(--muted);font-weight:800}
+.sr.top .sr-rk{color:#fff;background:var(--orange);border-radius:999px;text-align:center;padding:.1rem 0;font-size:.74rem}
+.sr.top .sr-nm,.sr.top b{font-weight:900}
+.sr-nm{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sr-bar{height:.55rem;background:#f3e8d6;border-radius:999px;overflow:hidden}
+.sr-bar i{display:block;height:100%;border-radius:999px}
+body.stream .ans-top{font-size:1.2rem}
+body.stream .ans-no{font-size:3.4rem}
+body.stream .ans-act{font-size:2.2rem}
+body.stream .ans-card{padding:1.2rem 1.4rem 1.3rem}
+body.stream .ans-main{padding:1rem 1.2rem}
+body.stream .vc{font-size:1rem}
 .score{margin-top:.8rem;padding:.7rem .9rem;background:#fffaf2;border:1px solid var(--line);border-radius:12px}
 .score h3{margin:0 0 .35rem;font-size:.92rem}
-.score .sr{display:flex;justify-content:space-between;font-size:.9rem;padding:.15rem 0}
+.score .sr{display:grid;grid-template-columns:2.6rem minmax(4.5rem,max-content) 1fr 3rem;align-items:center;gap:.6rem;font-size:.95rem;padding:.3rem 0}
+.score .sr b{text-align:right}
 .score .sr b{color:var(--orange-d)}
 
 .shop{margin:1.2rem 0 0;padding:.9rem 1rem;background:var(--paper);border:1px solid var(--line);border-radius:12px}
@@ -315,8 +347,8 @@ button.cat-btn { border-radius: 6px; }
 .cdown.tick{animation:cd-pop .7s ease both}
 @keyframes cd-pop{0%{transform:scale(.4);opacity:0}30%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
 body.stream .cdown{font-size:9rem}
-.res-row.pop{animation:cd-pop .5s ease both}
-@media (prefers-reduced-motion:reduce){.cdown.tick,.res-row.pop{animation:none}}
+.res-row.pop,.ans-card.pop{animation:cd-pop .5s ease both}
+@media (prefers-reduced-motion:reduce){.cdown.tick,.res-row.pop,.ans-card.pop{animation:none}}
 .veiled{display:none}
 .stream-only{display:none}
 /* 配信モード：PCの広い画面で自動ON（設定で切替可）。スマホの表示は変えない */
@@ -1268,12 +1300,30 @@ function finish(mode){
   const veil = STREAM_MQ.matches;
   body.classList.toggle('veiled', veil); $('scoreBox').classList.toggle('veiled', veil); $('unveil').hidden = !veil;
   // 誰がどの気持ちだったかを開示
+  // 演じた人ごとに「答えのカード」。投票したときは、誰が当てたか（○）・外したか（×と選んだ番号）も出す
+  body.className = 'ans-grid' + (S.k === 1 ? ' one' : '') + (veil ? ' veiled' : '');
   for (let i=0;i<S.k;i++){
-    const row = document.createElement('div');
-    row.className='res-row';
-    row.innerHTML = '<span class="nm">'+esc(pName(S.act[i]))+'</span>'
-      + '<span class="act"><span class="ans-l">正解</span><span class="no">'+numOf(S.assign[i])+'</span>'+esc(S.theme.acts[S.assign[i]])+'</span>';
-    body.appendChild(row);
+    const p = S.act[i], ai = S.assign[i];
+    const card = document.createElement('div');
+    card.className = 'ans-card';
+    card.style.setProperty('--pc', COLORS[p%COLORS.length].bg);
+    let who = '';
+    if (mode !== 'quick'){
+      const chips = [];
+      for (let v=0; v<S.players; v++){
+        if (v === p) continue;
+        const g = S.votes[v] && S.votes[v][i];
+        if (g === undefined) continue;
+        chips.push(g === ai
+          ? '<span class="vc ok">○ '+esc(pName(v))+'</span>'
+          : '<span class="vc ng">× '+esc(pName(v))+' <small>'+numOf(g)+'</small></span>');
+      }
+      if (chips.length) who = '<div class="ans-votes">'+chips.join('')+'</div>';
+    }
+    card.innerHTML = '<div class="ans-top"><span class="ans-dot"></span><span class="ans-name">'+esc(pName(p))+'</span><span class="ans-word">「'+esc(S.theme.word)+'」</span></div>'
+      + '<div class="ans-main"><span class="ans-no">'+numOf(ai)+'</span><span class="ans-act">'+esc(S.theme.acts[ai])+'</span></div>'
+      + who;
+    body.appendChild(card);
   }
   // 得点：当てた人に1点、当ててもらえた人にも1点（カード版と同じ考え方）
   const sc = new Array(S.players).fill(0);
@@ -1293,9 +1343,12 @@ function finish(mode){
     show('result');
     return;
   }
-  let h = '<h3>得点</h3>';
-  sc.map((v,i)=>({i,v})).sort((a,b)=>b.v-a.v).forEach(o=>{
-    h += '<div class="sr"><span>'+esc(pLabel(o.i))+(o.v===max&&max>0?' 👑':'')+'</span><b>'+o.v+'点</b></div>';
+  let h = '<h3>得点</h3>', rank = 0, prev = null;
+  sc.map((v,i)=>({i,v})).sort((a,b)=>b.v-a.v).forEach((o,n)=>{
+    if (o.v !== prev){ rank = n+1; prev = o.v; }
+    const w = max > 0 ? Math.round(o.v / max * 100) : 0;
+    h += '<div class="sr'+(rank===1&&max>0?' top':'')+'"><span class="sr-rk">'+rank+'位</span><span class="sr-nm">'+esc(pName(o.i))+'</span>'
+      + '<span class="sr-bar"><i style="width:'+w+'%;background:'+COLORS[o.i%COLORS.length].bg+'"></i></span><b>'+o.v+'点</b></div>';
   });
   box.innerHTML = h;
   const hits = sc.reduce((t,v)=>t+v,0);
@@ -1311,7 +1364,7 @@ function countdownReveal(){
     if (n === 0){
       cd.hidden = true;
       $('resultBody').classList.remove('veiled'); $('scoreBox').classList.remove('veiled');
-      $('resultBody').querySelectorAll('.res-row').forEach(r=>r.classList.add('pop'));
+      $('resultBody').querySelectorAll('.ans-card').forEach((r,k)=>{ r.style.animationDelay = (k*0.12)+'s'; r.classList.add('pop'); });
       return;
     }
     cd.textContent = n; cd.classList.remove('tick'); void cd.offsetWidth; cd.classList.add('tick');
