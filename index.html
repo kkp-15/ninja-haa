@@ -350,6 +350,12 @@ button.cat-btn { border-radius: 6px; }
 .cands .cw{font-size:1.25rem;font-weight:900;margin:0 0 .25rem}
 .unveil{margin:.4rem 0 .8rem}
 .unveil[hidden]{display:none}
+.unveil-msg{text-align:center;font-weight:800;font-size:1rem;line-height:1.6;margin:.6rem 0 .2rem}
+.unveil-msg[hidden]{display:none}
+/* 答えが出るまでは、次の回へのボタンと広告を出さない */
+body.veiling #postOnly,body.veiling #newGame,body.veiling #resultBack{display:none!important}
+body:not(.stream) .unveil-msg br,body:not(.stream) .unveil-msg-viewer{display:none}
+body.stream .unveil-msg{font-size:1.6rem}
 .cdown{text-align:center;font-size:4.5rem;font-weight:900;color:var(--orange);line-height:1.2;padding:.6rem 0}
 .cdown[hidden]{display:none}
 .cdown.tick{animation:cd-pop .7s ease both}
@@ -550,6 +556,7 @@ body:not(.at-result) #postOnly{display:none}
 <!-- STEP 5 結果 -->
 <section class="card hidden" id="step-result">
   <h2><span class="step-label">STEP 6</span>答え合わせ</h2>
+  <p class="unveil-msg" id="unveilMsg" hidden>投票がそろいました。<br>視聴者のみなさんも、コメントで番号を書いてから開けましょう</p>
   <button type="button" class="btn-primary unveil" id="unveil" hidden>答えを見る</button>
   <div class="cdown" id="cdown" hidden aria-live="polite"></div>
   <div id="resultBody"></div>
@@ -1257,7 +1264,7 @@ function renderPerform(){
 }
 $('toVote').addEventListener('click', ()=>{ S.voter=0; S.target=-1; nextVote(); show('vote'); });
 // 投票は人数×(人数−1)回スマホを回す（6人で30回）。そこで止まる人が多いので、口で当て合って答えだけ見る道を用意する
-$('toReveal').addEventListener('click', ()=>{ S.votes = {}; finish('quick'); if (STREAM_MQ.matches) countdownReveal(); });
+$('toReveal').addEventListener('click', ()=>{ S.votes = {}; finish('quick'); countdownReveal(); });
 $('voteSkip').addEventListener('click', ()=>finish('partial'));
 
 // ===== 投票（カード版でいちばん面倒なところ） =====
@@ -1306,8 +1313,11 @@ function finish(mode){
   mode = mode || 'vote';
   const body = $('resultBody'); body.innerHTML='';
   // 配信向けの広い画面では「答えを見る」で一拍おく（視聴者が当ててから開ける）
-  const veil = STREAM_MQ.matches;
+  const veil = true;
   body.classList.toggle('veiled', veil); $('scoreBox').classList.toggle('veiled', veil); $('unveil').hidden = !veil;
+  document.body.classList.toggle('veiling', veil);
+  $('unveilMsg').hidden = !(veil && mode !== 'quick');
+  $('unveilMsg').innerHTML = STREAM_MQ.matches ? '投票がそろいました。<br>視聴者のみなさんも、コメントで番号を書いてから開けましょう' : '投票がそろいました。「せーの」で答えを見ましょう';
   // 誰がどの気持ちだったかを開示
   // 演じた人ごとに「答えのカード」。投票したときは、誰が当てたか（○）・外したか（×と選んだ番号）も出す
   body.className = 'ans-grid' + (S.k === 1 ? ' one' : '') + (veil ? ' veiled' : '');
@@ -1365,14 +1375,21 @@ function finish(mode){
   show('result');
 }
 
+function pushResultAd(){
+  if (window.__adPushed || window.__haaStream) return;
+  window.__adPushed = true;
+  try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
+}
 // 3・2・1 で発表。コメントで当てる時間を作り、答えが出る瞬間をそろえる
 function countdownReveal(){
-  const cd = $('cdown'); $('unveil').hidden = true; cd.hidden = false;
+  const cd = $('cdown'); $('unveil').hidden = true; $('unveilMsg').hidden = true; cd.hidden = false;
   let n = 3;
   const tick = ()=>{
     if (n === 0){
       cd.hidden = true;
       $('resultBody').classList.remove('veiled'); $('scoreBox').classList.remove('veiled');
+      document.body.classList.remove('veiling');
+      setTimeout(pushResultAd, 60);
       $('resultBody').querySelectorAll('.ans-card').forEach((r,k)=>{ r.style.animationDelay = (k*0.12)+'s'; r.classList.add('pop'); });
       return;
     }
@@ -1393,10 +1410,8 @@ function show(name){
   });
   document.body.classList.toggle('at-result', name==='result');
   syncDock(name);
-  if (name === 'result' && !window.__adPushed && !window.__haaStream) {
-    window.__adPushed = true;
-    try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
-  }
+  // 広告は答えが出てから（隠れたまま push すると幅0で枠が死ぬ）
+  if (name === 'result' && !document.body.classList.contains('veiling')) pushResultAd();
   document.body.classList.toggle('playing', name!=='setup');
   window.scrollTo({top:0,behavior:'smooth'});
 }
