@@ -119,6 +119,9 @@ h2{font-size:1rem;margin:0 0 .5rem;display:flex;align-items:center;gap:.5rem}
 .stream-sw{display:none;align-items:center;gap:.5rem;justify-content:center;margin:.8rem 0 .2rem;font-size:.85rem;color:var(--muted);cursor:pointer}
 .stream-note{display:none}
 .cand-n{display:none}
+body.stream.playing .shop-mini{display:none}
+/* 配信モードでは主ボタンを画面下に固定（PCでもスクロールせずに押せる） */
+body.stream #dock{position:sticky;bottom:0;z-index:50;background:#fffdf9;box-shadow:0 -6px 12px rgba(255,253,249,.9);border-top:1px solid var(--line);padding:10px 0 12px;margin:0 0 12px}
 body.stream .cand-n,body[data-players="1"] .cand-n{display:block}
 body.stream .cand-n .act-lbl{display:block}
 body.stream .cand-n .act-lbl+.num{display:flex}
@@ -1445,6 +1448,11 @@ function show(name){
 // Init
 renderStats();
 applyStream();
+// 配信モードでは、市販版のリンク（PR）を「始める」ボタンの下へ移す（ボタンがPRの下に押し下げられないように）
+if (document.body.classList.contains('stream')){
+  const sm = document.querySelector('.shop-mini'), dock = $('dock');
+  if (sm && dock) dock.parentNode.insertBefore(sm, dock.nextSibling);
+}
 $('streamToggle').addEventListener('change', e=>{
   try{ localStorage.setItem(STREAM_KEY, e.target.checked ? '1' : '0'); }catch(_){}
   track('haa_stream_toggle',{on:e.target.checked});
