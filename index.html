@@ -249,6 +249,7 @@ body.returning .cat-desc{display:none}
 .ans-word{margin-left:auto;opacity:.8}
 .ans-main{display:flex;align-items:center;gap:.6rem;background:#fff;color:var(--ink);border-radius:10px;
   padding:.6rem .75rem;margin-top:.5rem;border:3px solid var(--orange)}
+.ans-kick{font-size:.7rem;font-weight:900;color:#fff;background:var(--orange);border-radius:4px;padding:.1rem .4rem;flex:none}
 .ans-no{font-size:1.9rem;font-weight:900;color:var(--orange-d);line-height:1}
 .ans-act{font-size:1.15rem;font-weight:900;line-height:1.35}
 .ans-votes{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.55rem}
@@ -264,6 +265,11 @@ body.returning .cat-desc{display:none}
 .sr-bar i{display:block;height:100%;border-radius:999px}
 body.stream .ans-top{font-size:1.2rem}
 body.stream .ans-no{font-size:3.4rem}
+body.stream .ans-kick{font-size:1.1rem;padding:.2rem .6rem}
+body.stream .ans-grid.one .ans-main{justify-content:center;padding:1.6rem 1.2rem}
+body.stream .ans-grid.one .ans-no{font-size:5rem}
+body.stream .ans-grid.one .ans-act{font-size:3.2rem}
+body.stream .ans-grid.one .ans-top{font-size:1.5rem}
 body.stream .ans-act{font-size:2.2rem}
 body.stream .ans-card{padding:1.2rem 1.4rem 1.3rem}
 body.stream .ans-main{padding:1rem 1.2rem}
@@ -1321,7 +1327,7 @@ function finish(mode){
       if (chips.length) who = '<div class="ans-votes">'+chips.join('')+'</div>';
     }
     card.innerHTML = '<div class="ans-top"><span class="ans-dot"></span><span class="ans-name">'+esc(pName(p))+'</span><span class="ans-word">「'+esc(S.theme.word)+'」</span></div>'
-      + '<div class="ans-main"><span class="ans-no">'+numOf(ai)+'</span><span class="ans-act">'+esc(S.theme.acts[ai])+'</span></div>'
+      + '<div class="ans-main"><span class="ans-kick">正解</span><span class="ans-no">'+numOf(ai)+'</span><span class="ans-act">'+esc(S.theme.acts[ai])+'</span></div>'
       + who;
     body.appendChild(card);
   }
