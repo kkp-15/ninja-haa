@@ -162,6 +162,9 @@ body.returning .cat-desc{display:none}
 
 /* 配役カード：itoと同じ「回して見る」 */
 .deal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:.55rem;margin-top:.6rem}
+.deal-cell{display:flex;flex-direction:column;gap:.3rem}
+.deal-link{background:#fff;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:.72rem;color:var(--muted);padding:.3rem 0;min-height:32px;cursor:pointer}
+.deal-remote{margin-top:.6rem}
 .deal-card{aspect-ratio:3/4;border-radius:14px;border:1.5px solid rgba(255,255,255,.9);
   background:url('/img/paper.webp') 0 0/128px 128px repeat,
     linear-gradient(145deg,rgba(255,255,255,.28),transparent 38%,rgba(0,0,0,.10)),
@@ -261,6 +264,8 @@ button.cat-btn { border-radius: 6px; }
 .stage.sm .vote-who{color:#fff;margin:0 0 .2rem}
 .stage .st-q{margin:0;font-size:.95rem;opacity:.95}
 .stage .st-q b{color:#ffd8a8}
+.no{display:inline-block;min-width:1.3em;margin-right:.3rem;color:var(--orange-d);font-weight:900}
+.stage .st-chat{display:none;margin-top:.5rem;font-size:.85rem;color:#ffd8a8}
 .cands{margin:.7rem 0 .2rem;padding:.6rem .8rem;background:#fffaf2;border:1px solid var(--line);border-radius:12px}
 .cands .cl{font-size:.78rem;color:var(--muted);font-weight:800;margin-bottom:.3rem}
 .cands ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.25rem .8rem}
@@ -297,6 +302,7 @@ button.cat-btn { border-radius: 6px; }
   #statsBar{display:none!important}
   .shop-mini .sm-h{font-size:1rem}.sm-row{font-size:1rem}.sm-row .sm-note{font-size:.9rem}.sm-link{font-size:.9rem}
   .vote-who{font-size:1.7rem}#voteTarget{font-size:1.3rem}
+  .stage .st-chat{display:block;font-size:1.15rem}
   .stage{padding:1.6rem 1.5rem 1.8rem;border-radius:16px}.stage .st-who{font-size:1.5rem}.stage .st-word{font-size:4rem}.stage .st-sub{font-size:1.1rem}
   .hbar{padding:.5rem 0 .7rem}.hb-name{font-size:1.3rem}.hb-url{font-size:1rem}.hb-step{font-size:1.05rem}
   .vote-item{font-size:1.5rem;padding:.9rem 1.2rem;border-radius:14px}.vote-list{gap:.6rem}
@@ -428,6 +434,7 @@ body:not(.at-result) #postOnly{display:none}
   <h2><span class="step-label">STEP 3</span>順番にタップして自分の役を見る</h2>
   <p class="hint">全員が同じ「<b id="dealWord"></b>」を言います。<br>気持ちだけが1人ずつ違います。他の人に見られないように！</p>
   <div class="deal-grid" id="dealGrid"></div>
+  <p class="hint deal-remote">離れた場所から遊ぶときは、カードの下の「リンクで送る」を押して、演じる人にDMで送ってください。その人の画面にだけ気持ちが出ます</p>
   <button class="btn-sub" id="toPerform" disabled>全員見終わった → 演じる</button>
   <button class="btn-sub" id="dealBack">↺ 設定に戻る</button>
 </section>
@@ -1055,7 +1062,14 @@ function renderDeal(){
     b.innerHTML = '<span class="n">'+(p+1)+'</span><span class="who">'+esc(pName(p))+'</span>';
     b.setAttribute('aria-label', pLabel(p)+' の役を見る');
     b.addEventListener('click', ()=>openReveal(i));
-    g.appendChild(b);
+    const cell = document.createElement('div'); cell.className = 'deal-cell';
+    cell.appendChild(b);
+    // 離れた場所の人へ：その人の気持ちだけが出るリンクをコピーする（この画面には出さない）
+    const ln = document.createElement('button');
+    ln.type='button'; ln.className='deal-link'; ln.textContent='リンクで送る';
+    ln.addEventListener('click', ()=>copyRoleLink(i, ln));
+    cell.appendChild(ln);
+    g.appendChild(cell);
   }
   $('toPerform').disabled = S.seen.some(v=>!v);
   const seenN = S.seen.filter(Boolean).length;
@@ -1077,6 +1091,18 @@ function syncDock(name){
   if (mn) document.documentElement.style.setProperty('--mainTop', Math.round(mn.getBoundingClientRect().top + scrollY) + 'px');
 }
 
+// 役のリンク。中身は「言う言葉・気持ち・名前」だけ。読みにくくするだけで暗号ではない（DMで本人に送る前提）
+function roleUrl(i){
+  const o = {w:S.theme.word, a:S.theme.acts[S.assign[i]], n:pLabel(S.act[i])};
+  const b = btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  return location.origin + '/?r=' + b;
+}
+function copyRoleLink(i, btn){
+  const url = roleUrl(i);
+  const done = ()=>{ btn.textContent = 'コピーしました'; S.seen[i] = true; setTimeout(()=>renderDeal(), 900); track('haa_role_link',{players:S.players}); };
+  try { navigator.clipboard.writeText(url).then(done, ()=>{ window.prompt('このリンクをコピーして送ってください', url); done(); }); }
+  catch(e){ window.prompt('このリンクをコピーして送ってください', url); done(); }
+}
 function openReveal(i){
   $('revealWho').textContent = pLabel(S.act[i])+' さん';
   $('revealWordLine').textContent = '言う言葉は「'+S.theme.word+'」';
@@ -1085,6 +1111,7 @@ function openReveal(i){
   $('reveal').dataset.i = i;
 }
 $('revealClose').addEventListener('click', ()=>{
+  if ($('reveal').classList.contains('from-link')){ $('reveal').classList.remove('show','from-link'); $('revealClose').textContent = '覚えた！次の人へ'; return; }
   const i = +$('reveal').dataset.i;
   S.seen[i] = true;
   $('reveal').classList.remove('show');
@@ -1096,14 +1123,27 @@ $('toPerform').addEventListener('click', ()=>{
 });
 $('dealBack').addEventListener('click', ()=>show('setup'));
 
+const NUMS = ['①','②','③','④','⑤','⑥','⑦','⑧'];
+// 候補の番号（並びは pool の昇順で固定）。視聴者がコメントで「②」と当てられる
+function numOf(ai){ const i = S.pool.slice().sort((a,b)=>a-b).indexOf(ai); return NUMS[i] || ''; }
 function renderPerform(){
   const st = $('performStage');
   st.innerHTML = '<div class="st-who">'+(S.k===1 ? esc(pLabel(S.act[0]))+' さんの番' : S.k+'人が順番に演じます')+'</div>'
     + '<div class="st-word">「'+esc(S.theme.word)+'」</div>'
-    + '<div class="st-sub">声と表情だけで。どの気持ちかを当ててもらう</div>';
+    + '<div class="st-sub">声と表情だけで。どの気持ちかを当ててもらう</div>'
+    + '<div class="st-chat">視聴者のみなさんは、コメントで番号を当ててください</div>';
   const cw = $('performCands');
   cw.innerHTML = '<div class="cl">気持ちの候補（この中のどれかを演じます）</div><ul>'
-    + S.pool.slice().sort((a,b)=>a-b).map(ai=>'<li>'+esc(S.theme.acts[ai])+'</li>').join('') + '</ul>';
+    + S.pool.slice().sort((a,b)=>a-b).map(ai=>'<li><span class="no">'+numOf(ai)+'</span>'+esc(S.theme.acts[ai])+'</li>').join('') + '</ul>';
+  // 配信や1人演技では、口やコメントで当ててすぐ答えを見る方がテンポがよい。ふだんは投票が主
+  const quick = S.k === 1 || STREAM_MQ.matches;
+  const tv = $('toVote'), tr = $('toReveal');
+  tv.className = quick ? 'btn-sub' : 'btn-primary';
+  tr.className = quick ? 'btn-primary' : 'btn-sub';
+  tr.textContent = quick ? '答えを見る' : '投票しないで答えを見る';
+  tv.textContent = quick ? '投票して得点をつける' : '全員演じ終わった → 投票へ';
+  if (quick && tr.parentNode === tv.parentNode) tv.parentNode.insertBefore(tr, tv);
+  else if (!quick && tr.parentNode === tv.parentNode) tv.parentNode.insertBefore(tv, tr);
   $('revealHint').textContent = S.players === 1 ? '視聴者やまわりの人が当てたら、答えを見ます' : '口で当て合ったあとに。人数が多いときや小さい子がいるときに';
   const w = $('performList'); w.innerHTML='';
   if (S.k === 1) return;
@@ -1138,7 +1178,7 @@ function renderVote(){
   used.forEach(ai=>{
     const b = document.createElement('button');
     b.type='button'; b.className='vote-item';
-    b.textContent = S.theme.acts[ai];
+    b.innerHTML = '<span class="no">'+numOf(ai)+'</span>'+esc(S.theme.acts[ai]);
     b.addEventListener('click', ()=>{
       S.votes[S.voter] = S.votes[S.voter] || {};
       S.votes[S.voter][S.target] = ai;
@@ -1165,7 +1205,7 @@ function finish(mode){
     const row = document.createElement('div');
     row.className='res-row';
     row.innerHTML = '<span class="nm">'+esc(pName(S.act[i]))+'</span>'
-      + '<span class="act"><span class="ans-l">正解</span>'+S.theme.acts[S.assign[i]]+'</span>';
+      + '<span class="act"><span class="ans-l">正解</span><span class="no">'+numOf(S.assign[i])+'</span>'+esc(S.theme.acts[S.assign[i]])+'</span>';
     body.appendChild(row);
   }
   // 得点：当てた人に1点、当ててもらえた人にも1点（カード版と同じ考え方）
@@ -1221,6 +1261,20 @@ function show(name){
 renderStats();
 // /odai/ からの「このお題で遊ぶ」（?cat=定番のキー&word=お題）
 const Q = new URLSearchParams(location.search);
+// 「リンクで送る」で届いた役（?r=）。この人の気持ちだけを出す。閉じたらURLから消す
+if (Q.get('r')){
+  try {
+    const raw = Q.get('r').replace(/-/g,'+').replace(/_/g,'/');
+    const o = JSON.parse(decodeURIComponent(escape(atob(raw + '==='.slice((raw.length+3)%4)))));
+    $('revealWho').textContent = String(o.n||'') + ' さん';
+    $('revealWordLine').textContent = '言う言葉は「' + String(o.w||'') + '」';
+    $('revealAct').textContent = String(o.a||'');
+    $('revealClose').textContent = '覚えた！閉じる';
+    $('reveal').classList.add('show','from-link');
+    track('haa_role_open',{});
+  } catch(e){}
+  try { history.replaceState(null, '', location.pathname); } catch(e){}
+}
 if (Q.get('cat') && THEMES[Q.get('cat')]) S.cat = Q.get('cat');
 renderCats();
 renderPick(Q.get('word') || '');
