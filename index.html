@@ -263,6 +263,9 @@ body.returning .cat-desc{display:none}
 .sr.top .sr-rk{color:#fff;background:var(--orange);border-radius:999px;text-align:center;padding:.1rem 0;font-size:.74rem}
 .sr.top .sr-nm,.sr.top b{font-weight:900}
 .sr-nm{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sr-rd{font-size:.75rem;font-weight:400;color:var(--muted);margin-left:.5rem}
+.sr-add{display:block;font-size:.68rem;color:var(--muted);font-weight:700;line-height:1}
+.sr-reset{display:block;margin:.5rem auto 0;background:none;border:none;color:#b3a595;font:inherit;font-size:.78rem;text-decoration:underline;cursor:pointer;padding:6px 10px;min-height:36px}
 .sr-bar{height:.55rem;background:#f3e8d6;border-radius:999px;overflow:hidden}
 .sr-bar i{display:block;height:100%;border-radius:999px}
 body.stream .ans-top{font-size:1.2rem}
@@ -899,6 +902,7 @@ const S = {
   players: 4,
   actors: 0,         // 1回に演じる人数（0＝全員）
   cands: 6,           // 配信モードの候補の数（3〜8）
+  total: [], rounds: 0, // 「もう1回遊ぶ」で積み上げる合計得点と回数（人数を変えたら0から）
   rot: 0,             // 演じる人を減らしたとき、次に演じる人の先頭（毎回交代する）
   names: [],          // 任意のプレイヤー名
   cat: Object.keys(THEMES)[0],
@@ -935,7 +939,9 @@ function track(n,p){ try{ if(typeof gtag==='function') gtag('event',n,p||{}); }c
 
 // ===== 設定 =====
 function setPlayers(n){
+  const prevPlayers = S.players;
   S.players = Math.max(1, Math.min(8, n));
+  if (S.players !== prevPlayers){ S.total = []; S.rounds = 0; }
   $('playerCount').textContent = S.players;
   document.body.dataset.players = S.players;
   $('playersHint').textContent = S.players >= 3
@@ -1362,14 +1368,22 @@ function finish(mode){
     show('result');
     return;
   }
-  let h = '<h3>得点</h3>', rank = 0, prev = null;
-  sc.map((v,i)=>({i,v})).sort((a,b)=>b.v-a.v).forEach((o,n)=>{
+  // 「もう1回遊ぶ」で合計していく。順位は合計で、今回の得点は「+2」で添える
+  if (S.total.length !== S.players) { S.total = new Array(S.players).fill(0); S.rounds = 0; }
+  for (let i=0;i<S.players;i++) S.total[i] += sc[i];
+  S.rounds++;
+  const tmax = Math.max.apply(null, S.total);
+  let h = '<h3>'+(S.rounds > 1 ? '合計得点<span class="sr-rd">'+S.rounds+'回目まで</span>' : '得点')+'</h3>', rank = 0, prev = null;
+  S.total.map((v,i)=>({i,v})).sort((a,b)=>b.v-a.v).forEach((o,n)=>{
     if (o.v !== prev){ rank = n+1; prev = o.v; }
-    const w = max > 0 ? Math.round(o.v / max * 100) : 0;
-    h += '<div class="sr'+(rank===1&&max>0?' top':'')+'"><span class="sr-rk">'+rank+'位</span><span class="sr-nm">'+esc(pName(o.i))+'</span>'
-      + '<span class="sr-bar"><i style="width:'+w+'%;background:'+COLORS[o.i%COLORS.length].bg+'"></i></span><b>'+o.v+'点</b></div>';
+    const w = tmax > 0 ? Math.round(o.v / tmax * 100) : 0;
+    h += '<div class="sr'+(rank===1&&tmax>0?' top':'')+'"><span class="sr-rk">'+rank+'位</span><span class="sr-nm">'+esc(pName(o.i))+'</span>'
+      + '<span class="sr-bar"><i style="width:'+w+'%;background:'+COLORS[o.i%COLORS.length].bg+'"></i></span><b>'+o.v+'点'+(S.rounds > 1 ? '<small class="sr-add">+'+sc[o.i]+'</small>' : '')+'</b></div>';
   });
+  if (S.rounds > 1) h += '<button type="button" class="sr-reset" id="scoreReset">合計を0に戻す</button>';
   box.innerHTML = h;
+  const rb = $('scoreReset');
+  if (rb) rb.addEventListener('click', ()=>{ S.total = []; S.rounds = 0; rb.textContent = '0に戻しました。次の回から数えます'; rb.disabled = true; });
   const hits = sc.reduce((t,v)=>t+v,0);
   track('haa_finish',{word:S.theme.word,players:S.players,hits:hits,mode:mode});
   show('result');
