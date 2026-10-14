@@ -353,6 +353,12 @@ button.cat-btn { border-radius: 6px; }
 .cands .cw{font-size:1.25rem;font-weight:900;margin:0 0 .25rem}
 .unveil{margin:.4rem 0 .8rem}
 .unveil[hidden]{display:none}
+/* 演技のあとの2択（投票して得点をつける／答えを見る）を同じ重さで横並び */
+.btn-eq{display:block;width:100%;padding:.8rem .4rem;border:2px solid var(--orange);border-radius:12px;background:#fff;
+  color:var(--orange-d);font:inherit;font-weight:800;font-size:.98rem;line-height:1.35;cursor:pointer;min-height:56px}
+body.perform-eq #dock[data-step=perform]{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+body.perform-eq #dock[data-step=perform] #dockMsg{grid-column:1 / -1}
+body.stream .btn-eq{font-size:1.25rem;min-height:66px}
 .unveil-msg{text-align:center;font-weight:800;font-size:1rem;line-height:1.6;margin:.6rem 0 .2rem}
 .unveil-msg[hidden]{display:none}
 /* 答えが出るまでは、次の回へのボタンと広告を出さない */
@@ -1251,11 +1257,15 @@ function renderPerform(){
   // 配信や1人演技では、口やコメントで当ててすぐ答えを見る方がテンポがよい。ふだんは投票が主
   const quick = S.k === 1 || STREAM_MQ.matches;
   const tv = $('toVote'), tr = $('toReveal');
-  tv.className = quick ? 'btn-sub' : 'btn-primary';
-  tr.className = quick ? 'btn-primary' : 'btn-sub';
-  tr.textContent = quick ? '答えを見る' : '投票しないで答えを見る';
-  tv.textContent = quick ? '投票して得点をつける' : '全員演じ終わった → 投票へ';
-  if (quick && tr.parentNode === tv.parentNode) tv.parentNode.insertBefore(tr, tv);
+  // 投票もできる回（2人以上で1人ずつ演じる）は、2つを同じ大きさで横に並べる。片方だけ目立つと、投票したいのに答えを先に押してしまう
+  const both = quick && S.players >= 2 && !STREAM_MQ.matches;
+  document.body.classList.toggle('perform-eq', both);
+  tv.className = both ? 'btn-eq' : (quick ? 'btn-sub' : 'btn-primary');
+  tr.className = both ? 'btn-eq' : (quick ? 'btn-primary' : 'btn-sub');
+  tr.textContent = both ? '答えだけ見る' : (quick ? '答えを見る' : '投票しないで答えを見る');
+  tv.textContent = both ? '投票する' : (quick ? '投票して得点をつける' : '全員演じ終わった → 投票へ');
+  if (both && tr.parentNode === tv.parentNode) tv.parentNode.insertBefore(tv, tr);
+  else if (quick && tr.parentNode === tv.parentNode) tv.parentNode.insertBefore(tr, tv);
   else if (!quick && tr.parentNode === tv.parentNode) tv.parentNode.insertBefore(tv, tr);
   $('revealHint').textContent = document.body.classList.contains('stream') ? 'コメントで番号が出そろったら、答えを見ます' : S.players === 1 ? '視聴者やまわりの人が当てたら、答えを見ます' : '口で当て合ったあとに。人数が多いときや小さい子がいるときに';
   const w = $('performList'); w.innerHTML='';
