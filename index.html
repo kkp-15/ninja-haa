@@ -193,6 +193,9 @@ body.returning .cat-desc{display:none}
 /* お題の3択（1つずつ引かせるより選ばせる方が早く決まる） */
 .next-pick{margin:.9rem 0 .2rem;padding:.7rem .8rem;border:1px dashed var(--line);border-radius:12px;background:#fff}
 .np-h{font-weight:800;font-size:.92rem;margin:0 0 .45rem}
+.np-ts{display:none}
+body.stream .np-t{display:none}
+body.stream .np-ts{display:inline}
 .np-cat{font-weight:400;font-size:.78rem;color:var(--muted);margin-left:.5rem}
 .np-links{display:flex;justify-content:center;gap:1.2rem;margin-top:.3rem}
 .np-link{background:none;border:none;color:var(--orange-d);font:inherit;font-size:.85rem;font-weight:700;text-decoration:underline;cursor:pointer;padding:8px 6px;min-height:44px}
@@ -693,12 +696,12 @@ body:not(.at-result) #postOnly{display:none}
   <div class="cands res-cands" id="resCands"></div>
   <div class="cdown" id="cdown" hidden aria-live="polite"></div>
   <div id="resultBody"></div>
-  <p class="cta-comment">当たった人は「正解」、いい演技には「8888」とコメントしてね</p>
+  <p class="cta-comment" id="ctaComment"></p>
   <img class="win-pic" src="/img/result-win.webp?v=2" width="700" height="470" alt="" loading="lazy" decoding="async">
   <div class="score" id="scoreBox"></div>
   <!-- 続けて遊ぶとき、次のお題をその場で選ぶ（押すとそのお題で次の回へ。得点の合計・演じる人の交代はそのまま） -->
   <div class="next-pick" id="nextPick">
-    <div class="np-h">次のお題を選ぶ<span class="np-cat" id="npCat"></span></div>
+    <div class="np-h"><span class="np-t">次のお題を選ぶ</span><span class="np-ts">次のお題、どれがいい？</span><span class="np-cat" id="npCat"></span></div>
     <div class="pick-list" id="npList"></div>
     <div class="np-links"><button type="button" class="np-link" id="npMore">ほかの3つ ↺</button><button type="button" class="np-link" id="npCatChange">カテゴリを変える</button></div>
   </div>
@@ -1581,7 +1584,7 @@ function pushView(extra){
   if (st.step === 'result'){
     st.veiling = document.body.classList.contains('veiling');
     st.quick = S.lastMode === 'quick';
-    if (!st.veiling){ st.answers = S.lastAnswers || []; st.scores = S.lastScores; }
+    if (!st.veiling){ st.answers = S.lastAnswers || []; st.scores = S.lastScores; st.ask = S.ask || ''; }
   }
   if (extra) Object.assign(st, extra);
   try { localStorage.setItem('haa-view-state', JSON.stringify(st)); } catch(e){}
@@ -1612,6 +1615,10 @@ function sfx(kind){
 try { const v = localStorage.getItem(SFX_KEY); if (v !== null) $('sfxToggle').checked = v === '1'; } catch(e){}
 $('sfxToggle').addEventListener('change', e=>{ try{ localStorage.setItem(SFX_KEY, e.target.checked ? '1' : '0'); }catch(_){} if (e.target.checked) sfx('pick'); });
 // 紙吹雪（答えが出た瞬間）。2.6秒で消す
+// 答えのあとの問いかけ（毎回変える。決まった言葉を書かせず、自由に話したくなる形に）
+const ASKS = ['当たった？外れた？','今の演技、どうだった？','この気持ち、分かった人いる？','次はだれに演じてほしい？','ほかの気持ちに聞こえた人いる？','いちばん迷ったのは何番だった？'];
+let ASK_I = Math.floor(Math.random()*ASKS.length);
+function nextAsk(){ ASK_I = (ASK_I + 1) % ASKS.length; return ASKS[ASK_I]; }
 function confetti(){
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const box = document.createElement('div'); box.className = 'confetti';
@@ -1674,6 +1681,7 @@ function countdownReveal(){
       setTimeout(pushResultAd, 60);
       $('resultBody').querySelectorAll('.ans-card').forEach((r,k)=>{ r.style.animationDelay = (k*0.12)+'s'; r.classList.add('pop'); });
       confetti(); sfx('fanfare');
+      S.ask = nextAsk(); if ($('ctaComment')) $('ctaComment').textContent = S.ask;
       pushView();
       return;
     }
