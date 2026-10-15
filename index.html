@@ -392,6 +392,9 @@ body.stream .btn-eq{font-size:1.25rem;min-height:66px}
 body.veiling #postOnly,body.veiling #newGame,body.veiling #resultBack{display:none!important}
 body:not(.stream) .unveil-msg br,body:not(.stream) .unveil-msg-viewer{display:none}
 body.stream .unveil-msg{font-size:1.6rem}
+.win-pic{display:block;width:min(240px,60%);height:auto;margin:.4rem auto 0}
+body.veiling .win-pic{display:none}
+body.stream .win-pic{width:300px}
 .res-cands{display:none}
 body.veiling .res-cands{display:block}
 .cdown{text-align:center;font-size:4.5rem;font-weight:900;color:var(--orange);line-height:1.2;padding:.6rem 0}
@@ -477,7 +480,7 @@ body:not(.at-result) #postOnly{display:none}
 
 <header>
   <div class="hero">
-    <img class="hero-pic" src="/img/hero-duo.webp" width="900" height="600" alt="" decoding="async">
+    <img class="hero-pic" src="/img/hero-duo.webp" width="900" height="604" alt="" decoding="async">
     <div class="hero-t">
       <h1>はぁって言うゲームをスマホ1台で<span class="h1-sub">声と表情で当てるゲーム</span></h1>
       <p>同じ一言を、それぞれ違う気持ちで演じて当て合う。<br>アプリ不要で配役から得点まで。非公式の無料ツール。</p>
@@ -602,6 +605,7 @@ body:not(.at-result) #postOnly{display:none}
   <div class="cands res-cands" id="resCands"></div>
   <div class="cdown" id="cdown" hidden aria-live="polite"></div>
   <div id="resultBody"></div>
+  <img class="win-pic" src="/img/result-win.webp" width="700" height="470" alt="" loading="lazy" decoding="async">
   <div class="score" id="scoreBox"></div>
   <!-- 続けて遊ぶとき、次のお題をその場で選ぶ（押すとそのお題で次の回へ。得点の合計・演じる人の交代はそのまま） -->
   <div class="next-pick" id="nextPick">

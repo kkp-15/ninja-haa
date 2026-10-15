@@ -56,6 +56,7 @@ body.bg-cream{background:#fff8f0}
 .nm{font-weight:800}
 .bar{height:1.4vh;background:#f3e8d6;border-radius:99vh;overflow:hidden}.bar i{display:block;height:100%;border-radius:99vh}
 .pt{text-align:right;font-weight:900;color:var(--orange-d)}.pt small{display:block;font-size:2vh;color:var(--muted)}
+.winpic{position:fixed;right:3vw;bottom:5vh;height:30vh;width:auto;pointer-events:none;animation:pop .6s ease both}
 .idle{text-align:center;font-size:5vh;font-weight:900}
 .idle small{display:block;font-size:2.8vh;color:var(--muted);font-weight:700;margin-top:1vh}
 .credit{position:fixed;right:1.2vw;bottom:1vh;font-size:2.2vh;color:#fff;text-shadow:0 0 .4vh #000,0 0 .8vh #000}
@@ -106,6 +107,7 @@ body.bg-cream{background:#fff8f0}
           + '<div class="ans-main"><span class="kick">正解</span><span class="n">'+esc(x.no)+'</span><span class="a">'+esc(x.act)+'</span></div>'
           + (chips ? '<div class="chips">'+chips+'</div>' : '') + '</div>';
       }).join('') + '</div>';
+      h += '<img class="winpic" src="/img/result-win.webp" alt="">';
       var s = st.scores;
       if (s && s.rows && s.rows.length){
         var max = Math.max.apply(null, s.rows.map(function(r){return r.total;})) || 0, rank = 0, prev = null;
