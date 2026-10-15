@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>声と表情で当てるゲーム OBS表示ページ</title>
+<meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://haa.kkpwebninja.com/haishin/">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+<style>
+/* OBS のブラウザソース向け（1920x1080 を想定・vw/vh で拡大縮小）。
+   ページの背景は透過、内容は不透明の板に載せる（どんな配信背景の上でも読める）。
+   操作ボタン・広告・計測は置かない。役（だれがどの気持ちか）は答えが出るまで届かない */
+:root{--orange:#ff8a3d;--orange-d:#e07b39;--ink:#3b2c22;--muted:#8a7560;--paper:#fffdf9;--line:#f0e2cc;--navy:#16213a}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden}
+body{background:transparent;font-family:"Hiragino Maru Gothic ProN","ヒラギノ丸ゴ ProN","M PLUS Rounded 1c",system-ui,sans-serif;color:var(--ink)}
+body.bg-cream{background:#fff8f0}
+.wrap{position:fixed;inset:3vh 4vw;display:flex;flex-direction:column;gap:1.6vh}
+.panel{background:var(--paper);border:.25vh solid var(--line);border-radius:2vh;padding:2.4vh 2.6vw;box-shadow:0 1vh 3vh rgba(22,33,58,.18)}
+.stage{background:var(--navy) url('/img/reveal-bg.webp') center/cover no-repeat;color:#fff;border-radius:2vh;padding:3vh 2vw;text-align:center;box-shadow:0 1vh 3vh rgba(22,33,58,.25)}
+.who{font-size:3.4vh;opacity:.92}
+.word{font-size:11vh;font-weight:900;line-height:1.2;letter-spacing:.02em}
+.sub{font-size:2.8vh;opacity:.8}
+.chat{font-size:3vh;color:#ffd8a8;margin-top:1vh}
+.cl{font-size:2.6vh;font-weight:800;color:var(--muted);margin-bottom:1vh}
+.cands{display:grid;grid-template-columns:1fr 1fr;gap:1.2vh 3vw}
+.cands div{font-size:4.2vh;line-height:1.35;font-weight:700}
+.no{display:inline-block;min-width:1.4em;color:var(--orange-d);font-weight:900}
+.msg{text-align:center;font-size:4.6vh;font-weight:900}
+.msg small{display:block;font-size:2.8vh;font-weight:700;color:var(--muted);margin-top:.6vh}
+.cd{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.cd span{font-size:40vh;font-weight:900;color:var(--orange);text-shadow:0 0 2vh #fff,0 0 4vh #fff;animation:pop .7s ease both}
+@keyframes pop{0%{transform:scale(.4);opacity:0}30%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
+.answers{display:grid;gap:1.6vh}
+.answers.many{grid-template-columns:1fr 1fr}
+.ans{background:var(--navy) url('/img/reveal-bg.webp') center/cover no-repeat;color:#fff;border-radius:2vh;padding:1.8vh 1.6vw 2vh;animation:pop .5s ease both}
+.ans-top{display:flex;align-items:center;gap:.8vw;font-size:3.2vh}
+.dot{width:2.2vh;height:2.2vh;border-radius:50%;box-shadow:0 0 0 .3vh rgba(255,255,255,.7)}
+.ans-top .w{margin-left:auto;opacity:.8}
+.ans-main{display:flex;align-items:center;justify-content:center;gap:1.2vw;background:#fff;color:var(--ink);border:.6vh solid var(--orange);border-radius:1.4vh;padding:2vh 1.4vw;margin-top:1.2vh}
+.kick{font-size:2.4vh;font-weight:900;color:#fff;background:var(--orange);border-radius:.8vh;padding:.3vh .8vw}
+.ans-main .n{font-size:9vh;font-weight:900;color:var(--orange-d);line-height:1}
+.ans-main .a{font-size:7vh;font-weight:900;line-height:1.25}
+.answers.many .ans-main .n{font-size:6vh}.answers.many .ans-main .a{font-size:4.4vh}
+.chips{display:flex;flex-wrap:wrap;gap:.8vh .6vw;margin-top:1.2vh}
+.chip{font-size:2.6vh;font-weight:800;border-radius:99vh;padding:.4vh 1vw}
+.chip.ok{background:#e6f4ea;color:#2f7a45}.chip.ng{background:rgba(255,255,255,.18);color:#fff}
+.scores h3{margin:0 0 1vh;font-size:3vh}
+.scores h3 small{font-size:2.2vh;color:var(--muted);font-weight:400;margin-left:1vw}
+.sr{display:grid;grid-template-columns:7vh minmax(14vw,max-content) 1fr 10vh;align-items:center;gap:1vw;font-size:3.4vh;padding:.6vh 0}
+.rk{font-size:2.4vh;font-weight:800;color:var(--muted);text-align:center}
+.sr.top .rk{color:#fff;background:var(--orange);border-radius:99vh;padding:.2vh 0}
+.nm{font-weight:800}
+.bar{height:1.4vh;background:#f3e8d6;border-radius:99vh;overflow:hidden}.bar i{display:block;height:100%;border-radius:99vh}
+.pt{text-align:right;font-weight:900;color:var(--orange-d)}.pt small{display:block;font-size:2vh;color:var(--muted)}
+.idle{text-align:center;font-size:5vh;font-weight:900}
+.idle small{display:block;font-size:2.8vh;color:var(--muted);font-weight:700;margin-top:1vh}
+.credit{position:fixed;right:1.2vw;bottom:1vh;font-size:2.2vh;color:#fff;text-shadow:0 0 .4vh #000,0 0 .8vh #000}
+.howto{position:fixed;left:1.2vw;bottom:1vh;font-size:1.8vh;color:#fff;text-shadow:0 0 .4vh #000}
+.howto[hidden]{display:none}
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap"></div>
+<div class="cd" id="cd"></div>
+<div class="credit">声と表情で当てるゲーム｜haa.kkpwebninja.com</div>
+<div class="howto" id="howto">操作は同じパソコンの「声と表情で当てるゲーム」のページで。このページはOBSのブラウザソースに取り込んでください</div>
+<script>
+(function(){
+  var q = new URLSearchParams(location.search);
+  if (q.get('bg') === 'cream') document.body.classList.add('bg-cream');
+  var wrap = document.getElementById('wrap'), cd = document.getElementById('cd');
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function cands(st, label){
+    if (!st.cands || !st.cands.length) return '';
+    return '<div class="panel"><div class="cl">'+esc(label||'気持ちの候補')+'</div><div class="cands">'
+      + st.cands.map(function(c){ return '<div><span class="no">'+esc(c.no)+'</span>'+esc(c.text)+'</div>'; }).join('') + '</div></div>';
+  }
+  function stage(st, who){
+    return '<div class="stage"><div class="who">'+esc(who)+'</div><div class="word">「'+esc(st.word)+'」</div>'
+      + '<div class="sub">声と表情だけで。どの気持ちかを当ててもらう</div><div class="chat">視聴者のみなさんは、コメントで番号を当ててください</div></div>';
+  }
+  function render(st){
+    if (!st) { wrap.innerHTML = '<div class="panel idle">声と表情で当てるゲーム<small>操作ページでゲームを始めると、ここに表示されます</small></div>'; return; }
+    document.getElementById('howto').hidden = st.step !== 'setup';
+    var one = st.actors && st.actors.length === 1 ? st.actors[0] + ' さんの番' : (st.actors ? st.actors.length + '人が順番に演じます' : '');
+    var h = '';
+    if (st.step === 'setup'){
+      h = '<div class="panel idle">声と表情で当てるゲーム<small>まもなく始まります</small></div>';
+    } else if (st.step === 'deal'){
+      h = '<div class="stage"><div class="who">'+esc(one)+'</div><div class="word">「'+esc(st.word)+'」</div><div class="sub">演じる人が、自分の気持ちを確認しています</div></div>' + cands(st);
+    } else if (st.step === 'perform'){
+      h = stage(st, one) + cands(st, '気持ちの候補（この中のどれかを演じます）');
+    } else if (st.step === 'vote'){
+      h = stage(st, one) + cands(st) + '<div class="panel msg">投票中 '+esc(st.voteDone)+' / '+esc(st.voteTotal)+'<small>一緒に遊ぶ人が答えを選んでいます</small></div>';
+    } else if (st.step === 'result' && st.veiling){
+      h = '<div class="stage"><div class="who">'+esc(one)+'</div><div class="word">「'+esc(st.word)+'」</div><div class="sub">まもなく答え合わせ</div></div>' + cands(st, '気持ちの候補');
+    } else if (st.step === 'result'){
+      var a = st.answers || [];
+      h = '<div class="answers'+(a.length>1?' many':'')+'">' + a.map(function(x){
+        var chips = (x.chips||[]).map(function(c){ return '<span class="chip '+(c.ok?'ok':'ng')+'">'+(c.ok?'○ ':'× ')+esc(c.name)+(c.ok?'':' '+esc(c.no))+'</span>'; }).join('');
+        return '<div class="ans"><div class="ans-top"><span class="dot" style="background:'+esc(x.color)+'"></span><b>'+esc(x.name)+'</b><span class="w">「'+esc(st.word)+'」</span></div>'
+          + '<div class="ans-main"><span class="kick">正解</span><span class="n">'+esc(x.no)+'</span><span class="a">'+esc(x.act)+'</span></div>'
+          + (chips ? '<div class="chips">'+chips+'</div>' : '') + '</div>';
+      }).join('') + '</div>';
+      var s = st.scores;
+      if (s && s.rows && s.rows.length){
+        var max = Math.max.apply(null, s.rows.map(function(r){return r.total;})) || 0, rank = 0, prev = null;
+        h += '<div class="panel scores"><h3>'+(s.rounds>1?'合計得点<small>'+esc(s.rounds)+'回目まで</small>':'得点')+'</h3>' + s.rows.map(function(r,i){
+          if (r.total !== prev){ rank = i+1; prev = r.total; }
+          return '<div class="sr'+(rank===1&&max>0?' top':'')+'"><span class="rk">'+rank+'位</span><span class="nm">'+esc(r.name)+'</span>'
+            + '<span class="bar"><i style="width:'+(max>0?Math.round(r.total/max*100):0)+'%;background:'+esc(r.color)+'"></i></span><span class="pt">'+esc(r.total)+'点'+(s.rounds>1?'<small>+'+esc(r.add)+'</small>':'')+'</span></div>';
+        }).join('') + '</div>';
+      }
+    }
+    wrap.innerHTML = h;
+    cd.innerHTML = (st.step === 'result' && st.cd) ? '<span>'+esc(st.cd)+'</span>' : '';
+  }
+  var last = null;
+  try { last = JSON.parse(localStorage.getItem('haa-view-state') || 'null'); } catch(e){}
+  render(last);
+  try { var ch = new BroadcastChannel('haa-view'); ch.onmessage = function(e){ render(e.data); }; } catch(e){}
+  // BroadcastChannel が使えない環境のため、保存された状態も見る
+  window.addEventListener('storage', function(e){ if (e.key === 'haa-view-state'){ try { render(JSON.parse(e.newValue)); } catch(_){} } });
+})();
+</script>
+</body>
+</html>

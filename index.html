@@ -120,6 +120,8 @@ h2{font-size:1rem;margin:0 0 .5rem;display:flex;align-items:center;gap:.5rem}
   background:#fff;font-size:1.3rem;color:var(--orange-d);cursor:pointer;line-height:1}
 .stream-sw{display:none;align-items:center;gap:.5rem;justify-content:center;margin:.8rem 0 .2rem;font-size:.85rem;color:var(--muted);cursor:pointer}
 .stream-note{display:none}
+.view-open{display:none;text-align:center;margin:.2rem 0 .4rem}
+body.stream .view-open{display:block}
 .cand-n{display:none}
 body.stream.playing .shop-mini{display:none}
 /* 配信モードでは主ボタンを画面下に固定（PCでもスクロールせずに押せる） */
@@ -508,6 +510,11 @@ body:not(.at-result) #postOnly{display:none}
     </div>
     <p class="hint">多いほど当てにくくなります（3〜8）</p>
   </div>
+  <div class="view-open" id="viewOpen">
+    <button type="button" class="np-link" id="viewOpenBtn">OBS用の表示ページを開く</button>
+    <button type="button" class="np-link" id="viewCopyBtn">URLをコピー</button>
+    <p class="hint">OBSには表示ページの方を取り込むと、役（答え）や操作ボタンは配信に映りません。操作はこの画面で。同じパソコンのブラウザで開いてください</p>
+  </div>
   <p class="hint stream-note" id="streamNote">配信モードは、1人ずつ交代で演じる遊び方になります。視聴者はコメントで番号を当て、一緒に遊ぶ人は画面で投票もできます</p>
   <!-- 名前は任意。色だけだと誰の番か分かりにくい（itoと同じ作り）。入れなければ色の名前のまま。この端末にだけ保存 -->
   <details class="names-box" id="namesBox">
@@ -549,7 +556,7 @@ body:not(.at-result) #postOnly{display:none}
   <h2><span class="step-label">STEP 3</span>順番にタップして自分の役を見る</h2>
   <p class="hint">全員が同じ「<b id="dealWord"></b>」を言います。<br>気持ちだけが1人ずつ違います。他の人に見られないように！</p>
   <div class="deal-grid" id="dealGrid"></div>
-  <p class="hint deal-remote">離れた場所から遊ぶときは、カードの下の「リンクで送る」を押して、演じる人にDMで送ってください。その人の画面にだけ気持ちが出ます。<b>配信者が演じる番も、リンクを自分のスマホで開けば配信に映りません</b></p>
+  <p class="hint deal-remote">離れた場所から遊ぶときは、カードの下の「リンクで送る」を押して、演じる人にDMで送ってください。その人の画面にだけ気持ちが出ます。<b>配信者が演じる番も、リンクを自分のスマホで開けば配信に映りません</b>（OBSに表示ページを取り込んでいれば、この画面は映らないのでカードをそのまま押してかまいません）</p>
   <button class="btn-sub" id="toPerform" disabled>全員見終わった → 演じる</button>
   <button class="btn-sub" id="dealBack">↺ 設定に戻る</button>
 </section>
@@ -1316,6 +1323,7 @@ function nextVote(){
   renderVote();
 }
 function renderVote(){
+  setTimeout(()=>pushView(), 0);
   if (STREAM_MQ.matches) $('voteHint').innerHTML = '離れた場所の人の答えは、DMやチャットで聞いて代わりに押してください。<br>視聴者のみなさんの答えは、コメントで。';
   $('voteWho').textContent = '📱 '+pLabel(S.voter)+' さんの番';
   $('voteTarget').innerHTML = '<b>'+esc(pLabel(S.act[S.target]))+'</b> さんは、どの気持ちだった？';
@@ -1363,8 +1371,11 @@ function finish(mode){
   // 誰がどの気持ちだったかを開示
   // 演じた人ごとに「答えのカード」。投票したときは、誰が当てたか（○）・外したか（×と選んだ番号）も出す
   body.className = 'ans-grid' + (S.k === 1 ? ' one' : '') + (veil ? ' veiled' : '');
+  S.lastMode = mode; S.lastAnswers = []; S.lastScores = null;
   for (let i=0;i<S.k;i++){
     const p = S.act[i], ai = S.assign[i];
+    const va = {name:pName(p), color:COLORS[p%COLORS.length].bg, no:numOf(ai), act:S.theme.acts[ai], chips:[]};
+    S.lastAnswers.push(va);
     const card = document.createElement('div');
     card.className = 'ans-card';
     card.style.setProperty('--pc', COLORS[p%COLORS.length].bg);
@@ -1375,6 +1386,7 @@ function finish(mode){
         if (v === p) continue;
         const g = S.votes[v] && S.votes[v][i];
         if (g === undefined) continue;
+        va.chips.push({name:pName(v), ok:g===ai, no:numOf(g)});
         chips.push(g === ai
           ? '<span class="vc ok">○ '+esc(pName(v))+'</span>'
           : '<span class="vc ng">× '+esc(pName(v))+' <small>'+numOf(g)+'</small></span>');
@@ -1416,6 +1428,7 @@ function finish(mode){
     h += '<div class="sr'+(rank===1&&tmax>0?' top':'')+'"><span class="sr-rk">'+rank+'位</span><span class="sr-nm">'+esc(pName(o.i))+'</span>'
       + '<span class="sr-bar"><i style="width:'+w+'%;background:'+COLORS[o.i%COLORS.length].bg+'"></i></span><b>'+o.v+'点'+(S.rounds > 1 ? '<small class="sr-add">+'+sc[o.i]+'</small>' : '')+'</b></div>';
   });
+  S.lastScores = {rounds:S.rounds, rows:S.total.map((v,i)=>({name:pName(i), color:COLORS[i%COLORS.length].bg, total:v, add:sc[i]})).sort((a,b)=>b.total-a.total)};
   if (S.rounds > 1) h += '<button type="button" class="sr-reset" id="scoreReset">合計を0に戻す</button>';
   box.innerHTML = h;
   const rb = $('scoreReset');
@@ -1425,6 +1438,30 @@ function finish(mode){
   show('result');
 }
 
+// ===== OBS表示用ページ（/view/）へ今の状態を送る =====
+// 同じパソコンの中だけ（BroadcastChannel＋localStorage）。外へは送らない。役（だれがどの気持ちか）は答えが出るまで送らない
+let VIEW_CH = null; try { VIEW_CH = new BroadcastChannel('haa-view'); } catch(e){}
+function pushView(extra){
+  const st = {t:Date.now(), step:S.step||'setup', site:'haa.kkpwebninja.com'};
+  if (S.theme && st.step !== 'setup'){
+    st.word = S.theme.word;
+    st.cands = (S.pool||[]).slice().sort((a,b)=>a-b).map(ai=>({no:numOf(ai), text:S.theme.acts[ai]}));
+    st.actors = (S.act||[]).map(p=>pName(p));
+  }
+  if (st.step === 'vote' && S.act){
+    st.voter = pName(S.voter); st.target = pName(S.act[S.target]||0);
+    let done = 0; Object.values(S.votes||{}).forEach(v=>done += Object.keys(v).length);
+    st.voteDone = done; st.voteTotal = S.players*S.k - S.k;
+  }
+  if (st.step === 'result'){
+    st.veiling = document.body.classList.contains('veiling');
+    st.quick = S.lastMode === 'quick';
+    if (!st.veiling){ st.answers = S.lastAnswers || []; st.scores = S.lastScores; }
+  }
+  if (extra) Object.assign(st, extra);
+  try { localStorage.setItem('haa-view-state', JSON.stringify(st)); } catch(e){}
+  try { VIEW_CH && VIEW_CH.postMessage(st); } catch(e){}
+}
 function pushResultAd(){
   if (window.__adPushed || window.__haaStream) return;
   window.__adPushed = true;
@@ -1441,8 +1478,10 @@ function countdownReveal(){
       document.body.classList.remove('veiling');
       setTimeout(pushResultAd, 60);
       $('resultBody').querySelectorAll('.ans-card').forEach((r,k)=>{ r.style.animationDelay = (k*0.12)+'s'; r.classList.add('pop'); });
+      pushView();
       return;
     }
+    pushView({cd:n});
     cd.textContent = n; cd.classList.remove('tick'); void cd.offsetWidth; cd.classList.add('tick');
     n--; setTimeout(tick, 700);
   };
@@ -1475,6 +1514,7 @@ $('resultBack').addEventListener('click', ()=>{ renderPick(); show('setup'); });
 $('redraw').addEventListener('click', ()=>{ renderPick(); track('haa_redraw',{cat:S.cat}); });
 
 function show(name){
+  S.step = name;
   ['setup','deal','perform','vote','result'].forEach(s=>{
     const el = $('step-'+s); if (el) el.classList.toggle('hidden', s!==name);
   });
@@ -1485,6 +1525,7 @@ function show(name){
   if (name === 'result' && !document.body.classList.contains('veiling')) pushResultAd();
   document.body.classList.toggle('playing', name!=='setup');
   window.scrollTo({top:0,behavior:'smooth'});
+  pushView();
 }
 
 // FAQ は build.py が静的HTMLと構造化データの両方に差し込む（ここでは描画しない）
@@ -1497,6 +1538,8 @@ if (document.body.classList.contains('stream')){
   const sm = document.querySelector('.shop-mini'), dock = $('dock');
   if (sm && dock) dock.parentNode.insertBefore(sm, dock.nextSibling);
 }
+$('viewOpenBtn').addEventListener('click', ()=>{ pushView(); window.open('/view/', 'haaView', 'width=1280,height=720'); track('haa_view_open',{}); });
+$('viewCopyBtn').addEventListener('click', ()=>{ const u = location.origin + '/view/'; try { navigator.clipboard.writeText(u).then(()=>{ $('viewCopyBtn').textContent = 'コピーしました'; }); } catch(e){ window.prompt('このURLをOBSのブラウザソースに', u); } });
 $('streamToggle').addEventListener('change', e=>{
   try{ localStorage.setItem(STREAM_KEY, e.target.checked ? '1' : '0'); }catch(_){}
   track('haa_stream_toggle',{on:e.target.checked});
