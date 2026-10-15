@@ -556,7 +556,7 @@ body:not(.at-result) #postOnly{display:none}
   <h2><span class="step-label">STEP 3</span>順番にタップして自分の役を見る</h2>
   <p class="hint">全員が同じ「<b id="dealWord"></b>」を言います。<br>気持ちだけが1人ずつ違います。他の人に見られないように！</p>
   <div class="deal-grid" id="dealGrid"></div>
-  <p class="hint deal-remote">離れた場所から遊ぶときは、カードの下の「リンクで送る」を押して、演じる人にDMで送ってください。その人の画面にだけ気持ちが出ます。<b>配信者が演じる番も、リンクを自分のスマホで開けば配信に映りません</b>（OBSに表示ページを取り込んでいれば、この画面は映らないのでカードをそのまま押してかまいません）</p>
+  <p class="hint deal-remote">離れた場所から遊ぶときは、カードの下の「リンクで送る」を押して、演じる人にDMで送ってください。その人の画面にだけ気持ちが出ます。<b>配信モードでは、カードを押すと役が別の小さなウィンドウで開きます。</b>OBSでこの画面のウィンドウを「ウィンドウキャプチャ」で取り込んでいれば、別ウィンドウは配信に映りません。画面全体を取り込んでいるときは、OBS用の表示ページを使うか、リンクを自分のスマホで開いてください</p>
   <button class="btn-sub" id="toPerform" disabled>全員見終わった → 演じる</button>
   <button class="btn-sub" id="dealBack">↺ 設定に戻る</button>
 </section>
@@ -1252,6 +1252,18 @@ function copyRoleLink(i, btn){
   catch(e){ window.prompt('このリンクをコピーして送ってください', url); done(); }
 }
 function openReveal(i){
+  // 配信モードでは、役を別の小さなウィンドウで開く（OBSで本体のウィンドウだけを取り込んでいれば配信に映らない）
+  if (document.body.classList.contains('stream')){
+    const w = window.open(roleUrl(i), 'haaRole', 'width=520,height=640');
+    if (w){
+      S.seen[i] = true; renderDeal();
+      $('dockMsg').hidden = false;
+      $('dockMsg').textContent = '役を別ウィンドウで開きました。見終わったら「覚えた！閉じる」で閉じてください';
+      track('haa_role_window',{});
+      return;
+    }
+    // ポップアップが止められたときは、いつもの画面で出す（配信では映像を隠してもらう）
+  }
   $('revealWho').textContent = pLabel(S.act[i])+' さん';
   $('revealWordLine').textContent = '言う言葉は「'+S.theme.word+'」';
   $('revealAct').textContent = S.theme.acts[S.assign[i]];
@@ -1259,7 +1271,11 @@ function openReveal(i){
   $('reveal').dataset.i = i;
 }
 $('revealClose').addEventListener('click', ()=>{
-  if ($('reveal').classList.contains('from-link')){ $('reveal').classList.remove('show','from-link'); $('revealClose').textContent = '覚えた！次の人へ'; return; }
+  if ($('reveal').classList.contains('from-link')){
+    // 本体から別ウィンドウで開いたときは、そのウィンドウを閉じる
+    if (window.opener && window.name === 'haaRole'){ try { window.close(); } catch(e){} }
+    $('reveal').classList.remove('show','from-link'); $('revealClose').textContent = '覚えた！次の人へ'; return;
+  }
   const i = +$('reveal').dataset.i;
   S.seen[i] = true;
   $('reveal').classList.remove('show');
