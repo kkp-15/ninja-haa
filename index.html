@@ -144,6 +144,8 @@ body.stream .act-lbl,body.stream #actDec,body.stream #actInc,body.stream #actorC
 /* 1人のときは「1回に演じる人」は選ぶ意味がないので隠す（候補の数の欄は残す） */
 body[data-players="1"] .act-lbl:not(.cand-n .act-lbl),body[data-players="1"] #actHint,body[data-players="1"] .act-lbl:not(.cand-n .act-lbl)+.num{display:none}
 body.stream #postOnly{display:none!important}
+.sfx-sw{display:none!important}
+body.stream .sfx-sw{display:flex!important;margin-top:0}
 .stream-sw input{width:20px;height:20px;accent-color:var(--orange)}
 @media(min-width:768px){.stream-sw{display:flex}}
 body.stream .stream-sw{font-size:1.05rem}
@@ -606,11 +608,13 @@ body:not(.at-result) #postOnly{display:none}
     <button class="btn-ghost" id="candInc" aria-label="候補を1つ増やす">＋</button>
     <span class="cn-h">多いほど当てにくい</span>
   </div>
+  <label class="stream-sw sfx-sw"><input type="checkbox" id="sfxToggle" checked> 効果音（カウントダウン・発表のファンファーレ）</label>
   <details class="view-open" id="viewOpen">
     <summary>OBSの取り込み方（くわしく）</summary>
     <p class="hint">ふつうは、このウィンドウを「ウィンドウキャプチャ」で取り込むだけで大丈夫です（役は別ウィンドウで開くので映りません）。画面全体を取り込んでいるときや、操作ボタンも映したくないときは、表示ページを使ってください</p>
     <button type="button" class="np-link" id="viewOpenBtn">OBS用の表示ページを開く</button>
     <button type="button" class="np-link" id="viewCopyBtn">URLをコピー</button>
+    <p class="hint">縦型配信（9:16）や縦の切り抜き用には <code>https://haa.kkpwebninja.com/view/?layout=v</code> を取り込んでください</p>
   </details>
   <p class="hint stream-note" id="streamNote">1人ずつ交代で演じて、リスナーはコメントで番号を当てます</p>
   <!-- 名前は任意。色だけだと誰の番か分かりにくい（itoと同じ作り）。入れなければ色の名前のまま。この端末にだけ保存 -->
@@ -1392,7 +1396,7 @@ const NUMS = ['①','②','③','④','⑤','⑥','⑦','⑧'];
 function numOf(ai){ const i = S.pool.slice().sort((a,b)=>a-b).indexOf(ai); return NUMS[i] || ''; }
 function renderPerform(){
   const st = $('performStage');
-  st.classList.remove('drop'); void st.offsetWidth; st.classList.add('drop');
+  st.classList.remove('drop'); void st.offsetWidth; st.classList.add('drop'); sfx('drop');
   st.innerHTML = '<img class="st-pic" src="/img/stage-mic.webp?v=2" width="600" height="600" alt="" decoding="async">'
     + '<div class="st-who">'+(S.k===1 ? esc(pLabel(S.act[0]))+' さんの番' : S.k+'人が順番に演じます')+'</div>'
     + '<div class="st-word">「'+esc(S.theme.word)+'」</div>'
@@ -1454,7 +1458,7 @@ function renderVote(){
     b.innerHTML = '<span class="no">'+numOf(ai)+'</span>'+esc(S.theme.acts[ai]);
     b.addEventListener('click', ()=>{
       if (w.dataset.busy) return; w.dataset.busy = '1';
-      b.classList.add('picked');
+      b.classList.add('picked'); sfx('pick');
       S.votes[S.voter] = S.votes[S.voter] || {};
       S.votes[S.voter][S.target] = ai;
       setTimeout(()=>{ delete w.dataset.busy; nextVote(); }, 260);
@@ -1583,6 +1587,30 @@ function pushView(extra){
   try { localStorage.setItem('haa-view-state', JSON.stringify(st)); } catch(e){}
   try { VIEW_CH && VIEW_CH.postMessage(st); } catch(e){}
 }
+// 効果音（配信モードだけ・ブラウザで合成。音のファイルは使わない）
+let AC = null;
+const SFX_KEY = 'haa-sfx';
+function sfxOn(){ if (!document.body.classList.contains('stream')) return false; const t = $('sfxToggle'); return !t || t.checked; }
+function tone(freq, t0, dur, type, vol){
+  const o = AC.createOscillator(), g = AC.createGain();
+  o.type = type || 'sine'; o.frequency.setValueAtTime(freq, AC.currentTime + t0);
+  g.gain.setValueAtTime(0.0001, AC.currentTime + t0);
+  g.gain.exponentialRampToValueAtTime(vol || 0.2, AC.currentTime + t0 + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, AC.currentTime + t0 + dur);
+  o.connect(g); g.connect(AC.destination); o.start(AC.currentTime + t0); o.stop(AC.currentTime + t0 + dur + 0.05);
+}
+function sfx(kind){
+  if (!sfxOn()) return;
+  try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); } catch(e){ return; }
+  if (kind === 'tick') tone(880, 0, 0.08, 'square', 0.06);
+  else if (kind === 'last') tone(660, 0, 0.06, 'triangle', 0.08);
+  else if (kind === 'cd') { tone(523, 0, 0.18, 'square', 0.12); }
+  else if (kind === 'pick') { tone(740, 0, 0.07, 'triangle', 0.12); tone(988, 0.06, 0.09, 'triangle', 0.12); }
+  else if (kind === 'drop') { tone(330, 0, 0.12, 'sine', 0.15); tone(495, 0.08, 0.14, 'sine', 0.12); }
+  else if (kind === 'fanfare') { [523,659,784,1047].forEach((f,i)=>tone(f, i*0.11, 0.22, 'triangle', 0.18)); tone(1047, 0.44, 0.6, 'triangle', 0.16); tone(1319, 0.44, 0.6, 'sine', 0.08); }
+}
+try { const v = localStorage.getItem(SFX_KEY); if (v !== null) $('sfxToggle').checked = v === '1'; } catch(e){}
+$('sfxToggle').addEventListener('change', e=>{ try{ localStorage.setItem(SFX_KEY, e.target.checked ? '1' : '0'); }catch(_){} if (e.target.checked) sfx('pick'); });
 // 紙吹雪（答えが出た瞬間）。2.6秒で消す
 function confetti(){
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -1623,6 +1651,7 @@ function startLastCall(){
   const tick = ()=>{
     if (n === 0){ LAST_T = null; S.lastDone = true; countdownReveal(); return; }
     cd.innerHTML = '<small>最終予想タイム！コメントで番号を</small>' + n;
+    sfx(n <= 3 ? 'tick' : 'last');
     pushView({last:n});
     n--; LAST_T = setTimeout(tick, 1000);
   };
@@ -1644,11 +1673,12 @@ function countdownReveal(){
       document.body.classList.remove('veiling');
       setTimeout(pushResultAd, 60);
       $('resultBody').querySelectorAll('.ans-card').forEach((r,k)=>{ r.style.animationDelay = (k*0.12)+'s'; r.classList.add('pop'); });
-      confetti();
+      confetti(); sfx('fanfare');
       pushView();
       return;
     }
     pushView({cd:n});
+    sfx('cd');
     cd.textContent = n; cd.classList.remove('tick'); void cd.offsetWidth; cd.classList.add('tick');
     n--; setTimeout(tick, 700);
   };

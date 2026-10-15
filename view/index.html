@@ -63,6 +63,30 @@ body.bg-cream{background:#fff8f0}
 @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
 .cta{color:var(--orange-d);font-size:4vh}
 .stage.last .word{font-size:16vh}
+/* 縦型配信（9:16）・縦の切り抜き用 ?layout=v。高さ基準(vh)の文字を幅基準(vw)に寄せる */
+body.vert .wrap{inset:3vh 4vw}
+body.vert .word{font-size:15vw}
+body.vert .who{font-size:4.6vw}body.vert .sub{font-size:3.6vw}
+body.vert .chat{font-size:3.8vw}
+body.vert .cands{grid-template-columns:1fr}
+body.vert .cands div{font-size:5.4vw}
+body.vert .cl{font-size:3.4vw}
+body.vert .stage .pic{display:none}
+body.vert .answers.many{grid-template-columns:1fr}
+body.vert .ans-top{font-size:4vw}
+body.vert .ans-main{flex-direction:column;gap:.5vh}
+body.vert .ans-main .n{font-size:16vw}
+body.vert .ans-main .a{font-size:8vw;text-align:center}
+body.vert .answers.many .ans-main .n{font-size:10vw}body.vert .answers.many .ans-main .a{font-size:6vw}
+body.vert .chip{font-size:3.4vw}
+body.vert .sr{grid-template-columns:12vw 1fr 22vw;font-size:4.6vw}
+body.vert .sr .bar{display:none}
+body.vert .rk{font-size:3.4vw}
+body.vert .msg{font-size:5vw}body.vert .cta{font-size:4.2vw}
+body.vert .winpic{display:none}
+body.vert .cd span{font-size:50vw}
+body.vert .stage.last .word{font-size:30vw}
+body.vert .credit{font-size:2.8vw}
 .idle{text-align:center;font-size:5vh;font-weight:900}
 .idle small{display:block;font-size:2.8vh;color:var(--muted);font-weight:700;margin-top:1vh}
 .credit{position:fixed;right:1.2vw;bottom:1vh;font-size:2.2vh;color:#fff;text-shadow:0 0 .4vh #000,0 0 .8vh #000}
@@ -79,6 +103,7 @@ body.bg-cream{background:#fff8f0}
 (function(){
   var q = new URLSearchParams(location.search);
   if (q.get('bg') === 'cream') document.body.classList.add('bg-cream');
+  if (q.get('layout') === 'v') document.body.classList.add('vert');
   var wrap = document.getElementById('wrap'), cd = document.getElementById('cd');
   function esc(t){ return String(t==null?'':t).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   function cands(st, label){
