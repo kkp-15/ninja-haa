@@ -81,7 +81,7 @@ body.bg-cream{background:#fff8f0}
       + st.cands.map(function(c){ return '<div><span class="no">'+esc(c.no)+'</span>'+esc(c.text)+'</div>'; }).join('') + '</div></div>';
   }
   function stage(st, who){
-    return '<div class="stage"><img class="pic" src="/img/stage-mic.webp" alt=""><div class="who">'+esc(who)+'</div><div class="word">「'+esc(st.word)+'」</div>'
+    return '<div class="stage"><img class="pic" src="/img/stage-mic.webp?v=2" alt=""><div class="who">'+esc(who)+'</div><div class="word">「'+esc(st.word)+'」</div>'
       + '<div class="sub">声と表情だけで。どの気持ちかを当ててもらう</div><div class="chat">視聴者のみなさんは、コメントで番号を当ててください</div></div>';
   }
   function render(st){
@@ -107,7 +107,7 @@ body.bg-cream{background:#fff8f0}
           + '<div class="ans-main"><span class="kick">正解</span><span class="n">'+esc(x.no)+'</span><span class="a">'+esc(x.act)+'</span></div>'
           + (chips ? '<div class="chips">'+chips+'</div>' : '') + '</div>';
       }).join('') + '</div>';
-      h += '<img class="winpic" src="/img/result-win.webp" alt="">';
+      h += '<img class="winpic" src="/img/result-win.webp?v=2" alt="">';
       var s = st.scores;
       if (s && s.rows && s.rows.length){
         var max = Math.max.apply(null, s.rows.map(function(r){return r.total;})) || 0, rank = 0, prev = null;
