@@ -378,6 +378,8 @@ body.stream .btn-eq{font-size:1.25rem;min-height:66px}
 body.veiling #postOnly,body.veiling #newGame,body.veiling #resultBack{display:none!important}
 body:not(.stream) .unveil-msg br,body:not(.stream) .unveil-msg-viewer{display:none}
 body.stream .unveil-msg{font-size:1.6rem}
+.res-cands{display:none}
+body.veiling .res-cands{display:block}
 .cdown{text-align:center;font-size:4.5rem;font-weight:900;color:var(--orange);line-height:1.2;padding:.6rem 0}
 .cdown[hidden]{display:none}
 .cdown.tick{animation:cd-pop .7s ease both}
@@ -547,7 +549,7 @@ body:not(.at-result) #postOnly{display:none}
   <h2><span class="step-label">STEP 3</span>順番にタップして自分の役を見る</h2>
   <p class="hint">全員が同じ「<b id="dealWord"></b>」を言います。<br>気持ちだけが1人ずつ違います。他の人に見られないように！</p>
   <div class="deal-grid" id="dealGrid"></div>
-  <p class="hint deal-remote">離れた場所から遊ぶときは、カードの下の「リンクで送る」を押して、演じる人にDMで送ってください。その人の画面にだけ気持ちが出ます</p>
+  <p class="hint deal-remote">離れた場所から遊ぶときは、カードの下の「リンクで送る」を押して、演じる人にDMで送ってください。その人の画面にだけ気持ちが出ます。<b>配信者が演じる番も、リンクを自分のスマホで開けば配信に映りません</b></p>
   <button class="btn-sub" id="toPerform" disabled>全員見終わった → 演じる</button>
   <button class="btn-sub" id="dealBack">↺ 設定に戻る</button>
 </section>
@@ -580,6 +582,7 @@ body:not(.at-result) #postOnly{display:none}
   <h2><span class="step-label">STEP 6</span>答え合わせ</h2>
   <p class="unveil-msg" id="unveilMsg" hidden>投票がそろいました。<br>視聴者のみなさんも、コメントで番号を書いてから開けましょう</p>
   <button type="button" class="btn-primary unveil" id="unveil" hidden>答えを見る</button>
+  <div class="cands res-cands" id="resCands"></div>
   <div class="cdown" id="cdown" hidden aria-live="polite"></div>
   <div id="resultBody"></div>
   <div class="score" id="scoreBox"></div>
@@ -1352,6 +1355,9 @@ function finish(mode){
   const veil = true;
   body.classList.toggle('veiled', veil); $('scoreBox').classList.toggle('veiled', veil); $('unveil').hidden = !veil;
   document.body.classList.toggle('veiling', veil);
+  // 答えが出るまでは候補を見せておく（視聴者が最後まで番号で予想できるように）
+  $('resCands').innerHTML = '<div class="cl">気持ちの候補「'+esc(S.theme.word)+'」</div><ul>'
+    + S.pool.slice().sort((a,b)=>a-b).map(ai=>'<li><span class="no">'+numOf(ai)+'</span>'+esc(S.theme.acts[ai])+'</li>').join('') + '</ul>';
   $('unveilMsg').hidden = !(veil && mode !== 'quick');
   $('unveilMsg').innerHTML = STREAM_MQ.matches ? '投票がそろいました。<br>視聴者のみなさんも、コメントで番号を書いてから開けましょう' : '投票がそろいました。「せーの」で答えを見ましょう';
   // 誰がどの気持ちだったかを開示
