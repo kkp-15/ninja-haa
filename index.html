@@ -397,6 +397,30 @@ body.stream .unveil-msg{font-size:1.6rem}
 .win-pic{display:block;width:min(240px,60%);height:auto;margin:.4rem auto 0}
 body.veiling .win-pic{display:none}
 body.stream .win-pic{width:300px}
+/* ===== 押した手応えと画面の切り替わり（楽しくハデに。動きを減らす設定の人には出さない） ===== */
+button{transition:transform .12s ease, box-shadow .12s ease, background-color .2s}
+button:active{transform:scale(.95)}
+.tap-ring{position:fixed;pointer-events:none;border-radius:50%;border:4px solid var(--orange);z-index:3000;animation:tapRing .45s ease-out forwards}
+@keyframes tapRing{from{width:0;height:0;opacity:.9;transform:translate(-50%,-50%)}to{width:120px;height:120px;opacity:0;transform:translate(-50%,-50%)}}
+.card.enter{animation:stepIn .5s cubic-bezier(.2,.9,.3,1.25) both}
+@keyframes stepIn{0%{opacity:0;transform:translateY(26px) scale(.96)}100%{opacity:1;transform:none}}
+.enter h2 .step-label{animation:labelPop .6s .15s cubic-bezier(.2,.9,.3,1.6) both}
+@keyframes labelPop{0%{transform:scale(.3) rotate(-12deg)}100%{transform:none}}
+.deal-card{animation:dealIn .5s cubic-bezier(.2,.9,.3,1.3) both}
+@keyframes dealIn{0%{opacity:0;transform:translateY(-40px) rotate(-14deg) scale(.7)}100%{opacity:1;transform:none}}
+.stage.drop{animation:stageDrop .55s cubic-bezier(.2,.9,.3,1.3) both}
+@keyframes stageDrop{0%{opacity:0;transform:scale(.85) translateY(-14px)}100%{opacity:1;transform:none}}
+.stage.drop .st-word{animation:wordBounce .8s .25s cubic-bezier(.2,.9,.3,1.8) both}
+@keyframes wordBounce{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.12);opacity:1}100%{transform:scale(1)}}
+.vote-item.picked{background:var(--orange)!important;color:#fff!important;border-color:var(--orange)!important;transform:scale(1.03)}
+.vote-item.picked .no{color:#fff}
+.vote-who.swap{animation:labelPop .45s cubic-bezier(.2,.9,.3,1.6) both}
+.pick-item[aria-pressed="true"]{animation:pickPop .35s cubic-bezier(.2,.9,.3,1.6)}
+@keyframes pickPop{0%{transform:scale(.96)}60%{transform:scale(1.03)}100%{transform:none}}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:2500;overflow:hidden}
+.confetti i{position:absolute;top:-20px;width:10px;height:16px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+@media (prefers-reduced-motion:reduce){.card.enter,.enter h2 .step-label,.deal-card,.stage.drop,.stage.drop .st-word,.vote-who.swap,.pick-item[aria-pressed="true"]{animation:none}.confetti,.tap-ring{display:none}}
 .res-cands{display:none}
 body.veiling .res-cands{display:block}
 .cdown{text-align:center;font-size:4.5rem;font-weight:900;color:var(--orange);line-height:1.2;padding:.6rem 0}
@@ -1221,6 +1245,7 @@ function renderDeal(){
     const p = S.act[i], c = COLORS[p%COLORS.length];
     const b = document.createElement('button');
     b.type='button'; b.className='deal-card'+(S.seen[i]?' done':'');
+    b.style.animationDelay = (i*0.09)+'s';
     b.style.setProperty('--pc', c.bg);
     b.innerHTML = '<span class="n">'+(p+1)+'</span><span class="who">'+esc(pName(p))+'</span>';
     b.setAttribute('aria-label', pLabel(p)+' の役を見る');
@@ -1308,6 +1333,7 @@ const NUMS = ['①','②','③','④','⑤','⑥','⑦','⑧'];
 function numOf(ai){ const i = S.pool.slice().sort((a,b)=>a-b).indexOf(ai); return NUMS[i] || ''; }
 function renderPerform(){
   const st = $('performStage');
+  st.classList.remove('drop'); void st.offsetWidth; st.classList.add('drop');
   st.innerHTML = '<img class="st-pic" src="/img/stage-mic.webp?v=2" width="600" height="600" alt="" decoding="async">'
     + '<div class="st-who">'+(S.k===1 ? esc(pLabel(S.act[0]))+' さんの番' : S.k+'人が順番に演じます')+'</div>'
     + '<div class="st-word">「'+esc(S.theme.word)+'」</div>'
@@ -1357,6 +1383,7 @@ function nextVote(){
 }
 function renderVote(){
   setTimeout(()=>pushView(), 0);
+  const vw = $('voteWho'); if (vw){ vw.classList.remove('swap'); void vw.offsetWidth; vw.classList.add('swap'); }
   if (STREAM_MQ.matches) $('voteHint').innerHTML = '離れた場所の人の答えは、DMやチャットで聞いて代わりに押してください。<br>視聴者のみなさんの答えは、コメントで。';
   $('voteWho').textContent = '📱 '+pLabel(S.voter)+' さんの番';
   $('voteTarget').innerHTML = '<b>'+esc(pLabel(S.act[S.target]))+'</b> さんは、どの気持ちだった？';
@@ -1367,9 +1394,11 @@ function renderVote(){
     b.type='button'; b.className='vote-item';
     b.innerHTML = '<span class="no">'+numOf(ai)+'</span>'+esc(S.theme.acts[ai]);
     b.addEventListener('click', ()=>{
+      if (w.dataset.busy) return; w.dataset.busy = '1';
+      b.classList.add('picked');
       S.votes[S.voter] = S.votes[S.voter] || {};
       S.votes[S.voter][S.target] = ai;
-      nextVote();
+      setTimeout(()=>{ delete w.dataset.busy; nextVote(); }, 260);
     });
     w.appendChild(b);
   });
@@ -1495,6 +1524,32 @@ function pushView(extra){
   try { localStorage.setItem('haa-view-state', JSON.stringify(st)); } catch(e){}
   try { VIEW_CH && VIEW_CH.postMessage(st); } catch(e){}
 }
+// 紙吹雪（答えが出た瞬間）。2.6秒で消す
+function confetti(){
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const box = document.createElement('div'); box.className = 'confetti';
+  const cols = ['#ff8a3d','#ffd43b','#ff6b9d','#51cf66','#4c6ef5','#fff3e2'];
+  const n = document.body.classList.contains('stream') ? 90 : 50;
+  for (let i=0;i<n;i++){
+    const p = document.createElement('i');
+    p.style.left = (Math.random()*100)+'vw';
+    p.style.background = cols[i % cols.length];
+    p.style.animationDuration = (1.4 + Math.random()*1.2)+'s';
+    p.style.animationDelay = (Math.random()*0.4)+'s';
+    p.style.transform = 'rotate('+(Math.random()*360)+'deg)';
+    box.appendChild(p);
+  }
+  document.body.appendChild(box);
+  setTimeout(()=>box.remove(), 3200);
+}
+// ボタンを押した場所に輪が広がる（押したことが分かるように）
+document.addEventListener('pointerdown', e=>{
+  const b = e.target.closest('button, .pick-item, .deal-card');
+  if (!b || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+  const r = document.createElement('span'); r.className = 'tap-ring';
+  r.style.left = e.clientX+'px'; r.style.top = e.clientY+'px';
+  document.body.appendChild(r); setTimeout(()=>r.remove(), 500);
+}, {passive:true});
 function pushResultAd(){
   if (window.__adPushed || window.__haaStream) return;
   window.__adPushed = true;
@@ -1511,6 +1566,7 @@ function countdownReveal(){
       document.body.classList.remove('veiling');
       setTimeout(pushResultAd, 60);
       $('resultBody').querySelectorAll('.ans-card').forEach((r,k)=>{ r.style.animationDelay = (k*0.12)+'s'; r.classList.add('pop'); });
+      confetti();
       pushView();
       return;
     }
@@ -1547,10 +1603,13 @@ $('resultBack').addEventListener('click', ()=>{ renderPick(); show('setup'); });
 $('redraw').addEventListener('click', ()=>{ renderPick(); track('haa_redraw',{cat:S.cat}); });
 
 function show(name){
+  const changed = S.step !== name;
   S.step = name;
   ['setup','deal','perform','vote','result'].forEach(s=>{
     const el = $('step-'+s); if (el) el.classList.toggle('hidden', s!==name);
   });
+  const cur = $('step-'+name);
+  if (cur && changed){ cur.classList.remove('enter'); void cur.offsetWidth; cur.classList.add('enter'); }
   document.body.classList.toggle('at-result', name==='result');
   if (name === 'result') renderNextPick();
   syncDock(name);
