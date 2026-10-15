@@ -394,6 +394,12 @@ body.stream .btn-eq{font-size:1.25rem;min-height:66px}
 body.veiling #postOnly,body.veiling #newGame,body.veiling #resultBack{display:none!important}
 body:not(.stream) .unveil-msg br,body:not(.stream) .unveil-msg-viewer{display:none}
 body.stream .unveil-msg{font-size:1.6rem}
+.cta-comment{display:none;text-align:center;font-weight:900;color:var(--orange-d);margin:.6rem 0 0;animation:labelPop .6s .3s cubic-bezier(.2,.9,.3,1.6) both}
+body.stream .cta-comment{display:block;font-size:1.3rem}
+body.veiling .cta-comment{display:none}
+.cdown.last{font-size:6rem;color:var(--navy,#16213a)}
+.cdown.last small{display:block;font-size:1.3rem;font-weight:900;color:var(--orange-d);margin-bottom:.2rem}
+body.stream .cdown.last{font-size:7rem}
 .win-pic{display:block;width:min(240px,60%);height:auto;margin:.4rem auto 0}
 body.veiling .win-pic{display:none}
 body.stream .win-pic{width:300px}
@@ -682,6 +688,7 @@ body:not(.at-result) #postOnly{display:none}
   <div class="cands res-cands" id="resCands"></div>
   <div class="cdown" id="cdown" hidden aria-live="polite"></div>
   <div id="resultBody"></div>
+  <p class="cta-comment">当たった人は「正解」、いい演技には「8888」とコメントしてね</p>
   <img class="win-pic" src="/img/result-win.webp?v=2" width="700" height="470" alt="" loading="lazy" decoding="async">
   <div class="score" id="scoreBox"></div>
   <!-- 続けて遊ぶとき、次のお題をその場で選ぶ（押すとそのお題で次の回へ。得点の合計・演じる人の交代はそのまま） -->
@@ -1389,7 +1396,7 @@ function renderPerform(){
     + '<div class="st-who">'+(S.k===1 ? esc(pLabel(S.act[0]))+' さんの番' : S.k+'人が順番に演じます')+'</div>'
     + '<div class="st-word">「'+esc(S.theme.word)+'」</div>'
     + '<div class="st-sub">声と表情だけで。どの気持ちかを当ててもらう</div>'
-    + '<div class="st-chat">視聴者のみなさんは、コメントで番号を当ててください</div>';
+    + '<div class="st-chat">リスナーのみなさん、コメントで番号を当ててください（例：③）</div>';
   const cw = $('performCands');
   cw.innerHTML = '<div class="cl">気持ちの候補（この中のどれかを演じます）</div><ul>'
     + S.pool.slice().sort((a,b)=>a-b).map(ai=>'<li><span class="no">'+numOf(ai)+'</span>'+esc(S.theme.acts[ai])+'</li>').join('') + '</ul>';
@@ -1606,8 +1613,27 @@ function pushResultAd(){
   window.__adPushed = true;
   try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
 }
+// 配信モードは「最終予想タイム」10秒 → 3・2・1。リスナーがコメントを書く時間を作る（「すぐ発表する」で飛ばせる）
+let LAST_T = null;
+function startLastCall(){
+  let n = 10; const cd = $('cdown'); const u = $('unveil');
+  $('unveilMsg').hidden = true; cd.hidden = false; cd.classList.add('last');
+  u.hidden = false; u.textContent = 'すぐ発表する';
+  const tick = ()=>{
+    if (n === 0){ LAST_T = null; S.lastDone = true; countdownReveal(); return; }
+    cd.innerHTML = '<small>最終予想タイム！コメントで番号を</small>' + n;
+    pushView({last:n});
+    n--; LAST_T = setTimeout(tick, 1000);
+  };
+  tick();
+  track('haa_lastcall',{});
+}
 // 3・2・1 で発表。コメントで当てる時間を作り、答えが出る瞬間をそろえる
 function countdownReveal(){
+  if (STREAM_MQ.matches && LAST_T === null && !S.lastDone){ startLastCall(); return; }
+  if (LAST_T){ clearTimeout(LAST_T); LAST_T = null; }
+  S.lastDone = false;
+  $('cdown').classList.remove('last'); $('unveil').textContent = '答えを見る';
   const cd = $('cdown'); $('unveil').hidden = true; $('unveilMsg').hidden = true; cd.hidden = false;
   let n = 3;
   const tick = ()=>{

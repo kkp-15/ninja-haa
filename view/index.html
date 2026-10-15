@@ -61,6 +61,8 @@ body.bg-cream{background:#fff8f0}
 .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden}
 .confetti i{position:absolute;top:-3vh;width:1.2vh;height:2vh;border-radius:.3vh;animation:fall linear forwards}
 @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+.cta{color:var(--orange-d);font-size:4vh}
+.stage.last .word{font-size:16vh}
 .idle{text-align:center;font-size:5vh;font-weight:900}
 .idle small{display:block;font-size:2.8vh;color:var(--muted);font-weight:700;margin-top:1vh}
 .credit{position:fixed;right:1.2vw;bottom:1vh;font-size:2.2vh;color:#fff;text-shadow:0 0 .4vh #000,0 0 .8vh #000}
@@ -86,7 +88,7 @@ body.bg-cream{background:#fff8f0}
   }
   function stage(st, who){
     return '<div class="stage"><img class="pic" src="/img/stage-mic.webp?v=2" alt=""><div class="who">'+esc(who)+'</div><div class="word">「'+esc(st.word)+'」</div>'
-      + '<div class="sub">声と表情だけで。どの気持ちかを当ててもらう</div><div class="chat">視聴者のみなさんは、コメントで番号を当ててください</div></div>';
+      + '<div class="sub">声と表情だけで。どの気持ちかを当ててもらう</div><div class="chat">リスナーのみなさん、コメントで番号を当ててください（例：③）</div></div>';
   }
   function render(st){
     if (!st) { wrap.innerHTML = '<div class="panel idle">声と表情で当てるゲーム<small>操作ページでゲームを始めると、ここに表示されます</small></div>'; return; }
@@ -111,6 +113,7 @@ body.bg-cream{background:#fff8f0}
           + '<div class="ans-main"><span class="kick">正解</span><span class="n">'+esc(x.no)+'</span><span class="a">'+esc(x.act)+'</span></div>'
           + (chips ? '<div class="chips">'+chips+'</div>' : '') + '</div>';
       }).join('') + '</div>';
+      h += '<div class="panel msg cta">当たった人は「正解」、いい演技には「8888」とコメントしてね</div>';
       h += '<img class="winpic" src="/img/result-win.webp?v=2" alt="">';
       var s = st.scores;
       if (s && s.rows && s.rows.length){
@@ -127,6 +130,7 @@ body.bg-cream{background:#fff8f0}
     lastKey = key;
     wrap.innerHTML = h;
     cd.innerHTML = (st.step === 'result' && st.cd) ? '<span>'+esc(st.cd)+'</span>' : '';
+    if (st.step === 'result' && st.veiling && st.last) wrap.innerHTML = '<div class="stage last"><div class="who">最終予想タイム！</div><div class="word">'+esc(st.last)+'</div><div class="chat">コメントで番号を（例：③）</div></div>' + cands(st, '気持ちの候補「'+(st.word||'')+'」');
   }
   var lastKey = '';
   function burst(){
