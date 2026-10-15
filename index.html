@@ -120,6 +120,8 @@ h2{font-size:1rem;margin:0 0 .5rem;display:flex;align-items:center;gap:.5rem}
   background:#fff;font-size:1.3rem;color:var(--orange-d);cursor:pointer;line-height:1}
 .stream-sw{display:none;align-items:center;gap:.5rem;justify-content:center;margin:.8rem 0 .2rem;font-size:.85rem;color:var(--muted);cursor:pointer}
 .stream-note{display:none}
+.stream-txt{display:none}
+body.stream .stream-txt{display:inline}
 .view-open{display:none;text-align:center;margin:.2rem 0 .4rem}
 body.stream .view-open{display:block}
 /* 配信モードは説明を減らしてお題の3択まで1画面に */
@@ -512,7 +514,7 @@ body:not(.at-result) #postOnly{display:none}
     <span class="unit">人</span>
     <button class="btn-ghost" id="actInc" aria-label="演じる人を1人増やす">＋</button>
   </div>
-  <p class="hint" id="actHint">ふつうは全員が演じます。配信や大人数では減らせます（演じない人は投票だけ）</p>
+  <p class="hint" id="actHint">ふつうは全員が演じます。1人ずつ交代で遊ぶときは減らせます（演じない人は投票だけ）</p>
   <label class="stream-sw" id="streamSw"><input type="checkbox" id="streamToggle"> 配信モード（広告なし・文字を大きく）</label>
   <!-- 配信モードだけ：候補の数（元のカードは8択。3択だと当たりやすすぎる） -->
   <div class="cand-n">
@@ -569,7 +571,7 @@ body:not(.at-result) #postOnly{display:none}
   <h2><span class="step-label">STEP 3</span>順番にタップして自分の役を見る</h2>
   <p class="hint">全員が同じ「<b id="dealWord"></b>」を言います。<br>気持ちだけが1人ずつ違います。他の人に見られないように！</p>
   <div class="deal-grid" id="dealGrid"></div>
-  <p class="hint deal-remote">離れた場所から遊ぶときは、カードの下の「リンクで送る」を押して、演じる人にDMで送ってください。その人の画面にだけ気持ちが出ます。<b>配信モードでは、カードを押すと役が別の小さなウィンドウで開きます。</b>OBSでこの画面のウィンドウを「ウィンドウキャプチャ」で取り込んでいれば、別ウィンドウは配信に映りません。画面全体を取り込んでいるときは、OBS用の表示ページを使うか、リンクを自分のスマホで開いてください</p>
+  <p class="hint deal-remote">離れた場所から遊ぶときは、カードの下の「リンクで送る」を押して、演じる人にDMで送ってください。その人の画面にだけ気持ちが出ます<span class="stream-txt">。<b>配信モードでは、カードを押すと役が別の小さなウィンドウで開きます。</b>OBSでこの画面のウィンドウを「ウィンドウキャプチャ」で取り込んでいれば、別ウィンドウは配信に映りません。画面全体を取り込んでいるときは、OBS用の表示ページを使うか、リンクを自分のスマホで開いてください</span></p>
   <button class="btn-sub" id="toPerform" disabled>全員見終わった → 演じる</button>
   <button class="btn-sub" id="dealBack">↺ 設定に戻る</button>
 </section>
@@ -1048,7 +1050,7 @@ function renderActors(){
   const k = actorsN();
   $('actorCount').textContent = k;
   $('actHint').textContent = k >= S.players
-    ? (S.players === 1 ? '演じるのはあなた1人です' : 'ふつうは全員が演じます。配信や大人数では減らせます（演じない人は投票だけ）')
+    ? (S.players === 1 ? '演じるのはあなた1人です' : 'ふつうは全員が演じます。1人ずつ交代で遊ぶときは減らせます（演じない人は投票だけ）')
     : '演じるのは'+k+'人（毎回交代）。ほかの'+(S.players-k)+'人は投票だけします。気持ちの候補は'+poolN()+'つから選びます';
 }
 function setActors(n){
