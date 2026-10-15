@@ -122,13 +122,21 @@ h2{font-size:1rem;margin:0 0 .5rem;display:flex;align-items:center;gap:.5rem}
 .stream-note{display:none}
 .view-open{display:none;text-align:center;margin:.2rem 0 .4rem}
 body.stream .view-open{display:block}
-.cand-n{display:none}
+/* 配信モードは説明を減らしてお題の3択まで1画面に */
+body.stream .hero-t p:not(.hen){display:none}
+body.stream .hero-pic{width:90px}
+body.stream .hero-t h1{font-size:1.25rem;margin:0}
+body.stream #playersHint{display:none}
+.view-open summary{cursor:pointer;color:var(--muted);font-size:.85rem;padding:6px 0;min-height:36px}
+.cand-n{display:none;align-items:center;justify-content:center;gap:.6rem;flex-wrap:wrap;margin:.5rem 0}
+body.stream .cand-n,body[data-players="1"] .cand-n{display:flex}
+.cand-n .btn-ghost{width:40px;height:40px}
+.cn-l{font-weight:800;color:var(--muted);font-size:.9rem}
+.cn-v{font-size:.95rem;color:var(--muted)}.cn-v b{font-size:1.6rem;color:var(--orange-d);margin-right:.15rem}
+.cn-h{font-size:.78rem;color:var(--muted)}
 body.stream.playing .shop-mini{display:none}
 /* 配信モードでは主ボタンを画面下に固定（PCでもスクロールせずに押せる） */
 body.stream #dock{position:sticky;bottom:0;z-index:50;background:#fffdf9;box-shadow:0 -6px 12px rgba(255,253,249,.9);border-top:1px solid var(--line);padding:10px 0 12px;margin:0 0 12px}
-body.stream .cand-n,body[data-players="1"] .cand-n{display:block}
-body.stream .cand-n .act-lbl{display:block}
-body.stream .cand-n .act-lbl+.num{display:flex}
 @media(min-width:768px){.stream-note{display:block;margin-top:0}}
 body.stream .act-lbl,body.stream #actDec,body.stream #actInc,body.stream #actorCount,body.stream #actHint,body.stream .act-lbl+.num{display:none}
 /* 1人のときは「1回に演じる人」は選ぶ意味がないので隠す（候補の数の欄は残す） */
@@ -501,21 +509,19 @@ body:not(.at-result) #postOnly{display:none}
   <label class="stream-sw" id="streamSw"><input type="checkbox" id="streamToggle"> 配信モード（広告なし・文字を大きく）</label>
   <!-- 配信モードだけ：候補の数（元のカードは8択。3択だと当たりやすすぎる） -->
   <div class="cand-n">
-    <p class="act-lbl">気持ちの候補の数</p>
-    <div class="num">
-      <button class="btn-ghost" id="candDec" aria-label="候補を1つ減らす">−</button>
-      <span class="val" id="candCount">6</span>
-      <span class="unit">択</span>
-      <button class="btn-ghost" id="candInc" aria-label="候補を1つ増やす">＋</button>
-    </div>
-    <p class="hint">多いほど当てにくくなります（3〜8）</p>
+    <span class="cn-l">気持ちの候補</span>
+    <button class="btn-ghost" id="candDec" aria-label="候補を1つ減らす">−</button>
+    <span class="cn-v"><b id="candCount">6</b>択</span>
+    <button class="btn-ghost" id="candInc" aria-label="候補を1つ増やす">＋</button>
+    <span class="cn-h">多いほど当てにくい</span>
   </div>
-  <div class="view-open" id="viewOpen">
+  <details class="view-open" id="viewOpen">
+    <summary>OBSの取り込み方（くわしく）</summary>
+    <p class="hint">ふつうは、このウィンドウを「ウィンドウキャプチャ」で取り込むだけで大丈夫です（役は別ウィンドウで開くので映りません）。画面全体を取り込んでいるときや、操作ボタンも映したくないときは、表示ページを使ってください</p>
     <button type="button" class="np-link" id="viewOpenBtn">OBS用の表示ページを開く</button>
     <button type="button" class="np-link" id="viewCopyBtn">URLをコピー</button>
-    <p class="hint">OBSには表示ページの方を取り込むと、役（答え）や操作ボタンは配信に映りません。操作はこの画面で。同じパソコンのブラウザで開いてください</p>
-  </div>
-  <p class="hint stream-note" id="streamNote">配信モードは、1人ずつ交代で演じる遊び方になります。視聴者はコメントで番号を当て、一緒に遊ぶ人は画面で投票もできます</p>
+  </details>
+  <p class="hint stream-note" id="streamNote">1人ずつ交代で演じて、リスナーはコメントで番号を当てます</p>
   <!-- 名前は任意。色だけだと誰の番か分かりにくい（itoと同じ作り）。入れなければ色の名前のまま。この端末にだけ保存 -->
   <details class="names-box" id="namesBox">
     <summary class="names-sum">プレイヤー名を入れる（任意）<span id="namesCount"></span></summary>
@@ -1549,6 +1555,7 @@ function show(name){
 // Init
 renderStats();
 applyStream();
+if (document.body.classList.contains('stream') && $('namesBox')) $('namesBox').open = true;
 // 配信モードでは、市販版のリンク（PR）を「始める」ボタンの下へ移す（ボタンがPRの下に押し下げられないように）
 if (document.body.classList.contains('stream')){
   const sm = document.querySelector('.shop-mini'), dock = $('dock');
