@@ -924,7 +924,7 @@ button.g-c{cursor:pointer}
   <p class="cta-comment" id="ctaComment"></p>
   <img class="win-pic" src="/img/result-win.webp?v=2" width="700" height="470" alt="" loading="lazy" decoding="async">
   <div class="score" id="scoreBox"></div>
-  <!-- 続けて遊ぶとき、次のお題をその場で選ぶ（押すとそのお題で次の回へ。得点の合計・演じる人の交代はそのまま） -->
+  <!-- 続けて遊ぶとき、次のお題をその場で選ぶ（選んで「◯◯で始める」で次の回へ。もう一度押すと選択をやめる。得点の合計・演じる人の交代はそのまま） -->
   <!-- 1回に演じる人が1人のとき：次に演じる人を選ぶ（はじめは今までの順番の人。選ばなければそのまま交代） -->
   <div class="actor-pick" id="apNext"><p class="ap-h">次に演じる人</p><div class="ap-row" role="group" aria-label="次に演じる人"></div></div>
   <div class="next-pick" id="nextPick">
@@ -2199,7 +2199,11 @@ function countdownReveal(){
   track('haa_unveil',{players:S.players});
 }
 $('unveil').addEventListener('click', countdownReveal);
-$('newGame').addEventListener('click', ()=>{ renderPick(); startGame(); });
+// 次のお題を選んだら、そのお題で。選んでいなければ今までどおり（2026-10-17：押しただけで始まらないよう、選ぶ→ボタンで始める形に）
+$('newGame').addEventListener('click', ()=>{
+  if (S.nextTheme){ S.theme = S.nextTheme; S.nextTheme = null; track('haa_next_pick',{word:S.theme.word,cat:S.cat}); startGame(); return; }
+  renderPick(); startGame();
+});
 // 次のお題を選ぶ（答え合わせの画面で）。今のカテゴリから、まだ遊んでいないお題を優先して3つ
 function renderNextPick(){
   const w = $('npList'); if (!w || S.cat === MY_KEY) return;
@@ -2210,11 +2214,18 @@ function renderNextPick(){
   const bag = list.slice(), picked = [];
   while (picked.length < 3 && bag.length) picked.push(bag.splice(Math.floor(Math.random()*bag.length),1)[0]);
   w.innerHTML = '';
+  S.nextTheme = null; $('newGame').textContent = 'もう1回遊ぶ';
   picked.forEach(t=>{
     const b = document.createElement('button');
     b.type='button'; b.className='pick-item';
     b.innerHTML = '<span class="pi-w">「'+esc(t.word)+'」</span><span class="pi-s">'+esc(t.acts.slice(0,3).join('／'))+' …ほか</span>';
-    b.addEventListener('click', ()=>{ S.theme = t; track('haa_next_pick',{word:t.word,cat:S.cat}); startGame(); });
+    b.setAttribute('aria-pressed','false');
+    b.addEventListener('click', ()=>{
+      const on = S.nextTheme !== t;
+      S.nextTheme = on ? t : null;
+      w.querySelectorAll('.pick-item').forEach(x=>x.setAttribute('aria-pressed', x === b && on ? 'true' : 'false'));
+      $('newGame').textContent = on ? '「'+t.word+'」で始める' : 'もう1回遊ぶ';
+    });
     w.appendChild(b);
   });
 }
