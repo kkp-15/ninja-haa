@@ -473,6 +473,32 @@ button:active{transform:scale(.95)}
 @media (prefers-reduced-motion:reduce){.card.enter,.enter h2 .step-label,.deal-card,.stage.drop,.stage.drop .st-word,.vote-who.swap,.pick-item[aria-pressed="true"]{animation:none}.confetti,.tap-ring{display:none}}
 /* 配信モード：名前は1行に並べる。画面の高さが低いPC（ノート 1366x768 など）はさらに詰めて、スクロールなしで収める */
 body.stream .names-grid{grid-template-columns:repeat(4,1fr)}
+/* いま演じる人（遊んでいる間ずっと見える1行）と、次にやること（主ボタンのすぐ上に1行） */
+.now-actor{display:none;margin:0 0 8px;font-size:1.05rem;font-weight:800;color:var(--ink);text-align:left}
+.now-actor b{color:var(--orange-d)}
+body.playing:not(.gmode) .now-actor:not([hidden]){display:block}
+body.stream .now-actor{font-size:1.45rem;margin-bottom:6px}
+/* 配信モードのはじめての方へ（最初の1回だけ開いておく。一度始めたら畳む） */
+.first-guide{display:none;margin:0 0 .6rem;border-left:4px solid var(--orange);padding:.1rem 0 .1rem .7rem;text-align:left}
+body.stream .first-guide{display:block}
+body.stream .stream-note{display:none!important}
+/* 配信モードの演じる画面は、ステージに「声と表情だけで」があるので下の同じ説明は出さない */
+body.stream .perf-hint{display:none}
+.first-guide summary{cursor:pointer;font-weight:800;color:var(--orange-d);min-height:36px;display:flex;align-items:center}
+.first-guide p{margin:.1rem 0 .3rem;line-height:1.7;font-size:1.05rem}
+.first-guide p span{display:block}
+/* 高さの低いPC（1366x768 など）は1行に並べて、お題の候補を押し下げない */
+@media (max-height:900px){body.stream .first-guide p span{display:inline;margin-right:1.2em}body.stream .first-guide summary{min-height:30px}body.stream .first-guide p{margin:0}}
+/* 1回に演じる人が1人のとき（配信モードはいつも1人）：だれが演じるかを選ぶ（名前のボタンを横に並べる。押したものは塗りつぶし） */
+.actor-pick{display:none;margin:.6rem 0 .3rem}
+.actor-pick.on{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+body.veiling .actor-pick{display:none!important}
+.ap-h{font-weight:800;font-size:.95rem;margin:0}
+.ap-row{display:flex;flex-wrap:wrap;gap:8px}
+.ap-btn{min-height:44px;min-width:44px;padding:6px 14px;border:2px solid #e6d5bd;border-radius:8px;background:#fff;font:inherit;font-size:1rem;font-weight:700;color:var(--ink,#4a3b2a);cursor:pointer;display:inline-flex;align-items:center;gap:.4rem}
+.ap-btn .ap-dot{width:.8rem;height:.8rem;border-radius:50%;flex:0 0 auto}
+.ap-btn[aria-pressed="true"]{background:var(--orange);border-color:var(--orange);color:#fff}
+.ap-btn[aria-pressed="true"] .ap-dot{box-shadow:0 0 0 2px #fff}
 @media (max-height:900px){
   body.stream .hero{display:none}
   body.stream .wrap{padding-top:6px}
@@ -714,6 +740,7 @@ button.g-c{cursor:pointer}
   </div>
   <!-- 遊んでいる間だけ出す帯。配信に映ったときにサイト名が読める。右は進み具合 -->
   <div class="hbar"><span class="hb-name">声と表情で当てるゲーム</span><span class="hb-url">haa.kkpwebninja.com</span><span class="hb-step" id="hbStep"></span></div>
+  <p class="now-actor" id="nowActor" hidden aria-live="polite"></p>
 </header>
 
 <!-- 参加者画面（離れて遊ぶリンクを開いた人）。?r= 演じる人／?j= 当てる人／?a= 発表。中身はURLの中だけで、外へは送らない -->
@@ -773,6 +800,10 @@ button.g-c{cursor:pointer}
 <!-- STEP 1 -->
 <section class="card" id="step-setup">
   <div class="stats-bar hidden" id="statsBar"></div>
+  <!-- 配信モードだけ：はじめての方へ（最初の1回は開いておく。一度始めたら畳む。この端末にだけ覚える） -->
+  <details class="first-guide" id="firstGuide"><summary>はじめての方へ</summary>
+    <p><span>①人数と名前を入れる</span><span>②演じる人を選ぶ</span><span>③お題を選んでスタート</span></p>
+  </details>
 
   <h2><span class="step-label">STEP 1</span>人数を選ぶ</h2>
   <div class="num">
@@ -814,6 +845,8 @@ button.g-c{cursor:pointer}
     <div class="names-grid" id="namesGrid"></div>
     <button type="button" class="names-clear" id="namesClear">名前をすべて消す</button>
   </details>
+  <!-- 1回に演じる人が1人のとき（配信モードはいつも）：最初に演じる人を選ぶ（参加人数が1人のときは出さない） -->
+  <div class="actor-pick" id="apFirst"><p class="ap-h">最初に演じる人</p><div class="ap-row" role="group" aria-label="最初に演じる人"></div></div>
 
   <h2 style="margin-top:1rem"><span class="step-label">STEP 2</span>お題を選ぶ</h2>
   <div class="cat-scroll">
@@ -850,7 +883,7 @@ button.g-c{cursor:pointer}
   <div class="deal-grid" id="dealGrid"></div>
   <div class="join-box" id="joinBox" hidden></div>
   <p class="sent-hint" id="sentHint" hidden>送った人に「見た？」と声で確かめてね</p>
-  <p class="hint deal-remote">離れた場所から遊ぶときは、カードの下の「◯◯さんに送る」でLINEやDiscordに送ってください。その人の画面にだけ気持ちが出ます<span class="normal-txt">。同じ部屋の人には「QRで渡す」で、その人のスマホで読み取ってもらえます</span><span class="stream-txt">。<b>配信モードでは、カードを押すと別の小さなウィンドウにその人用のQRが出ます（スマホで読み取ると、その人の画面にだけ気持ちが出ます）。自分の役は「気持ちを見る」で。</b>OBSでこの画面のウィンドウを「ウィンドウキャプチャ」で取り込んでいれば、別ウィンドウは配信に映りません。画面全体を取り込んでいるときは、OBS用の表示ページを使うか、リンクを自分のスマホで開いてください</span></p>
+  <p class="hint deal-remote">離れた場所から遊ぶときは、カードの下の「◯◯さんに送る」でLINEやDiscordに送ってください。その人の画面にだけ気持ちが出ます<span class="normal-txt">。同じ部屋の人には「QRで渡す」で、その人のスマホで読み取ってもらえます</span><span class="stream-txt">。<b>配信モードでは、カードを押すと小窓にその人用のQRが出ます。自分の役は「どんな気持ちで言うか見る」で。</b>OBSでこのウィンドウだけを取り込めば、小窓は映りません</span></p>
   <button class="btn-sub" id="toPerform" disabled>全員見終わった → 演じる</button>
   <button class="btn-sub" id="dealBack">↺ 設定に戻る</button>
 </section>
@@ -859,7 +892,7 @@ button.g-c{cursor:pointer}
 <section class="card hidden" id="step-perform">
   <h2><span class="step-label">STEP 4</span>順番に演じる</h2>
   <div class="stage" id="performStage"></div>
-  <p class="hint">身振りは使わず、<b>声と表情だけ</b>で。1人ずつ「<b id="performWord"></b>」と言ってください。</p>
+  <p class="hint perf-hint">身振りは使わず、<b>声と表情だけ</b>で。1人ずつ「<b id="performWord"></b>」と言ってください。</p>
   <div id="performList"></div>
   <!-- 気持ちの候補。カード版でも全員がカードの候補を見ながら当てる。配信では視聴者がここを見て当てる -->
   <div class="cands" id="performCands"></div>
@@ -892,6 +925,8 @@ button.g-c{cursor:pointer}
   <img class="win-pic" src="/img/result-win.webp?v=2" width="700" height="470" alt="" loading="lazy" decoding="async">
   <div class="score" id="scoreBox"></div>
   <!-- 続けて遊ぶとき、次のお題をその場で選ぶ（押すとそのお題で次の回へ。得点の合計・演じる人の交代はそのまま） -->
+  <!-- 1回に演じる人が1人のとき：次に演じる人を選ぶ（はじめは今までの順番の人。選ばなければそのまま交代） -->
+  <div class="actor-pick" id="apNext"><p class="ap-h">次に演じる人</p><div class="ap-row" role="group" aria-label="次に演じる人"></div></div>
   <div class="next-pick" id="nextPick">
     <div class="np-h"><span class="np-t">次のお題を選ぶ</span><span class="np-ts">次のお題、どれがいい？</span><span class="np-cat" id="npCat"></span></div>
     <div class="pick-list" id="npList"></div>
@@ -1001,7 +1036,7 @@ button.g-c{cursor:pointer}
   <div class="rq" id="revealQr" hidden></div>
   <p class="rq-cap" id="revealQrCap" hidden></p>
   <button type="button" class="btn-w btn-show" id="revealQrBtn" hidden>QRを出す（スマホで読み取って渡す）</button>
-  <button type="button" class="btn-w btn-show" id="revealShow" hidden>気持ちを見る</button>
+  <button type="button" class="btn-w btn-show" id="revealShow" hidden>どんな気持ちで言うか見る</button>
   <div class="act" id="revealAct"></div>
   <div class="tapnote" id="revealTapNote" hidden>もう一度タップで隠せます</div>
   <div class="warn" id="revealWarn">ほかの人には内緒にしておいてね</div>
@@ -1298,6 +1333,7 @@ function setPlayers(n){
                        : '2人なら、1人が演じてもう1人が当てる形。候補は3つ出ます');
   renderActors();
   renderNames();
+  renderActorPick();
   if (S.cat === MY_KEY && $('myMsg')) checkMine();
 }
 // 1回に演じる人数。配信（演者1人ずつ）や大人数向け。0のときは全員が演じる＝これまでどおり
@@ -1331,7 +1367,7 @@ function renderNames(){
     const inp = document.createElement('input');
     inp.type = 'text'; inp.maxLength = 8; inp.placeholder = (i+1)+'人目・'+c.n; inp.value = S.names[i] || '';
     inp.setAttribute('aria-label', (i+1)+'人目の名前');
-    inp.addEventListener('input', ()=>{ S.names[i] = inp.value; saveNames(); updateNamesCount(); });
+    inp.addEventListener('input', ()=>{ S.names[i] = inp.value; saveNames(); updateNamesCount(); renderActorPick(); });
     inp.addEventListener('keydown', e=>{ if (e.key==='Enter'){ e.preventDefault(); const nx = g.querySelectorAll('input')[i+1]; if (nx) nx.focus(); else inp.blur(); } });
     row.appendChild(dot); row.appendChild(inp); g.appendChild(row);
   }
@@ -1341,20 +1377,43 @@ function updateNamesCount(){
   let n = 0; for (let i=0;i<S.players;i++) if ((S.names[i]||'').trim()) n++;
   $('namesCount').textContent = n ? '（'+n+'人 入力済み）' : '';
 }
-$('namesClear').addEventListener('click', ()=>{ S.names = []; saveNames(); renderNames(); });
+$('namesClear').addEventListener('click', ()=>{ S.names = []; saveNames(); renderNames(); renderActorPick(); });
 
 function renderActors(){
   const k = actorsN();
   $('actorCount').textContent = k;
   $('actHint').textContent = k >= S.players
     ? (S.players === 1 ? '演じるのはあなた1人です' : 'ふつうは全員が演じます。1人ずつ交代で遊ぶときは減らせます（演じない人は投票だけ）')
-    : '演じるのは'+k+'人（毎回交代）。ほかの'+(S.players-k)+'人は投票だけします。気持ちの候補は'+poolN()+'つから選びます';
+    : (k === 1 ? '演じない'+(S.players-k)+'人は投票だけ。気持ちの候補は'+poolN()+'つ'
+             : '演じるのは'+k+'人（毎回交代）。ほかの'+(S.players-k)+'人は投票だけします。気持ちの候補は'+poolN()+'つから選びます');
 }
 function setActors(n){
   n = Math.max(1, Math.min(S.players, n));
   S.actors = n >= S.players ? 0 : n;
   S.rot = 0;
   renderActors();
+  renderActorPick();
+}
+// 1回に演じる人が1人のとき（配信モードはいつも）：だれが演じるかを選ぶ。S.rot（次に演じる人の番号）をそのまま選んだ人にする
+// 演じたあとは startGame が S.rot を「その人の次」に進めるので、選ばなければ今までどおりの交代
+function renderActorPick(){
+  const on = S.players > 1 && actorsN() === 1;
+  if (S.players > 0) S.rot = ((S.rot||0) % S.players + S.players) % S.players;
+  ['apFirst','apNext'].forEach(id=>{
+    const box = $(id); if (!box) return;
+    box.classList.toggle('on', on);
+    const row = box.querySelector('.ap-row'); row.innerHTML = '';
+    if (!on) return;
+    for (let i=0;i<S.players;i++){
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'ap-btn';
+      b.setAttribute('aria-pressed', i === S.rot ? 'true' : 'false');
+      b.setAttribute('aria-label', pLabel(i)+' が演じる');
+      b.innerHTML = '<span class="ap-dot" style="background:'+COLORS[i%COLORS.length].bg+'"></span>'+esc((S.names[i]||'').trim() ? pName(i) : (i+1)+' '+pName(i));
+      b.addEventListener('click', ()=>{ S.rot = i; renderActorPick(); track('haa_actor_pick',{at:id==='apFirst'?'setup':'next',players:S.players}); });
+      row.appendChild(b);
+    }
+  });
 }
 $('actInc').addEventListener('click', ()=>setActors(actorsN()+1));
 $('actDec').addEventListener('click', ()=>setActors(actorsN()-1));
@@ -1509,6 +1568,7 @@ function startGame(){
   if (!t.mine && STATS.seen.indexOf(t.word) < 0) STATS.seen.push(t.word);
   saveStats(); renderStats();
   track('haa_start',{word:t.word,cat:S.cat,players:S.players,actors:S.k});
+  if (document.body.classList.contains('stream')){ try { localStorage.setItem('haa-guide-seen','1'); } catch(e){} if ($('firstGuide')) $('firstGuide').open = false; }
   $('dealWord').textContent = t.word;
   $('performWord').textContent = t.word;
   renderDeal();
@@ -1576,6 +1636,16 @@ function renderDeal(){
   $('dockMsg').textContent = 'カードを順番にタップ（見た人 '+seenN+' / '+S.k+'人）';
   $('dockMsg').hidden = seenN >= S.k;
 }
+// いまの状態を上の1行に（何回目・いま演じる人・何をする時間か）。名前がなければ色の名前
+function updateNow(){
+  const na = $('nowActor'), step = S.step; if (!na) return;
+  const playing = !!S.act && ['deal','perform','vote','result'].indexOf(step) >= 0 && !document.body.classList.contains('gmode');
+  na.hidden = !playing; if (!playing) return;
+  const who = S.k >= S.players && S.players > 1 ? '全員' : S.act.map(p=>'<b>'+esc(pName(p))+'</b>さん').join('・');
+  const what = {deal:'役を見る時間', perform:(S.players === 1 ? '演じて当ててもらう時間' : '演じて当てる時間'), vote:'投票の時間',
+    result:(document.body.classList.contains('veiling') ? '答えを見る前' : '答え合わせ')}[step];
+  na.innerHTML = (S.gno||1)+'回目・'+(step === 'result' ? '演じた人：' : 'いま演じる人：')+who+'・'+what;
+}
 // 主な操作を画面下の #dock に集める。ボタンはそのまま移すので、押したときの動きは変わらない
 function syncDock(name){
   const dock = $('dock'); if (!dock || document.body.classList.contains('gmode')) return;
@@ -1586,7 +1656,8 @@ function syncDock(name){
   dock.dataset.step = name;
   const stepName = {deal:'役を見る 3/6', perform:'演じる 4/6', vote:'投票 5/6', result:'答え合わせ 6/6'};
   if (document.body.classList.contains('stream')) Object.assign(stepName, {deal:'役を見る', perform:'演じる', vote:'投票', result:'答え合わせ'});
-  $('hbStep').textContent = stepName[name] || '';
+  // 遊んでいる間は、何をする時間かを上の1行（#nowActor）に出すので、ここは進み具合（3/6）だけ
+  $('hbStep').textContent = S.act && stepName[name] ? (stepName[name].split(' ')[1] || '') : (stepName[name] || '');
   // ボタンの位置を画面ごとに動かさないため、main を画面の高さまで伸ばして #dock を下端に置く（2回目以降はヘッダーが畳まれるので毎回測る）
   const mn = document.querySelector('main');
   if (mn) document.documentElement.style.setProperty('--mainTop', Math.round(mn.getBoundingClientRect().top + scrollY) + 'px');
@@ -1688,7 +1759,7 @@ function openReveal(i){
     if (w){
       S.seen[i] = true; S.sent = S.sent || {}; S.sent['r'+i] = 'qr'; S.sentAny = true; renderDeal(); renderAnn();
       $('dockMsg').hidden = false;
-      $('dockMsg').textContent = '別ウィンドウを開きました（「QRを出す」で渡す・自分の役は「気持ちを見る」で）。終わったら「覚えた！閉じる」で閉じてください';
+      $('dockMsg').textContent = '別ウィンドウを開きました（「QRを出す」で渡す・自分の役は「どんな気持ちで言うか見る」で）。終わったら「覚えた！閉じる」で閉じてください';
       track('haa_role_window',{});
       return;
     }
@@ -2020,6 +2091,7 @@ function countdownReveal(){
       cd.hidden = true;
       $('resultBody').classList.remove('veiled'); $('scoreBox').classList.remove('veiled');
       document.body.classList.remove('veiling');
+      updateNow();
       setTimeout(pushResultAd, 60);
       $('resultBody').querySelectorAll('.ans-card').forEach((r,k)=>{ r.style.animationDelay = (k*0.12)+'s'; r.classList.add('pop'); });
       confetti(); sfx('fanfare');
@@ -2070,6 +2142,8 @@ function show(name){
   if (cur && changed){ cur.classList.remove('enter'); void cur.offsetWidth; cur.classList.add('enter'); }
   document.body.classList.toggle('at-result', name==='result');
   if (name === 'result') renderNextPick();
+  if (name === 'result' || name === 'setup') renderActorPick();
+  updateNow();
   syncDock(name);
   // 広告は答えが出てから（隠れたまま push すると幅0で枠が死ぬ）
   if (name === 'result' && !document.body.classList.contains('veiling')) pushResultAd();
@@ -2083,6 +2157,9 @@ function show(name){
 // Init
 renderStats();
 applyStream();
+renderActorPick();
+const GUIDE_KEY = 'haa-guide-seen';
+try { if ($('firstGuide')) $('firstGuide').open = !localStorage.getItem(GUIDE_KEY); } catch(e){ if ($('firstGuide')) $('firstGuide').open = true; }
 if (document.body.classList.contains('stream') && $('namesBox')) $('namesBox').open = true;
 // 配信モードでは、市販版のリンク（PR）を「始める」ボタンの下へ移す（ボタンがPRの下に押し下げられないように）
 if (document.body.classList.contains('stream')){
@@ -2338,7 +2415,7 @@ $('gViewOpen').addEventListener('click', ()=>{
       $('revealClose').textContent = '覚えた！閉じる';
       const qs = (typeof o.q === 'string' && /^[A-Za-z0-9_-]+$/.test(o.q)) ? o.q : '';
       if (qs){
-        // 配信モードの小窓（10/16〜）：まずその人用のQRだけ。気持ちは「気持ちを見る」を押したときだけ入れる（ほかの人のQRを開いても役が目に入らない）
+        // 配信モードの小窓（10/16〜）：まずその人用のQRだけ。気持ちは「どんな気持ちで言うか見る」を押したときだけ入れる（ほかの人のQRを開いても役が目に入らない）
         const qk = o.qk === 'j' ? 'j' : 'r', act = o.a ? String(o.a) : '';
         $('reveal').classList.add('has-qr');
         $('revealAct').textContent = ''; $('revealAct').hidden = true;
