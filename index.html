@@ -1770,6 +1770,16 @@ function openReveal(i){
   $('revealWordLine').textContent = '言う言葉は「'+S.theme.word+'」';
   $('revealAct').textContent = S.theme.acts[S.assign[i]];
   $('revealAct').classList.remove('maskable','masked'); $('revealTapNote').hidden = true;
+  $('revealAct').hidden = false; $('revealShow').hidden = true; $('revealShow').onclick = null;
+  // 配信モードで小窓が止められたときは、気持ちを最初は隠しておく（配信画面に映らないように・2026-10-17）
+  if (document.body.classList.contains('stream')){
+    const act = S.theme.acts[S.assign[i]];
+    $('revealAct').textContent = ''; $('revealAct').hidden = true;
+    $('revealShow').hidden = false;
+    $('revealShow').onclick = ()=>{ $('revealAct').textContent = act; $('revealAct').hidden = false; $('revealShow').hidden = true; };
+    $('dockMsg').hidden = false;
+    $('dockMsg').textContent = '小さなウィンドウが開けませんでした（ブラウザでポップアップを許可すると開きます）。気持ちは「どんな気持ちで言うか見る」を押したときだけ出ます';
+  }
   $('reveal').classList.add('show');
   $('reveal').dataset.i = i;
 }
