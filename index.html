@@ -1980,7 +1980,7 @@ if (document.body.classList.contains('stream')){
   if (sm && dock) dock.parentNode.insertBefore(sm, dock.nextSibling);
 }
 $('viewOpenBtn').addEventListener('click', ()=>{ pushView(); window.open('/view/', 'haaView', 'width=1280,height=720'); track('haa_view_open',{}); });
-$('viewCopyBtn').addEventListener('click', ()=>{ const u = location.origin + '/view/'; try { navigator.clipboard.writeText(u).then(()=>{ $('viewCopyBtn').textContent = 'コピーしました'; }); } catch(e){ window.prompt('このURLをOBSのブラウザソースに', u); } });
+$('viewCopyBtn').addEventListener('click', ()=>{ const u = location.origin + '/view/'; try { navigator.clipboard.writeText(u).then(()=>{ $('viewCopyBtn').textContent = 'コピーしました'; }); } catch(e){ window.prompt('このURLを、操作する画面と同じブラウザで開いてください', u); } });
 $('streamToggle').addEventListener('change', e=>{
   try{ localStorage.setItem(STREAM_KEY, e.target.checked ? '1' : '0'); }catch(_){}
   track('haa_stream_toggle',{on:e.target.checked});
