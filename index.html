@@ -472,7 +472,7 @@ button:active{transform:scale(.95)}
 @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
 @media (prefers-reduced-motion:reduce){.card.enter,.enter h2 .step-label,.deal-card,.stage.drop,.stage.drop .st-word,.vote-who.swap,.pick-item[aria-pressed="true"]{animation:none}.confetti,.tap-ring{display:none}}
 /* 配信モード：名前は1行に並べる。画面の高さが低いPC（ノート 1366x768 など）はさらに詰めて、スクロールなしで収める */
-body.stream .names-grid{grid-template-columns:repeat(4,1fr)}
+@media (min-width:768px){body.stream .names-grid{grid-template-columns:repeat(4,1fr)}}
 /* いま演じる人（遊んでいる間ずっと見える1行）と、次にやること（主ボタンのすぐ上に1行） */
 .now-actor{display:none;margin:0 0 8px;font-size:1.05rem;font-weight:800;color:var(--ink);text-align:left}
 .now-actor b{color:var(--orange-d)}
