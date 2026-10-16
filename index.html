@@ -605,6 +605,8 @@ header p a{display:inline-block;padding:10px 6px}
 .cat-btn{min-height:44px}
 .pick-item{min-height:48px}
 .vote-item{min-height:48px}
+.vote-undo{display:block;margin:.4rem auto 0;min-height:44px}
+.vote-undo[hidden]{display:none}
 .vote-who{margin:.1rem 0 .3rem}
 .btn-sub{min-height:44px}
 #step-setup>p:last-child{margin-top:2px!important}
@@ -908,6 +910,7 @@ button.g-c{cursor:pointer}
   <div class="stage sm"><p class="vote-who" id="voteWho"></p><p class="st-q" id="voteTarget"></p></div>
   <div class="vote-list" id="voteList"></div>
   <p class="vote-prog" id="voteProg"></p>
+  <button type="button" class="np-link vote-undo" id="voteUndo" hidden>↶ 1つ前の票をやり直す</button>
   <button class="btn-sub" id="voteSkip">投票をここでやめて答えを見る</button>
 </section>
 
@@ -1640,7 +1643,7 @@ function startGame(){
   S.seen = new Array(S.k).fill(false);
   S.order = Array.from({length:S.k},(_,i)=>i);
   for (let i=S.order.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [S.order[i],S.order[j]]=[S.order[j],S.order[i]]; }
-  S.votes = {};
+  S.votes = {}; S.voteHist = [];
   // 離れて遊ぶリンク用：この回の番号と目印（発表リンクと予想を結びつける）。送った印は回ごとに消す
   S.gno = (S.gno||0) + 1;
   S.gid = Math.random().toString(36).slice(2,8);
@@ -1963,6 +1966,7 @@ function renderVote(){
       b.classList.add('picked'); sfx('pick');
       S.votes[S.voter] = S.votes[S.voter] || {};
       S.votes[S.voter][S.target] = ai;
+      (S.voteHist = S.voteHist || []).push({voter:S.voter, target:S.target});
       setTimeout(()=>{ delete w.dataset.busy; nextVote(); }, 260);
     });
     w.appendChild(b);
@@ -1971,7 +1975,15 @@ function renderVote(){
   let done = 0;
   Object.values(S.votes).forEach(v=>done += Object.keys(v).length);
   $('voteProg').textContent = '投票 '+done+' / '+total;
+  $('voteUndo').hidden = !(S.voteHist && S.voteHist.length);
 }
+// 押し間違えたときだけ、1つ前の票に戻ってやり直す（押す回数は増やさない・2026-10-17）
+$('voteUndo').addEventListener('click', ()=>{
+  const h = S.voteHist && S.voteHist.pop(); if (!h) return;
+  if (S.votes[h.voter]){ delete S.votes[h.voter][h.target]; if (!Object.keys(S.votes[h.voter]).length) delete S.votes[h.voter]; }
+  S.voter = h.voter; S.target = h.target;
+  renderVote();
+});
 
 // ===== 結果 =====
 // 配信モード：PCの広い画面では自動でON。スイッチで切り替えた値はこの端末に覚える。?mode=stream でも強制ON
