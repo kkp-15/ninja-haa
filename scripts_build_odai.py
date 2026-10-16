@@ -12,7 +12,7 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 SITE = 'https://haa.kkpwebninja.com'
 GA, PUB = 'G-2LM85GJN0L', 'ca-pub-1298304917726270'
 # 公開日と更新日。更新日は中身（お題・本文）を変えた日に手で進める。再生成しただけでは進めない
-PUBLISHED, UPDATED = '2026-09-05', '2026-10-15'
+PUBLISHED, UPDATED = '2026-09-05', '2026-10-17'
 
 src = open(os.path.join(ROOT, 'data.js'), encoding='utf-8').read()
 
