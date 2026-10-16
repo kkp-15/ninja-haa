@@ -77,7 +77,7 @@
   // 参加者画面は1回ぶんの役・候補・答えを見るだけで、ゲーム本体は遊べない（トップへはページを読み直して移る）
   var gs = false;
   try {
-    var m = location.search.match(/[?&](r|j|a)=([^&#]+)/), o = null;
+    var m = location.search.match(/[?&](r|j|a)=([A-Za-z0-9_-]+)/), o = null;
     if (m){
       var raw = decodeURIComponent(m[2]).replace(/-/g,'+').replace(/_/g,'/');
       o = JSON.parse(decodeURIComponent(escape(atob(raw + '==='.slice((raw.length+3)%4)))));
@@ -1325,6 +1325,7 @@ function setPlayers(n){
   const prevPlayers = S.players;
   S.players = Math.max(1, Math.min(8, n));
   if (S.players !== prevPlayers){ S.total = []; S.rounds = 0; }
+  try { localStorage.setItem('haa-players', String(S.players)); } catch(e){}
   $('playerCount').textContent = S.players;
   document.body.dataset.players = S.players;
   $('playersHint').textContent = S.players >= 3
@@ -1861,14 +1862,14 @@ function renderVote(){
   if (STREAM_MQ.matches) $('voteHint').innerHTML = '離れた場所の人の答えは、DMやチャットで聞いて代わりに押してください。<br>視聴者のみなさんの答えは、コメントで。';
   $('voteWho').textContent = '📱 '+pLabel(S.voter)+' さんの番';
   $('voteTarget').innerHTML = '<b>'+esc(pLabel(S.act[S.target]))+'</b> さんは、どの気持ちだった？';
-  const w = $('voteList'); w.innerHTML='';
+  const w = $('voteList'); w.innerHTML=''; const shownAt = Date.now();
   const used = S.pool.slice().sort((a,b)=>a-b);
   used.forEach(ai=>{
     const b = document.createElement('button');
     b.type='button'; b.className='vote-item';
     b.innerHTML = '<span class="no">'+numOf(ai)+'</span>'+esc(S.theme.acts[ai]);
     b.addEventListener('click', ()=>{
-      if (w.dataset.busy) return; w.dataset.busy = '1';
+      if (w.dataset.busy || Date.now() - shownAt < 350) return; w.dataset.busy = '1';
       b.classList.add('picked'); sfx('pick');
       S.votes[S.voter] = S.votes[S.voter] || {};
       S.votes[S.voter][S.target] = ai;
@@ -2031,7 +2032,7 @@ $('sfxToggle').addEventListener('change', e=>{ try{ localStorage.setItem(SFX_KEY
 // 答えのあとの問いかけ（毎回変える。決まった言葉を書かせず、自由に話したくなる形に）
 const ASKS = ['当たった？外れた？','今の演技、どうだった？','この気持ち、分かった人いる？','次はだれに演じてほしい？','ほかの気持ちに聞こえた人いる？','いちばん迷ったのは何番だった？'];
 let ASK_I = Math.floor(Math.random()*ASKS.length);
-function nextAsk(){ ASK_I = (ASK_I + 1) % ASKS.length; return ASKS[ASK_I]; }
+function nextAsk(){ ASK_I = (ASK_I + 1) % ASKS.length; if (S.players === 1 && ASKS[ASK_I].indexOf('だれに') >= 0) ASK_I = (ASK_I + 1) % ASKS.length; return ASKS[ASK_I]; }
 function confetti(){
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const box = document.createElement('div'); box.className = 'confetti';
@@ -2407,7 +2408,7 @@ $('gViewOpen').addEventListener('click', ()=>{
 {
   let gk = null; ['r','j','a'].forEach(k=>{ if (!gk && Q.get(k)) gk = k; });
   if (gk){
-    let o = null; try { o = b64d(Q.get(gk)); } catch(e){}
+    let o = null; try { o = b64d(String(Q.get(gk)).match(/^[A-Za-z0-9_-]*/)[0]); } catch(e){}
     if (gk === 'r' && o && !o.v){
       // これまでの形（10/15〜16の ?r=・配信モードの別ウィンドウ）。役だけを出して、閉じたらトップ
       $('revealWho').textContent = String(o.n||'') + ' さん';
@@ -2457,7 +2458,8 @@ $('gViewOpen').addEventListener('click', ()=>{
 if (Q.get('cat') && THEMES[Q.get('cat')]) S.cat = Q.get('cat');
 renderCats();
 renderPick(Q.get('word') || '');
-setPlayers(4);
+// 配信モードは前回の人数で始める（配信中に読み直しても4人に戻らない）。ふだんは4人から
+{ let np = 4; if (document.body.classList.contains('stream')){ try { const v = +localStorage.getItem('haa-players'); if (v >= 1 && v <= 8) np = v; } catch(e){} } setPlayers(np); }
 if (Q.get('cat')) { try { history.replaceState(null, '', location.pathname + (Q.get('mode')==='stream' ? '?mode=stream' : '')); } catch(e){} }
 syncDock('setup');
 

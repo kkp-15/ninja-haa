@@ -56,7 +56,11 @@ body.bg-cream{background:#fff8f0}
 .nm{font-weight:800}
 .bar{height:1.4vh;background:#f3e8d6;border-radius:99vh;overflow:hidden}.bar i{display:block;height:100%;border-radius:99vh}
 .pt{text-align:right;font-weight:900;color:var(--orange-d)}.pt small{display:block;font-size:2vh;color:var(--muted)}
-.winpic{position:fixed;right:3vw;bottom:5vh;height:30vh;width:auto;pointer-events:none;animation:pop .6s ease both}
+.winpic{position:fixed;right:3vw;bottom:5vh;height:30vh;width:auto;pointer-events:none;z-index:0;animation:pop .6s ease both}
+.scores{position:relative;z-index:1}
+/* 5人以上は得点を2列に（720pの画面の下にはみ出さないように） */
+.scores.many{column-count:2;column-gap:3vw}.scores.many h3{column-span:all}.scores.many .sr{break-inside:avoid;grid-template-columns:6vh minmax(8vw,max-content) 1fr 12vh;font-size:3vh;padding:.3vh 0}.scores.many .pt small{display:inline;margin-left:.4vw}
+body.vert .scores.many{column-count:1}body.vert .scores.mid .sr{grid-template-columns:12vw 1fr 22vw;font-size:3.6vw;padding:0;line-height:1.35}body.vert .scores.mid .rk{font-size:3vw}body.vert .scores.mid h3{font-size:3.6vw}
 .stage{animation:pop .5s ease both}
 .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden}
 .confetti i{position:absolute;top:-3vh;width:1.2vh;height:2vh;border-radius:.3vh;animation:fall linear forwards}
@@ -143,7 +147,7 @@ body.vert .credit{font-size:2.8vw}
       var s = st.scores;
       if (s && s.rows && s.rows.length){
         var max = Math.max.apply(null, s.rows.map(function(r){return r.total;})) || 0, rank = 0, prev = null;
-        h += '<div class="panel scores"><h3>'+(s.rounds>1?'合計得点<small>'+esc(s.rounds)+'回目まで</small>':'得点')+'</h3>' + s.rows.map(function(r,i){
+        h += '<div class="panel scores'+(s.rows.length>=5?' mid many':s.rows.length>=4?' mid':'')+'"><h3>'+(s.rounds>1?'合計得点<small>'+esc(s.rounds)+'回目まで</small>':'得点')+'</h3>' + s.rows.map(function(r,i){
           if (r.total !== prev){ rank = i+1; prev = r.total; }
           return '<div class="sr'+(rank===1&&max>0?' top':'')+'"><span class="rk">'+rank+'位</span><span class="nm">'+esc(r.name)+'</span>'
             + '<span class="bar"><i style="width:'+(max>0?Math.round(r.total/max*100):0)+'%;background:'+esc(r.color)+'"></i></span><span class="pt">'+esc(r.total)+'点'+(s.rounds>1?'<small>+'+esc(r.add)+'</small>':'')+'</span></div>';
