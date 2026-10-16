@@ -1000,6 +1000,7 @@ button.g-c{cursor:pointer}
   <div class="word" id="revealWordLine"></div>
   <div class="rq" id="revealQr" hidden></div>
   <p class="rq-cap" id="revealQrCap" hidden></p>
+  <button type="button" class="btn-w btn-show" id="revealQrBtn" hidden>QRを出す（スマホで読み取って渡す）</button>
   <button type="button" class="btn-w btn-show" id="revealShow" hidden>気持ちを見る</button>
   <div class="act" id="revealAct"></div>
   <div class="tapnote" id="revealTapNote" hidden>もう一度タップで隠せます</div>
@@ -1687,7 +1688,7 @@ function openReveal(i){
     if (w){
       S.seen[i] = true; S.sent = S.sent || {}; S.sent['r'+i] = 'qr'; S.sentAny = true; renderDeal(); renderAnn();
       $('dockMsg').hidden = false;
-      $('dockMsg').textContent = '別ウィンドウにQRを出しました（自分の役は「気持ちを見る」で）。終わったら「覚えた！閉じる」で閉じてください';
+      $('dockMsg').textContent = '別ウィンドウを開きました（「QRを出す」で渡す・自分の役は「気持ちを見る」で）。終わったら「覚えた！閉じる」で閉じてください';
       track('haa_role_window',{});
       return;
     }
@@ -1892,7 +1893,11 @@ function finish(mode){
   if (S.rounds > 1) h += '<button type="button" class="sr-reset" id="scoreReset">合計を0に戻す</button>';
   box.innerHTML = h;
   const rb = $('scoreReset');
-  if (rb) rb.addEventListener('click', ()=>{ S.total = []; S.rounds = 0; rb.textContent = '0に戻しました。次の回から数えます'; rb.disabled = true; });
+  // 押しまちがいで合計が消えないよう、2回目で戻す（ワンクッション）
+  if (rb) rb.addEventListener('click', ()=>{
+    if (!rb.dataset.ask){ rb.dataset.ask = '1'; rb.textContent = '本当に0に戻す？（もう一度押す）'; setTimeout(()=>{ if (!rb.disabled){ delete rb.dataset.ask; rb.textContent = '合計を0に戻す'; } }, 4000); return; }
+    S.total = []; S.rounds = 0; rb.textContent = '0に戻しました。次の回から数えます'; rb.disabled = true;
+  });
   const hits = sc.reduce((t,v)=>t+v,0);
   track('haa_finish',{word:S.theme.word,players:S.players,hits:hits,mode:mode});
   show('result');
@@ -2333,14 +2338,18 @@ $('gViewOpen').addEventListener('click', ()=>{
         $('reveal').classList.add('has-qr');
         $('revealAct').textContent = ''; $('revealAct').hidden = true;
         $('revealQrCap').textContent = qk === 'r' ? 'スマホで読み取ると、その人の画面にだけ気持ちが出ます' : 'スマホで読み取ると、お題と候補が開いて予想を選べます（答えは入っていません）';
-        $('revealQrCap').hidden = false;
         if (qk === 'j'){ $('revealWho').textContent = String(o.n||'') + ' さん（参加リンク）'; $('revealWarn').hidden = true; $('revealClose').textContent = '閉じる'; }
-        loadQR(()=>{ drawQR($('revealQr'), location.origin + '/?' + qk + '=' + qs); $('revealQr').hidden = false; });
+        // QRはいきなり出さず、「QRを出す」を押してから（10/16 ユーザー指示）
+        $('revealQrBtn').hidden = false;
+        $('revealQrBtn').addEventListener('click', ()=>{
+          $('revealQrBtn').hidden = true;
+          loadQR(()=>{ drawQR($('revealQr'), location.origin + '/?' + qk + '=' + qs); $('revealQr').hidden = false; $('revealQrCap').hidden = false; });
+        });
         if (act){
           $('revealShow').hidden = false;
           $('revealShow').addEventListener('click', ()=>{
             $('revealAct').textContent = act; $('revealAct').hidden = false;
-            $('revealShow').hidden = true; $('revealQr').hidden = true; $('revealQrCap').hidden = true;
+            $('revealShow').hidden = true; $('revealQrBtn').hidden = true; $('revealQr').hidden = true; $('revealQrCap').hidden = true;
             $('reveal').classList.remove('has-qr');
           });
         }
