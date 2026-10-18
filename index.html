@@ -479,6 +479,11 @@ button:active{transform:scale(.95)}
 body.playing:not(.gmode) .now-actor:not([hidden]){display:block}
 body.stream .now-actor{font-size:1.45rem;margin-bottom:6px}
 /* 配信モードのはじめての方へ（最初の1回だけ開いておく。一度始めたら畳む） */
+.from-stream{position:relative;margin:0 0 14px;padding:10px 64px 10px 14px;border-left:4px solid var(--orange);background:#fff6ea;text-align:left;font-size:.92rem;line-height:1.6}
+.from-stream p{margin:0}
+.from-stream .fs-x{position:absolute;top:4px;right:4px;background:none;border:none;color:var(--muted);font:inherit;font-size:.8rem;text-decoration:underline;cursor:pointer;min-height:36px;padding:0 8px}
+.from-stream[hidden]{display:none}
+body.stream .from-stream{display:none}
 .first-guide{display:none;margin:0 0 .6rem;border-left:4px solid var(--orange);padding:.1rem 0 .1rem .7rem;text-align:left}
 body.stream .first-guide{display:block}
 body.stream .stream-note{display:none!important}
@@ -807,6 +812,12 @@ button.g-c{cursor:pointer}
     <p><span>①人数と名前を入れる</span><span>②演じる人を選ぶ</span><span>③お題を選んでスタート</span></p>
   </details>
 
+  <!-- 配信（YouTube・Twitch・TikTok・X など）から来た人にだけ出す一言。2026-10-19 reBON の配信に合わせて -->
+  <div class="from-stream" id="fromStream" hidden>
+    <p><b>配信で見たゲームはこれです。</b>スマホ1台をみんなで順番に回して遊べます（アプリ・登録なし）。</p>
+    <p>人数とお題を選んで、下のボタンで始められます。</p>
+    <button type="button" class="fs-x" id="fromStreamX" aria-label="閉じる">閉じる</button>
+  </div>
   <h2><span class="step-label">STEP 1</span>人数を選ぶ</h2>
   <div class="num">
     <button class="btn-ghost" id="dec" aria-label="1人減らす">−</button>
@@ -2575,6 +2586,18 @@ renderPick(Q.get('word') || '');
 { let np = 4; if (document.body.classList.contains('stream')){ try { const v = +localStorage.getItem('haa-players'); if (v >= 1 && v <= 8) np = v; } catch(e){} } setPlayers(np); }
 if (Q.get('cat')) { try { history.replaceState(null, '', location.pathname + (Q.get('mode')==='stream' ? '?mode=stream' : '')); } catch(e){} }
 syncDock('setup');
+// 配信から来た人への一言（参加者画面・配信モードでは出さない。閉じたらこのタブでは出さない）
+(function(){
+  const box = $('fromStream'); if (!box || document.body.classList.contains('stream')) return;
+  if (/[?&](r|j|a)=/.test(location.search) || /[?&]play\b/.test(location.search)) return;
+  let ref = ''; try { ref = new URL(document.referrer).hostname; } catch(e){}
+  const hit = /(^|\.)(youtube\.com|youtu\.be|twitch\.tv|tiktok\.com|x\.com|t\.co|twitter\.com|nicovideo\.jp)$/.test(ref) || /[?&]from=stream\b/.test(location.search);
+  if (!hit) return;
+  try { if (sessionStorage.getItem('haa-fs-x')) return; } catch(e){}
+  box.hidden = false;
+  track('haa_from_stream', {ref: ref || 'param'});
+  $('fromStreamX').addEventListener('click', ()=>{ box.hidden = true; try { sessionStorage.setItem('haa-fs-x','1'); } catch(e){} });
+})();
 
 // 広告は結果画面が表示されてから1回だけ読み込む。
 // 読み込み時に押すと、枠が非表示（幅0）のままなので広告が入らず、枠が死んでいた（2026-09-20 修正）。
