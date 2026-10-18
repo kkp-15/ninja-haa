@@ -90,10 +90,20 @@
   } catch(e){}
   window.__haaGuestNoAd = gs;
   if (on || gs || window.__kkpTest) return;
-  var s = document.createElement('script');
-  s.async = true; s.crossOrigin = 'anonymous';
-  s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1298304917726270';
-  document.head.appendChild(s);
+  // 読み込みが終わってから push する（読み込み前に積んだ push が自動広告の枠に取られることがあった）
+  var state = 0, waits = [];
+  window.__haaLoadAds = function(cb){
+    if (cb) { if (state === 2) cb(); else waits.push(cb); }
+    if (state) return; state = 1;
+    var s = document.createElement('script');
+    s.async = true; s.crossOrigin = 'anonymous';
+    s.onload = s.onerror = function(){ state = 2; var w = waits; waits = []; w.forEach(function(f){ try { f(); } catch (e) {} }); };
+    s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1298304917726270';
+    document.head.appendChild(s);
+  };
+  // 2026-10-19 参加者画面（s なしのリンク）は、役・候補を見ている間は広告のスクリプト自体を読まない（自動広告も出さない）。答え合わせのあとに読む
+  if (o && o.v === 2) return;
+  window.__haaLoadAds();
 })();
 </script>
 
@@ -183,6 +193,11 @@ body.stream .act-lbl,body.stream #actDec,body.stream #actInc,body.stream #actorC
 body[data-players="1"] .act-lbl:not(.cand-n .act-lbl),body[data-players="1"] #actHint,body[data-players="1"] .act-lbl:not(.cand-n .act-lbl)+.num{display:none}
 body.stream #postOnly{display:none!important}
 .sfx-sw{display:none!important}
+.cast-sw{display:none}
+body.stream .cast-sw{display:flex;flex-wrap:wrap;justify-content:center;gap:.2rem 1.2rem;margin:.3rem 0 .2rem}
+.cast-sw label{display:flex;align-items:center;gap:.45rem;min-height:44px;font-size:1.05rem;cursor:pointer}
+.cast-sw input{width:20px;height:20px;accent-color:var(--orange)}
+.cast-sw .hint{flex-basis:100%;margin:0;text-align:center}
 body.stream .sfx-sw{display:flex!important;margin-top:0}
 .stream-sw input{width:20px;height:20px;accent-color:var(--orange)}
 @media(min-width:768px){.stream-sw{display:flex}}
@@ -835,6 +850,12 @@ button.g-c{cursor:pointer}
   </div>
   <p class="hint" id="actHint">ふつうは全員が演じます。1人ずつ交代で遊ぶときは減らせます（演じない人は投票だけ）</p>
   <label class="stream-sw" id="streamSw"><input type="checkbox" id="streamToggle"> 配信モード（広告なし・文字を大きく）</label>
+  <!-- 配信モードだけ：配信する／しない（オンライン飲み会・リモート交流など）。2026-10-19 -->
+  <div class="cast-sw" id="castSw" role="radiogroup" aria-label="配信する・しない">
+    <label><input type="radio" name="haaCast" value="on"> 配信する</label>
+    <label><input type="radio" name="haaCast" value="off"> 配信しない（オンライン飲み会・リモート交流など）</label>
+    <p class="hint">配信しないときは、送ったリンクを開いた人の画面の最後に広告が出ます（答え合わせのあとだけ）。この画面には出ません</p>
+  </div>
   <!-- 配信モードだけ：候補の数（元のカードは8択。3択だと当たりやすすぎる） -->
   <div class="cand-n">
     <span class="cn-l">気持ちの候補</span>
@@ -1763,9 +1784,13 @@ function syncDock(name){
 // ?r= 演じる人（その人の気持ちだけ）／?j= 当てる人（お題と候補だけ）／?a= 発表（全員の答え）
 function b64e(o){ return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
 function b64d(s){ const raw = String(s).replace(/-/g,'+').replace(/_/g,'/'); return JSON.parse(decodeURIComponent(escape(atob(raw + '==='.slice((raw.length+3)%4))))); }
+// 配信する／しない（配信モードだけ・この端末に覚える）。既定は「配信する」
+const CAST_KEY = 'haa-stream-cast';
+function castOn(){ try { return localStorage.getItem(CAST_KEY) !== 'off'; } catch(e){ return true; } }
 function linkBase(){
   const o = {v:2, w:S.theme.word, c:S.pool.slice().sort((a,b)=>a-b).map(ai=>S.theme.acts[ai]), A:S.act.map(p=>[pName(p), p]), g:S.gid, rd:S.gno};
-  if (document.body.classList.contains('stream')) o.s = 1;
+  // 配信モードの「配信しない」（オンライン飲み会・リモート交流など）では s を付けない＝受け取った画面は答え合わせのあとに広告（2026-10-19）
+  if (document.body.classList.contains('stream') && castOn()) o.s = 1;
   return o;
 }
 // popup=true は配信モードの別ウィンドウ用（これまでの形のまま。開いて閉じるだけ）
@@ -2293,6 +2318,13 @@ if (document.body.classList.contains('stream')){
 }
 $('viewOpenBtn').addEventListener('click', ()=>{ pushView(); window.open('/view/', 'haaView', 'width=1280,height=720'); track('haa_view_open',{}); });
 $('viewCopyBtn').addEventListener('click', ()=>{ const u = location.origin + '/view/'; try { navigator.clipboard.writeText(u).then(()=>{ $('viewCopyBtn').textContent = 'コピーしました'; }); } catch(e){ window.prompt('このURLを、操作する画面と同じブラウザで開いてください', u); } });
+(function(){
+  const v = castOn() ? 'on' : 'off';
+  document.querySelectorAll('input[name=haaCast]').forEach(r=>{
+    r.checked = r.value === v;
+    r.addEventListener('change', ()=>{ if (!r.checked) return; try { localStorage.setItem(CAST_KEY, r.value); } catch(e){} track('haa_stream_cast',{cast:r.value}); });
+  });
+})();
 $('streamToggle').addEventListener('change', e=>{
   try{ localStorage.setItem(STREAM_KEY, e.target.checked ? '1' : '0'); }catch(_){}
   track('haa_stream_toggle',{on:e.target.checked});
@@ -2459,7 +2491,7 @@ function gReveal(instant){
     if (!instant){ confetti(); sfx('fanfare', o.s === 1); }
     gView({step:'result', veiling:false, quick:true, answers:o.A.map((x,i)=>({name:x[0], color:COLORS[x[1]%COLORS.length].bg, no:gNo(o.X[i]), act:o.c[o.X[i]], chips:[]})), scores:null, ask:''});
     // 広告は答えのあと（配信モードで作られたリンク・配信モードの端末では出さない）
-    if (!window.__haaStream && !window.__haaGuestNoAd){ $('gAd').hidden = false; setTimeout(()=>{ if (window.__gAdPushed) return; window.__gAdPushed = true; try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){} }, 60); }
+    if (!window.__haaStream && !window.__haaGuestNoAd){ $('gAd').hidden = false; const gPush = ()=>setTimeout(()=>{ if (window.__gAdPushed) return; window.__gAdPushed = true; try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){} }, 60); if (window.__haaLoadAds) window.__haaLoadAds(gPush); else gPush(); }
     if (!instant) track('haa_guest_reveal',{hit:hit, tot:tot});
   };
   if (instant){ finishReveal(); return; }
@@ -2503,7 +2535,7 @@ function guestOpen(k, o, how){
     window.scrollTo(0,0);
     gView({step:'perform'});
   }
-  track('haa_guest_open',{kind:k, how:how||'link'});
+  track('haa_guest_open',{kind:k, how:how||'link', mode:o && o.s === 1 ? 'stream' : 'remote'});
 }
 function guestError(){
   enterGuest(); $('gMain').hidden = true; $('gErr').hidden = false; $('hbStep').textContent = '';
