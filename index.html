@@ -445,6 +445,10 @@ body.stream .st-pic{height:100%;right:2rem}
 .cands .cw{font-size:1.25rem;font-weight:900;margin:0 0 .25rem}
 .unveil{margin:.4rem 0 .8rem}
 .unveil[hidden]{display:none}
+/* 最終予想タイム中の「すぐ発表する」は小さい文字ボタン。主ボタンと同じ位置・見た目にしない（2026-10-19 演じる前に答えが出た事故） */
+#unveil.unveil-skip{display:block;width:auto;margin:.2rem auto .8rem;padding:.5rem 1rem;min-height:44px;background:none;border:0;box-shadow:none;
+  color:var(--muted);font-size:.9rem;font-weight:700;text-decoration:underline;text-underline-offset:3px;border-radius:8px}
+#unveil.unveil-skip[hidden]{display:none}
 /* 演技のあとの2択（投票して得点をつける／答えを見る）を同じ重さで横並び */
 .btn-eq{display:block;width:100%;padding:.8rem .4rem;border:2px solid var(--orange);border-radius:12px;background:#fff;
   color:var(--orange-d);font:inherit;font-weight:800;font-size:.98rem;line-height:1.35;cursor:pointer;min-height:56px}
@@ -1937,6 +1941,12 @@ $('dealBack').addEventListener('click', ()=>{
   delete b.dataset.ask; b.textContent = '↺ 設定に戻る'; show('setup');
 });
 
+// 画面が切り替わった直後の押しまちがい防止。新しく出た「答えが出る」ボタンは 0.8 秒は押しても効かない
+// （2026-10-19 るはね配信：「全員見終わった → 演じる」を押した2秒以内に、同じ位置に出た「答えだけ見る」→「すぐ発表する」が押されて、演じる前に答えが出た）
+const GUARD_MS = 800; let GUARD_AT = 0;
+function armGuard(){ GUARD_AT = Date.now(); }
+function guarded(){ return Date.now() - GUARD_AT < GUARD_MS; }
+
 const NUMS = ['①','②','③','④','⑤','⑥','⑦','⑧'];
 // 候補の番号（並びは pool の昇順で固定）。視聴者がコメントで「②」と当てられる
 function numOf(ai){ const i = S.pool.slice().sort((a,b)=>a-b).indexOf(ai); return NUMS[i] || ''; }
@@ -1954,6 +1964,7 @@ function renderPerform(){
   // 配信や1人演技では、口やコメントで当ててすぐ答えを見る方がテンポがよい。ふだんは投票が主
   const quick = S.k === 1 || STREAM_MQ.matches;
   const tv = $('toVote'), tr = $('toReveal');
+  resetRevealAsk();
   // 投票もできる回（2人以上で1人ずつ演じる）は、2つを同じ大きさで横に並べる。片方だけ目立つと、投票したいのに答えを先に押してしまう
   const both = quick && S.players >= 2;
   document.body.classList.toggle('perform-eq', both);
@@ -1977,8 +1988,25 @@ function renderPerform(){
 }
 $('toVote').addEventListener('click', ()=>{ S.voter=0; S.target=-1; nextVote(); show('vote'); });
 // 投票は人数×(人数−1)回スマホを回す（6人で30回）。そこで止まる人が多いので、口で当て合って答えだけ見る道を用意する
-$('toReveal').addEventListener('click', ()=>{ S.votes = {}; finish('quick'); countdownReveal(); });
-$('voteSkip').addEventListener('click', ()=>finish('partial'));
+// 配信モードでは2回押し（1回目で「もう一度押すと答えが出ます」）。演じる前に答えが出ると、その回が遊べなくなる（2026-10-19）
+$('toReveal').addEventListener('click', ()=>{
+  if (guarded()) return;
+  const b = $('toReveal');
+  if (STREAM_MQ.matches){
+    if (!b.dataset.ask){
+      b.dataset.ask = String(Date.now()); b.dataset.label = b.textContent; b.textContent = 'もう一度押すと答えが出ます';
+      clearTimeout(b._askT); b._askT = setTimeout(resetRevealAsk, 4000); return;
+    }
+    if (Date.now() - +b.dataset.ask < 400) return; // 連打の2回目は数えない
+  }
+  resetRevealAsk();
+  S.votes = {}; finish('quick'); countdownReveal();
+});
+function resetRevealAsk(){
+  const b = $('toReveal'); clearTimeout(b._askT);
+  if (b.dataset.ask){ delete b.dataset.ask; if (b.dataset.label) b.textContent = b.dataset.label; }
+}
+$('voteSkip').addEventListener('click', ()=>{ if (guarded()) return; finish('partial'); });
 
 // ===== 投票（カード版でいちばん面倒なところ） =====
 function nextVote(){
@@ -2042,6 +2070,7 @@ function finish(mode){
   // 配信向けの広い画面では「答えを見る」で一拍おく（視聴者が当ててから開ける）
   const veil = true;
   body.classList.toggle('veiled', veil); $('scoreBox').classList.toggle('veiled', veil); $('unveil').hidden = !veil;
+  $('unveil').classList.remove('unveil-skip'); $('unveilMsg').after($('unveil'));
   document.body.classList.toggle('veiling', veil);
   // 答えが出るまでは候補を見せておく（視聴者が最後まで番号で予想できるように）
   $('resCands').innerHTML = '<div class="cl">気持ちの候補「'+esc(S.theme.word)+'」</div><ul>'
@@ -2211,7 +2240,7 @@ let LAST_T = null;
 function startLastCall(){
   let n = 10; const cd = $('cdown'); const u = $('unveil');
   $('unveilMsg').hidden = true; cd.hidden = false; cd.classList.add('last');
-  u.hidden = false; u.textContent = 'すぐ発表する';
+  u.hidden = false; u.textContent = 'すぐ発表する'; u.classList.add('unveil-skip'); cd.after(u); armGuard();
   const tick = ()=>{
     if (n === 0){ LAST_T = null; S.lastDone = true; countdownReveal(); return; }
     cd.innerHTML = '<small>最終予想タイム！コメントで番号を</small>' + n;
@@ -2228,6 +2257,7 @@ function countdownReveal(){
   if (LAST_T){ clearTimeout(LAST_T); LAST_T = null; }
   S.lastDone = false;
   $('cdown').classList.remove('last'); $('unveil').textContent = '答えを見る';
+  $('unveil').classList.remove('unveil-skip'); $('unveilMsg').after($('unveil'));
   const cd = $('cdown'); $('unveil').hidden = true; $('unveilMsg').hidden = true; cd.hidden = false;
   let n = 3;
   const tick = ()=>{
@@ -2251,7 +2281,7 @@ function countdownReveal(){
   tick();
   track('haa_unveil',{players:S.players});
 }
-$('unveil').addEventListener('click', countdownReveal);
+$('unveil').addEventListener('click', ()=>{ if (guarded()) return; countdownReveal(); });
 // 次のお題を選んだら、そのお題で。選んでいなければ今までどおり（2026-10-17：押しただけで始まらないよう、選ぶ→ボタンで始める形に）
 $('newGame').addEventListener('click', ()=>{
   if (S.nextTheme){ S.theme = S.nextTheme; S.nextTheme = null; track('haa_next_pick',{word:S.theme.word,cat:S.cat}); startGame(); return; }
@@ -2290,6 +2320,7 @@ $('redraw').addEventListener('click', ()=>{ renderPick(); track('haa_redraw',{ca
 function show(name){
   const changed = S.step !== name;
   S.step = name;
+  if (changed) armGuard();
   ['setup','deal','perform','vote','result'].forEach(s=>{
     const el = $('step-'+s); if (el) el.classList.toggle('hidden', s!==name);
   });
