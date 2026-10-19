@@ -103,6 +103,13 @@ out = f'''<!DOCTYPE html>
   gtag('config', '{GA}');
 </script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={PUB}" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
+<!-- 共通部品 D4（kkp-kit を kit/ にコピーしたもの。中は手で直さず kkp-kit 側で直して sync.sh） -->
+<!-- k-fonts:start --><!-- k-fonts:end -->
+<link rel="stylesheet" href="/kit/kit.css">
+<script src="/kit/kit.js" defer></script>
 <style>
 /* 読み物ページ：地は白、本文16px・#333・行間1.8。クリームは見出し帯とボタンまわりだけ */
 :root{{--orange:#ff8a3d;--orange-d:#e07b39;--cream:#fff8f0;
@@ -154,8 +161,9 @@ body{{line-height:1.7}}
 .play .btn{{min-height:44px;line-height:1.4;padding:.6rem 1rem}}
 details.block summary{{min-height:48px}}
 </style>
+<link rel="stylesheet" href="/d4.css">
 </head>
-<body>
+<body class="k-page d4-read d4-odai">
 <div class="wrap">
 
 <h1>はぁって言うゲーム風のオリジナルお題一覧<span class="c">【全{N_WORD}お題・{N_ACT}通り】声と表情で演じる・非公式</span></h1>
@@ -231,6 +239,16 @@ details.block summary{{min-height:48px}}
 </body>
 </html>
 '''
+# D4: 筆（h1・h2）と太字（遊ぶボタン）で描く字だけを Google Fonts の text= で読む。見出しやボタンの文言を変えても作り直せば追従する
+def d4_fonts(html):
+    import urllib.parse
+    t = ''.join(re.findall(r'<h[12][^>]*>(.*?)</h[12]>', html, flags=re.S))
+    t += ''.join(re.findall(r'<a class="(?:cta|btn|pw)"[^>]*>(.*?)</a>', html))
+    t = re.sub(r'<[^>]+>', '', t)
+    chars = ''.join(sorted(set(t + '0123456789') - set(' \n\t\r')))
+    url = 'https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=RocknRoll+One&display=swap&text=' + urllib.parse.quote(chars, safe='')
+    return html.replace('<!-- k-fonts:start --><!-- k-fonts:end -->', '<!-- k-fonts:start -->\n<link href="' + url + '" rel="stylesheet">\n<!-- k-fonts:end -->')
+out = d4_fonts(out)
 os.makedirs(os.path.join(ROOT,'odai'), exist_ok=True)
 open(os.path.join(ROOT,'odai','index.html'),'w',encoding='utf-8').write(out)
 print(f'[ok] odai/index.html  {N_WORD}お題 / {N_ACT}通り / {len(order)}カテゴリ  {len(out)} bytes')
