@@ -31,7 +31,7 @@
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
 <!-- 共通部品 D4（kkp-kit を kit/ にコピーしたもの。中は手で直さず kkp-kit 側で直して sync.sh） -->
 <!-- k-fonts:start -->
-<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=RocknRoll+One&display=swap&text=0123456789%E3%80%8C%E3%80%8D%E3%80%90%E3%80%91%E3%81%81%E3%81%82%E3%81%84%E3%81%86%E3%81%8A%E3%81%8D%E3%81%8F%E3%81%90%E3%81%91%E3%81%93%E3%81%95%E3%81%98%E3%81%99%E3%81%A0%E3%81%A3%E3%81%A4%E3%81%A6%E3%81%A7%E3%81%A8%E3%81%A9%E3%81%AE%E3%81%AF%E3%81%B3%E3%81%B6%E3%81%BE%E3%81%BF%E3%82%82%E3%82%88%E3%82%8A%E3%82%8B%E3%82%8D%E3%82%AA%E3%82%AF%E3%82%B2%E3%82%B3%E3%82%B8%E3%82%B9%E3%83%84%E3%83%8A%E3%83%9E%E3%83%A0%E3%83%AA%E3%83%AB%E3%83%AC%E3%83%BB%E3%83%BC%E4%B8%80%E4%B8%8D%E4%BA%8B%E4%BB%95%E4%BC%9A%E4%BD%BF%E4%BF%A1%E5%85%A8%E5%85%AC%E5%95%8F%E5%A3%B0%E5%AD%A6%E5%AE%9A%E5%AE%9F%E5%AE%B6%E5%B8%B0%E5%B9%B4%E5%BC%8F%E5%BF%98%E6%83%85%E6%8E%88%E6%96%99%E6%96%B0%E6%97%8F%E6%9C%88%E6%A0%A1%E6%A5%AD%E6%AD%A3%E6%B3%81%E6%BC%94%E7%84%A1%E7%95%AA%E7%99%BB%E7%9C%81%E7%B4%9A%E8%A1%A8%E8%A6%81%E8%A6%A7%E8%A8%80%E8%B3%AA%E9%80%9A%E9%81%8A%E9%81%B8%E9%85%8D%E9%8C%B2%E9%9D%9E%E9%A1%8C%E9%A2%A8%E9%A3%B2%EF%BC%88%EF%BC%89" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=RocknRoll+One&display=swap&text=0123456789%E3%80%8C%E3%80%8D%E3%80%90%E3%80%91%E3%81%81%E3%81%82%E3%81%84%E3%81%86%E3%81%88%E3%81%8A%E3%81%8D%E3%81%8F%E3%81%90%E3%81%91%E3%81%93%E3%81%95%E3%81%98%E3%81%99%E3%81%9B%E3%81%A0%E3%81%A3%E3%81%A4%E3%81%A6%E3%81%A7%E3%81%A8%E3%81%A9%E3%81%AE%E3%81%AF%E3%81%B3%E3%81%B6%E3%81%BE%E3%81%BF%E3%82%82%E3%82%88%E3%82%8A%E3%82%8B%E3%82%8D%E3%82%8F%E3%82%A2%E3%82%AA%E3%82%AF%E3%82%B2%E3%82%B3%E3%82%B8%E3%82%B9%E3%83%84%E3%83%8A%E3%83%97%E3%83%9E%E3%83%A0%E3%83%AA%E3%83%AB%E3%83%AC%E3%83%BB%E3%83%BC%E4%B8%80%E4%B8%8D%E4%BA%8B%E4%BB%95%E4%BC%9A%E4%BD%BF%E4%BF%A1%E5%85%A8%E5%85%AC%E5%95%8F%E5%A3%B0%E5%AD%A6%E5%AE%9A%E5%AE%9F%E5%AE%B6%E5%B8%B0%E5%B9%B4%E5%BC%8F%E5%BF%98%E6%83%85%E6%8E%88%E6%96%99%E6%96%B0%E6%97%8F%E6%9C%88%E6%A0%A1%E6%A5%AD%E6%AD%A3%E6%B3%81%E6%BC%94%E7%84%A1%E7%95%AA%E7%99%BB%E7%9C%81%E7%B4%9A%E8%A1%A8%E8%A6%81%E8%A6%A7%E8%A8%80%E8%B3%AA%E9%80%9A%E9%81%8A%E9%81%B8%E9%85%8D%E9%8C%B2%E9%9D%9E%E9%A1%8C%E9%A2%A8%E9%A3%B2%EF%BC%88%EF%BC%89" rel="stylesheet">
 <!-- k-fonts:end -->
 <link rel="stylesheet" href="/kit/kit.css">
 <script src="/kit/kit.js" defer></script>
@@ -87,6 +87,20 @@ body{line-height:1.7}
 details.block summary{min-height:48px}
 </style>
 <link rel="stylesheet" href="/d4.css">
+<!-- kkp-rel-d4:start -->
+<style id="kkp-rel-d4">
+/* あわせて使えるアプリ（統一仕様の欄）を D4 に: 和紙の面・筆の見出し・墨の字＋オレンジの下線＋道しるべ。中身とリンクは触らない（インライン style に勝つため !important） */
+@media screen{
+.kkp-rel{box-sizing:border-box;background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0/320px auto!important;border:var(--k-bw-s) solid var(--k-sumi)!important;border-radius:var(--k-r)!important;box-shadow:var(--k-sh-s);padding:14px 16px 6px!important;color:var(--k-sumi);text-align:left}
+.kkp-rel>div:first-child,.kkp-rel>b:first-child{display:block;margin:0 0 4px!important;padding:0!important;border:0!important;font-family:var(--k-brush)!important;font-weight:400!important;font-size:19px!important;line-height:1.3!important;letter-spacing:.12em;color:var(--k-sumi)!important;font-feature-settings:"palt" 1}
+.kkp-rel>a{display:flex!important;align-items:center;gap:12px;box-sizing:border-box;min-height:48px;margin:0!important;padding:10px 0!important;border:0!important;border-top:1px dashed var(--k-line-soft)!important;background:none!important;color:var(--k-sumi)!important;font-size:15px!important;font-weight:700!important;line-height:1.55!important;letter-spacing:.02em;text-decoration:underline!important;text-decoration-color:var(--k-orange)!important;text-decoration-thickness:2px!important;text-underline-offset:4px;-webkit-tap-highlight-color:transparent}
+.kkp-rel>a::after{content:"";flex:none;width:26px;height:17px;margin-left:auto;background:var(--k-sign) center/100% 100% no-repeat;transition:transform .2s}
+.kkp-rel>a:hover{color:var(--k-shu)!important}
+.kkp-rel>a:hover::after,.kkp-rel>a:active::after,.kkp-rel>a:focus-visible::after{transform:translateX(4px)}
+}
+@media screen and (max-width:712px){.kkp-rel{max-width:calc(100vw - 24px)!important;margin-left:auto!important;margin-right:auto!important}}
+</style>
+<!-- kkp-rel-d4:end -->
 </head>
 <body class="k-page d4-read d4-odai">
 <div class="wrap">
@@ -137,7 +151,7 @@ details.block summary{min-height:48px}
 </div>
 
 <!-- WEBNINJA_RELATED_APPS -->
-<div style="max-width:680px;margin:2rem auto 0;padding:1rem 1.2rem;background:#fffcf7;border:1px solid #f0e6d2;border-radius:12px;font-family:inherit;">
+<div class="kkp-rel" style="max-width:680px;margin:2rem auto 0;padding:1rem 1.2rem;background:#fffcf7;border:1px solid #f0e6d2;border-radius:12px;font-family:inherit;">
   <div style="font-weight:800;color:#8b6b3d;font-size:0.9rem;margin-bottom:0.3rem;">あわせて使えるアプリ</div>
   <a href="https://wordwolf.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ワードウルフ — 少数派をさがす定番パーティーゲーム</a>
   <a href="https://ito.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ito お題と数字の配布 — スマホ1台で遊べる協力ゲーム</a>
