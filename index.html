@@ -712,6 +712,18 @@ body.gmode .hbar{display:flex}
 .g-role{font-size:.95rem;color:#ffd8a8;font-weight:700;line-height:1.5}
 .g-mycard{display:block;margin:.6rem auto 0;min-height:44px;padding:.45rem 1.1rem;border-radius:8px;border:2px solid #fff;background:rgba(255,255,255,.08);color:#fff;font:inherit;font-weight:800;cursor:pointer}
 .g-mycard[hidden],.g-myact[hidden]{display:none}
+.g-now{margin:.6rem auto 0;max-width:24rem;font-size:1.1rem;font-weight:800;line-height:1.55;color:#fff;text-wrap:balance;word-break:auto-phrase}
+.g-now[hidden],.g-soft[hidden],.g-say[hidden],.g-next[hidden]{display:none}
+.g-soft{margin:.35rem 0 0;font-size:.8rem;color:#ffd8a8}
+/* 選んだ予想を大きく。配信者に番号を読み上げて伝えるときに見やすく（送信はしない） */
+.g-say{margin:12px 0 0;padding:4px 0 4px 12px;border-left:4px solid var(--orange);display:flex;align-items:baseline;flex-wrap:wrap;gap:.2rem .7rem;line-height:1.3}
+.g-say small{font-size:.86rem;font-weight:700;color:var(--muted)}
+.g-say b{font-size:2.3rem;font-weight:900;color:var(--orange-d)}
+.g-say .g-sn{font-size:1rem;font-weight:800;color:var(--ink)}
+.g-next{margin:10px 0 0;padding-top:8px;border-top:1px dashed var(--line);font-size:.92rem;font-weight:700;line-height:1.55;color:var(--ink)}
+.reveal .r-now{margin:.5rem auto .2rem;max-width:22rem;font-size:1rem;font-weight:700;line-height:1.55;color:#fff;text-wrap:balance;word-break:auto-phrase}
+.reveal .r-now[hidden],.reveal #revealSoft[hidden]{display:none}
+.reveal #revealSoft{margin-top:.3rem;font-size:.8rem;opacity:.9}
 .g-myact{margin:.5rem auto 0;background:#fff;color:var(--ink);border:4px solid var(--orange);border-radius:10px;padding:.55rem .8rem;font-size:1.3rem;font-weight:900;line-height:1.4;max-width:22rem}
 .g-sec{margin:0 0 14px}
 .g-sec[hidden]{display:none}
@@ -727,7 +739,7 @@ button.g-c{cursor:pointer}
 .g-tag.t-me{background:#efe6d6;color:var(--ink)}
 .g-tg{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 0}
 .g-tn{font-weight:800;font-size:.9rem;min-width:100%}
-.g-nb{min-width:44px;min-height:44px;border:1.5px solid var(--line);border-radius:8px;background:#fff;font:inherit;font-weight:800;font-size:1.05rem;color:var(--orange-d);cursor:pointer}
+.g-nb{min-width:52px;min-height:52px;font-size:1.3rem!important;border:1.5px solid var(--line);border-radius:8px;background:#fff;font:inherit;font-weight:800;font-size:1.05rem;color:var(--orange-d);cursor:pointer}
 .g-nb[aria-pressed="true"]{background:var(--orange);color:#fff;border-color:var(--orange)}
 .g-msg{font-size:.88rem;color:var(--muted);margin:8px 0 0;line-height:1.5}
 .g-msg b{color:var(--ink)}
@@ -735,7 +747,7 @@ button.g-c{cursor:pointer}
 .g-mine.ok{color:#2f7a45}.g-mine.ng{color:var(--ng)}
 .g-tally{font-size:.88rem;color:var(--muted);margin:0}
 .g-tally b{color:var(--orange-d);font-size:1.05rem}
-.g-reset{background:none;border:none;color:#b3a595;font:inherit;font-size:.78rem;text-decoration:underline;cursor:pointer;padding:8px 0;min-height:36px}
+.g-reset{background:none;border:none;color:#b3a595;font:inherit;font-size:.78rem;text-decoration:underline;cursor:pointer;padding:8px 0;min-height:44px}
 .g-paste{border-top:1px solid var(--line);padding-top:10px}
 .g-paste label{display:block;font-size:.88rem;font-weight:800;margin:0 0 4px}
 .g-prow{display:flex;gap:8px}
@@ -782,6 +794,8 @@ button.g-c{cursor:pointer}
       <div class="g-wl">全員が言う言葉</div>
       <div class="g-word" id="gWord"></div>
       <div class="g-role" id="gRole"></div>
+      <p class="g-now" id="gNow" hidden></p>
+      <p class="g-soft" id="gSoft" hidden>配信に映っているときは、この画面は映さないでね</p>
       <button type="button" class="g-mycard" id="gMyCard" hidden>自分のカードをもう一度見る</button>
       <div class="g-myact" id="gMyAct" hidden></div>
     </div>
@@ -795,7 +809,9 @@ button.g-c{cursor:pointer}
       <p class="g-h" id="gCandH">気持ちの候補</p>
       <div class="g-list" id="gCands"></div>
       <div id="gTargets"></div>
+      <p class="g-say" id="gSay" hidden></p>
       <p class="g-msg" id="gMsg"></p>
+      <p class="g-next" id="gNext" hidden></p>
     </div>
     <div class="ad-slot g-ad" id="gAd" hidden>
       <div class="ad-label">広告</div>
@@ -1077,6 +1093,7 @@ button.g-c{cursor:pointer}
 <div class="reveal" id="reveal">
   <div class="who" id="revealWho"></div>
   <div class="word" id="revealWordLine"></div>
+  <p class="r-now" id="revealNow" hidden></p>
   <div class="rq" id="revealQr" hidden></div>
   <p class="rq-cap" id="revealQrCap" hidden></p>
   <button type="button" class="btn-w btn-show" id="revealQrBtn" hidden>QRを出す（スマホで読み取って渡す）</button>
@@ -1084,6 +1101,7 @@ button.g-c{cursor:pointer}
   <div class="act" id="revealAct"></div>
   <div class="tapnote" id="revealTapNote" hidden>もう一度タップで隠せます</div>
   <div class="warn" id="revealWarn">ほかの人には内緒にしておいてね</div>
+  <div class="warn" id="revealSoft" hidden>配信に映っているときは、この画面は映さないでね</div>
   <div class="warn stream-only">配信に映すときは、この画面のあいだだけ映像を隠しておいてね</div>
   <button class="btn-w" id="revealClose">覚えた！次の人へ</button>
 </div>
@@ -1921,6 +1939,7 @@ $('revealClose').addEventListener('click', ()=>{
     // 本体から別ウィンドウで開いたときは、そのウィンドウを閉じる
     if (window.opener && window.name === 'haaRole'){ try { window.close(); } catch(e){} }
     $('reveal').classList.remove('show','from-link'); $('revealClose').textContent = '覚えた！次の人へ';
+    $('revealNow').hidden = true; $('revealSoft').hidden = true;
     $('revealAct').classList.remove('maskable','masked'); $('revealTapNote').hidden = true;
     if (document.body.classList.contains('gmode')) { $('gMyCard').hidden = !G.cur || !G.cur.a; window.scrollTo(0,0); }
     return;
@@ -2402,7 +2421,18 @@ function gParse(text){
   let o = null; try { o = b64d(decodeURIComponent(m[2])); } catch(e){ return {k:m[1], o:null}; }
   return {k:m[1], o:o};
 }
+// 参加者画面は、演技を見ている間に画面が暗くならないように（Wake Lock が使える端末だけ。失敗しても何も出さない）
+let G_WL = null;
+function gKeepAwake(){
+  try {
+    if (G_WL || !('wakeLock' in navigator) || document.visibilityState !== 'visible') return;
+    navigator.wakeLock.request('screen').then(l=>{ G_WL = l; window.__haaWL = 1; l.addEventListener('release', ()=>{ G_WL = null; }); }).catch(()=>{});
+  } catch(e){}
+}
+document.addEventListener('visibilitychange', ()=>{ if (document.body.classList.contains('gmode')) gKeepAwake(); });
+function gHost(o){ return o && o.s === 1 ? '配信者さん' : '送ってくれた人'; }
 function enterGuest(){
+  gKeepAwake();
   const b = document.body;
   b.classList.add('gmode'); b.classList.remove('stream','playing','at-result','veiling');
   $('guest').hidden = false;
@@ -2431,6 +2461,13 @@ function gRenderRound(){
   if (isAnn) $('gRole').textContent = '演じたのは ' + names;
   else if (o.k === 'r') $('gRole').textContent = o.A.length === 1 ? 'あなたが演じる番です' : 'あなたも演じます（'+names+'）';
   else $('gRole').textContent = '演じるのは ' + names;
+  // いまあなたがすること（1文）。演じる人には配信に映さない注意も
+  const hs = gHost(o), nowEl = $('gNow');
+  nowEl.hidden = isAnn;
+  if (!isAnn) nowEl.textContent = o.k === 'r'
+    ? (o.A.length === 1 ? 'さっきの気持ちで「'+o.w+'」と言ってね' : 'さっきの気持ちで「'+o.w+'」と言ってね。ほかの人の番では、何番の気持ちか予想してね')
+    : '演じる人を見て（聞いて）、何番の気持ちか'+hs+'に伝えてね';
+  $('gSoft').hidden = isAnn || !mine || o.s !== 1;  // 配信で作られたリンクのときだけ
   $('gMyCard').hidden = !mine || $('reveal').classList.contains('show');
   $('gMyAct').hidden = true; $('gMyCard').textContent = '自分のカードをもう一度見る';
   if (mine){ const i = mine.c.indexOf(mine.a); $('gMyAct').textContent = (i >= 0 ? gNo(i)+' ' : '') + mine.a; }
@@ -2473,14 +2510,19 @@ function gRenderCands(){
       tw.appendChild(row);
     });
   }
-  const msg = $('gMsg');
-  if (G.revealed) msg.innerHTML = '次の回のリンクが届いたら、開くか下に貼ってください。この画面で続きます';
-  else if (!tg.length) msg.innerHTML = '演じ終わったら、発表リンクが届くのを待ちましょう';
+  const msg = $('gMsg'), say = $('gSay'), nx = $('gNext'), hs = gHost(o);
+  say.hidden = true; nx.hidden = false;
+  if (G.revealed){ msg.innerHTML = ''; nx.textContent = '次の回は'+hs+'がまた送ります。届いたリンクを開けば、この画面で続きます（このページは閉じても大丈夫）'; }
+  else if (!tg.length){ msg.innerHTML = ''; nx.textContent = '演じ終わったら、'+hs+'が答えを送ります（このページは閉じても大丈夫）'; }
   else {
     const chosen = tg.filter(ti=>picks[ti] !== undefined);
-    msg.innerHTML = chosen.length
-      ? 'あなたの予想：<b>' + chosen.map(ti=>(one ? '' : esc(o.A[ti][0])+' さん ')+gNo(picks[ti])).join('／') + '</b>。発表リンクが届いたら答え合わせします（選び直せます）'
-      : '演技を見て（聞いて）、どの気持ちだったか選んでください。発表リンクが届くと答え合わせします';
+    if (chosen.length){
+      // 伝えるときに読み上げやすいよう、選んだ番号を大きく（この画面だけ・どこにも送らない）
+      say.hidden = false;
+      say.innerHTML = '<small>'+esc(hs)+'に伝える番号</small>' + chosen.map(ti=>(one ? '' : '<span class="g-sn">'+esc(o.A[ti][0])+' さん</span>')+'<b>'+gNo(picks[ti])+'</b>').join('');
+    }
+    msg.innerHTML = chosen.length ? '選び直せます。しるしはこの画面だけで、どこにも送られません' : '番号をタップすると、自分の予想にしるしが付きます（この画面だけ）';
+    nx.textContent = '答えは'+hs+'が送ります（このページは閉じても大丈夫）';
   }
 }
 function gPick(ti, ci){
@@ -2565,6 +2607,8 @@ function guestOpen(k, o, how){
       $('revealAct').textContent = o.a;
       $('revealAct').classList.add('maskable','masked'); $('revealTapNote').hidden = true;
       $('revealClose').textContent = '覚えた！閉じる';
+      $('revealNow').textContent = '下をタップして気持ちを見たら、その気持ちで「' + o.w + '」と言ってね'; $('revealNow').hidden = false;
+      $('revealSoft').hidden = o.s !== 1;
       $('reveal').classList.add('show','from-link');
       $('gMyCard').hidden = true;
     }
