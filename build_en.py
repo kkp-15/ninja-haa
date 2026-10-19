@@ -94,7 +94,9 @@ html = re.sub(r'<!-- WEBNINJA_UNIFIED_FOOTER -->.*?</footer>', FOOTER, html, cou
 # 長いものから当てる（短い語が先に食うと崩れる）
 T = [
  # head 以外に残る大物
- ('<h1>はぁって言うゲームをスマホ1台で<span class="h1-sub">声と表情で当てるゲーム</span></h1>', '<h1>Emotion Charades<span class="h1-sub">Say one line with a secret feeling</span></h1>'),
+ ('<h1>声と表情で当てるゲーム</h1>', '<h1>Emotion Charades<span class="h1-sub">Say one line with a secret feeling</span></h1>'),
+ # 本家（幻冬舎）を応援する一文は日本語版だけ（英語圏では知られていないため、導入文と同じ扱い）
+ ('      <p class="hero-fan">『はぁって言うゲーム』を楽しむための非公式ツール。本家のカードは<a href="https://www.gentosha.co.jp/s/haa-game/" target="_blank" rel="noopener">こちら（幻冬舎の公式ページ）</a></p>\n', ''),
  ('<p>同じ一言を、それぞれ違う気持ちで演じて当て合う。<br>アプリ不要で配役から得点まで。非公式の無料ツール。</p>',
   '<p>Everyone says the same line with a different feeling.<br>One phone handles the roles, the voting and the score. No app, no sign-up.</p>'),
  # 遊び方
