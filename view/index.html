@@ -179,11 +179,34 @@ body.vert .stage.scroll .who{font-size:6vw}body.vert .stage.scroll .word{font-si
 body.vert .stage.deal .who{font-size:5vw}body.vert .stage.deal .word{font-size:12vw}body.vert .stage.deal .sub{font-size:3.6vw}body.vert .pp{font-size:5vw}body.vert .pp .mk{width:9vw;height:9vw;font-size:4vw}body.vert .pp.s1 .mk,body.vert .pp.s0 .mk{width:auto;height:auto;font-size:3vw}
 @media (prefers-reduced-motion:reduce){.pp.fresh .mk,.stage.scroll .who,.kick,.recent .rs.new,.ans,.stage,.cd span{animation:none!important}.confetti{display:none}}
 .wrap.measuring,.wrap.measuring *{animation:none!important}
+/* 回答コード（2026-10-20）：届いた人の名前と受付の印だけ。答えは答え合わせまで届かない */
+.rcw{display:flex;flex-wrap:wrap;align-items:center;gap:1vh 2.4vw;font-size:4vh;font-weight:900;color:var(--sumi);padding:1.2vh 2vw}
+.rcw .h{font-size:2.8vh;color:#4a3f37}
+.rcw .p{display:inline-flex;align-items:center;gap:.6vw}
+.rcw .p small{font-size:2.6vh;color:#4a3f37;font-family:system-ui,sans-serif}
+.rcw .hk,.stamp .hk{display:inline-grid;place-items:center;background:url(/kit/img/d4-hanko.webp) center/100% 100% no-repeat;color:var(--shu);font-family:"Yuji Syuku",serif;font-weight:400;transform:rotate(-12deg)}
+.rcw .hk{width:6vh;height:6vh;font-size:2.8vh}
+.rcw .n{margin-left:auto;color:var(--shu)}
+.chip small.mk{font-size:.7em;margin-left:.4vw;opacity:.85;font-family:system-ui,sans-serif}
+.stamp{position:fixed;left:50%;top:16vh;z-index:20;transform:translateX(-50%);display:flex;align-items:center;gap:2vw;padding:2vh 4vw 2vh 2vw;background:var(--kinari) url(/kit/img/d4-washi.webp) 0 0/320px auto;border:.6vh solid var(--sumi);border-radius:1vh;box-shadow:1vh 1vh 0 var(--sumi);color:var(--sumi);white-space:nowrap;max-width:94vw;pointer-events:none}
+.stamp[hidden]{display:none}
+.stamp .hk{width:14vh;height:14vh;font-size:7vh}
+.stamp .t{display:flex;flex-direction:column;min-width:0;line-height:1.2}
+.stamp .t b{font-size:6.4vh;font-weight:900;overflow:hidden;text-overflow:ellipsis}
+.stamp .t small{font-size:4vh;font-weight:800;color:#4a3f37}
+.stamp .no{font-size:5vh;font-weight:900;color:#fff;background:var(--shu);border:.45vh solid var(--sumi);border-radius:.8vh;padding:0 .5em}
+.stamp.go{animation:sIn .2s ease-out both,sOut .2s .8s ease-in both}
+.stamp.go .hk{animation:stampIn .35s .12s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes sIn{from{opacity:0;transform:translateX(-50%) translateY(-20%)}to{opacity:1;transform:translateX(-50%)}}
+@keyframes sOut{to{opacity:0}}
+body.vert .stamp .t b{font-size:5.4vw}body.vert .stamp .t small{font-size:3.6vw}body.vert .stamp .no{font-size:4vw}body.vert .stamp .hk{width:11vw;height:11vw;font-size:5.4vw}body.vert .rcw{font-size:4.4vw}body.vert .rcw .h,body.vert .rcw .p small{font-size:3vw}body.vert .rcw .hk{width:6vw;height:6vw;font-size:3vw}
+@media (prefers-reduced-motion:reduce){.stamp.go,.stamp.go .hk{animation:none!important}}
 </style>
 </head>
 <body>
 <div class="wrap" id="wrap"></div>
 <div class="cd" id="cd"></div>
+<div class="stamp" id="stamp" hidden></div>
 <div class="recent" id="recent" aria-label="直近の回"></div>
 <div class="credit">声と表情で当てるゲーム｜haa.kkpwebninja.com</div>
 <div class="howto" id="howto">操作は同じパソコンの「声と表情で当てるゲーム」のページで。このウィンドウをOBSの「ウィンドウキャプチャ」で取り込んでください（「ブラウザソース」では操作がつながりません）</div>
@@ -217,7 +240,22 @@ body.vert .stage.deal .who{font-size:5vw}body.vert .stage.deal .word{font-size:1
         return '<span class="pp s'+esc(x.s)+(fresh?' fresh':'')+'"><span class="pn">'+esc(x.n)+'</span><span class="mk">'+(x.s === 2 ? '済' : x.s === 1 ? '確認中' : 'まだ')+'</span></span>';
       }).join('') + '</div></div>';
   }
+  // 回答コードで届いた人（名前と受付の印だけ）
+  function rcw(st){
+    var L = st.rc || []; if (!L.length) return '';
+    return '<div class="panel rcw"><span class="h">回答コード</span>' + L.map(function(x){ return '<span class="p"><span class="hk">済</span>'+esc(x.n)+'<small>'+esc(x.mk)+'</small></span>'; }).join('') + '<span class="n">'+L.length+'人回答済み</span></div>';
+  }
+  // 受け取った瞬間のハンコ（操作ページで貼ったとき・届いてから4秒以内だけ。読み直しで出し直さない）
+  var stampEl = document.getElementById('stamp'), lastStamp = '', stampT = null;
+  function showStamp(st){
+    var x = st.stamp; if (!x || x.id === lastStamp) return; lastStamp = x.id;
+    if (Date.now() - (st.t||0) > 4000) return;
+    stampEl.innerHTML = '<span class="hk">済</span><span class="t"><b>'+esc(x.n)+'さん</b><small>受け取りました</small></span><span class="no">受付 '+esc(x.mk)+'</span>';
+    stampEl.hidden = false; stampEl.classList.remove('go'); void stampEl.offsetWidth; stampEl.classList.add('go');
+    clearTimeout(stampT); stampT = setTimeout(function(){ stampEl.hidden = true; stampEl.classList.remove('go'); }, 1000);
+  }
   function render(st){
+    if (st) showStamp(st);
     if (!st) { wrap.innerHTML = '<div class="panel idle">声と表情で当てるゲーム<small>操作ページでゲームを始めると、ここに表示されます</small></div>'; return; }
     document.getElementById('howto').hidden = st.step !== 'setup';
     var one = st.actors && st.actors.length === 1 ? st.actors[0] + ' さんの番' : (st.actors ? st.actors.length + '人が順番に演じます' : '');
@@ -225,19 +263,19 @@ body.vert .stage.deal .who{font-size:5vw}body.vert .stage.deal .word{font-size:1
     if (st.step === 'setup'){
       h = '<div class="panel idle">声と表情で当てるゲーム<small>まもなく始まります</small></div>';
     } else if (st.step === 'deal' && st.dealPpl && st.dealPpl.length){
-      h = dealStage(st) + cands(st);
+      h = dealStage(st) + cands(st) + rcw(st);
     } else if (st.step === 'deal'){
       h = '<div class="stage scroll"><div class="who">'+esc(one)+'</div><div class="word">「'+esc(st.word)+'」</div><div class="sub">演じる人が、自分の気持ちを確認しています</div></div>' + cands(st);
     } else if (st.step === 'perform'){
-      h = stage(st, one) + cands(st, '気持ちの候補（この中のどれかを演じます）');
+      h = stage(st, one) + cands(st, '気持ちの候補（この中のどれかを演じます）') + rcw(st);
     } else if (st.step === 'vote'){
-      h = stage(st, one) + cands(st) + '<div class="panel msg">投票中 '+esc(st.voteDone)+' / '+esc(st.voteTotal)+'<small>一緒に遊ぶ人が答えを選んでいます</small></div>';
+      h = stage(st, one) + cands(st) + rcw(st) + '<div class="panel msg">投票中 '+esc(st.voteDone)+' / '+esc(st.voteTotal)+'<small>一緒に遊ぶ人が答えを選んでいます</small></div>';
     } else if (st.step === 'result' && st.veiling){
       h = '<div class="stage scroll"><div class="who">'+esc(one)+'</div><div class="word">「'+esc(st.word)+'」</div><div class="sub">まもなく答え合わせ</div></div>' + cands(st, '気持ちの候補');
     } else if (st.step === 'result'){
       var a = st.answers || [];
       h = '<div class="answers'+(a.length>1?' many':'')+'">' + a.map(function(x){
-        var chips = (x.chips||[]).map(function(c){ return '<span class="chip '+(c.ok?'ok':'ng')+'">'+(c.ok?'○ ':'× ')+esc(c.name)+(c.ok?'':' '+esc(c.no))+'</span>'; }).join('');
+        var chips = (x.chips||[]).map(function(c){ return '<span class="chip '+(c.ok?'ok':'ng')+'">'+(c.ok?'○ ':'× ')+esc(c.name)+(c.mk?'<small class="mk">'+esc(c.mk)+'</small>':'')+(c.ok?'':' '+esc(c.no))+'</span>'; }).join('');
         return '<div class="ans"><div class="ans-top"><span class="dot" style="background:'+esc(x.color)+'"></span><b>'+esc(x.name)+'</b><span class="w">「'+esc(st.word)+'」</span></div>'
           + '<div class="ans-main"><span class="kick">正解</span><span class="n">'+esc(x.no)+'</span><span class="a">'+esc(x.act)+'</span></div>'
           + (chips ? '<div class="chips">'+chips+'</div>' : '') + '</div>';

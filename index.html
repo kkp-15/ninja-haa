@@ -1016,6 +1016,62 @@ html body.stream .unveil{margin:calc(.4*var(--u)) 0 calc(.6*var(--u))}
 html body.stream #step-result #unveil:not(.unveil-skip){min-height:calc(6*var(--u));font-size:calc(2.6*var(--u))}
 html body.stream .res-cands{margin:0 0 calc(.6*var(--u))}
 @media (prefers-reduced-motion:reduce){html body.stream #performStage .st-who,html body.stream .ans-card.pop .ans-kick,.rec-strip .rs.new{animation:none}}
+/* ===== 回答コード（2026-10-20）：離れた当てる人がコードを送り、配信者が貼る。配信画面には名前と受付の印だけ ===== */
+/* 参加者のスマホ */
+.g-code{margin:12px 0 0;padding:10px 12px 12px;border:2px solid var(--sumi,#1f1a17);border-radius:8px;background:#fbf3e4;text-align:center}
+.g-code[hidden]{display:none}
+.g-cmk{margin:0 0 6px;font-size:.95rem;font-weight:800;color:#4a3f37}
+.g-cmk b{display:inline-block;margin-left:.3em;padding:.05em .45em;border:2px solid var(--sumi,#1f1a17);border-radius:4px;background:#fff;color:#d9432a;font-size:1.5rem;font-weight:900;letter-spacing:.06em;font-family:system-ui,sans-serif}
+.g-cbtn{display:block;width:100%;min-height:56px;border:0;border-radius:10px;background:var(--orange);color:#fff;font:inherit;font-size:1.15rem;font-weight:900;cursor:pointer;box-shadow:0 3px 0 var(--orange-d)}
+.g-cbtn:active{transform:translateY(2px);box-shadow:none}
+.g-cnote{margin:8px 0 0;font-size:.88rem;font-weight:700;line-height:1.5;color:var(--ink)}
+.g-ctxt{margin:4px 0 0;font-size:.78rem;color:var(--muted)}
+.g-ctxt span{font-family:ui-monospace,Menlo,monospace;letter-spacing:.08em;color:var(--ink);user-select:all}
+/* 進行役メニュー「回答コードを貼る」 */
+.rc-menu[hidden]{display:none}
+.rc-h{margin:0 0 6px;font-size:.9em;color:#4a3f37;line-height:1.5}
+.rc-row{display:flex;gap:8px;align-items:stretch}
+.rc-row textarea{flex:1;min-width:0;min-height:44px;resize:vertical;font:inherit;font-size:16px;padding:8px 10px;border:2px solid var(--sumi,#1f1a17);border-radius:6px;background:#fff;color:var(--ink);-webkit-text-security:disc;text-security:disc}
+.rc-go{flex:none;min-height:44px;padding:0 16px;border:2px solid var(--sumi,#1f1a17);border-radius:6px;background:#d9432a;color:#fff;font:inherit;font-weight:800;cursor:pointer}
+.rc-msg{margin:6px 0 0;font-size:.92em;line-height:1.5}
+.rc-msg span{display:block}
+.rc-msg .rc-mask{color:#7a6e64;letter-spacing:.05em}
+.rc-msg .rc-ok{color:#2f7a45;font-weight:800}
+.rc-msg .rc-dup{color:#a35b00;font-weight:800}
+.rc-msg .rc-ng{color:#c92a2a;font-weight:800}
+.rc-list{list-style:none;margin:6px 0 8px;padding:0;display:flex;flex-wrap:wrap;gap:4px 16px}
+.rc-list li{display:flex;align-items:center;gap:6px;font-weight:700}
+.rc-list .rc-undo{min-height:36px;font-size:.9em}
+/* 表の「回答済み」 */
+.vg-rc{flex:1;display:flex;align-items:center;gap:.5em;font-weight:900;color:var(--sumi,#1f1a17)}
+.vg-rc small{font-weight:800;color:#4a3f37}
+.vg-hk,.rcb-hk,.rcs-hk{display:inline-grid;place-items:center;flex:none;background:url(/kit/img/d4-hanko.webp) center/100% 100% no-repeat;color:#d9432a;font-family:"Yuji Syuku",serif;font-weight:400;transform:rotate(-12deg)}
+.vg-hk{width:2.2em;height:2.2em;font-size:.9em}
+html body.stream .vg-rc{font-size:calc(3.2*var(--u));min-height:calc(6.4*var(--u))}
+html body.stream .vg-rc small{font-size:calc(2.4*var(--u))}
+/* 演じる場面の帯：名前と受付の印だけ */
+.rc-strip{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;margin:0 0 8px;font-weight:900;color:var(--sumi,#1f1a17)}
+.rc-strip[hidden]{display:none}
+.rcb-h{font-size:.8em;color:#4a3f37}
+.rcb-p{display:inline-flex;align-items:center;gap:.3em}
+.rcb-p small{font-size:.75em;color:#4a3f37;font-family:system-ui,sans-serif}
+.rcb-hk{width:1.8em;height:1.8em;font-size:.8em}
+.rcb-n{margin-left:auto;color:#d9432a}
+html body.stream .rc-strip{font-size:calc(2.6*var(--u));gap:calc(.4*var(--u)) calc(1.6*var(--u));margin:0 0 calc(.8*var(--u))}
+/* 受け取った瞬間のハンコ */
+.rc-stamp{position:fixed;left:50%;top:18%;z-index:1200;transform:translateX(-50%);display:flex;align-items:center;gap:calc(1.6*var(--u,10px));padding:calc(1.2*var(--u,10px)) calc(3*var(--u,10px)) calc(1.2*var(--u,10px)) calc(1.6*var(--u,10px));background:#fbf3e4 url(/kit/img/d4-washi.webp) 0 0/320px auto;border:calc(.4*var(--u,10px)) solid #1f1a17;border-radius:8px;box-shadow:calc(.7*var(--u,10px)) calc(.7*var(--u,10px)) 0 #1f1a17;color:#1f1a17;pointer-events:none;white-space:nowrap;max-width:94vw}
+.rc-stamp[hidden]{display:none}
+.rcs-hk{width:calc(9*var(--u,10px));height:calc(9*var(--u,10px));font-size:calc(4.4*var(--u,10px))}
+.rcs-t{display:flex;flex-direction:column;min-width:0;line-height:1.2}
+.rcs-t b{font-size:calc(4.4*var(--u,10px));font-weight:900;overflow:hidden;text-overflow:ellipsis}
+.rcs-t small{font-size:calc(2.8*var(--u,10px));font-weight:800;color:#4a3f37}
+.rcs-no{font-size:calc(3.2*var(--u,10px));font-weight:900;color:#fff;background:#d9432a;border:calc(.3*var(--u,10px)) solid #1f1a17;border-radius:6px;padding:0 .5em}
+.rc-stamp.go{animation:rcsIn .2s ease-out both,rcsOut .2s .8s ease-in both}
+.rc-stamp.go .rcs-hk{animation:stampIn .35s .12s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes rcsIn{from{opacity:0;transform:translateX(-50%) translateY(-20%)}to{opacity:1;transform:translateX(-50%)}}
+@keyframes rcsOut{to{opacity:0}}
+html body.stream .vc-mk{margin-left:.3em;font-size:.7em;opacity:.85;font-family:system-ui,sans-serif}
+@media (prefers-reduced-motion:reduce){.rc-stamp.go,.rc-stamp.go .rcs-hk{animation:none}}
 </style>
 <link rel="stylesheet" href="/d4.css">
 <!-- kkp-rel-d4:start -->
@@ -1077,6 +1133,13 @@ html body.stream .res-cands{margin:0 0 calc(.6*var(--u))}
       <div class="g-list" id="gCands"></div>
       <div id="gTargets"></div>
       <p class="g-say" id="gSay" hidden></p>
+      <!-- 回答コード（配信モードで作られた参加リンクだけ・2026-10-20）：選んだ予想をコードにして配信者に送る。答えはコードの中に混ぜてあり、見ても分からない -->
+      <div class="g-code" id="gCode" hidden>
+        <p class="g-cmk">受付 <b id="gCodeMk"></b></p>
+        <button type="button" class="g-cbtn" id="gCodeBtn">回答コードをコピー</button>
+        <p class="g-cnote" id="gCodeNote"></p>
+        <p class="g-ctxt">コード <span id="gCodeTxt"></span></p>
+      </div>
       <p class="g-msg" id="gMsg"></p>
       <p class="g-next" id="gNext" hidden></p>
     </div>
@@ -1224,6 +1287,8 @@ html body.stream .res-cands{margin:0 0 calc(.6*var(--u))}
   <div id="performList"></div>
   <!-- 気持ちの候補。カード版でも全員がカードの候補を見ながら当てる。配信では視聴者がここを見て当てる -->
   <div class="cands" id="performCands"></div>
+  <!-- 配信モード：回答コードで届いた人（名前と受付の印だけ。答えは答え合わせまで出さない） -->
+  <div class="rc-strip" id="rcStrip" hidden aria-live="polite"></div>
   <button class="btn-primary" id="toVote">全員演じ終わった → 投票へ</button>
   <button class="btn-sub" id="toReveal">投票しないで答えを見る</button>
   <p class="hint" id="revealHint">口で当て合ったあとに。人数が多いときや小さい子がいるときに</p>
@@ -1369,6 +1434,9 @@ html body.stream .res-cands{margin:0 0 calc(.6*var(--u))}
 </footer>
 
 </div>
+
+<!-- 配信モード：回答コードを受け取った瞬間のハンコ（名前と受付の印だけ） -->
+<div class="rc-stamp" id="rcStamp" hidden aria-live="polite"></div>
 
 <!-- 自分の役を見る画面 -->
 <div class="reveal" id="reveal">
@@ -2031,6 +2099,8 @@ function startGame(){
   S.gid = Math.random().toString(36).slice(2,8);
   S.sent = {}; S.sentAny = false;
   S.dealNow = -1; S.dsStamped = {};
+  // 回答コード：ラウンドの種（ゲームID＋回）・受け取った予想（答え合わせまで配信画面に出さない）・受付の順
+  S.rsd = rcSeed(S.gid, S.gno); S.codes = {}; S.vOrd = {}; S.vseq = 0;
   STATS.plays++;
   if (!t.mine && STATS.seen.indexOf(t.word) < 0) STATS.seen.push(t.word);
   saveStats(); renderStats();
@@ -2172,6 +2242,46 @@ function syncDock(name){
 // ?r= 演じる人（その人の気持ちだけ）／?j= 当てる人（お題と候補だけ）／?a= 発表（全員の答え）
 function b64e(o){ return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
 function b64d(s){ const raw = String(s).replace(/-/g,'+').replace(/_/g,'/'); return JSON.parse(decodeURIComponent(escape(atob(raw + '==='.slice((raw.length+3)%4))))); }
+// ===== 回答コード（2026-10-20）: 離れた場所の当てる人の予想を、配信者が貼って受け取る =====
+// ワードウルフ（ninja-wordwolf 8999758）と同じ形。頭の2文字だけ「HA」に替える
+//   種   seed = ゲームID g + ':' + 回 rd（参加リンクに入っている。配信者の画面にもある）
+//   中身 V = (名前の印 10bit << 7) | (席 * 11 + 答え)   席＝当てる人の番号 0〜7・答え＝候補の番号 0〜7
+//   E = (V * 4099 + K) mod 36^4（K は種から作る）→ 英数字4文字。チェック C = 種＋E から2文字
+//   コード = 'HA' + E(4) + C(2)（大文字の英数字8文字）。別の回・壊れたコードはチェックが合わない
+//   受付記号 = 種と席から決める英字1＋数字1（同じ回の中で重ならないよう、席の順に決める）
+//   読みにくくするだけで暗号ではない（コンソールで覗けば分かる程度でよい、という合意）
+const RC_M = 1679616, RC_MUL = 4099, RC_INV = 819115, RC_HEAD = 'HA';
+function rcHash(t){ let h = 0x811c9dc5; t = String(t); for (let i=0;i<t.length;i++){ h ^= t.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h >>> 0; }
+function rcB36(n, len){ let t = n.toString(36).toUpperCase(); while (t.length < len) t = '0' + t; return t; }
+function rcSeed(g, rd){ return String(g) + ':' + rd; }
+function rcMark(seed, seat){
+  const L = 'ABCDEFGHJKLMNPQRSTUVWXYZ', used = {}; let u = '';
+  for (let i=0;i<=seat;i++){
+    let h = rcHash(seed + '|u|' + i);
+    for (let t=0;t<60;t++){ u = L.charAt(h % 24) + (1 + ((h >>> 8) % 9)); if (!used[u]) break; h = rcHash(h + '+'); }
+    used[u] = 1;
+  }
+  return u;
+}
+function rcNm(seed, name){ return rcHash(seed + '|n|' + String(name).slice(0,12)) & 1023; }
+function rcMake(seed, seat, name, ans){
+  const V = (rcNm(seed, name) << 7) | (seat * 11 + ans);
+  const E = (V * RC_MUL + rcHash(seed + '|k') % RC_M) % RC_M, es = rcB36(E, 4);
+  return RC_HEAD + es + rcB36(rcHash(seed + '|c|' + es) % 1296, 2);
+}
+// 読めたら {pi, ci}。そのラウンドのコードでなければ null（nameOf は席→名前）
+function rcRead(seed, code, nameOf){
+  code = String(code||'').toUpperCase();
+  if (!/^HA[0-9A-Z]{6}$/.test(code)) return null;
+  const es = code.slice(2, 6);
+  if (rcB36(rcHash(seed + '|c|' + es) % 1296, 2) !== code.slice(6)) return null;
+  const V = ((parseInt(es, 36) - rcHash(seed + '|k') % RC_M + RC_M) % RC_M) * RC_INV % RC_M;
+  if (V >= 131072) return null;
+  const P = V & 127, pi = Math.floor(P / 11), ci = P % 11;
+  if (pi > 7 || ci > 7) return null;
+  if (rcNm(seed, nameOf(pi)) !== (V >>> 7)) return null;
+  return {pi, ci};
+}
 // 配信する／しない（配信モードだけ・この端末に覚える）。既定は「配信する」
 const CAST_KEY = 'haa-stream-cast';
 function castOn(){ try { return localStorage.getItem(CAST_KEY) !== 'off'; } catch(e){ return true; } }
@@ -2181,6 +2291,8 @@ function linkBase(){
   const o = {v:2, w:S.theme.word, c:S.pool.slice().sort((a,b)=>a-b).map(ai=>S.theme.acts[ai]), A:S.act.map(p=>[pName(p), p]), g:S.gid, rd:S.gno};
   // 配信モードの「配信しない」（オンライン飲み会・リモート交流など）では s を付けない＝受け取った画面は答え合わせのあとに広告（2026-10-19）
   if (document.body.classList.contains('stream') && castOn()) o.s = 1;
+  // 配信モードはラウンドの種を入れる（当てる人の画面で回答コードを作るため。答えは入れない）
+  if (document.body.classList.contains('stream')) o.rc = 1;
   return o;
 }
 // popup=true は配信モードの別ウィンドウ用（これまでの形のまま。開いて閉じるだけ）
@@ -2194,6 +2306,7 @@ function roleUrl(i, popup){
 }
 function joinUrl(p){
   const o = linkBase(); o.n = pName(p);
+  if (o.rc) o.pi = p;  // 回答コードで「だれの予想か」を分けるための番号
   return location.origin + '/?j=' + b64e(o) + ktq();
 }
 // ===== QRで渡す（同じ部屋の人に）。QR は同梱の js/qrcode.js（qrcode-generator・MIT）を使うときだけ読み込む =====
@@ -2387,7 +2500,8 @@ $('toReveal').addEventListener('click', ()=>{
     if (Date.now() - +b.dataset.ask < 400) return; // 連打の2回目は数えない
   }
   resetRevealAsk();
-  S.votes = {}; finish('quick'); countdownReveal();
+  // 回答コードが届いていれば、その予想は答え合わせに出す（手元の人は口で当てる）
+  S.votes = {}; finish(rcCount() ? 'partial' : 'quick'); countdownReveal();
 });
 function resetRevealAsk(){
   const b = $('toReveal'); clearTimeout(b._askT);
@@ -2461,6 +2575,7 @@ function applyStream(){
 }
 function finish(mode){
   mode = mode || 'vote';
+  rcMerge();
   const body = $('resultBody'); body.innerHTML='';
   // 配信向けの広い画面では「答えを見る」で一拍おく（視聴者が当ててから開ける）
   const veil = true;
@@ -2487,15 +2602,19 @@ function finish(mode){
     let who = '';
     if (mode !== 'quick'){
       const chips = [];
-      for (let v=0; v<S.players; v++){
-        if (v === p) continue;
+      // 並びは受付の順（表で押した順・回答コードを貼った順）。回答コードの人には受付の印を添える
+      const vs = []; for (let v=0; v<S.players; v++) if (v !== p) vs.push(v);
+      const ord = v=>(S.vOrd && S.vOrd[v] !== undefined) ? S.vOrd[v] : 1000 + v;
+      vs.sort((a,b)=>ord(a)-ord(b)).forEach(v=>{
         const g = S.votes[v] && S.votes[v][i];
-        if (g === undefined) continue;
-        va.chips.push({name:pName(v), ok:g===ai, no:numOf(g)});
+        if (g === undefined) return;
+        const mk = S.k === 1 && S.codes && S.codes[v] ? S.codes[v].mk : '';
+        va.chips.push({name:pName(v), ok:g===ai, no:numOf(g), mk:mk});
+        const mkh = mk ? '<small class="vc-mk">'+esc(mk)+'</small>' : '';
         chips.push(g === ai
-          ? '<span class="vc ok">○ '+esc(pName(v))+'</span>'
-          : '<span class="vc ng">× '+esc(pName(v))+' <small>'+numOf(g)+'</small></span>');
-      }
+          ? '<span class="vc ok">○ '+esc(pName(v))+mkh+'</span>'
+          : '<span class="vc ng">× '+esc(pName(v))+mkh+' <small>'+numOf(g)+'</small></span>');
+      });
       if (chips.length) who = '<div class="ans-votes">'+chips.join('')+'</div>';
     }
     card.innerHTML = '<div class="ans-top"><span class="ans-dot"></span><span class="ans-name">'+esc(pName(p))+'</span><span class="ans-word">「'+esc(S.theme.word)+'」</span></div>'
@@ -2564,6 +2683,8 @@ function pushView(extra){
     st.actors = (S.act||[]).map(p=>pName(p));
   }
   if (st.step === 'deal' && S.act && S.seen){ st.dealPpl = dealMarks(); }
+  // 回答コードで届いた人（名前と受付の印だけ。答えは入れない）
+  if (['deal','perform','vote'].indexOf(st.step) >= 0 && rcCount()) st.rc = rcList().map(x=>({n:x.n, mk:x.mk}));
   if (st.step === 'vote' && S.act){
     st.voter = pName(S.voter); st.target = pName(S.act[S.target]||0);
     let done = 0; Object.values(S.votes||{}).forEach(v=>done += Object.keys(v).length);
@@ -2735,6 +2856,7 @@ function show(name){
   document.body.classList.toggle('at-result', name==='result');
   if (name === 'result') renderNextPick();
   if (name === 'result' || name === 'setup') renderActorPick();
+  rcPlace(name);
   updateNow();
   syncDock(name);
   // 広告は答えが出てから（隠れたまま push すると幅0で枠が死ぬ）
@@ -2890,7 +3012,7 @@ window.addEventListener('resize', ()=>{ clearTimeout(window.__fitT); window.__fi
 document.addEventListener('toggle', e=>{ if (e.target.classList && e.target.classList.contains('host-menu')) fitStream(); }, true);
 // ===== 配信モードの予想の表（2026-10-20）: 縦＝当てる人・横＝番号。1人ずつ画面が切り替わる形をやめる =====
 function voteTotalN(){ return S.players*S.k - S.k; }
-function voteDoneN(){ let d = 0; Object.values(S.votes||{}).forEach(v=>d += Object.keys(v).length); return d; }
+function voteDoneN(){ let d = rcCount(); Object.values(S.votes||{}).forEach(v=>d += Object.keys(v).length); return d; }
 function renderVoteGrid(){
   const used = S.pool.slice().sort((a,b)=>a-b);
   const one = S.k === 1;
@@ -2903,6 +3025,12 @@ function renderVoteGrid(){
     h += '<div class="vg-tbl" role="table" aria-label="'+esc(pName(S.act[t]))+'さんの気持ちの予想">';
     for (let v=0; v<S.players; v++){
       if (v === S.act[t]) continue;
+      const rcv = one && S.codes && S.codes[v];
+      if (rcv){
+        // 回答コードで届いた人：答えは出さず「回答済み」と受付の印だけ（取り消しは進行役メニューで）
+        h += '<div class="vg-row done rc" role="row"><span class="vg-nm" role="rowheader"><i style="background:'+COLORS[v%COLORS.length].bg+'"></i>'+esc(pName(v))+'</span><span class="vg-rc" role="cell"><span class="vg-hk" aria-hidden="true">済</span>回答済み<small>受付 '+esc(rcv.mk)+'</small></span></div>';
+        continue;
+      }
       const cur = S.votes[v] && S.votes[v][t];
       h += '<div class="vg-row'+(cur!==undefined?' done':'')+'" role="row"><span class="vg-nm" role="rowheader"><i style="background:'+COLORS[v%COLORS.length].bg+'"></i>'+esc(pName(v))+'</span><span class="vg-bs" role="cell">'
         + used.map(ai=>'<button type="button" class="vg-b" data-v="'+v+'" data-t="'+t+'" data-a="'+ai+'" aria-pressed="'+(cur===ai)+'" aria-label="'+esc(pName(v))+'さんの予想 '+numOf(ai)+' '+esc(S.theme.acts[ai])+'">'+numOf(ai)+'</button>').join('')
@@ -2914,7 +3042,7 @@ function renderVoteGrid(){
   const lg = $('voteLegend');
   if (lg){ lg.hidden = !one; lg.innerHTML = one ? used.map(ai=>'<span><b>'+numOf(ai)+'</b>'+esc(S.theme.acts[ai])+'</span>').join('') : ''; }
   const done = voteDoneN(), total = voteTotalN();
-  $('voteProg').textContent = '予想 '+done+' / '+total+(done >= total ? '（そろいました）' : '');
+  $('voteProg').textContent = '予想 '+done+' / '+total+(done >= total ? '（そろいました）' : '')+(rcCount() ? '・回答コード '+rcCount()+'人回答済み' : '');
   $('voteUndo').hidden = !(S.voteHist && S.voteHist.length);
   $('voteSkip').textContent = done >= total ? '予想がそろった → 答え合わせへ' : '予想をここまでにして答え合わせへ';
 }
@@ -2924,10 +3052,112 @@ $('voteGrid').addEventListener('click', e=>{
   const v = +b.dataset.v, t = +b.dataset.t, ai = +b.dataset.a;
   const prev = S.votes[v] && S.votes[v][t];
   if (prev === ai) return;
+  if (S.codes && S.codes[v]) return;
   S.votes[v] = S.votes[v] || {}; S.votes[v][t] = ai;
+  if (S.vOrd && S.vOrd[v] === undefined) S.vOrd[v] = ++S.vseq;
   (S.voteHist = S.voteHist || []).push({voter:v, target:t, prev:prev});
   sfx('pick'); renderVoteGrid(); pushView();
 });
+
+// ===== 回答コードを貼る（配信モードの進行役だけ・2026-10-20） =====
+// 貼った中身はこの画面に出さない（●で伏せる）。受け取った予想は答え合わせまで、配信画面にも /view/ にも出さない（出すのは名前と受付の印だけ）
+function rcRemote(){ return Object.keys(S.sent||{}).some(k=>k[0] === 'j') || rcCount() > 0; }
+function rcCount(){ return S.codes ? Object.keys(S.codes).length : 0; }
+function rcList(){ return Object.keys(S.codes||{}).map(k=>({pi:+k, n:pName(+k), mk:S.codes[k].mk, o:S.vOrd[k]||0})).sort((a,b)=>a.o-b.o); }
+// 答え合わせのときだけ、届いた予想を票に入れる
+function rcMerge(){
+  if (!rcCount() || S.k !== 1) return;
+  const sorted = S.pool.slice().sort((a,b)=>a-b);
+  Object.keys(S.codes).forEach(k=>{ const pi = +k; S.votes[pi] = S.votes[pi] || {}; S.votes[pi][0] = sorted[S.codes[k].ci]; });
+}
+function rcTake(code){
+  if (!S.rsd || S.k !== 1 || ['deal','perform','vote'].indexOf(S.step) < 0) return {k:'ng'};
+  const r = rcRead(S.rsd, code, pi=>pName(pi));
+  if (!r || r.pi >= S.players || S.act.indexOf(r.pi) >= 0 || r.ci >= S.pool.length) return {k:'ng'};
+  const mk = rcMark(S.rsd, r.pi);
+  if (S.codes[r.pi]) return {k:'dup', pi:r.pi, mk:mk};
+  S.codes[r.pi] = {ci:r.ci, mk:mk}; S.vOrd[r.pi] = ++S.vseq;
+  // 進行役が表で代わりに押していた分は、本人のコードを優先する
+  if (S.votes[r.pi]){ delete S.votes[r.pi][0]; if (!Object.keys(S.votes[r.pi]).length) delete S.votes[r.pi]; }
+  S.voteHist = (S.voteHist||[]).filter(h=>h.voter !== r.pi);
+  return {k:'ok', pi:r.pi, mk:mk};
+}
+// 何人分まとめて貼っても（改行・空白区切り・前後に余計な文字があっても）読む
+function rcPaste(text){
+  const t = String(text||'').toUpperCase().replace(/[Ａ-Ｚ０-９]/g, ch=>String.fromCharCode(ch.charCodeAt(0)-0xFEE0));
+  const re = /HA[0-9A-Z]{6}/g; const out = []; let m;
+  while ((m = re.exec(t))) out.push(rcTake(m[0]));
+  if (!out.length && t.trim()) out.push({k:'ng'});
+  if (!out.length) return;
+  const ok = out.filter(x=>x.k === 'ok'), dup = out.filter(x=>x.k === 'dup'), ng = out.filter(x=>x.k === 'ng').length;
+  const lines = [];
+  if (ok.length) lines.push('<span class="rc-ok">受け取りました：'+ok.map(x=>esc(pName(x.pi))+'さん（受付 '+esc(x.mk)+'）').join('・')+'</span>');
+  if (dup.length) lines.push('<span class="rc-dup">もう受け取り済み：'+dup.map(x=>esc(pName(x.pi))+'さん（受付 '+esc(x.mk)+'）').join('・')+'　直したいときは下の「取り消す」のあとに貼り直してください</span>');
+  if (ng) lines.push('<span class="rc-ng">'+(ng > 1 ? ng+'件、' : '')+'このラウンドのコードではありません</span>');
+  $('rcMsg').innerHTML = '<span class="rc-mask">貼ったもの：'+out.map(()=>'●●●●').join(' ')+'</span>' + lines.join('');
+  track('haa_code_paste', {ok:ok.length, dup:dup.length, ng:ng});
+  if (ok.length){ ok.forEach(x=>rcStampQ.push({n:pName(x.pi), mk:x.mk})); rcStampNext(); }
+  rcRender();
+}
+let rcStampQ = [], rcStampT = null, rcStampId = 0;
+function rcStampNext(){
+  if (rcStampT || !rcStampQ.length) return;
+  const x = rcStampQ.shift(), el = $('rcStamp');
+  el.innerHTML = '<span class="rcs-hk" aria-hidden="true">済</span><span class="rcs-t"><b>'+esc(x.n)+'さん</b><small>受け取りました</small></span><span class="rcs-no">受付 '+esc(x.mk)+'</span>';
+  el.hidden = false; el.classList.remove('go'); void el.offsetWidth; el.classList.add('go');
+  sfx('pick');
+  pushView({stamp:{id:Date.now()+'-'+(++rcStampId), n:x.n, mk:x.mk}});
+  rcStampT = setTimeout(()=>{ el.hidden = true; el.classList.remove('go'); rcStampT = null; rcStampNext(); }, 1000);
+}
+// 名前と印だけの帯（演じる場面）・表（投票の場面）・進行役メニューの一覧
+function rcRender(){
+  const st = $('rcStrip'), L = rcList();
+  if (st){
+    st.hidden = !L.length || S.step !== 'perform';
+    st.innerHTML = L.length ? '<span class="rcb-h">回答コード</span>' + L.map(x=>'<span class="rcb-p"><span class="rcb-hk" aria-hidden="true">済</span>'+esc(x.n)+'<small>'+esc(x.mk)+'</small></span>').join('') + '<b class="rcb-n">'+L.length+'人回答済み</b>' : '';
+  }
+  const ls = $('rcList');
+  if (ls){
+    ls.innerHTML = L.map(x=>'<li><span>'+esc(x.n)+'さん　受付 '+esc(x.mk)+'</span><button type="button" class="np-link rc-undo" data-pi="'+x.pi+'">取り消す</button></li>').join('');
+  }
+  if (S.step === 'vote' && useGrid()) renderVoteGrid();
+  if (['deal','perform','vote'].indexOf(S.step) >= 0) pushView(); else fitStream();
+}
+// 進行役メニュー「回答コードを貼る」は、配る・演じる・投票の場面で同じものを出す（開いたままでも場面をまたいで使える）
+function rcPlace(name){
+  const d = $('rcMenu'); if (!d) return;
+  // 離れた人に参加リンクを送った回だけ出す（送っていなければ配信画面に1行も足さない）
+  const card = rcRemote() ? {deal:$('step-deal'), perform:$('step-perform'), vote:$('step-vote')}[name] : null;
+  d.hidden = !card;
+  if (card){
+    const before = name === 'deal' ? $('dealBack') : name === 'perform' ? $('rcStrip').nextSibling : card.querySelector('.host-menu:not(#rcMenu)');
+    if (before && before.parentNode === card) card.insertBefore(d, before); else card.appendChild(d);
+  }
+  if (name === 'setup' || name === 'deal'){ $('rcMsg').innerHTML = ''; }
+  rcRender();
+}
+function setupCodeMenu(){
+  const d = document.createElement('details'); d.className = 'host-menu rc-menu'; d.id = 'rcMenu'; d.hidden = true;
+  d.innerHTML = '<summary>回答コードを貼る（離れた人の予想）</summary>'
+    + '<p class="rc-h">届いたコードを、ここに貼ってください。何人分まとめてでも大丈夫です（中身は伏せて表示します）</p>'
+    + '<div class="rc-row"><textarea id="rcIn" rows="1" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="回答コードを貼る" placeholder="ここに貼る"></textarea><button type="button" class="rc-go" id="rcGo">受け取る</button></div>'
+    + '<p class="rc-msg" id="rcMsg" aria-live="polite"></p><ul class="rc-list" id="rcList"></ul>';
+  document.body.appendChild(d);
+  const inp = $('rcIn');
+  const take = ()=>{ const v = inp.value; inp.value = ''; rcPaste(v); };
+  // 貼った瞬間に読んで消す（伏せたまま）。手で打ったときは「受け取る」か Enter
+  inp.addEventListener('paste', e=>{ const t = e.clipboardData && e.clipboardData.getData('text'); if (t == null) return; e.preventDefault(); inp.value = ''; rcPaste(t); });
+  inp.addEventListener('keydown', e=>{ if (e.key === 'Enter'){ e.preventDefault(); take(); } });
+  $('rcGo').addEventListener('click', take);
+  $('rcList').addEventListener('click', e=>{
+    const b = e.target.closest('.rc-undo'); if (!b) return;
+    const pi = +b.dataset.pi; if (!S.codes || !S.codes[pi]) return;
+    delete S.codes[pi]; delete S.vOrd[pi];
+    $('rcMsg').innerHTML = '<span class="rc-dup">'+esc(pName(pi))+'さんの回答を取り消しました。新しいコードを貼ってください</span>';
+    track('haa_code_undo', {});
+    rcRender();
+  });
+}
 
 // ===== 配信モード：進行役だけが使う部品は「進行役メニュー」1行に畳む（開けば使える。配信画面を大事な情報に回す） =====
 function hostMenu(card, ids, label){
@@ -2953,6 +3183,7 @@ renderStats();
 applyStream();
 renderActorPick();
 setupHostMenus();
+if (document.body.classList.contains('stream')) setupCodeMenu();
 renderRecStrip();
 const GUIDE_KEY = 'haa-guide-seen';
 try { if ($('firstGuide')) $('firstGuide').open = !localStorage.getItem(GUIDE_KEY); } catch(e){ if ($('firstGuide')) $('firstGuide').open = true; }
@@ -2996,6 +3227,8 @@ function gClean(o, k){
   if (!Array.isArray(o.A) || !o.A.length || o.A.length > 8) return null;
   const c = {v:2, k:k, w:o.w.slice(0,40), c:o.c.map(x=>x.slice(0,60)), A:o.A.map(x=>[String(Array.isArray(x)?x[0]:x).slice(0,12), Math.abs(+(Array.isArray(x)?x[1]:0)|0) % 8]),
     g:String(o.g||'').replace(/[^a-z0-9]/gi,'').slice(0,12) || 'x', rd:Math.max(0, +o.rd|0), n:typeof o.n === 'string' ? o.n.slice(0,12) : '', s:o.s === 1 ? 1 : 0, me:-1};
+  // 回答コード用（配信モードで作られた参加リンクだけ）：ラウンドの種と、自分が何人目か
+  if (k === 'j' && o.rc === 1 && Number.isInteger(o.pi) && o.pi >= 0 && o.pi < 8 && c.n){ c.rc = 1; c.pi = o.pi; c.sd = rcSeed(c.g, c.rd); }
   if (k === 'r'){
     if (typeof o.a !== 'string' || !(o.me >= 0 && o.me < c.A.length)) return null;
     c.a = o.a.slice(0,60); c.me = o.me|0;
@@ -3057,7 +3290,7 @@ function gRenderRound(){
   nowEl.hidden = isAnn;
   if (!isAnn) nowEl.textContent = o.k === 'r'
     ? (o.A.length === 1 ? 'さっきの気持ちで「'+o.w+'」と言ってね' : 'さっきの気持ちで「'+o.w+'」と言ってね。ほかの人の番では、何番の気持ちか予想してね')
-    : '演じる人を見て（聞いて）、何番の気持ちか'+hs+'に伝えてね';
+    : (o.sd && Number.isInteger(o.pi) ? '演じる人を見て（聞いて）、何番の気持ちか選んで、回答コードを'+hs+'に送ってね' : '演じる人を見て（聞いて）、何番の気持ちか'+hs+'に伝えてね');
   $('gSoft').hidden = isAnn || !mine || o.s !== 1;  // 配信で作られたリンクのときだけ
   $('gMyCard').hidden = !mine || $('reveal').classList.contains('show');
   $('gMyAct').hidden = true; $('gMyCard').textContent = '自分のカードをもう一度見る';
@@ -3070,8 +3303,10 @@ function gRenderCands(){
   const tg = gTargets({A:o.A, me:me});
   const canPick = !G.revealed && tg.length > 0;
   const one = tg.length === 1;
+  // 回答コードを使える回（配信モードで作られた参加リンク・当てる相手が1人）
+  const rc = !G.ann && o.k === 'j' && !!o.sd && Number.isInteger(o.pi) && one;
   const list = $('gCands'); list.innerHTML = '';
-  $('gCandH').innerHTML = canPick && one ? '気持ちの候補<small>予想を1つ選ぶ（自分の画面だけ）</small>' : '気持ちの候補';
+  $('gCandH').innerHTML = canPick && one ? '気持ちの候補<small>'+(rc ? '予想を1つ選ぶ' : '予想を1つ選ぶ（自分の画面だけ）')+'</small>' : '気持ちの候補';
   const ansSet = {};
   if (G.revealed && G.ann) G.ann.X.forEach((x,i)=>{ ansSet[x] = (ansSet[x]||[]).concat(i); });
   o.c.forEach((text, ci)=>{
@@ -3102,11 +3337,18 @@ function gRenderCands(){
     });
   }
   const msg = $('gMsg'), say = $('gSay'), nx = $('gNext'), hs = gHost(o);
-  say.hidden = true; nx.hidden = false;
+  say.hidden = true; nx.hidden = false; $('gCode').hidden = true;
   if (G.revealed){ msg.innerHTML = ''; nx.textContent = '次の回は'+hs+'がまた送ります。届いたリンクを開けば、この画面で続きます（このページは閉じても大丈夫）'; }
   else if (!tg.length){ msg.innerHTML = ''; nx.textContent = '演じ終わったら、'+hs+'が答えを送ります（このページは閉じても大丈夫）'; }
   else {
     const chosen = tg.filter(ti=>picks[ti] !== undefined);
+    if (rc){
+      // 番号は大きく出さない（読み上げなくてよい）。コードだけを送る
+      if (chosen.length) gRenderCode(o, picks[tg[0]], hs);
+      msg.innerHTML = chosen.length ? '選び直したときは、もう一度コピーして送ってね' : '番号をタップして、予想を1つ選んでね';
+      nx.textContent = o.s === 1 ? '答えは配信の答え合わせで出ます（このページは閉じても大丈夫）' : '答えは'+hs+'が送ります（このページは閉じても大丈夫）';
+      return;
+    }
     if (chosen.length){
       // 伝えるときに読み上げやすいよう、選んだ番号を大きく（この画面だけ・どこにも送らない）
       say.hidden = false;
@@ -3116,6 +3358,27 @@ function gRenderCands(){
     nx.textContent = '答えは'+hs+'が送ります（このページは閉じても大丈夫）';
   }
 }
+// 回答コード：選んだ予想が変わったときだけ作り直す（同じ予想なら同じコードを出しておく）
+function gRenderCode(o, ci, hs){
+  if (!G.code || G.code.g !== o.g || G.code.ci !== ci) G.code = {g:o.g, ci:ci, code:rcMake(o.sd, o.pi, o.n, ci)};
+  $('gCode').hidden = false;
+  $('gCodeMk').textContent = rcMark(o.sd, o.pi);
+  $('gCodeTxt').textContent = G.code.code;
+  $('gCodeNote').textContent = 'コードをコピーして、'+hs+'に送ってね（答えはコードの中に隠れています）';
+  const b = $('gCodeBtn'); if (!b.dataset.busy) b.textContent = '回答コードをコピー';
+}
+$('gCodeBtn').addEventListener('click', ()=>{
+  const o = G.cur, b = $('gCodeBtn'); if (!o || !G.code) return;
+  const mk = rcMark(o.sd, o.pi);
+  const t = 'はぁの回答コード '+G.code.code+'（受付 '+mk+'）';
+  const ok = ()=>{
+    b.dataset.busy = '1'; b.textContent = 'コピーしました。DiscordやLINEに貼ってね';
+    clearTimeout(b._t); b._t = setTimeout(()=>{ delete b.dataset.busy; b.textContent = '回答コードをコピー'; }, 2600);
+  };
+  const fb = ()=>{ window.prompt('このコードをコピーして送ってください', t); ok(); };
+  try { navigator.clipboard.writeText(t).then(ok, fb); } catch(e){ fb(); }
+  track('haa_code_copy',{});
+});
 function gPick(ti, ci){
   const o = G.ann || G.cur; if (G.revealed) return;
   const v = gLoad(); v.p[o.g] = v.p[o.g] || {}; v.p[o.g][ti] = ci; gTouch(v, o.g); gSave(v);
