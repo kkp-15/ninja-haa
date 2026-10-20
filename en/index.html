@@ -33,6 +33,27 @@
 {"@context":"https://schema.org","@type":"WebApplication","name":"Emotion Charades Online","url":"https://haa.kkpwebninja.com/en/","applicationCategory":"GameApplication","operatingSystem":"Web","inLanguage":"en","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Organization","name":"web忍者の砦"},"publisher":{"@type":"Organization","name":"web忍者の砦","url":"https://kkpwebninja.com/"}}
 </script>
 
+<!-- 運営者の確認用（?kkptest=1 でこの端末だけオン・?kkptest=0 でオフ）。オンの間は GA4 を送らずAdvertisementも読まず、スマホでも配信モードを試せる -->
+<script>
+(function(){
+  var t = false;
+  try {
+    if (/[?&]kkptest=1\b/.test(location.search)) localStorage.setItem('kkp-test','1');
+    if (/[?&]kkptest=0\b/.test(location.search)) localStorage.removeItem('kkp-test');
+    t = localStorage.getItem('kkp-test') === '1';
+  } catch(e){}
+  window.__kkpTest = t;
+  if (!t) return;
+  window['ga-disable-G-2LM85GJN0L'] = true;
+  document.addEventListener('DOMContentLoaded', function(){
+    var d = document.createElement('a');
+    d.href = location.pathname + '?kkptest=0';
+    d.textContent = 'テスト中（この端末だけ・Advertisementと計測なし）解除';
+    d.style.cssText = 'position:fixed;left:6px;bottom:6px;z-index:99999;background:#3b2c22;color:#fff;font-size:11px;padding:3px 8px;border-radius:4px;opacity:.85;text-decoration:none';
+    document.body.appendChild(d);
+  });
+})();
+</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-2LM85GJN0L"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -40,8 +61,58 @@
   gtag('js', new Date());
   gtag('config', 'G-2LM85GJN0L');
 </script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1298304917726270" crossorigin="anonymous"></script>
+<!-- 配信モード（Advertisementなし）のときは AdSense を読み込まない。切り替えたときはページを読み直す -->
+<script>
+(function(){
+  var on = false;
+  try { on = localStorage.getItem('haa-stream') === '1'; } catch(e){}
+  on = false; // 英語版は配信モードなし
+  // スマホ（スマホ1台を回して遊ぶふだんの使い方）では効かない。Advertisementなしで遊ぶ抜け道にしないため
+  if (!window.__kkpTest && !(window.matchMedia && window.matchMedia('(min-width:768px)').matches)) on = false;
+  window.__haaStream = on;
+  // 参加者画面（離れて遊ぶリンク）：配信モードで作られたリンク（s:1）のときはAdvertisementを読まない。
+  // 参加者画面は1回ぶんの役・候補・答えを見るだけで、ゲーム本体は遊べない（トップへはページを読み直して移る）
+  var gs = false;
+  try {
+    var m = location.search.match(/[?&](r|j|a)=([A-Za-z0-9_-]+)/), o = null;
+    if (m){
+      var raw = decodeURIComponent(m[2]).replace(/-/g,'+').replace(/_/g,'/');
+      o = JSON.parse(decodeURIComponent(escape(atob(raw + '==='.slice((raw.length+3)%4)))));
+    } else if (/[?&]play\b/.test(location.search)){
+      o = JSON.parse(sessionStorage.getItem('haa-guest-card') || 'null');
+    }
+    if (o && o.v === 2 && o.s === 1) gs = true;
+    // 配信モードの小窓（QRを出す別ウィンドウ・q を持つ）もAdvertisementを読まない
+    if (o && !o.v && typeof o.q === 'string') gs = true;
+  } catch(e){}
+  window.__haaGuestNoAd = gs;
+  if (on || gs || window.__kkpTest) return;
+  // 読み込みが終わってから push する（読み込み前に積んだ push が自動Advertisementの枠に取られることがあった）
+  var state = 0, waits = [];
+  window.__haaLoadAds = function(cb){
+    if (cb) { if (state === 2) cb(); else waits.push(cb); }
+    if (state) return; state = 1;
+    var s = document.createElement('script');
+    s.async = true; s.crossOrigin = 'anonymous';
+    s.onload = s.onerror = function(){ state = 2; var w = waits; waits = []; w.forEach(function(f){ try { f(); } catch (e) {} }); };
+    s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1298304917726270';
+    document.head.appendChild(s);
+  };
+  // 2026-10-19 参加者画面（s なしのリンク）は、役・候補を見ている間はAdvertisementのスクリプト自体を読まない（自動Advertisementも出さない）。答え合わせのあとに読む
+  if (o && o.v === 2) return;
+  window.__haaLoadAds();
+})();
+</script>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
+<!-- 共通部品 D4（kkp-kit を kit/ にコピーしたもの。中は手で直さず kkp-kit 側で直して sync.sh） -->
+<!-- k-fonts:start -->
+<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=RocknRoll+One&display=swap&text=0123456789EPQRST%E2%86%92%E2%86%B6%E2%86%BA%E2%88%92%E2%91%A0%E2%91%A1%E2%91%A2%E2%91%A3%E2%91%A4%E2%91%A5%E2%91%A6%E2%91%A7%E3%80%81%E3%80%82%E3%80%8C%E3%80%8D%E3%81%81%E3%81%82%E3%81%84%E3%81%86%E3%81%87%E3%81%88%E3%81%8A%E3%81%8B%E3%81%8C%E3%81%8D%E3%81%8F%E3%81%90%E3%81%91%E3%81%92%E3%81%93%E3%81%94%E3%81%95%E3%81%96%E3%81%97%E3%81%98%E3%81%99%E3%81%9A%E3%81%9B%E3%81%9D%E3%81%9E%E3%81%9F%E3%81%A0%E3%81%A1%E3%81%A3%E3%81%A4%E3%81%A5%E3%81%A6%E3%81%A7%E3%81%A8%E3%81%A9%E3%81%AA%E3%81%AB%E3%81%AD%E3%81%AE%E3%81%AF%E3%81%B0%E3%81%B1%E3%81%B2%E3%81%B3%E3%81%B5%E3%81%B6%E3%81%B8%E3%81%B9%E3%81%BB%E3%81%BC%E3%81%BE%E3%81%BF%E3%82%80%E3%82%81%E3%82%82%E3%82%83%E3%82%84%E3%82%85%E3%82%86%E3%82%87%E3%82%88%E3%82%89%E3%82%8A%E3%82%8B%E3%82%8C%E3%82%8D%E3%82%8F%E3%82%92%E3%82%93%E3%82%A2%E3%82%A4%E3%82%AB%E3%82%AD%E3%82%AF%E3%82%B1%E3%82%B2%E3%82%B3%E3%82%B4%E3%82%B5%E3%82%B9%E3%82%BC%E3%82%BF%E3%83%83%E3%83%86%E3%83%88%E3%83%89%E3%83%8A%E3%83%93%E3%83%94%E3%83%97%E3%83%9E%E3%83%A0%E3%83%A1%E3%83%A4%E3%83%A9%E3%83%AA%E3%83%AC%E3%83%B3%E3%83%BB%E3%83%BC%E4%B8%80%E4%B8%88%E4%B8%8A%E4%B8%8B%E4%B8%96%E4%B8%AD%E4%BA%86%E4%BA%8B%E4%BA%8C%E4%BA%BA%E4%BB%8A%E4%BB%95%E4%BB%BB%E4%BC%9A%E4%BD%9C%E4%BD%BF%E4%BF%A1%E5%85%88%E5%85%A5%E5%85%A8%E5%87%BA%E5%88%86%E5%8B%95%E5%8B%9D%E5%8F%A3%E5%8F%B7%E5%90%88%E5%90%8C%E5%90%8D%E5%91%8A%E5%93%81%E5%93%A1%E5%95%8F%E5%9B%9E%E5%A3%B0%E5%A4%A7%E5%A4%A9%E5%A4%AB%E5%A4%B1%E5%A7%8B%E5%AD%90%E5%AD%A6%E5%AE%9A%E5%AE%9F%E5%AE%B6%E5%AF%9D%E5%B1%8A%E5%B1%8B%E5%B8%B0%E5%B9%B3%E5%B9%B4%E5%B9%B9%E5%BA%83%E5%BA%A6%E5%BD%93%E5%BD%B9%E5%BF%98%E6%80%9D%E6%81%AF%E6%83%85%E6%84%8F%E6%84%9F%E6%88%90%E6%88%BB%E6%89%8B%E6%89%8D%E6%89%BF%E6%8A%95%E6%8A%9E%E6%8A%BC%E6%8C%81%E6%8C%AF%E6%95%B0%E6%96%B0%E6%96%B9%E6%97%8F%E6%97%A5%E6%97%A9%E6%99%AF%E6%9B%B8%E6%9C%88%E6%9C%AB%E6%9C%AC%E6%9D%A5%E6%9D%AF%E6%A0%A1%E6%A4%9C%E6%AC%A1%E6%AD%A3%E6%B0%97%E6%B3%81%E6%B6%88%E6%B8%88%E6%B8%A1%E6%B8%AC%E6%BC%94%E7%84%A1%E7%8E%89%E7%94%9F%E7%94%B3%E7%94%BB%E7%95%AA%E7%96%B2%E7%99%BA%E7%9B%AE%E7%9C%81%E7%9C%89%E7%9F%A5%E7%A2%BA%E7%A4%BC%E7%A5%9E%E7%A5%A8%E7%A7%92%E7%AB%AF%E7%AC%91%E7%AD%94%E7%B5%82%E7%B6%9A%E7%B8%BE%E8%80%85%E8%81%9E%E8%81%B4%E8%87%AA%E8%91%89%E8%A1%8C%E8%A1%A8%E8%A6%8B%E8%A6%96%E8%A6%9A%E8%A7%A3%E8%A8%80%E8%A8%88%E8%A8%8E%E8%A8%AD%E8%A8%B3%E8%A9%B1%E8%AA%8D%E8%AA%AD%E8%B2%A0%E8%B2%B8%E8%B2%BC%E8%B3%AA%E9%81%8A%E9%81%B8%E9%83%A8%E9%85%8D%E9%96%89%E9%96%8B%E9%99%A4%E9%9B%A3%E9%9B%BB%E9%9D%A2%E9%A0%86%E9%A1%8C%E9%A1%98%E9%A3%B2%E9%A6%96%E9%BC%BB%EF%BC%81%EF%BC%88%EF%BC%89%EF%BC%8B%EF%BC%9F" rel="stylesheet">
+<!-- k-fonts:end -->
+<link rel="stylesheet" href="/kit/kit.css">
+<script src="/kit/kit.js" defer></script>
 <style>
 :root{
   --orange:#ff8a3d; --orange-d:#e07b39; --cream:#fff8f0; --paper:#fffdf9;
@@ -57,6 +128,25 @@ body{
 .wrap{max-width:640px;margin:0 auto;padding:16px 14px 56px}
 
 header{text-align:center;padding:.4rem 0 .2rem}
+.hero{display:flex;flex-direction:column;align-items:center}
+.hero-pic{display:none}
+.hen{font-size:.8rem;margin:.4rem 0 0}.hen a{color:#8a7560}
+/* 2026-10-19 本家を応援する一文（h1直下・小さく） */
+header .hero-t p.hero-fan{font-size:.75rem;line-height:1.5;margin:0 0 .35rem;color:var(--muted)}
+header .hero-fan a{color:#b84a00}
+.hbar{display:none;align-items:baseline;gap:.6rem;padding:.35rem 0 .5rem;border-bottom:2px solid var(--orange);margin:0 0 10px;text-align:left}
+.hb-name{font-weight:800;font-size:.95rem;color:var(--orange-d);white-space:nowrap}
+@media(max-width:480px){.hb-url{display:none}}
+.hb-url{font-size:.78rem;color:var(--muted);letter-spacing:.02em}
+.hb-step{margin-left:auto;font-size:.8rem;color:var(--muted);white-space:nowrap}
+body.playing .hero{display:none}
+body.playing .hbar{display:flex}
+@media(min-width:768px){
+  .hero{flex-direction:row;text-align:left;gap:1.2rem;align-items:center;padding:.4rem 0 .6rem}
+  .hero-pic{display:block;width:210px;height:auto;flex:none}
+  .hero-t h1{font-size:1.5rem;margin-bottom:.4rem}
+  .hero-t p{font-size:.95rem}
+}
 h1{font-size:1.2rem;line-height:1.45;margin:0 0 .3rem;text-wrap:balance}
 h1 .h1-sub{display:block;font-size:.82rem;font-weight:400;color:var(--ink);margin-top:.1rem}
 header p{font-size:.85rem;color:var(--muted);margin:0}
@@ -84,6 +174,60 @@ h2{font-size:1rem;margin:0 0 .5rem;display:flex;align-items:center;gap:.5rem}
 .num .unit{font-size:.85rem;color:var(--muted)}
 .btn-ghost{width:46px;height:46px;border-radius:50%;border:2px solid var(--line);
   background:#fff;font-size:1.3rem;color:var(--orange-d);cursor:pointer;line-height:1}
+.stream-sw{display:none;align-items:center;gap:.5rem;justify-content:center;margin:.8rem 0 .2rem;font-size:.85rem;color:var(--muted);cursor:pointer}
+.stream-note{display:none}
+.stream-txt{display:none}
+body.stream .stream-txt{display:inline}
+body.stream .normal-txt{display:none}
+.view-open{display:none;text-align:center;margin:.2rem 0 .4rem}
+body.stream .view-open{display:block}
+/* 配信モードは説明を減らしてお題の3択まで1画面に */
+body.stream .hero-t p:not(.hen){display:none}
+body.stream .hero-pic{width:130px}
+body.stream .hero-t h1{font-size:1.25rem;margin:0}
+body.stream #playersHint{display:none}
+.view-open summary{cursor:pointer;color:var(--muted);font-size:.85rem;padding:6px 0;min-height:36px}
+.cand-n{display:none;align-items:center;justify-content:center;gap:.6rem;flex-wrap:wrap;margin:.5rem 0}
+body.stream .cand-n,body[data-players="1"] .cand-n{display:flex}
+.cand-n .btn-ghost{width:40px;height:40px}
+.cn-l{font-weight:800;color:var(--muted);font-size:.9rem}
+.cn-v{font-size:.95rem;color:var(--muted)}.cn-v b{font-size:1.6rem;color:var(--orange-d);margin-right:.15rem}
+.cn-h{font-size:.78rem;color:var(--muted)}
+body.stream.playing .shop-mini{display:none}
+/* 配信モードでは主ボタンを画面下に固定（PCでもスクロールせずに押せる） */
+body.stream #dock{position:sticky;bottom:0;z-index:50;background:#fffdf9;box-shadow:0 -6px 12px rgba(255,253,249,.9);border-top:1px solid var(--line);padding:10px 0 12px;margin:0 0 12px}
+@media(min-width:768px){.stream-note{display:block;margin-top:0}}
+body.stream .act-lbl,body.stream #actDec,body.stream #actInc,body.stream #actorCount,body.stream #actHint,body.stream .act-lbl+.num{display:none}
+/* 1人のときは「1回に演じる人」は選ぶ意味がないので隠す（候補の数の欄は残す） */
+body[data-players="1"] .act-lbl:not(.cand-n .act-lbl),body[data-players="1"] #actHint,body[data-players="1"] .act-lbl:not(.cand-n .act-lbl)+.num{display:none}
+body.stream #postOnly{display:none!important}
+.sfx-sw{display:none!important}
+.cast-sw{display:none}
+body.stream .cast-sw{display:flex;flex-wrap:wrap;justify-content:center;gap:.2rem 1.2rem;margin:.3rem 0 .2rem}
+.cast-sw label{display:flex;align-items:center;gap:.45rem;min-height:44px;font-size:1.05rem;cursor:pointer}
+.cast-sw input{width:20px;height:20px;accent-color:var(--orange)}
+.cast-sw .hint{flex-basis:100%;margin:0;text-align:center}
+body.stream .sfx-sw{display:flex!important;margin-top:0}
+.stream-sw input{width:20px;height:20px;accent-color:var(--orange)}
+@media(min-width:768px){.stream-sw{display:flex}}
+body.stream .stream-sw{font-size:1.05rem}
+body.stream .deal-link{font-size:1rem;min-height:44px;font-weight:700;color:var(--orange-d);border-color:var(--orange)}
+body.stream .deal-remote{font-size:1.05rem}
+.names-box{margin:.7rem 0 .2rem;background:#fffdf9;border:1px solid #f0e4d0;border-radius:12px;padding:0 .8rem}
+.names-sum{list-style:none;cursor:pointer;min-height:44px;padding:.4rem 0;font-size:.85rem;color:var(--orange-d);font-weight:bold;display:flex;align-items:center;gap:.4rem}
+.names-sum::-webkit-details-marker{display:none}
+.names-sum::before{content:"＋";font-weight:900}
+.names-box[open] .names-sum::before{content:"−"}
+.names-sum span{font-weight:normal;color:var(--muted);font-size:.78rem}
+.names-grid{display:grid;grid-template-columns:1fr;gap:.35rem;padding-bottom:.5rem}
+@media (min-width:560px){.names-grid{grid-template-columns:repeat(2,1fr)}}
+.names-row{display:flex;align-items:center;gap:.45rem}
+.names-row .nm-dot{flex:0 0 auto;width:1.1rem;height:1.1rem;border-radius:50%}
+.names-row input{flex:1 1 0;min-width:0;box-sizing:border-box;font-family:inherit;font-size:16px;padding:7px 9px;border:1px solid #e6d5bd;border-radius:8px;background:#fff}
+.names-row input:focus{outline:2px solid var(--orange);border-color:transparent}
+.names-clear{background:none;border:none;color:#b3a595;font-family:inherit;font-size:.78rem;text-decoration:underline;cursor:pointer;padding:4px 0 10px;display:block;margin:0 auto}
+.act-lbl{text-align:center;font-size:.85rem;font-weight:800;color:var(--muted);margin:.7rem 0 0}
+.site-credit{text-align:center;font-size:.72rem;color:#b9a68a;margin:.6rem 0 0;letter-spacing:.02em}
 .hint{text-align:center;font-size:.8rem;color:var(--muted);margin:.1rem 0 .2rem}
 
 /* カテゴリは横スライド（縦に積むと選ぶ前に画面を使い切る） */
@@ -99,10 +243,27 @@ h2{font-size:1rem;margin:0 0 .5rem;display:flex;align-items:center;gap:.5rem}
 .cat-btn.active{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:700}
 /* 選択中のタブをもう一度押すと別の3つが出る。それが分かるように印を出す */
 .cat-btn.active::after{content:" ↺";font-weight:400;opacity:.9}
+.redraw{display:block;margin:.5rem auto 0;background:none;border:none;color:var(--orange-d);font:inherit;font-size:.85rem;font-weight:700;text-decoration:underline;cursor:pointer;padding:8px 12px;min-height:44px}
+body[data-cat="mine"] .redraw{display:none}
+.pick-item{position:relative}
+.pick-item[aria-pressed="true"]::after{content:"selected";position:absolute;top:.5rem;right:.6rem;font-size:.68rem;font-weight:800;color:#fff;background:var(--orange);border-radius:999px;padding:.12rem .5rem}
+/* PCではカテゴリを折り返して全部見せる（横スクロールはマウスで動かしにくい） */
+@media(min-width:768px){.cat-scroll{margin:0 0 .6rem}.cat-scroll::after{display:none}.cat-grid{flex-wrap:wrap;overflow:visible;padding:.15rem 0 .3rem}}
 .cat-desc{font-size:.78rem;color:var(--muted);text-align:center;margin:0 0 .6rem}
 body.returning .cat-desc{display:none}
 
 /* お題の3択（1つずつ引かせるより選ばせる方が早く決まる） */
+.next-pick{margin:.9rem 0 .2rem;padding:.7rem .8rem;border:1px dashed var(--line);border-radius:12px;background:#fff}
+.np-h{font-weight:800;font-size:.92rem;margin:0 0 .45rem}
+.np-ts{display:none}
+body.stream .np-t{display:none}
+body.stream .np-ts{display:inline}
+.np-cat{font-weight:400;font-size:.78rem;color:var(--muted);margin-left:.5rem}
+.np-links{display:flex;justify-content:center;gap:1.2rem;margin-top:.3rem}
+.np-link{background:none;border:none;color:var(--orange-d);font:inherit;font-size:.85rem;font-weight:700;text-decoration:underline;cursor:pointer;padding:8px 6px;min-height:44px}
+body.veiling .next-pick{display:none}
+body[data-cat="mine"] .next-pick{display:none}
+body.stream .np-h{font-size:1.2rem}body.stream .np-link{font-size:1.05rem}
 .pick-list{display:flex;flex-direction:column;gap:.4rem}
 .pick-item{display:block;width:100%;text-align:left;cursor:pointer;padding:.55rem .75rem;
   border:1.5px solid var(--line);border-radius:10px;background:#fffdf9;font:inherit;line-height:1.45}
@@ -122,6 +283,9 @@ body.returning .cat-desc{display:none}
 
 /* 配役カード：itoと同じ「回して見る」 */
 .deal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:.55rem;margin-top:.6rem}
+.deal-cell{display:flex;flex-direction:column;gap:.3rem}
+.deal-link{background:#fff;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:.72rem;color:var(--muted);padding:.3rem 0;min-height:32px;cursor:pointer}
+.deal-remote{margin-top:.6rem}
 .deal-card{aspect-ratio:3/4;border-radius:14px;border:1.5px solid rgba(255,255,255,.9);
   background:url('/img/paper.webp') 0 0/128px 128px repeat,
     linear-gradient(145deg,rgba(255,255,255,.28),transparent 38%,rgba(0,0,0,.10)),
@@ -162,13 +326,55 @@ body.returning .cat-desc{display:none}
 
 .res-row{display:flex;align-items:center;gap:.6rem;padding:.55rem .2rem;border-top:1px solid var(--line)}
 .res-row .nm{font-weight:800;min-width:4.2rem}
-.res-row .act{flex:1;font-size:.88rem}
+.res-row .act{flex:1;font-size:1rem;font-weight:700}
+.ans-l{display:inline-block;font-size:.66rem;font-weight:800;color:#fff;background:var(--orange);border-radius:4px;padding:.05rem .4rem;margin-right:.45rem;vertical-align:middle}
 .res-row .mk{font-weight:800;font-size:.9rem}
 .res-row .mk.o{color:var(--ok)}
 .res-row .mk.x{color:var(--ng)}
+/* 答えのカード：演技の舞台と同じ濃紺。番号と気持ちを大きく */
+.ans-grid{display:grid;grid-template-columns:1fr;gap:.6rem;margin:.2rem 0 .2rem}
+@media(min-width:560px){.ans-grid:not(.one){grid-template-columns:1fr 1fr}}
+.ans-grid.veiled{display:none}
+.ans-card{display:block;border:0;padding:.8rem .9rem .9rem;border-radius:14px;color:#fff;
+  background:#16213a url('/img/reveal-bg.webp') center/cover no-repeat;box-shadow:0 6px 16px rgba(22,33,58,.18)}
+.ans-top{display:flex;align-items:center;gap:.45rem;font-size:.85rem;opacity:.95}
+.ans-dot{width:.8rem;height:.8rem;border-radius:50%;background:var(--pc);flex:none;box-shadow:0 0 0 2px rgba(255,255,255,.7)}
+.ans-name{font-weight:800}
+.ans-word{margin-left:auto;opacity:.8}
+.ans-main{display:flex;align-items:center;gap:.6rem;background:#fff;color:var(--ink);border-radius:10px;
+  padding:.6rem .75rem;margin-top:.5rem;border:3px solid var(--orange)}
+.ans-kick{font-size:.7rem;font-weight:900;color:#fff;background:var(--orange);border-radius:4px;padding:.1rem .4rem;flex:none}
+.ans-no{font-size:1.9rem;font-weight:900;color:var(--orange-d);line-height:1}
+.ans-act{font-size:1.15rem;font-weight:900;line-height:1.35}
+.ans-votes{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.55rem}
+.vc{font-size:.78rem;font-weight:700;border-radius:999px;padding:.15rem .6rem}
+.vc.ok{background:#e6f4ea;color:#2f7a45}
+.vc.ng{background:rgba(255,255,255,.18);color:#fff}
+.vc small{opacity:.85}
+.sr-rk{font-size:.78rem;color:var(--muted);font-weight:800}
+.sr.top .sr-rk{color:#fff;background:var(--orange);border-radius:999px;text-align:center;padding:.1rem 0;font-size:.74rem}
+.sr.top .sr-nm,.sr.top b{font-weight:900}
+.sr-nm{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sr-rd{font-size:.75rem;font-weight:400;color:var(--muted);margin-left:.5rem}
+.sr-add{display:block;font-size:.68rem;color:var(--muted);font-weight:700;line-height:1}
+.sr-reset{display:block;margin:.5rem auto 0;background:none;border:none;color:#b3a595;font:inherit;font-size:.78rem;text-decoration:underline;cursor:pointer;padding:6px 10px;min-height:36px}
+.sr-bar{height:.55rem;background:#f3e8d6;border-radius:999px;overflow:hidden}
+.sr-bar i{display:block;height:100%;border-radius:999px}
+body.stream .ans-top{font-size:1.2rem}
+body.stream .ans-no{font-size:3.4rem}
+body.stream .ans-kick{font-size:1.1rem;padding:.2rem .6rem}
+body.stream .ans-grid.one .ans-main{justify-content:center;padding:1.6rem 1.2rem}
+body.stream .ans-grid.one .ans-no{font-size:5rem}
+body.stream .ans-grid.one .ans-act{font-size:3.2rem}
+body.stream .ans-grid.one .ans-top{font-size:1.5rem}
+body.stream .ans-act{font-size:2.2rem}
+body.stream .ans-card{padding:1.2rem 1.4rem 1.3rem}
+body.stream .ans-main{padding:1rem 1.2rem}
+body.stream .vc{font-size:1rem}
 .score{margin-top:.8rem;padding:.7rem .9rem;background:#fffaf2;border:1px solid var(--line);border-radius:12px}
 .score h3{margin:0 0 .35rem;font-size:.92rem}
-.score .sr{display:flex;justify-content:space-between;font-size:.9rem;padding:.15rem 0}
+.score .sr{display:grid;grid-template-columns:2.6rem minmax(4.5rem,max-content) 1fr 3rem;align-items:center;gap:.6rem;font-size:.95rem;padding:.3rem 0}
+.score .sr b{text-align:right}
 .score .sr b{color:var(--orange-d)}
 
 .shop{margin:1.2rem 0 0;padding:.9rem 1rem;background:var(--paper);border:1px solid var(--line);border-radius:12px}
@@ -211,6 +417,216 @@ button.cat-btn { border-radius: 6px; }
 .my-form textarea{min-height:9.5rem;line-height:1.6}
 .my-form .my-msg{font-size:.78rem;color:var(--muted);margin:.3rem 0 0}
 .my-form .my-msg.ng{color:var(--ng);font-weight:700}
+/* 舞台：演技と投票のときだけ出る濃紺の板。配信画面でここが主役になる */
+.stage{background:#16213a url('/img/reveal-bg.webp') center/cover no-repeat;color:#fff;border-radius:12px;padding:1rem 1rem 1.1rem;text-align:center;margin:.2rem 0 .7rem}
+.stage{position:relative;overflow:hidden}
+.st-pic{display:none}
+@media(min-width:768px){.st-pic{display:block;position:absolute;right:1.2rem;bottom:0;height:92%;width:auto;pointer-events:none}.stage.drop{padding-left:150px;padding-right:150px}}
+body.stream .st-pic{height:100%;right:2rem}
+@media(min-width:768px){body.stream .stage.drop,body.stream #performStage{padding-left:290px;padding-right:290px}}
+.stage .st-who{font-size:.95rem;opacity:.9}
+.stage .st-word{font-size:2.1rem;font-weight:900;line-height:1.3;margin:.15rem 0 .1rem;letter-spacing:.02em}
+.stage .st-sub{font-size:.8rem;opacity:.75}
+.stage.sm{padding:.75rem 1rem .85rem}
+.stage.sm .vote-who{color:#fff;margin:0 0 .2rem}
+.stage .st-q{margin:0;font-size:.95rem;opacity:.95}
+.stage .st-q b{color:#ffd8a8}
+.no{display:inline-block;min-width:1.3em;margin-right:.3rem;color:var(--orange-d);font-weight:900}
+.stage .st-chat{display:none;margin-top:.5rem;font-size:.85rem;color:#ffd8a8}
+.cands{margin:.7rem 0 .2rem;padding:.6rem .8rem;background:#fffaf2;border:1px solid var(--line);border-radius:12px}
+.cands .cl{font-size:.78rem;color:var(--muted);font-weight:800;margin-bottom:.3rem}
+.cands ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.25rem .8rem}
+.cands li{font-size:.9rem;line-height:1.5;padding:.1rem 0}
+.shop-mini{margin:.9rem 0 .2rem;padding:.6rem .8rem;border:1px dashed var(--line);border-radius:12px;background:#fff}
+.shop-mini .sm-h{font-size:.82rem;font-weight:800;color:#8b6b3d;margin-bottom:.3rem}
+.shop-mini .pr{font-size:10px;font-weight:400;color:var(--muted);margin-left:.3rem;letter-spacing:.06em}
+.sm-row{display:flex;align-items:center;gap:.5rem;padding:.3rem 0;border-top:1px solid #f3ecd9;font-size:.82rem}
+.sm-row .sm-name{font-weight:700;flex:0 1 auto}
+.sm-row .sm-note{flex:1 1 0;color:var(--muted);font-size:.74rem;min-width:0}
+.sm-link{flex:0 0 auto;padding:.25rem .6rem;border:1px solid var(--orange);border-radius:999px;color:var(--orange-d);text-decoration:none;font-size:.76rem;background:#fff;min-height:28px;display:inline-flex;align-items:center}
+.sm-link.alt{border-color:var(--line);color:var(--muted)}
+.sm-row .sm-links{flex:0 0 auto;display:flex;gap:.3rem;margin-left:auto}
+@media(max-width:420px){.sm-row{flex-wrap:wrap}.sm-row .sm-note{flex-basis:100%;order:3}}
+.cands .cw{font-size:1.25rem;font-weight:900;margin:0 0 .25rem}
+.unveil{margin:.4rem 0 .8rem}
+.unveil[hidden]{display:none}
+/* 最終予想タイム中の「すぐ発表する」は小さい文字ボタン。主ボタンと同じ位置・見た目にしない（2026-10-19 演じる前に答えが出た事故） */
+#unveil.unveil-skip{display:block;width:auto;margin:.2rem auto .8rem;padding:.5rem 1rem;min-height:44px;background:none;border:0;box-shadow:none;
+  color:var(--muted);font-size:.9rem;font-weight:700;text-decoration:underline;text-underline-offset:3px;border-radius:8px}
+#unveil.unveil-skip[hidden]{display:none}
+/* 演技のあとの2択（投票して得点をつける／答えを見る）を同じ重さで横並び */
+.btn-eq{display:block;width:100%;padding:.8rem .4rem;border:2px solid var(--orange);border-radius:12px;background:#fff;
+  color:var(--orange-d);font:inherit;font-weight:800;font-size:.98rem;line-height:1.35;cursor:pointer;min-height:56px}
+body.perform-eq #dock[data-step=perform]{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+body.perform-eq #dock[data-step=perform] #dockMsg{grid-column:1 / -1}
+body.stream .btn-eq{font-size:1.25rem;min-height:66px}
+.unveil-msg{text-align:center;font-weight:800;font-size:1rem;line-height:1.6;margin:.6rem 0 .2rem}
+.unveil-msg[hidden]{display:none}
+/* 答えが出るまでは、次の回へのボタンとAdvertisementを出さない */
+body.veiling #postOnly,body.veiling #newGame,body.veiling #resultBack{display:none!important}
+body:not(.stream) .unveil-msg br,body:not(.stream) .unveil-msg-viewer{display:none}
+body.stream .unveil-msg{font-size:1.6rem}
+.cta-comment{display:none;text-align:center;font-weight:900;color:var(--orange-d);margin:.6rem 0 0;animation:labelPop .6s .3s cubic-bezier(.2,.9,.3,1.6) both}
+body.stream .cta-comment{display:block;font-size:1.3rem}
+body.veiling .cta-comment{display:none}
+.cdown.last{font-size:6rem;color:var(--navy,#16213a)}
+.cdown.last small{display:block;font-size:1.3rem;font-weight:900;color:var(--orange-d);margin-bottom:.2rem}
+body.stream .cdown.last{font-size:7rem}
+.win-pic{display:block;width:min(240px,60%);height:auto;margin:.4rem auto 0}
+body.veiling .win-pic{display:none}
+body.stream .win-pic{width:300px}
+/* ===== 押した手応えと画面の切り替わり（楽しくハデに。動きを減らす設定の人には出さない） ===== */
+button{transition:transform .12s ease, box-shadow .12s ease, background-color .2s}
+button:active{transform:scale(.95)}
+.tap-ring{position:fixed;pointer-events:none;border-radius:50%;border:4px solid var(--orange);z-index:3000;animation:tapRing .45s ease-out forwards}
+@keyframes tapRing{from{width:0;height:0;opacity:.9;transform:translate(-50%,-50%)}to{width:120px;height:120px;opacity:0;transform:translate(-50%,-50%)}}
+.card.enter{animation:stepIn .5s cubic-bezier(.2,.9,.3,1.25) both}
+@keyframes stepIn{0%{opacity:0;transform:translateY(26px) scale(.96)}100%{opacity:1;transform:none}}
+.enter h2 .step-label{animation:labelPop .6s .15s cubic-bezier(.2,.9,.3,1.6) both}
+@keyframes labelPop{0%{transform:scale(.3) rotate(-12deg)}100%{transform:none}}
+.deal-card{animation:dealIn .5s cubic-bezier(.2,.9,.3,1.3) both}
+@keyframes dealIn{0%{opacity:0;transform:translateY(-40px) rotate(-14deg) scale(.7)}100%{opacity:1;transform:none}}
+.stage.drop{animation:stageDrop .55s cubic-bezier(.2,.9,.3,1.3) both}
+@keyframes stageDrop{0%{opacity:0;transform:scale(.85) translateY(-14px)}100%{opacity:1;transform:none}}
+.stage.drop .st-word{animation:wordBounce .8s .25s cubic-bezier(.2,.9,.3,1.8) both}
+@keyframes wordBounce{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.12);opacity:1}100%{transform:scale(1)}}
+.vote-item.picked{background:var(--orange)!important;color:#fff!important;border-color:var(--orange)!important;transform:scale(1.03)}
+.vote-item.picked .no{color:#fff}
+.vote-who.swap{animation:labelPop .45s cubic-bezier(.2,.9,.3,1.6) both}
+.pick-item[aria-pressed="true"]{animation:pickPop .35s cubic-bezier(.2,.9,.3,1.6)}
+@keyframes pickPop{0%{transform:scale(.96)}60%{transform:scale(1.03)}100%{transform:none}}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:2500;overflow:hidden}
+.confetti i{position:absolute;top:-20px;width:10px;height:16px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+@media (prefers-reduced-motion:reduce){.card.enter,.enter h2 .step-label,.deal-card,.stage.drop,.stage.drop .st-word,.vote-who.swap,.pick-item[aria-pressed="true"]{animation:none}.confetti,.tap-ring{display:none}}
+/* 配信モード：名前は1行に並べる。画面の高さが低いPC（ノート 1366x768 など）はさらに詰めて、スクロールなしで収める */
+@media (min-width:768px){body.stream .names-grid{grid-template-columns:repeat(4,1fr)}}
+/* いま演じる人（遊んでいる間ずっと見える1行）と、次にやること（主ボタンのすぐ上に1行） */
+.now-actor{display:none;margin:0 0 8px;font-size:1.05rem;font-weight:800;color:var(--ink);text-align:left}
+.now-actor b{color:var(--orange-d)}
+body.playing:not(.gmode) .now-actor:not([hidden]){display:block}
+body.stream .now-actor{font-size:1.45rem;margin-bottom:6px}
+/* 配信モードのはじめての方へ（最初の1回だけ開いておく。一度始めたら畳む） */
+.from-stream{position:relative;margin:0 0 14px;padding:10px 64px 10px 14px;border-left:4px solid var(--orange);background:#fff6ea;text-align:left;font-size:.92rem;line-height:1.6}
+.from-stream p{margin:0}
+.from-stream .fs-x{position:absolute;top:4px;right:4px;background:none;border:none;color:var(--muted);font:inherit;font-size:.8rem;text-decoration:underline;cursor:pointer;min-height:36px;padding:0 8px}
+.from-stream[hidden]{display:none}
+body.stream .from-stream{display:none}
+.first-guide{display:none;margin:0 0 .6rem;border-left:4px solid var(--orange);padding:.1rem 0 .1rem .7rem;text-align:left}
+body.stream .first-guide{display:block}
+body.stream .stream-note{display:none!important}
+/* 配信モードの演じる画面は、ステージに「声と表情だけで」があるので下の同じ説明は出さない */
+body.stream .perf-hint{display:none}
+.first-guide summary{cursor:pointer;font-weight:800;color:var(--orange-d);min-height:36px;display:flex;align-items:center}
+.first-guide p{margin:.1rem 0 .3rem;line-height:1.7;font-size:1.05rem}
+.first-guide p span{display:block}
+/* 高さの低いPC（1366x768 など）は1行に並べて、お題の候補を押し下げない */
+@media (max-height:900px){body.stream .first-guide p span{display:inline;margin-right:1.2em}body.stream .first-guide summary{min-height:30px}body.stream .first-guide p{margin:0}}
+/* 1回に演じる人が1人のとき（配信モードはいつも1人）：だれが演じるかを選ぶ（名前のボタンを横に並べる。押したものは塗りつぶし） */
+.actor-pick{display:none;margin:.6rem 0 .3rem}
+.actor-pick.on{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+body.veiling .actor-pick{display:none!important}
+.ap-h{font-weight:800;font-size:.95rem;margin:0}
+.ap-row{display:flex;flex-wrap:wrap;gap:8px}
+.ap-btn{min-height:44px;min-width:44px;padding:6px 14px;border:2px solid #e6d5bd;border-radius:8px;background:#fff;font:inherit;font-size:1rem;font-weight:700;color:var(--ink,#4a3b2a);cursor:pointer;display:inline-flex;align-items:center;gap:.4rem}
+.ap-btn .ap-dot{width:.8rem;height:.8rem;border-radius:50%;flex:0 0 auto}
+.ap-btn[aria-pressed="true"]{background:var(--orange);border-color:var(--orange);color:#fff}
+.ap-btn[aria-pressed="true"] .ap-dot{box-shadow:0 0 0 2px #fff}
+@media (max-height:900px){
+  body.stream .hero{display:none}
+  body.stream .wrap{padding-top:6px}
+  body.stream main .card{padding:12px 22px}
+  body.stream h2{font-size:1.15rem;margin-bottom:4px}
+  body.stream .num .val{font-size:2.2rem}
+  body.stream .btn-ghost{width:44px;height:44px}
+  body.stream .stream-sw{margin:.3rem 0 0}
+  body.stream .cand-n{margin:.2rem 0}
+  body.stream .names-box{margin:.3rem 0}
+  body.stream .names-sum{min-height:34px;padding:.2rem 0}
+  body.stream .names-grid{gap:.25rem}
+  body.stream .cat-grid{padding-bottom:.2rem}
+  body.stream .cat-btn{padding:.3rem .7rem;min-height:36px}
+  body.stream .cat-desc{display:none}
+  body.stream .pick-item{padding:.35rem .7rem;min-height:40px}
+  body.stream .pick-item .pi-s{display:none}
+  body.stream .redraw{min-height:34px;padding:2px 10px;margin-top:.2rem}
+  body.stream #odaiLink{display:none}
+  body.stream .hbar{padding:.3rem 0 .4rem;margin-bottom:6px}
+  body.stream .stage{padding:.8rem 1.2rem .9rem;margin-bottom:.4rem}
+  body.stream .stage .st-who{font-size:1.1rem}
+  body.stream .stage .st-word{font-size:2.8rem}
+  body.stream .stage .st-sub{font-size:.9rem}
+  body.stream .stage .st-chat{font-size:.95rem;margin-top:.2rem}
+  body.stream .cands{margin:.4rem 0 .1rem;padding:.4rem .8rem}
+  body.stream .cands li{font-size:1.15rem;padding:.05rem 0}
+  body.stream .cands .cl{font-size:.85rem}
+  body.stream .vote-who{font-size:1.3rem}
+  body.stream #voteTarget{font-size:1.05rem}
+  body.stream .vote-item{font-size:1.1rem;padding:.35rem 1rem;min-height:38px}
+  body.stream .stage.sm{padding:.5rem 1rem .55rem}
+  body.stream .vote-list{gap:.35rem}
+  body.stream #voteHint,body.stream #step-vote > .hint:first-of-type{display:none}
+  body.stream .ans-card{padding:.7rem 1rem .8rem}
+  body.stream .ans-main{padding:.6rem 1rem}
+  body.stream .ans-grid.one .ans-main{padding:.8rem 1rem}
+  body.stream .ans-grid.one .ans-no{font-size:3.2rem}
+  body.stream .ans-grid.one .ans-act{font-size:2.1rem}
+  body.stream .win-pic{width:170px;margin-top:.2rem}
+  body.stream .score{padding:.5rem .8rem;margin-top:.4rem}
+  body.stream .score .sr{font-size:1.05rem;padding:.12rem 0}
+  body.stream .next-pick{margin-top:.5rem;padding:.5rem .7rem}
+  body.stream .next-pick .pick-item .pi-s{display:none}
+  body.stream #dock{padding:6px 0 8px}
+  body.stream #dock>button{min-height:50px;font-size:1.1rem}
+  body.stream #dock>button.btn-sub,body.stream .btn-eq{min-height:46px}
+  body.stream .stream-note{display:none}
+  body.stream .join-s{display:none}
+  body.stream .join-box{margin-top:.4rem;padding-top:.4rem}
+}
+.res-cands{display:none}
+body.veiling .res-cands{display:block}
+.cdown{text-align:center;font-size:4.5rem;font-weight:900;color:var(--orange);line-height:1.2;padding:.6rem 0}
+.cdown[hidden]{display:none}
+.cdown.tick{animation:cd-pop .7s ease both}
+@keyframes cd-pop{0%{transform:scale(.4);opacity:0}30%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
+body.stream .cdown{font-size:9rem}
+.res-row.pop,.ans-card.pop{animation:cd-pop .5s ease both}
+@media (prefers-reduced-motion:reduce){.cdown.tick,.res-row.pop,.ans-card.pop{animation:none}}
+.veiled{display:none}
+.stream-only{display:none}
+/* 配信モード：PCの広い画面で自動ON（設定で切替可）。スマホの表示は変えない */
+body.stream .wrap{max-width:1080px}
+body.stream main .card{padding:22px 30px}
+body.stream h2{font-size:1.5rem}body.stream .step-label{font-size:.9rem;padding:.2rem .6rem}
+body.stream .hint{font-size:1.15rem;line-height:1.6}
+body.stream .num .val{font-size:3rem;min-width:3.2rem}body.stream .num .unit{font-size:1.1rem}body.stream .btn-ghost{width:56px;height:56px;font-size:1.5rem}
+body.stream .act-lbl{font-size:1.1rem}
+body.stream .deal-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.9rem}
+body.stream .deal-card .n{font-size:2.6rem}body.stream .deal-card .who{font-size:1.15rem}
+body.stream .res-row{padding:.75rem .3rem}body.stream .res-row .nm{min-width:8rem;font-size:1.5rem}body.stream .res-row .act{font-size:1.5rem}
+body.stream .cands .cl{font-size:1rem}body.stream .cands li{font-size:1.5rem;padding:.2rem 0}body.stream .cands .cw{font-size:2.4rem}
+body.stream #revealHint{display:none}
+  /* 「◯回目」はスマホで続けて遊ぶ人向け。配信画面では意味がないので隠す */
+body.stream #statsBar{display:none!important}
+body.stream .shop-mini .sm-h{font-size:1rem}body.stream .sm-row{font-size:1rem}body.stream .sm-row .sm-note{font-size:.9rem}body.stream .sm-link{font-size:.9rem}
+body.stream .vote-who{font-size:1.7rem}body.stream #voteTarget{font-size:1.3rem}
+body.stream .stage .st-chat{display:block;font-size:1.15rem}
+body.stream .stage{padding:1.6rem 1.5rem 1.8rem;border-radius:16px}body.stream .stage .st-who{font-size:1.5rem}body.stream .stage .st-word{font-size:4rem}body.stream .stage .st-sub{font-size:1.1rem}
+body.stream .hbar{padding:.5rem 0 .7rem}body.stream .hb-name{font-size:1.3rem}body.stream .hb-url{font-size:1rem}body.stream .hb-step{font-size:1.05rem}
+body.stream .vote-item{font-size:1.5rem;padding:.9rem 1.2rem;border-radius:14px}body.stream .vote-list{gap:.6rem}
+body.stream .vote-prog{font-size:1.1rem}
+body.stream .score h3{font-size:1.2rem}body.stream .score .sr{font-size:1.4rem;padding:.3rem 0}
+body.stream #dock>button{max-width:640px;font-size:1.35rem;min-height:66px}body.stream #dock>button.btn-sub{font-size:1.15rem;min-height:54px}
+body.stream #dockMsg{font-size:1.2rem}
+body.stream .site-credit{font-size:1rem;color:#9c8a6c}
+body.stream .reveal .who{font-size:1.6rem}body.stream .reveal .word{font-size:1.5rem}
+body.stream .reveal .act{font-size:2.6rem;max-width:44rem;padding:1.4rem 2rem}
+body.stream .reveal .warn{font-size:1.2rem}body.stream .reveal .btn-w{font-size:1.2rem;padding:1rem 2.2rem}
+body.stream .stream-only{display:block;color:#fff;opacity:.85}
+body.stream .quick-note{font-size:1.15rem}
+  /* 遊んでいる間は説明やリンクを隠し、配信画面をゲームだけにする */
+body.stream.playing details.block,body.stream.playing .wrap>p.note,body.stream.playing .wrap>div[style*="max-width:680px"],body.stream.playing footer{display:none}
+body.stream.playing header p{display:none}
 .quick-note{font-size:.85rem;color:var(--muted);margin:.6rem 0 0;line-height:1.6}
 /* 使いやすさの調整（2026-10-03・UI/UX指針）: 余白を詰め、主ボタンは画面下の決まった場所に1つ。元のルールは上に残し上書き。
    #dock は main の最後の子で position:sticky。main の外にあるAdvertisementまでは付いていかない */
@@ -222,6 +638,8 @@ header p a{display:inline-block;padding:10px 6px}
 .cat-btn{min-height:44px}
 .pick-item{min-height:48px}
 .vote-item{min-height:48px}
+.vote-undo{display:block;margin:.4rem auto 0;min-height:44px}
+.vote-undo[hidden]{display:none}
 .vote-who{margin:.1rem 0 .3rem}
 .btn-sub{min-height:44px}
 #step-setup>p:last-child{margin-top:2px!important}
@@ -234,6 +652,8 @@ header p a{display:inline-block;padding:10px 6px}
 #dock[data-step=setup] #startGame,#dock[data-step=deal] #toPerform:not(:disabled),
 #dock[data-step=perform] #toVote,#dock[data-step=perform] #toReveal,
 #dock[data-step=vote] #voteSkip,#dock[data-step=result] #newGame{display:block}
+/* 1人のときは投票がない（視聴者やまわりの人が当てる） */
+body[data-players="1"] #toVote{display:none!important}
 /* 全員が見終わったら、演じるへのボタンは主ボタンの色にする */
 #dock #toPerform{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:800;min-height:52px;font-size:1.02rem}
 #dockMsg{display:none;text-align:center;font-size:.92rem;font-weight:700;line-height:1.3;padding:8px 0}
@@ -243,23 +663,468 @@ body:not(.at-result) #postOnly{display:none}
 .deal-card::before,.deal-card.done::after{white-space:nowrap}
 @media(max-width:340px){#postOnly .ad-slot{margin-left:-14px;margin-right:-14px}}
 @media(min-width:768px){main{min-height:0}#dock{position:static;margin:0 0 12px;background:none;border:0;padding:0}#dock>button{max-width:420px;margin:0 auto}}
+/* ===== 離れて遊ぶ（2026-10-16）: 名前ごとに送る・参加リンク・発表リンク ===== */
+.deal-link{min-height:44px;line-height:1.3;padding:.3rem .2rem;word-break:keep-all;overflow-wrap:anywhere}
+.deal-link.sent,.join-link.sent{border-color:var(--ok);color:#2f7a45;font-weight:700;background:#f3faf5}
+.join-box{margin:.8rem 0 0;padding:.6rem 0 0;border-top:1px solid var(--line)}
+.join-h{font-size:.85rem;font-weight:800;color:var(--ink);margin:0 0 .15rem}
+.join-s{font-size:.78rem;color:var(--muted);margin:0 0 .4rem;line-height:1.5}
+.join-row{display:flex;flex-wrap:wrap;gap:8px}
+.join-link{background:#fff;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:.82rem;color:var(--orange-d);font-weight:700;padding:.3rem .8rem;min-height:44px;cursor:pointer}
+.sent-hint{margin:.6rem 0 0;font-size:.88rem;font-weight:800;color:#2f7a45}
+.sent-hint[hidden]{display:none}
+.ann{margin:.4rem 0 .8rem;padding:.55rem .7rem;border-left:4px solid var(--orange);background:#fffaf2}
+.ann[hidden]{display:none}
+.ann-btn{min-height:44px;padding:.4rem 1rem;border:2px solid var(--orange);border-radius:8px;background:#fff;color:var(--orange-d);font:inherit;font-weight:800;cursor:pointer}
+.ann-btn.sent{border-color:var(--ok);color:#2f7a45}
+.ann-h{display:block;font-size:.78rem;color:var(--muted);margin-top:.3rem;line-height:1.5}
+body.stream .join-link{font-size:1rem}body.stream .join-h{font-size:1.05rem}body.stream .join-s{font-size:.95rem}
+body.stream .ann-btn{font-size:1.1rem}body.stream .ann-h{font-size:.95rem}body.stream .sent-hint{font-size:1.1rem}
+/* 演技カード（リンクで受け取った人）：タップするまで気持ちを隠す。配信に映っても見えない。もう一度タップで隠す */
+.reveal .act.maskable{cursor:pointer;width:min(20rem,84vw);min-height:4.6rem;position:relative;display:flex;align-items:center;justify-content:center}
+.reveal .act.masked{color:transparent;text-shadow:none;user-select:none;-webkit-user-select:none;background:repeating-linear-gradient(45deg,#fff 0 10px,#fff3e2 10px 20px)}
+.reveal .act.masked::after{content:"タップで表示";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--orange-d);font-size:1.15rem;font-weight:900}
+.reveal .tapnote{margin-top:.5rem;font-size:.82rem;opacity:.85}
+.reveal .tapnote[hidden]{display:none}
+/* QRで渡す（2026-10-16）: 配信モードの小窓はまずQRだけ。ふだんのモードはその場で小窓（モーダル）。/view/ と配信画面には出さない */
+.reveal.has-qr{justify-content:flex-start;overflow-y:auto}
+.reveal .act[hidden],.reveal .warn[hidden],.reveal .btn-w[hidden],.rq[hidden],.rq-cap[hidden]{display:none}
+.rq{background:#fff;border-radius:10px;padding:8px;margin:.5rem 0 0;max-width:100%}
+.rq svg,.qm-box svg{display:block;margin:0 auto;max-width:100%;height:auto;shape-rendering:crispEdges}
+.rq-cap{margin:.5rem 0 0;font-size:.95rem;font-weight:700;line-height:1.5;color:#fff}
+.reveal .btn-show{margin-top:.8rem;border:3px solid var(--orange)}
+.deal-qr{background:#fff;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:.72rem;color:var(--ink);padding:.2rem;min-height:44px;line-height:1.25;cursor:pointer}
+.deal-qr.sent{border-color:var(--ok);color:#2f7a45;font-weight:700;background:#f3faf5}
+body.stream .deal-qr{display:none}
+.join-one{display:flex;gap:6px;flex-wrap:wrap}
+.join-qr{background:#fff;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:.78rem;color:var(--ink);padding:.3rem .6rem;min-height:44px;cursor:pointer}
+body.stream .join-qr{font-size:.95rem}
+.qr-modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(40,30,20,.6)}
+.qr-modal[hidden]{display:none}
+.qm-in{width:100%;max-width:360px;max-height:100%;overflow-y:auto;padding:10px;border-radius:10px;background:#fff;text-align:center}
+.qm-who{font-size:1.1rem;font-weight:800;margin:.2rem 0 .5rem}
+.qm-cap{font-size:.85rem;color:var(--ink);margin:.4rem 0 0;line-height:1.5}
+.qm-close{display:block;width:100%;min-height:48px;margin-top:.7rem;border:none;border-radius:999px;background:var(--orange);color:#fff;font:inherit;font-weight:800;cursor:pointer}
+/* 参加者画面（body.gmode）：ゲーム本体は隠し、1回ぶんの役・候補・予想・答えだけを出す */
+.guest{display:none}
+body.gmode .guest{display:block}
+body.gmode .hero,body.gmode main,body.gmode details.block,body.gmode .wrap>p.note,body.gmode .wrap>div[style*="max-width:680px"],body.gmode #postOnly{display:none!important}
+body.gmode .hbar{display:flex}
+.g-stage{background:#16213a url('/img/reveal-bg.webp') center/cover no-repeat;color:#fff;border-radius:12px;padding:10px 14px 14px;margin:0 0 14px;text-align:center}
+.g-top{display:flex;justify-content:space-between;gap:.6rem;font-size:.82rem;opacity:.9;text-align:left}
+.g-wl{font-size:.8rem;opacity:.8;margin-top:.4rem}
+.g-word{font-size:2.2rem;font-weight:900;line-height:1.25;margin:0 0 .15rem;letter-spacing:.02em;overflow-wrap:anywhere}
+.g-role{font-size:.95rem;color:#ffd8a8;font-weight:700;line-height:1.5}
+.g-mycard{display:block;margin:.6rem auto 0;min-height:44px;padding:.45rem 1.1rem;border-radius:8px;border:2px solid #fff;background:rgba(255,255,255,.08);color:#fff;font:inherit;font-weight:800;cursor:pointer}
+.g-mycard[hidden],.g-myact[hidden]{display:none}
+.g-now{margin:.6rem auto 0;max-width:24rem;font-size:1.1rem;font-weight:800;line-height:1.55;color:#fff;text-wrap:balance;word-break:auto-phrase}
+.g-now[hidden],.g-soft[hidden],.g-say[hidden],.g-next[hidden]{display:none}
+.g-soft{margin:.35rem 0 0;font-size:.8rem;color:#ffd8a8}
+/* 選んだ予想を大きく。配信者に番号を読み上げて伝えるときに見やすく（送信はしない） */
+.g-say{margin:12px 0 0;padding:4px 0 4px 12px;border-left:4px solid var(--orange);display:flex;align-items:baseline;flex-wrap:wrap;gap:.2rem .7rem;line-height:1.3}
+.g-say small{font-size:.86rem;font-weight:700;color:var(--muted)}
+.g-say b{font-size:2.3rem;font-weight:900;color:var(--orange-d)}
+.g-say .g-sn{font-size:1rem;font-weight:800;color:var(--ink)}
+.g-next{margin:10px 0 0;padding-top:8px;border-top:1px dashed var(--line);font-size:.92rem;font-weight:700;line-height:1.55;color:var(--ink)}
+.reveal .r-now{margin:.5rem auto .2rem;max-width:22rem;font-size:1rem;font-weight:700;line-height:1.55;color:#fff;text-wrap:balance;word-break:auto-phrase}
+.reveal .r-now[hidden],.reveal #revealSoft[hidden]{display:none}
+.reveal #revealSoft{margin-top:.3rem;font-size:.8rem;opacity:.9}
+.g-myact{margin:.5rem auto 0;background:#fff;color:var(--ink);border:4px solid var(--orange);border-radius:10px;padding:.55rem .8rem;font-size:1.3rem;font-weight:900;line-height:1.4;max-width:22rem}
+.g-sec{margin:0 0 14px}
+.g-sec[hidden]{display:none}
+.g-h{font-size:.92rem;font-weight:800;margin:0 0 6px;line-height:1.4}
+.g-h small{font-weight:400;color:var(--muted);font-size:.78rem;margin-left:.4rem}
+.g-list{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.g-c{display:flex;align-items:center;gap:.4rem;width:100%;text-align:left;min-height:46px;padding:.4rem .75rem;border:1.5px solid var(--line);border-radius:8px;background:#fffdf9;font:inherit;font-size:.98rem;line-height:1.4;color:var(--ink)}
+button.g-c{cursor:pointer}
+.g-c[aria-pressed="true"]{border-color:var(--orange);background:#fff3e2;font-weight:700}
+.g-c.ans{border-color:var(--orange);border-width:3px;font-weight:900}
+.g-c .g-tag{margin-left:auto;font-size:.72rem;font-weight:800;border-radius:4px;padding:.05rem .4rem;white-space:nowrap;flex:none}
+.g-tag.t-ans{background:var(--orange);color:#fff}
+.g-tag.t-me{background:#efe6d6;color:var(--ink)}
+.g-tg{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 0}
+.g-tn{font-weight:800;font-size:.9rem;min-width:100%}
+.g-nb{min-width:52px;min-height:52px;font-size:1.3rem!important;border:1.5px solid var(--line);border-radius:8px;background:#fff;font:inherit;font-weight:800;font-size:1.05rem;color:var(--orange-d);cursor:pointer}
+.g-nb[aria-pressed="true"]{background:var(--orange);color:#fff;border-color:var(--orange)}
+.g-msg{font-size:.88rem;color:var(--muted);margin:8px 0 0;line-height:1.5}
+.g-msg b{color:var(--ink)}
+.g-mine{font-size:1.1rem;font-weight:900;margin:10px 0 2px;line-height:1.5}
+.g-mine.ok{color:#2f7a45}.g-mine.ng{color:var(--ng)}
+.g-tally{font-size:.88rem;color:var(--muted);margin:0}
+.g-tally b{color:var(--orange-d);font-size:1.05rem}
+.g-reset{background:none;border:none;color:#b3a595;font:inherit;font-size:.78rem;text-decoration:underline;cursor:pointer;padding:8px 0;min-height:44px}
+.g-paste{border-top:1px solid var(--line);padding-top:10px}
+.g-paste label{display:block;font-size:.88rem;font-weight:800;margin:0 0 4px}
+.g-prow{display:flex;gap:8px}
+.g-prow input{flex:1;min-width:0;font:inherit;font-size:16px;padding:9px 10px;border:1.5px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+.g-prow button{min-height:46px;padding:0 18px;border:0;border-radius:8px;background:var(--orange);color:#fff;font:inherit;font-weight:800;cursor:pointer;flex:none}
+.g-pmsg{font-size:.82rem;margin:4px 0 0;color:var(--muted)}
+.g-pmsg.ng{color:var(--ng);font-weight:700}
+.g-obs{display:none;font-size:.85rem;color:var(--muted);margin:0 0 12px}
+@media(min-width:768px){.g-obs{display:block}}
+.g-obs summary{cursor:pointer;min-height:40px;padding:8px 0}
+.g-foot{font-size:.88rem;color:var(--ink);border-top:1px solid var(--line);padding-top:6px;margin-top:6px;line-height:1.5}
+.g-foot p{margin:0}
+.g-foot a{display:inline-block;padding:9px 0;color:var(--orange-d);font-weight:700}
+.g-err{padding:12px 0}
+.g-err p{margin:0 0 8px}
+.g-err a{display:inline-block;padding:10px 16px;border:2px solid var(--orange);border-radius:8px;color:var(--orange-d);font-weight:800;text-decoration:none}
+.g-ad[hidden]{display:none}
+@media(min-width:768px){.guest{max-width:560px;margin:0 auto}.g-word{font-size:2.8rem}}
+/* ===== 振り返り（2026-10-20）: 得点の行の「当てた・伝わった」・名人・記録の小窓 ===== */
+.sr-hit{display:block;font-size:.72rem;font-weight:400;color:var(--muted);line-height:1.3;white-space:normal}
+.sr-titles{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.5rem 0 0;font-size:.85rem}
+.sr-ttl b{display:inline-block;margin-right:.35rem;padding:0 .45rem;background:#d9432a;color:#fff;border-radius:4px;font-size:.78rem}
+.sr-ttl small{margin-left:.3rem;color:var(--muted)}
+.log-links{display:flex;flex-wrap:wrap;justify-content:center;gap:0 1rem;margin:.2rem 0 0}
+body:not(.stream) #sumOpen{display:none}
+body.veiling .log-links{display:none}
+.rec-strip{display:none}
+.log-ov{position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;padding:12px;background:rgba(31,26,23,.55)}
+.log-ov[hidden]{display:none}
+.log-in{width:100%;max-width:640px;max-height:100%;overflow-y:auto;background:#fffdf8;border:3px solid #1f1a17;border-radius:6px;box-shadow:4px 4px 0 #1f1a17;padding:12px 14px 14px;color:#1f1a17}
+.log-head{display:flex;align-items:center;gap:8px;margin:0 0 6px}
+.log-title{margin:0;font-size:1.15rem;font-weight:800;flex:1}
+.log-x,.log-clear{min-height:44px;padding:0 14px;border:2px solid #1f1a17;border-radius:6px;background:#fbf3e4;color:#1f1a17;font:inherit;font-weight:700;cursor:pointer}
+.log-scope{display:flex;gap:6px;margin:0 0 8px}
+.log-scope button{min-height:40px;padding:0 12px;border:2px solid #1f1a17;border-radius:6px;background:#fffdf8;font:inherit;font-size:.85rem;cursor:pointer;color:#1f1a17}
+.log-scope button[aria-pressed="true"]{background:#d9432a;color:#fff}
+.log-h{margin:.8rem 0 .3rem;font-size:.95rem}
+.log-h small{margin-left:.5rem;font-weight:400;color:var(--muted);font-size:.78rem}
+.log-titles{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 .4rem}
+.lt b{display:inline-block;margin-right:.35rem;padding:0 .45rem;background:#d9432a;color:#fff;border-radius:4px;font-size:.8rem}
+.lt small{margin-left:.3rem;color:var(--muted);font-size:.8rem}
+.log-ppl{width:100%;border-collapse:collapse;font-size:.95rem}
+.log-ppl th,.log-ppl td{padding:.35rem .4rem;border-bottom:1px solid rgba(31,26,23,.15);text-align:right;white-space:nowrap}
+.log-ppl th:first-child{text-align:left;max-width:9rem;overflow:hidden;text-overflow:ellipsis}
+.log-ppl thead th{font-size:.75rem;color:var(--muted);font-weight:700}
+.log-ppl small{color:var(--muted);font-size:.75rem}
+.log-marks{list-style:none;margin:0;padding:0;font-size:.9rem}
+.log-marks li{padding:.2rem 0}
+.log-marks em,.lr-top em{font-style:normal;font-weight:800;margin-right:.4rem;padding:0 .4rem;border-radius:4px;font-size:.8rem}
+.m-all em{background:#d9432a;color:#fff}
+.m-none em{background:#1f1a17;color:#fff}
+.log-rounds{list-style:none;margin:0;padding:0}
+.lr{padding:.45rem 0;border-top:1px solid rgba(31,26,23,.15)}
+.lr p{margin:0;line-height:1.5}
+.lr-top small{margin-left:.5rem;color:var(--muted);font-size:.75rem}
+.lr-ans{font-size:.9rem}
+.lr-a{margin-right:.8rem}
+.lr-gs{display:flex;flex-wrap:wrap;gap:4px;margin-top:.2rem!important}
+.lr-g{font-size:.8rem;padding:0 .45rem;border-radius:999px;border:1px solid rgba(31,26,23,.25)}
+.lr-g.o{background:#fff;border-color:#1f1a17;font-weight:700}
+.lr-g.x{color:var(--muted)}
+.lr-g small{margin-left:.2rem}
+.lr-q{font-size:.8rem;color:var(--muted)}
+.lr-pts{font-size:.8rem;color:var(--muted)}
+.log-empty{color:var(--muted);margin:1rem 0}
+.log-foot{margin-top:.8rem;padding-top:.6rem;border-top:1px solid rgba(31,26,23,.15);display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.log-note{flex:1 1 14rem;margin:0;font-size:.78rem;color:var(--muted);line-height:1.5}
+.vote-grid[hidden],.vote-list[hidden]{display:none}
+
+/* ===== 配信モードの遊んでいる画面を、映す前提で大きく（2026-10-20・るはね配信の分析から） =====
+   操作画面をウィンドウキャプチャで画面の左半分（約960×740）に置かれても、スマホ縦持ち（倍率0.2）で読めるように。
+   文字はウィンドウの幅と高さの小さい方に合わせる（--u）。幅960で候補 約46px・番の人 約44px・一言 約86px・答えは最大。
+   挿し絵は外し、空いた分を一言・番の人・候補・番号・答え・当てた数へ。動きは短く、動きを減らす設定では止める */
+body.stream{--u:min(1vw,1.32vh);--sumi:#1f1a17;--shu:#d9432a;--kinari:#fbf3e4}
+body.stream .st-pic,body.stream .win-pic,body.stream .hero-pic{display:none!important}
+html body.stream .stage.drop,html body.stream #performStage{padding-left:calc(4.4*var(--u));padding-right:calc(4.4*var(--u))}
+/* 場面の札（斜めの墨の帯）：いま何の場面か */
+html body.stream.playing main .card>h2{display:inline-flex;align-items:center;gap:calc(1*var(--u));margin:0 0 calc(.8*var(--u));padding:calc(.4*var(--u)) calc(3*var(--u)) calc(.5*var(--u)) calc(1.4*var(--u));background:var(--sumi);color:#fff;font-size:calc(2.3*var(--u));font-weight:800;line-height:1.2;clip-path:polygon(0 0,100% 0,calc(100% - 1.4em) 100%,0 100%);letter-spacing:.06em}
+html body.stream.playing main .card>h2 .step-label{background:var(--shu);color:#fff;font-size:.62em;padding:.15em .5em;border-radius:3px;border:2px solid #fff}
+/* 巻物に一言・朱の札で「◯◯さんの番」 */
+html body.stream #performStage,html body.stream #step-vote .stage.sm{background:none;color:var(--sumi);border-radius:0;box-shadow:none;border-style:solid;border-width:calc(1.8*var(--u)) calc(4.6*var(--u));border-image:url(/kit/img/d3-scroll.webp) 56 84 fill / calc(1.8*var(--u)) calc(4.6*var(--u)) stretch;padding:calc(.6*var(--u)) calc(1*var(--u)) calc(1*var(--u));margin:0 0 calc(1.2*var(--u));overflow:visible}
+html body.stream #performStage .st-who{display:inline-block;margin:0 0 calc(.4*var(--u));padding:calc(.25*var(--u)) calc(1.8*var(--u));background:var(--shu);color:#fff;border:calc(.3*var(--u)) solid var(--sumi);border-radius:4px;box-shadow:calc(.5*var(--u)) calc(.5*var(--u)) 0 var(--sumi);font-size:calc(4.6*var(--u));font-weight:800;line-height:1.25;opacity:1;transform:rotate(-2deg);animation:fudaIn .32s cubic-bezier(.2,.9,.3,1.4) both}
+html body.stream #performStage{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;column-gap:calc(2.4*var(--u))}
+html body.stream #performStage .st-chat{flex-basis:100%}
+html body.stream #performStage .st-word{font-family:"RocknRoll One","M PLUS Rounded 1c",sans-serif;font-weight:400;font-size:calc(8.4*var(--u));line-height:1.1;margin:0;color:var(--sumi);text-shadow:none;letter-spacing:.04em}
+html body.stream #performStage .st-sub{display:none}
+html body.stream #performStage .st-chat{display:block;margin:calc(.2*var(--u)) 0 0;font-size:calc(2.4*var(--u));font-weight:800;color:var(--shu)}
+@keyframes fudaIn{0%{transform:rotate(-2deg) translateX(-40%);opacity:0}100%{transform:rotate(-2deg);opacity:1}}
+/* 気持ちの候補：番号が主役（朱の丸）。2列 */
+html body.stream.playing .cands{background:var(--kinari) url(/kit/img/d4-washi.webp) 0 0/320px auto;border:calc(.3*var(--u)) solid var(--sumi);border-radius:6px;padding:calc(1*var(--u)) calc(1.6*var(--u)) calc(1.2*var(--u));margin:0 0 calc(1*var(--u))}
+html body.stream.playing .cands .cl{font-size:calc(2.2*var(--u));color:#4a3f37;margin:0 0 calc(.4*var(--u))}
+html body.stream.playing .cands ul{gap:calc(.5*var(--u)) calc(2.2*var(--u))}
+html body.stream.playing .cands li{display:flex;align-items:center;gap:calc(.8*var(--u));font-size:calc(4.6*var(--u));font-weight:800;line-height:1.2;padding:0;color:var(--sumi);min-width:0;overflow-wrap:anywhere}
+html body.stream.playing .cands .no,html body.stream .vg-b,html body.stream .ans-no{font-family:system-ui,sans-serif}
+html body.stream.playing .cands .no{flex:none;min-width:0;margin:0;color:var(--shu);font-size:1.2em;font-weight:900;line-height:1}
+/* 進み具合の1行と直近の○× */
+html body.stream.playing .now-actor{display:none!important}
+html body.stream.playing .hbar{padding:calc(.4*var(--u)) 0;margin:0 0 calc(.6*var(--u));border-bottom:calc(.3*var(--u)) solid var(--sumi)}
+html body.stream.playing .hb-name{font-size:calc(2.2*var(--u));color:var(--sumi)}
+html body.stream.playing .hb-url,html body.stream.playing .hb-step{font-size:calc(1.8*var(--u))}
+body.stream.playing .rec-strip:not(:empty){display:flex;flex-wrap:nowrap;align-items:center;gap:calc(.8*var(--u));overflow:hidden;margin:0 0 calc(.8*var(--u));font-size:calc(2*var(--u));line-height:1.3;justify-content:flex-end}
+.rec-strip .rs-h{flex:none;font-weight:800;color:#4a3f37}
+.rec-strip .rs{flex:none;display:inline-flex;align-items:center;gap:.25em;padding:.1em .6em;background:#fff;border:2px solid var(--sumi,#1f1a17);border-radius:4px;white-space:nowrap}
+.rec-strip .rs b{font-weight:900}
+.rec-strip i{font-style:normal;font-weight:900}
+.rec-strip i.o{color:var(--shu,#d9432a)}.rec-strip i.x{color:#7a6e64}.rec-strip i.q{font-size:.8em;color:#7a6e64}
+.rec-strip em{font-style:normal;font-weight:900;font-size:.85em;padding:0 .35em;border-radius:3px;background:var(--shu,#d9432a);color:#fff}
+.rec-strip .m-none em{background:var(--sumi,#1f1a17)}
+.rec-strip .rs.new{animation:rsIn .45s ease-out both}
+@keyframes rsIn{from{transform:translateX(60%);opacity:0}to{transform:none;opacity:1}}
+/* 予想の表 */
+html body.stream #step-vote .stage.sm .vote-who{font-size:calc(2.6*var(--u));color:var(--shu);font-weight:800;margin:0}
+html body.stream #step-vote .stage.sm .st-q{font-size:calc(3.6*var(--u));font-weight:800;color:var(--sumi);opacity:1}
+html body.stream #step-vote .stage.sm .st-q b{color:var(--sumi)}
+.vote-grid{margin:0 0 8px}
+.vg-t{margin:.4rem 0 .2rem;font-weight:800}
+.vg-tbl{display:flex;flex-direction:column;gap:6px}
+.vg-row{display:flex;align-items:center;gap:10px;padding:4px 8px;border:2px solid var(--line);border-radius:6px;background:#fff}
+.vg-row.done{border-color:var(--sumi,#1f1a17)}
+.vg-nm{flex:0 0 auto;min-width:6em;display:flex;align-items:center;gap:.4em;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:40%}
+.vg-nm i{width:.8em;height:.8em;border-radius:50%;flex:none}
+.vg-bs{display:flex;flex-wrap:wrap;gap:6px;flex:1}
+.vg-b{min-width:48px;min-height:48px;padding:0 .3em;border:2px solid var(--sumi,#1f1a17);border-radius:6px;background:var(--kinari,#fbf3e4);color:var(--sumi,#1f1a17);font:inherit;font-weight:900;font-size:1.3rem;cursor:pointer;line-height:1}
+.vg-b[aria-pressed="true"]{background:var(--shu,#d9432a);color:#fff;transform:translate(2px,2px)}
+.vg-row.done .vg-b[aria-pressed="false"]{opacity:.45}
+html body.stream .vg-tbl{gap:calc(.7*var(--u))}
+html body.stream .vg-row{gap:calc(1.4*var(--u));padding:calc(.4*var(--u)) calc(1*var(--u));border-width:calc(.3*var(--u))}
+html body.stream .vg-nm{font-size:calc(3.6*var(--u));min-width:7em}
+html body.stream .vg-bs{gap:calc(.7*var(--u))}
+html body.stream .vg-b{min-width:calc(6.4*var(--u));min-height:calc(6.4*var(--u));font-size:calc(4.2*var(--u));border-width:calc(.3*var(--u))}
+.vg-legend{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0 0 8px;font-weight:800;color:var(--sumi,#1f1a17)}
+.vg-legend[hidden]{display:none}
+.vg-legend b{color:var(--shu,#d9432a);margin-right:.15em}
+.vg-legend span{white-space:nowrap}
+html body.stream .vg-legend{font-size:calc(2.8*var(--u));gap:calc(.4*var(--u)) calc(2*var(--u))}
+html body.stream #voteProg{font-size:calc(2.4*var(--u));font-weight:800;color:var(--sumi)}
+/* 答え合わせ：答えは最大・判子がドンと押される・当たった人の名前を大きく。得点は横に並べて1画面に */
+@media(min-width:700px){html body.stream .res-pair{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:calc(2*var(--u));align-items:start}}
+html body.stream .ans-grid{margin:0}
+html body.stream .ans-card{background:var(--kinari) url(/kit/img/d4-washi.webp) 0 0/320px auto;color:var(--sumi);border:calc(.35*var(--u)) solid var(--sumi);border-radius:6px;box-shadow:calc(.5*var(--u)) calc(.5*var(--u)) 0 var(--sumi);padding:calc(1*var(--u)) calc(1.4*var(--u)) calc(1.2*var(--u))}
+html body.stream .ans-top{font-size:calc(3*var(--u));opacity:1;font-weight:800}
+html body.stream .ans-word{opacity:.75}
+html body.stream .ans-main,html body.stream .ans-grid.one .ans-main{position:relative;justify-content:flex-start;gap:calc(1.2*var(--u));padding:calc(1.2*var(--u)) calc(1.4*var(--u));margin-top:calc(.8*var(--u));border:calc(.45*var(--u)) solid var(--shu);border-radius:6px;background:#fff}
+html body.stream .ans-no,html body.stream .ans-grid.one .ans-no{font-size:calc(9*var(--u));color:var(--shu);font-weight:900}
+html body.stream .ans-act,html body.stream .ans-grid.one .ans-act{font-size:calc(6.4*var(--u));font-weight:900;color:var(--sumi);line-height:1.15}
+html body.stream .ans-grid:not(.one) .ans-no{font-size:calc(6*var(--u))}html body.stream .ans-grid:not(.one) .ans-act{font-size:calc(4*var(--u))}
+html body.stream .ans-main{padding-right:calc(10*var(--u))!important}
+html body.stream .ans-kick{position:absolute;right:calc(1*var(--u));top:50%;margin-top:calc(-4*var(--u));display:grid;place-items:center;width:calc(8*var(--u));height:calc(8*var(--u));padding:0;background:url(/kit/img/d4-hanko.webp) center/100% 100% no-repeat;color:var(--shu);font-family:"Yuji Syuku",serif;font-size:calc(2.8*var(--u));font-weight:400;border-radius:0;transform:rotate(-12deg)}
+html body.stream .ans-card.pop .ans-kick{animation:stampIn .35s .25s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes stampIn{0%{transform:rotate(-12deg) scale(2.2);opacity:0}100%{transform:rotate(-12deg) scale(1);opacity:1}}
+html body.stream .ans-votes{gap:calc(.6*var(--u));margin-top:calc(.8*var(--u))}
+html body.stream .vc{font-size:calc(3*var(--u));font-weight:800;padding:.1em .6em;border-radius:4px}
+html body.stream .vc.ok{background:var(--shu);color:#fff;border:calc(.25*var(--u)) solid var(--sumi);font-size:calc(3.4*var(--u))}
+html body.stream .vc.ng{background:#fff;color:#7a6e64;border:calc(.25*var(--u)) solid #c9bfb3}
+html body.stream .score{margin:0;padding:calc(1*var(--u)) calc(1.4*var(--u));background:var(--kinari);border:calc(.3*var(--u)) solid var(--sumi);border-radius:6px}
+html body.stream .score h3{font-size:calc(2.6*var(--u));margin:0 0 calc(.4*var(--u))}
+html body.stream .score .sr-bar{display:none}
+html body.stream .score .sr{grid-template-columns:calc(5*var(--u)) minmax(0,1fr) calc(8*var(--u));gap:calc(1*var(--u));font-size:calc(3.2*var(--u));padding:calc(.3*var(--u)) 0;line-height:1.2}
+html body.stream .score .sr-rk{font-size:calc(2*var(--u))}
+html body.stream .sr.top .sr-rk{background:var(--shu)}
+html body.stream .score .sr b{color:var(--shu);font-weight:900}
+html body.stream .sr-hit{font-size:calc(2.2*var(--u));color:#4a3f37;font-weight:700}
+html body.stream .sr-add{font-size:calc(1.8*var(--u))}
+html body.stream .sr-titles{font-size:calc(2.2*var(--u));gap:calc(.4*var(--u)) calc(1.4*var(--u))}
+html body.stream .sr-ttl b{font-size:calc(2*var(--u))}
+html body.stream .log-links .np-link{font-size:calc(2*var(--u))}
+html body.stream #cdown.last{display:flex;align-items:center;justify-content:center;gap:calc(2*var(--u));font-size:calc(7*var(--u));padding:0;line-height:1.1}
+html body.stream #cdown.last[hidden]{display:none}
+html body.stream #cdown.last small{display:inline;margin:0;font-size:calc(3*var(--u))}
+html body.stream.veiling .res-cands li{font-size:calc(3.8*var(--u))}
+html body.stream .cdown{font-size:calc(16*var(--u))}
+html body.stream .unveil-msg{font-size:calc(3*var(--u))}
+html body.stream .cta-comment{font-size:calc(2.8*var(--u));color:var(--shu)}
+/* 進行役メニュー（配信モードだけ作る）：1行に畳む */
+.host-menu{margin:6px 0 8px;border:2px dashed #c9bfb3;border-radius:6px;padding:0 10px;font-size:.92rem}
+.host-menu>summary{cursor:pointer;min-height:40px;display:flex;align-items:center;color:#4a3f37;font-weight:700}
+/* 今日のまとめ（配信の締め用。大きく） */
+.log-ov.cast .log-in{max-width:min(1100px,96vw);padding:calc(1.4*var(--u,10px)) calc(2*var(--u,10px))}
+.log-ov.cast .log-title{font-size:calc(4.4*var(--u,10px));font-family:"Yuji Syuku",serif;font-weight:400}
+.log-ov.cast .log-ppl{font-size:calc(3.4*var(--u,10px))}
+.log-ov.cast .log-ppl thead th{font-size:calc(2*var(--u,10px))}
+.log-ov.cast .log-ppl small{font-size:.6em}
+.log-ov.cast .log-ppl td b{color:#d9432a}
+.log-ov.cast .log-titles{font-size:calc(2.8*var(--u,10px))}
+.log-ov.cast .lt b{font-size:calc(2.6*var(--u,10px))}
+.log-ov.cast .lt small{font-size:calc(2.2*var(--u,10px))}
+.log-ov.cast .log-h{font-size:calc(2.6*var(--u,10px))}
+.log-ov.cast .log-marks{font-size:calc(2.6*var(--u,10px))}
+.log-ov.cast .log-marks em{font-size:.8em}
+.log-ov.cast .log-rounds{font-size:calc(1.9*var(--u,10px))}
+/* ===== 配信モード：遊んでいる画面はスクロールなしで1画面に（2026-10-20）。足りないときは JS（fitStream）が --fit で全体を縮める。進行役メニューを開いたときだけスクロールしてよい ===== */
+body.stream{--u:calc(min(1vw,1.32vh)*var(--fit,1))}
+html body.stream.playing .wrap{padding-top:calc(.6*var(--u));padding-bottom:0;max-width:calc(112*min(1vw,1.32vh))}
+html body.stream.playing main{min-height:0}
+html body.stream.playing main .card{padding:calc(1.2*var(--u)) calc(2*var(--u));margin:0 0 calc(.8*var(--u))}
+html body.stream.playing #dock{padding:calc(.6*var(--u)) 0 calc(.8*var(--u));margin:0}
+html body.stream.playing #dock>button{min-height:calc(6*var(--u));font-size:calc(2.4*var(--u));max-width:min(640px,90%)}
+html body.stream.playing #dock>button.btn-sub,html body.stream.playing .btn-eq{min-height:calc(5.4*var(--u));font-size:calc(2.2*var(--u))}
+html body.stream.playing #dockMsg{font-size:calc(2*var(--u));padding:calc(.4*var(--u)) 0}
+html body.stream.playing .card>.hint,html body.stream.playing .sent-hint{font-size:calc(2*var(--u));margin:0 0 calc(.4*var(--u))}
+html body.stream.playing button.btn-sub:not(#dock>button){min-height:calc(4.4*var(--u));font-size:calc(1.9*var(--u));padding:calc(.4*var(--u));margin-top:calc(.4*var(--u))}
+html body.stream.playing .host-menu{font-size:calc(1.8*var(--u));margin:calc(.4*var(--u)) 0}
+html body.stream.playing .host-menu>summary{min-height:calc(3.6*var(--u))}
+html body.stream.playing .vote-undo{min-height:calc(3.6*var(--u));font-size:calc(1.9*var(--u));margin:calc(.2*var(--u)) auto 0}
+html body.stream.playing #voteProg{margin:calc(.4*var(--u)) 0 0}
+/* 配る：カードは横長に、文字は --u で */
+html body.stream .deal-grid{grid-template-columns:repeat(auto-fill,minmax(calc(13*var(--u)),1fr));gap:calc(1*var(--u));margin-top:calc(.6*var(--u))}
+html body.stream .deal-cell{gap:calc(.4*var(--u))}
+html body.stream .deal-card{aspect-ratio:4/3}
+html body.stream .deal-card .n{font-size:calc(4*var(--u))}html body.stream .deal-card .who{font-size:calc(2*var(--u))}
+html body.stream .deal-card::before,html body.stream .deal-card.done::after{font-size:calc(1.3*var(--u))}
+html body.stream .deal-link{font-size:calc(1.7*var(--u));min-height:calc(4*var(--u));padding:calc(.2*var(--u))}
+/* 配る場面の巻物（2026-10-20）：視聴者に「いま◯◯さんが確認中」「全員の確認が済んだら始まります」・確認済みの人に判子。名前と印だけ */
+.deal-scroll{display:none;overflow:clip}
+html body.stream #step-deal>.hint:first-of-type{display:none}
+html body.stream .deal-scroll:not([hidden]){display:flex;flex-wrap:wrap;align-items:center;justify-content:center;column-gap:calc(2.4*var(--u));row-gap:calc(.3*var(--u));text-align:center;color:var(--sumi);border-style:solid;border-width:calc(1.8*var(--u)) calc(4.6*var(--u));border-image:url(/kit/img/d3-scroll.webp) 56 84 fill / calc(1.8*var(--u)) calc(4.6*var(--u)) stretch;padding:calc(.6*var(--u)) calc(1*var(--u)) calc(1*var(--u));margin:0 0 calc(1*var(--u))}
+html body.stream .ds-fuda{display:inline-block;padding:calc(.25*var(--u)) calc(1.8*var(--u));background:var(--shu);color:#fff;border:calc(.3*var(--u)) solid var(--sumi);border-radius:4px;box-shadow:calc(.5*var(--u)) calc(.5*var(--u)) 0 var(--sumi);font-size:calc(4*var(--u));font-weight:800;line-height:1.25;transform:rotate(-2deg);animation:fudaIn .32s cubic-bezier(.2,.9,.3,1.4) both}
+html body.stream .ds-word{font-family:"RocknRoll One","M PLUS Rounded 1c",sans-serif;font-size:calc(7*var(--u));line-height:1.1;letter-spacing:.04em}
+html body.stream .ds-sub{flex-basis:100%;font-size:calc(2.4*var(--u));font-weight:800;color:var(--shu)}
+html body.stream .ds-ppl{flex-basis:100%;display:flex;flex-wrap:wrap;justify-content:center;gap:calc(.6*var(--u)) calc(2.4*var(--u));margin-top:calc(.4*var(--u))}
+html body.stream .ds-p{display:inline-flex;align-items:center;gap:calc(.6*var(--u));font-size:calc(3.2*var(--u));font-weight:900}
+html body.stream .ds-mk{display:inline-grid;place-items:center;width:calc(5.4*var(--u));height:calc(5.4*var(--u));background:url(/kit/img/d4-hanko.webp) center/100% 100% no-repeat;color:var(--shu);font-family:"Yuji Syuku",serif;font-size:calc(2.6*var(--u));transform:rotate(-12deg)}
+html body.stream .ds-p.fresh .ds-mk{animation:stampIn .35s cubic-bezier(.3,1.6,.5,1) both}
+html body.stream .ds-p.s1 .ds-mk{width:auto;height:auto;padding:calc(.2*var(--u)) calc(1*var(--u));background:var(--shu);color:#fff;border-radius:4px;font-family:inherit;font-size:calc(1.9*var(--u));font-weight:800;transform:none}
+html body.stream .ds-p.s0{color:#7a6e64}
+html body.stream .ds-p.s0 .ds-mk{width:auto;height:auto;padding:calc(.1*var(--u)) calc(.8*var(--u));background:none;border:calc(.25*var(--u)) dashed #b9ad9f;border-radius:4px;color:#7a6e64;font-family:inherit;font-size:calc(1.7*var(--u));font-weight:700;transform:none}
+@media (prefers-reduced-motion:reduce){html body.stream .ds-fuda,html body.stream .ds-p.fresh .ds-mk{animation:none}}
+/* 答え合わせ：右の列に得点・次に演じる人・次のお題（得点は常に見える位置） */
+html body.stream .res-side,html body.stream .res-main{display:flex;flex-direction:column;gap:calc(.8*var(--u))}
+html body.stream .res-side .log-links{flex-direction:row;justify-content:flex-start;gap:0 calc(1.6*var(--u))}
+html body.stream .res-main .pick-list{flex-direction:row;flex-wrap:wrap}
+html body.stream .res-main .pick-list .pick-item{flex:1 1 0;min-width:calc(12*var(--u));text-align:center}
+html body.stream .res-main .pick-item[aria-pressed="true"]::after{display:none}
+html body.stream .res-main .actor-pick.on{flex-wrap:wrap}
+html body.stream .res-main .ap-h{flex:none}
+html body.stream .res-main .actor-pick.on{margin:0;gap:calc(.6*var(--u))}
+html body.stream .res-main .ap-h{font-size:calc(1.9*var(--u))}
+html body.stream .res-main .ap-row{gap:calc(.5*var(--u))}
+html body.stream .res-main .ap-btn{min-height:calc(4*var(--u));min-width:0;padding:calc(.2*var(--u)) calc(1*var(--u));font-size:calc(1.9*var(--u))}
+html body.stream .res-main .next-pick{margin:0;padding:calc(.6*var(--u)) calc(1*var(--u))}
+html body.stream .res-main .np-h{font-size:calc(2*var(--u));margin:0 0 calc(.4*var(--u))}
+html body.stream .res-main .pick-list{gap:calc(.4*var(--u))}
+html body.stream .res-main .pick-item{min-height:0;padding:calc(.4*var(--u)) calc(1*var(--u))}
+html body.stream .res-main .pick-item .pi-w{font-size:calc(2.2*var(--u))}
+html body.stream .res-main .pick-item .pi-s{display:none}
+html body.stream .res-main .pick-item[aria-pressed="true"]::after{font-size:calc(1.4*var(--u));top:50%;transform:translateY(-50%)}
+html body.stream .res-main .np-links{gap:calc(1.6*var(--u));margin-top:calc(.2*var(--u))}
+html body.stream .res-main .np-link{font-size:calc(1.8*var(--u));min-height:calc(3.6*var(--u));padding:calc(.2*var(--u)) calc(.4*var(--u))}
+html body.stream .res-side #resultBack{margin:0}
+html body.stream .score .sr-hit{display:block;margin:0;font-size:calc(1.8*var(--u));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html body.stream .score .sr-nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.15}
+
+html body.stream .sr-reset{font-size:calc(1.6*var(--u));min-height:calc(3.2*var(--u));padding:0 calc(.6*var(--u));margin:calc(.2*var(--u)) auto 0}
+html body.stream .score .sr.many{font-size:calc(2.6*var(--u))}
+html body.stream .cta-comment{margin:calc(.6*var(--u)) 0 0}
+html body.stream .unveil{margin:calc(.4*var(--u)) 0 calc(.6*var(--u))}
+html body.stream #step-result #unveil:not(.unveil-skip){min-height:calc(6*var(--u));font-size:calc(2.6*var(--u))}
+html body.stream .res-cands{margin:0 0 calc(.6*var(--u))}
+@media (prefers-reduced-motion:reduce){html body.stream #performStage .st-who,html body.stream .ans-card.pop .ans-kick,.rec-strip .rs.new{animation:none}}
+</style>
+<link rel="stylesheet" href="/d4.css">
+<!-- kkp-rel-d4:start -->
+<style id="kkp-rel-d4">
+/* あわせて使えるアプリ（統一仕様の欄）を D4 に: 和紙の面・筆の見出し・墨の字＋オレンジの下線＋道しるべ。中身とリンクは触らない（インライン style に勝つため !important） */
+@media screen{
+.kkp-rel{box-sizing:border-box;background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0/320px auto!important;border:var(--k-bw-s) solid var(--k-sumi)!important;border-radius:var(--k-r)!important;box-shadow:var(--k-sh-s);padding:14px 16px 6px!important;color:var(--k-sumi);text-align:left}
+.kkp-rel>div:first-child,.kkp-rel>b:first-child{display:block;margin:0 0 4px!important;padding:0!important;border:0!important;font-family:var(--k-brush)!important;font-weight:400!important;font-size:19px!important;line-height:1.3!important;letter-spacing:.12em;color:var(--k-sumi)!important;font-feature-settings:"palt" 1}
+.kkp-rel>a{display:flex!important;align-items:center;gap:12px;box-sizing:border-box;min-height:48px;margin:0!important;padding:10px 0!important;border:0!important;border-top:1px dashed var(--k-line-soft)!important;background:none!important;color:var(--k-sumi)!important;font-size:15px!important;font-weight:700!important;line-height:1.55!important;letter-spacing:.02em;text-decoration:underline!important;text-decoration-color:var(--k-orange)!important;text-decoration-thickness:2px!important;text-underline-offset:4px;-webkit-tap-highlight-color:transparent}
+.kkp-rel>a::after{content:"";flex:none;width:26px;height:17px;margin-left:auto;background:var(--k-sign) center/100% 100% no-repeat;transition:transform .2s}
+.kkp-rel>a:hover{color:var(--k-shu)!important}
+.kkp-rel>a:hover::after,.kkp-rel>a:active::after,.kkp-rel>a:focus-visible::after{transform:translateX(4px)}
+}
+@media screen and (max-width:712px){.kkp-rel{max-width:calc(100vw - 24px)!important;margin-left:auto!important;margin-right:auto!important}}
+</style>
+<!-- kkp-rel-d4:end -->
+<style id="en-hide">
+/* 英語版では出さない：配信モード・離れて遊ぶリンク・市販版（日本の商品）・振り返りの記録・はじめての方へ・配信から来た人への一言 */
+#streamSw,#castSw,.cand-n,.sfx-sw,#viewOpen,#streamNote,#firstGuide,#fromStream,.shop-mini,
+.deal-link,.deal-qr,#joinBox,#sentHint,.deal-remote,#annBox,#logLinks,#recStrip,.deal-scroll{display:none!important}
 </style>
 </head>
-<body>
+<body class="k-page d4-play">
 <div class="wrap">
 
 <header>
-  <h1>Emotion Charades<span class="h1-sub">Say one line with a secret feeling</span></h1>
-  <p>Everyone says the same line with a different feeling.<br>One phone handles the roles, the voting and the score. No app, no sign-up.</p>
-  <p style="font-size:.8rem;margin:.4rem 0 0"><a href="/" style="color:#8a7560">日本語版はこちら</a></p>
+  <div class="hero">
+    <img class="hero-pic" src="/img/hero-duo.webp?v=2" width="900" height="604" alt="" decoding="async">
+    <div class="hero-t">
+      <h1>Emotion Charades<span class="h1-sub">Say one line with a secret feeling</span></h1>
+      <p>Everyone says the same line with a different feeling.<br>One phone handles the roles, the voting and the score. No app, no sign-up.</p>
+      <p class="hen"><a href="/">日本語版はこちら</a></p>
+    </div>
+  </div>
+  <!-- 遊んでいる間だけ出す帯。配信に映ったときにサイト名が読める。右は進み具合 -->
+  <div class="hbar"><span class="hb-name">Emotion Charades</span><span class="hb-url">haa.kkpwebninja.com</span><span class="hb-step" id="hbStep"></span></div>
+  <p class="now-actor" id="nowActor" hidden aria-live="polite"></p>
+  <!-- 配信モードだけ：直近の回の○×（答え合わせのたびに右から入る）。記録は端末内の haa-log から -->
+  <div class="rec-strip" id="recStrip" aria-label="直近の回の当たり外れ"></div>
 </header>
+
+<!-- 参加者画面（離れて遊ぶリンクを開いた人）。?r= 演じる人／?j= 当てる人／?a= 発表。中身はURLの中だけで、外へは送らない -->
+<section class="guest" id="guest" aria-live="polite">
+  <div id="gMain">
+    <div class="g-stage">
+      <div class="g-top"><span id="gWho"></span><span id="gRound"></span></div>
+      <div class="g-wl">全員が言う言葉</div>
+      <div class="g-word" id="gWord"></div>
+      <div class="g-role" id="gRole"></div>
+      <p class="g-now" id="gNow" hidden></p>
+      <p class="g-soft" id="gSoft" hidden>配信に映っているときは、この画面は映さないでね</p>
+      <button type="button" class="g-mycard" id="gMyCard" hidden>自分のカードをもう一度見る</button>
+      <div class="g-myact" id="gMyAct" hidden></div>
+    </div>
+    <div class="g-sec" id="gResSec" hidden>
+      <div class="cdown" id="gCd" hidden aria-live="polite"></div>
+      <div class="ans-grid" id="gAns"></div>
+      <p class="g-mine" id="gMine"></p>
+      <p class="g-tally" id="gTally"></p>
+    </div>
+    <div class="g-sec">
+      <p class="g-h" id="gCandH">気持ちの候補</p>
+      <div class="g-list" id="gCands"></div>
+      <div id="gTargets"></div>
+      <p class="g-say" id="gSay" hidden></p>
+      <p class="g-msg" id="gMsg"></p>
+      <p class="g-next" id="gNext" hidden></p>
+    </div>
+    <div class="ad-slot g-ad" id="gAd" hidden>
+      <div class="ad-label">Advertisement</div>
+      <ins class="adsbygoogle" style="display:block"
+           data-ad-client="ca-pub-1298304917726270"
+           data-ad-slot="2937937957"
+           data-ad-format="rectangle" data-full-width-responsive="false"></ins>
+    </div>
+  </div>
+  <div class="g-sec g-err" id="gErr" hidden>
+    <p class="g-h">リンクが読めませんでした</p>
+    <p class="g-msg">途中で切れたか、文字が変わってしまったようです。送ってくれた人にもう一度送ってもらってください。</p>
+    <a href="/">トップへ（自分たちで遊ぶ）</a>
+  </div>
+  <div class="g-sec g-paste">
+    <label for="gPaste">届いたリンクを貼る（発表・次の回）</label>
+    <div class="g-prow"><input id="gPaste" type="url" inputmode="url" autocomplete="off" enterkeyhint="go" placeholder="https://haa.kkpwebninja.com/?…"><button type="button" id="gPasteGo">開く</button></div>
+    <p class="g-pmsg" id="gPasteMsg">リンクをそのまま開いても、この画面で続きます</p>
+  </div>
+  <details class="g-obs" id="gObs">
+    <summary>自分の配信にも映す（OBS）</summary>
+    <p>このブラウザで表示ページを開き、OBSの「ウィンドウキャプチャ」で取り込みます。お題と候補が出て、答えは発表のあとに出ます。自分のカードは映りません。</p>
+    <button type="button" class="np-link" id="gViewOpen">表示ページを開く</button>
+  </details>
+  <div class="g-foot">
+    <p>このサイトで遊んでいます：<a href="/">声と表情で当てるゲーム</a></p>
+    <p><a href="/haishin/">自分の配信でも使う（配信・実況で遊ぶ方法）</a></p>
+  </div>
+</section>
 
 <main>
 
 <!-- STEP 1 -->
 <section class="card" id="step-setup">
   <div class="stats-bar hidden" id="statsBar"></div>
+  <!-- 配信モードだけ：はじめての方へ（最初の1回は開いておく。一度始めたら畳む。この端末にだけ覚える） -->
+  <details class="first-guide" id="firstGuide"><summary>はじめての方へ</summary>
+    <p><span>①人数と名前を入れる</span><span>②演じる人を選ぶ</span><span>③お題を選んでスタート</span></p>
+  </details>
 
+  <!-- 配信（YouTube・Twitch・TikTok・X など）から来た人にだけ出す一言。2026-10-19 reBON の配信に合わせて -->
+  <div class="from-stream" id="fromStream" hidden>
+    <p><b>配信で見たゲームはこれです。</b>スマホ1台をみんなで順番に回して遊べます（アプリ・登録なし）。</p>
+    <p>人数とお題を選んで、下のボタンで始められます。</p>
+    <button type="button" class="fs-x" id="fromStreamX" aria-label="閉じる">閉じる</button>
+  </div>
   <h2><span class="step-label">STEP 1</span>Players</h2>
   <div class="num">
     <button class="btn-ghost" id="dec" aria-label="one fewer player">−</button>
@@ -267,7 +1132,47 @@ body:not(.at-result) #postOnly{display:none}
     <span class="unit">players</span>
     <button class="btn-ghost" id="inc" aria-label="one more player">＋</button>
   </div>
-  <p class="hint">3 to 8 players. 4 to 6 is the hardest to read</p>
+  <p class="hint" id="playersHint">3 to 8 players. 4 to 6 is the hardest to read</p>
+  <p class="act-lbl">Actors per round</p>
+  <div class="num">
+    <button class="btn-ghost" id="actDec" aria-label="one fewer actor">−</button>
+    <span class="val" id="actorCount">4</span>
+    <span class="unit">players</span>
+    <button class="btn-ghost" id="actInc" aria-label="one more actor">＋</button>
+  </div>
+  <p class="hint" id="actHint">Usually everyone acts. Lower it to take turns one at a time (the others only vote)</p>
+  <label class="stream-sw" id="streamSw"><input type="checkbox" id="streamToggle"> 配信モード（Advertisementなし・文字を大きく）</label>
+  <!-- 配信モードだけ：配信する／しない（オンライン飲み会・リモート交流など）。2026-10-19 -->
+  <div class="cast-sw" id="castSw" role="radiogroup" aria-label="配信する・しない">
+    <label><input type="radio" name="haaCast" value="on"> 配信する</label>
+    <label><input type="radio" name="haaCast" value="off"> 配信しない（オンライン飲み会・リモート交流など）</label>
+    <p class="hint">配信しないときは、送ったリンクを開いた人の画面の最後にAdvertisementが出ます（答え合わせのあとだけ）。この画面には出ません</p>
+  </div>
+  <!-- 配信モードだけ：候補の数（元のカードは8択。3択だと当たりやすすぎる） -->
+  <div class="cand-n">
+    <span class="cn-l">気持ちの候補</span>
+    <button class="btn-ghost" id="candDec" aria-label="候補を1つ減らす">−</button>
+    <span class="cn-v"><b id="candCount">6</b>択</span>
+    <button class="btn-ghost" id="candInc" aria-label="候補を1つ増やす">＋</button>
+    <span class="cn-h">多いほど当てにくい</span>
+  </div>
+  <label class="stream-sw sfx-sw"><input type="checkbox" id="sfxToggle" checked> 効果音（カウントダウン・発表のファンファーレ）</label>
+  <details class="view-open" id="viewOpen">
+    <summary>OBSの取り込み方（くわしく）</summary>
+    <p class="hint">ふつうは、このウィンドウを「ウィンドウキャプチャ」で取り込むだけで大丈夫です（役は別ウィンドウで開くので映りません）。画面全体を取り込んでいるときや、操作ボタンも映したくないときは、表示ページを使ってください</p>
+    <button type="button" class="np-link" id="viewOpenBtn">OBS用の表示ページを開く</button>
+    <button type="button" class="np-link" id="viewCopyBtn">URLをコピー</button>
+    <p class="hint">縦型配信（9:16）や縦の切り抜き用には <code>https://haa.kkpwebninja.com/view/?layout=v</code> を取り込んでください</p>
+  </details>
+  <p class="hint stream-note" id="streamNote">1人ずつ交代で演じて、リスナーはコメントで番号を当てます</p>
+  <!-- 名前は任意。色だけだと誰の番か分かりにくい（itoと同じ作り）。入れなければ色の名前のまま。この端末にだけ保存 -->
+  <details class="names-box" id="namesBox">
+    <summary class="names-sum">Player names (optional)<span id="namesCount"></span></summary>
+    <div class="names-grid" id="namesGrid"></div>
+    <button type="button" class="names-clear" id="namesClear">Clear all names</button>
+  </details>
+  <!-- 1回に演じる人が1人のとき（配信モードはいつも）：最初に演じる人を選ぶ（参加人数が1人のときは出さない） -->
+  <div class="actor-pick" id="apFirst"><p class="ap-h">Who acts first</p><div class="ap-row" role="group" aria-label="Who acts first"></div></div>
 
   <h2 style="margin-top:1rem"><span class="step-label">STEP 2</span>Pick a line</h2>
   <div class="cat-scroll">
@@ -275,15 +1180,34 @@ body:not(.at-result) #postOnly{display:none}
   </div>
   <p class="cat-desc" id="catDesc"></p>
   <div class="pick-list" id="pickList"></div>
+  <!-- 3つだけ出している。別の3つが出ることを文字で示す（↺の記号だけでは伝わらない） -->
+  <button type="button" class="redraw" id="redraw">Show three others ↺</button>
 
   <button class="btn-primary" id="startGame">Start</button>
+  <!-- 市販のカード版（幻冬舎）。このツールは非公式なので、カードで遊びたい人は公式へ（2026-10-15 ユーザー指示で途中に置く） -->
+  <div class="shop-mini">
+    <div class="sm-h">カードで遊ぶなら市販版も（幻冬舎・全7作） <span class="pr">PR</span></div>
+    <!-- 一覧は幻冬舎の特設ページ https://www.gentosha.co.jp/s/haa-game/ で 2026-10-15 に確認。新作が出たらここに足す -->
+    <div class="sm-row"><span class="sm-name">はぁって言うゲーム</span><span class="sm-note">第1弾・2018年</span><span class="sm-links"><a class="sm-link" href="https://www.amazon.co.jp/s?k=%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazon</a><a class="sm-link alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F" target="_blank" rel="nofollow sponsored noopener">楽天</a></span></div>
+    <div class="sm-row"><span class="sm-name">はぁって言うゲーム2</span><span class="sm-note">第2弾・2019年</span><span class="sm-links"><a class="sm-link" href="https://www.amazon.co.jp/s?k=%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A02&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazon</a><a class="sm-link alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A02%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A02%2F" target="_blank" rel="nofollow sponsored noopener">楽天</a></span></div>
+    <div class="sm-row"><span class="sm-name">はぁって言うゲーム3</span><span class="sm-note">第3弾・2020年</span><span class="sm-links"><a class="sm-link" href="https://www.amazon.co.jp/s?k=%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A03&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazon</a><a class="sm-link alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A03%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A03%2F" target="_blank" rel="nofollow sponsored noopener">楽天</a></span></div>
+    <div class="sm-row"><span class="sm-name">はぁって言うゲーム4</span><span class="sm-note">第4弾・2022年</span><span class="sm-links"><a class="sm-link" href="https://www.amazon.co.jp/s?k=%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A04&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazon</a><a class="sm-link alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A04%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A04%2F" target="_blank" rel="nofollow sponsored noopener">楽天</a></span></div>
+    <div class="sm-row"><span class="sm-name">青春のはぁって言うゲーム</span><span class="sm-note">2023年</span><span class="sm-links"><a class="sm-link" href="https://www.amazon.co.jp/s?k=%E9%9D%92%E6%98%A5%E3%81%AE%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazon</a><a class="sm-link alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E9%259D%2592%25E6%2598%25A5%25E3%2581%25AE%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E9%259D%2592%25E6%2598%25A5%25E3%2581%25AE%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F" target="_blank" rel="nofollow sponsored noopener">楽天</a></span></div>
+    <div class="sm-row"><span class="sm-name">こどものはぁって言うゲーム</span><span class="sm-note">こども向け・2025年</span><span class="sm-links"><a class="sm-link" href="https://www.amazon.co.jp/s?k=%E3%81%93%E3%81%A9%E3%82%82%E3%81%AE%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazon</a><a class="sm-link alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%2593%25E3%2581%25A9%25E3%2582%2582%25E3%2581%25AE%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%2593%25E3%2581%25A9%25E3%2582%2582%25E3%2581%25AE%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F" target="_blank" rel="nofollow sponsored noopener">楽天</a></span></div>
+    <div class="sm-row"><span class="sm-name">信長のはぁって言うゲーム</span><span class="sm-note">最新作・2026年</span><span class="sm-links"><a class="sm-link" href="https://www.amazon.co.jp/s?k=%E4%BF%A1%E9%95%B7%E3%81%AE%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazon</a><a class="sm-link alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E4%25BF%25A1%25E9%2595%25B7%25E3%2581%25AE%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E4%25BF%25A1%25E9%2595%25B7%25E3%2581%25AE%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F" target="_blank" rel="nofollow sponsored noopener">楽天</a></span></div>
+  </div>
 </section>
 
 <!-- STEP 2 配役 -->
 <section class="card hidden" id="step-deal">
   <h2><span class="step-label">STEP 3</span>Tap in turn to see your role</h2>
-  <p class="hint">Everyone says the same "<b id="dealWord"></b>".<br>Only the feeling differs. Do not let anyone else see!</p>
+  <p class="hint">Everyone says the same "<b id="dealWord"></b>".<br>Only the feeling differs. Keep yours secret!</p>
+  <!-- 配信モードだけ：配る場面を配信に映したとき、視聴者にも「いま何をしているか」が分かるように（名前と確認の印だけ。だれがどの気持ちかは出さない） -->
+  <div class="deal-scroll" id="dealScroll" hidden aria-live="polite"></div>
   <div class="deal-grid" id="dealGrid"></div>
+  <div class="join-box" id="joinBox" hidden></div>
+  <p class="sent-hint" id="sentHint" hidden>送った人に「見た？」と声で確かめてね</p>
+  <p class="hint deal-remote">離れた場所から遊ぶときは、カードの下の「◯◯さんに送る」でLINEやDiscordに送ってください。その人の画面にだけ気持ちが出ます<span class="normal-txt">。同じ部屋の人には「QRで渡す」で、その人のスマホで読み取ってもらえます</span><span class="stream-txt">。<b>配信モードでは、カードを押すと小窓にその人用のQRが出ます。自分の役は「どんな気持ちで言うか見る」で。</b>OBSでこのウィンドウだけを取り込めば、小窓は映りません</span></p>
   <button class="btn-sub" id="toPerform" disabled>Everyone has looked → perform</button>
   <button class="btn-sub" id="dealBack">↺ Back to setup</button>
 </section>
@@ -291,29 +1215,60 @@ body:not(.at-result) #postOnly{display:none}
 <!-- STEP 3 演技 -->
 <section class="card hidden" id="step-perform">
   <h2><span class="step-label">STEP 4</span>Perform in turn</h2>
-  <p class="hint"><b>Voice and face only</b> — no gestures.<br>Take turns saying "<b id="performWord"></b>".</p>
+  <div class="stage" id="performStage"></div>
+  <p class="hint perf-hint"><b>Voice and face only</b> — no gestures. Take turns saying "<b id="performWord"></b>".</p>
   <div id="performList"></div>
+  <!-- 気持ちの候補。カード版でも全員がカードの候補を見ながら当てる。配信では視聴者がここを見て当てる -->
+  <div class="cands" id="performCands"></div>
   <button class="btn-primary" id="toVote">Everyone has performed → vote</button>
   <button class="btn-sub" id="toReveal">Skip voting — just reveal</button>
-  <p class="hint">Guess out loud first. Handy for big groups or young kids</p>
+  <p class="hint" id="revealHint">Guess out loud first. Handy for big groups or young kids</p>
 </section>
 
 <!-- STEP 4 投票（ここがカード版でいちばん面倒なところ） -->
 <section class="card hidden" id="step-vote">
   <h2><span class="step-label">STEP 5</span>Vote</h2>
-  <p class="hint">Pass the phone and vote one at a time.<br>Choose the feeling you think each of the others had.</p>
-  <p class="vote-who" id="voteWho"></p>
-  <p class="hint" id="voteTarget"></p>
+  <p class="hint" id="voteHint">Pass the phone and vote one at a time.<br>Choose the feeling you think each of the other actors had.</p>
+  <div class="stage sm"><p class="vote-who" id="voteWho"></p><p class="st-q" id="voteTarget"></p></div>
   <div class="vote-list" id="voteList"></div>
+  <!-- 配信モード：離れた人の予想を1画面の表で入れる（縦＝当てる人・横＝番号）。進行役が聞いて代わりに押す -->
+  <div class="vote-grid" id="voteGrid" hidden></div>
+  <!-- 配信モード：表は番号だけなので、見ている人が番号の意味を追えるよう候補を1行で添える -->
+  <div class="vg-legend" id="voteLegend" hidden></div>
   <p class="vote-prog" id="voteProg"></p>
+  <button type="button" class="np-link vote-undo" id="voteUndo" hidden>↶ Undo the last vote</button>
   <button class="btn-sub" id="voteSkip">Stop voting and reveal now</button>
 </section>
 
 <!-- STEP 5 結果 -->
 <section class="card hidden" id="step-result">
   <h2><span class="step-label">STEP 6</span>Reveal</h2>
-  <div id="resultBody"></div>
-  <div class="score" id="scoreBox"></div>
+  <p class="unveil-msg" id="unveilMsg" hidden>投票がそろいました。<br>視聴者のみなさんも、コメントで番号を書いてから開けましょう</p>
+  <button type="button" class="btn-primary unveil" id="unveil" hidden>Reveal</button>
+  <!-- 離れた人へ：答えを1本のリンクにしてグループに貼る（リンクを送った回だけ出す） -->
+  <div class="ann" id="annBox" hidden><button type="button" class="ann-btn" id="annBtn">発表リンクをコピー</button><span class="ann-h">グループに貼ると、離れた人の画面でも 3・2・1 のあとに同じ答えが出ます</span></div>
+  <div class="cands res-cands" id="resCands"></div>
+  <div class="cdown" id="cdown" hidden aria-live="polite"></div>
+  <div class="res-pair">
+    <div class="res-main">
+      <div id="resultBody"></div>
+      <p class="cta-comment" id="ctaComment"></p>
+      <img class="win-pic" src="/img/result-win.webp?v=2" width="700" height="470" alt="" loading="lazy" decoding="async">
+    </div>
+    <div class="res-side">
+      <div class="score" id="scoreBox"></div>
+      <!-- 振り返り（端末内の記録）。ふだんは小さい文字ボタン1つ。配信モードは「今日のまとめ」を大きく出せる -->
+      <div class="log-links" id="logLinks"><button type="button" class="np-link" id="logOpen">これまでの記録（振り返り）</button><button type="button" class="np-link" id="sumOpen">今日のまとめを出す</button></div>
+    </div>
+  </div>
+  <!-- 続けて遊ぶとき、次のお題をその場で選ぶ（選んで「◯◯で始める」で次の回へ。もう一度押すと選択をやめる。得点の合計・演じる人の交代はそのまま） -->
+  <!-- 1回に演じる人が1人のとき：次に演じる人を選ぶ（はじめは今までの順番の人。選ばなければそのまま交代） -->
+  <div class="actor-pick" id="apNext"><p class="ap-h">Who acts next</p><div class="ap-row" role="group" aria-label="Who acts next"></div></div>
+  <div class="next-pick" id="nextPick">
+    <div class="np-h"><span class="np-t">Pick the next line</span><span class="np-ts">Which line next?</span><span class="np-cat" id="npCat"></span></div>
+    <div class="pick-list" id="npList"></div>
+    <div class="np-links"><button type="button" class="np-link" id="npMore">Three others ↺</button><button type="button" class="np-link" id="npCatChange">Change category</button></div>
+  </div>
   <button class="btn-primary" id="newGame">Play again</button>
   <button class="btn-sub" id="resultBack">↺ Back to setup</button>
 
@@ -389,9 +1344,36 @@ body:not(.at-result) #postOnly{display:none}
 <div class="reveal" id="reveal">
   <div class="who" id="revealWho"></div>
   <div class="word" id="revealWordLine"></div>
+  <p class="r-now" id="revealNow" hidden></p>
+  <div class="rq" id="revealQr" hidden></div>
+  <p class="rq-cap" id="revealQrCap" hidden></p>
+  <button type="button" class="btn-w btn-show" id="revealQrBtn" hidden>QRを出す（スマホで読み取って渡す）</button>
+  <button type="button" class="btn-w btn-show" id="revealShow" hidden>どんな気持ちで言うか見る</button>
   <div class="act" id="revealAct"></div>
-  <div class="warn">Keep this to yourself</div>
+  <div class="tapnote" id="revealTapNote" hidden>もう一度タップで隠せます</div>
+  <div class="warn" id="revealWarn">Keep this to yourself</div>
+  <div class="warn" id="revealSoft" hidden>配信に映っているときは、この画面は映さないでね</div>
+  <div class="warn stream-only">配信に映すときは、この画面のあいだだけ映像を隠しておいてね</div>
   <button class="btn-w" id="revealClose">Got it — next player</button>
+</div>
+<!-- ふだんのモードで、同じ部屋の人にQRで渡す。気持ちはこの画面に出さない（配信モードでは別の小さなウィンドウに出す） -->
+<div class="qr-modal" id="qrModal" hidden>
+  <div class="qm-in" role="dialog" aria-modal="true" aria-labelledby="qmWho">
+    <p class="qm-who" id="qmWho"></p>
+    <div class="qm-box" id="qmBox"></div>
+    <p class="qm-cap" id="qmCap"></p>
+    <button type="button" class="qm-close" id="qmClose">閉じる</button>
+  </div>
+</div>
+
+<!-- 振り返り：回ごとの記録・人ごとのまとめ・名場面。中身はこの端末の localStorage（haa-log）だけ。外へは送らない -->
+<div class="log-ov" id="logOv" hidden>
+  <div class="log-in" role="dialog" aria-modal="true" aria-labelledby="logTitle">
+    <div class="log-head"><p class="log-title" id="logTitle">これまでの記録</p><button type="button" class="log-x" id="logClose">閉じる</button></div>
+    <div class="log-scope" id="logScope" role="group" aria-label="記録の範囲"></div>
+    <div id="logBody"></div>
+    <div class="log-foot"><p class="log-note">この端末にだけ残ります（外へは送りません）。新しい順に200回ぶんまで</p><button type="button" class="log-clear" id="logClear">記録を消す</button></div>
+  </div>
 </div>
 
 <!-- DATA:BEGIN generated. edit data.en.js and run build_en.py -->
@@ -529,6 +1511,11 @@ const COLORS = [
 
 const S = {
   players: 4,
+  actors: 0,         // 1回に演じる人数（0＝全員）
+  cands: 6,           // 配信モードの候補の数（3〜8）
+  total: [], rounds: 0, // 「Play again」で積み上げる合計得点と回数（人数を変えたら0から）
+  rot: 0,             // 演じる人を減らしたとき、次に演じる人の先頭（毎回交代する）
+  names: [],          // 任意のプレイヤー名
   cat: Object.keys(THEMES)[0],
   theme: null,        // {word, acts}
   assign: [],         // 各プレイヤーに配られた acts のインデックス
@@ -563,10 +1550,102 @@ function track(n,p){ try{ if(typeof gtag==='function') gtag('event',n,p||{}); }c
 
 // ===== 設定 =====
 function setPlayers(n){
-  S.players = Math.max(3, Math.min(8, n));
+  const prevPlayers = S.players;
+  S.players = Math.max(1, Math.min(8, n));
+  if (S.players !== prevPlayers){ S.total = []; S.rounds = 0; S.sid = newSid(); }
+  try { localStorage.setItem('haa-players', String(S.players)); } catch(e){}
   $('playerCount').textContent = S.players;
+  document.body.dataset.players = S.players;
+  $('playersHint').textContent = S.players >= 3
+    ? '3 to 8 players. 4 to 6 is the hardest to read'
+    : (S.players === 1 ? 'One person acts and everyone around guesses from the list. No voting'
+                       : 'With two, one acts and the other guesses from three feelings');
+  renderActors();
+  renderNames();
+  renderActorPick();
   if (S.cat === MY_KEY && $('myMsg')) checkMine();
 }
+// 1回に演じる人数。配信（演者1人ずつ）や大人数向け。0のときは全員が演じる＝これまでどおり
+function actorsN(){ if (document.body.classList.contains('stream')) return 1; return S.actors ? Math.min(S.actors, S.players) : S.players; }
+// 投票で選ぶ候補の数。人数が少なくても3つは出す（1〜2人の配信・視聴者が当てる形）
+// 配信モードと1人で遊ぶとき（視聴者やまわりの人が当てる）は、候補の数を選べる。ふだんは人数ぶん
+function poolN(){ return (document.body.classList.contains('stream') || S.players === 1) ? S.cands : Math.max(3, S.players); }
+const CAND_KEY = 'haa-cands';
+try { const c = +localStorage.getItem(CAND_KEY); if (c >= 3 && c <= 8) S.cands = c; } catch(e){}
+function setCands(n){
+  S.cands = Math.max(3, Math.min(8, n));
+  $('candCount').textContent = S.cands;
+  try { localStorage.setItem(CAND_KEY, String(S.cands)); } catch(e){}
+}
+$('candInc').addEventListener('click', ()=>setCands(S.cands+1));
+$('candDec').addEventListener('click', ()=>setCands(S.cands-1));
+$('candCount').textContent = S.cands;
+// ===== プレイヤー名（任意・この端末にだけ保存） =====
+const NAMES_KEY = 'haa-player-names';
+try { const v = JSON.parse(localStorage.getItem(NAMES_KEY)||'[]'); S.names = Array.isArray(v) ? v : []; } catch(e){ S.names = []; }
+function saveNames(){ try{ localStorage.setItem(NAMES_KEY, JSON.stringify(S.names)); }catch(e){} }
+function esc(t){ return String(t).replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
+function pName(i){ const n = (S.names[i]||'').trim(); return n || COLORS[i%COLORS.length].n; }
+function pLabel(i){ return (S.names[i]||'').trim() ? pName(i) : 'Player '+(i+1)+' · '+pName(i); }
+function renderNames(){
+  const g = $('namesGrid'); if (!g) return; g.innerHTML = '';
+  for (let i=0;i<S.players;i++){
+    const c = COLORS[i%COLORS.length];
+    const row = document.createElement('div'); row.className = 'names-row';
+    const dot = document.createElement('span'); dot.className = 'nm-dot'; dot.style.background = c.bg;
+    const inp = document.createElement('input');
+    inp.type = 'text'; inp.maxLength = 8; inp.placeholder = 'Player '+(i+1)+' · '+c.n; inp.value = S.names[i] || '';
+    inp.setAttribute('aria-label', 'Name of player '+(i+1));
+    inp.addEventListener('input', ()=>{ S.names[i] = inp.value; saveNames(); updateNamesCount(); renderActorPick(); });
+    inp.addEventListener('keydown', e=>{ if (e.key==='Enter'){ e.preventDefault(); const nx = g.querySelectorAll('input')[i+1]; if (nx) nx.focus(); else inp.blur(); } });
+    row.appendChild(dot); row.appendChild(inp); g.appendChild(row);
+  }
+  updateNamesCount();
+}
+function updateNamesCount(){
+  let n = 0; for (let i=0;i<S.players;i++) if ((S.names[i]||'').trim()) n++;
+  $('namesCount').textContent = n ? '（'+n+'人 入力済み）' : '';
+}
+$('namesClear').addEventListener('click', ()=>{ S.names = []; saveNames(); renderNames(); renderActorPick(); });
+
+function renderActors(){
+  const k = actorsN();
+  $('actorCount').textContent = k;
+  $('actHint').textContent = k >= S.players
+    ? (S.players === 1 ? 'You are the only actor' : 'Usually everyone acts. Lower it to take turns one at a time (the others only vote)')
+    : (k === 1 ? 'The other '+(S.players-k)+' only vote. '+poolN()+' feelings to choose from'
+             : k+' act each round (taking turns). The other '+(S.players-k)+' only vote. '+poolN()+' feelings to choose from');
+}
+function setActors(n){
+  n = Math.max(1, Math.min(S.players, n));
+  S.actors = n >= S.players ? 0 : n;
+  S.rot = 0;
+  renderActors();
+  renderActorPick();
+}
+// 1回に演じる人が1人のとき（配信モードはいつも）：だれが演じるかを選ぶ。S.rot（次に演じる人の番号）をそのまま選んだ人にする
+// 演じたあとは startGame が S.rot を「その人の次」に進めるので、選ばなければ今までどおりの交代
+function renderActorPick(){
+  const on = S.players > 1 && actorsN() === 1;
+  if (S.players > 0) S.rot = ((S.rot||0) % S.players + S.players) % S.players;
+  ['apFirst','apNext'].forEach(id=>{
+    const box = $(id); if (!box) return;
+    box.classList.toggle('on', on);
+    const row = box.querySelector('.ap-row'); row.innerHTML = '';
+    if (!on) return;
+    for (let i=0;i<S.players;i++){
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'ap-btn';
+      b.setAttribute('aria-pressed', i === S.rot ? 'true' : 'false');
+      b.setAttribute('aria-label', pLabel(i)+' が演じる');
+      b.innerHTML = '<span class="ap-dot" style="background:'+COLORS[i%COLORS.length].bg+'"></span>'+esc((S.names[i]||'').trim() ? pName(i) : (i+1)+' '+pName(i));
+      b.addEventListener('click', ()=>{ S.rot = i; renderActorPick(); track('haa_actor_pick',{at:id==='apFirst'?'setup':'next',players:S.players}); });
+      row.appendChild(b);
+    }
+  });
+}
+$('actInc').addEventListener('click', ()=>setActors(actorsN()+1));
+$('actDec').addEventListener('click', ()=>setActors(actorsN()-1));
 $('inc').addEventListener('click', ()=>setPlayers(S.players+1));
 $('dec').addEventListener('click', ()=>setPlayers(S.players-1));
 
@@ -619,12 +1698,13 @@ function checkMine(){
   const v = readMine(); saveMine(v);
   const msg = $('myMsg');
   if (!v.word){ S.theme = null; msg.textContent = 'First, write the line everyone will say'; msg.className='my-msg ng'; }
-  else if (v.acts.length < S.players){ S.theme = null; msg.textContent = v.acts.length+' feelings. '+S.players+' players need at least '+S.players; msg.className='my-msg ng'; }
+  else if (v.acts.length < poolN()){ S.theme = null; msg.textContent = '気持ちが '+v.acts.length+' 個。'+poolN()+' 個以上いります'; msg.className='my-msg ng'; }
   else { S.theme = {word:v.word, acts:v.acts, mine:true}; msg.textContent = v.acts.length+' feelings. Ready to start'; msg.className='my-msg'; }
   updateStartLabel();
 }
 function renderMine(){
   const wrap = $('pickList');
+  document.body.dataset.cat = MY_KEY;
   const v = loadMine();
   wrap.innerHTML = '<div class="my-form">'
     + '<label for="myWord">The line everyone says</label><input id="myWord" maxlength="30" placeholder="e.g. Congratulations" autocomplete="off">'
@@ -645,14 +1725,21 @@ function updateStartLabel(){
   if (b) b.textContent = S.theme ? 'Start with \u201c'+S.theme.word+'\u201d' : 'Pick a line to start';
 }
 
-function renderPick(){
+function renderPick(forceWord){
+  // お題一覧ページ（/odai/）から「このお題で遊ぶ」で来たとき、そのカテゴリとお題を最初に出す
+  const ol = $('odaiLink'); if (ol) ol.href = '/odai/' + (S.cat === MY_KEY ? '' : '#' + S.cat);
   if (S.cat === MY_KEY) return renderMine();
   const wrap = $('pickList');
+  document.body.dataset.cat = S.cat;
   let list = THEMES[S.cat].list.slice();
   const fresh = list.filter(t => STATS.seen.indexOf(t.word) < 0);
   if (fresh.length >= 3) list = fresh;
   const bag = list.slice(), picked = [];
   while (picked.length < 3 && bag.length) picked.push(bag.splice(Math.floor(Math.random()*bag.length),1)[0]);
+  if (forceWord){
+    const f = THEMES[S.cat].list.find(t => t.word === forceWord);
+    if (f){ const i = picked.findIndex(t => t.word === f.word); if (i >= 0) picked.splice(i,1); picked.unshift(f); picked.length = Math.min(picked.length, 3); }
+  }
 
   // 引き直したときは、いまの選択を持ち越さず先頭を選び直す
   S.theme = picked[0] || null;
@@ -689,17 +1776,29 @@ function startGame(){
   if (!S.theme) renderPick();
   const t = S.theme;
   // acts から人数ぶんを取る。先頭ほど分かりやすい順に並べてあるので前から使う
-  const idx = t.acts.map((_,i)=>i).slice(0, S.players);
+  // 演じる人が少ないときも、投票の候補は人数ぶん出す（候補が1つだと答えが分かってしまう）
+  const idx = t.acts.map((_,i)=>i).slice(0, Math.min(poolN(), t.acts.length));
+  S.pool = idx.slice();
   for (let i=idx.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [idx[i],idx[j]]=[idx[j],idx[i]]; }
-  S.assign = idx;
-  S.seen = new Array(S.players).fill(false);
-  S.order = Array.from({length:S.players},(_,i)=>i);
+  S.k = actorsN();
+  // 演じる人（プレイヤー番号）。減らしたときは毎回交代する（1人なら 1人目→2人目→3人目→…）
+  if (S.k >= S.players){ S.act = Array.from({length:S.k},(_,i)=>i); S.rot = 0; }
+  else { S.act = Array.from({length:S.k},(_,j)=>(S.rot+j)%S.players); S.rot = (S.rot+S.k)%S.players; }
+  S.assign = idx.slice(0, S.k);
+  S.seen = new Array(S.k).fill(false);
+  S.order = Array.from({length:S.k},(_,i)=>i);
   for (let i=S.order.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [S.order[i],S.order[j]]=[S.order[j],S.order[i]]; }
-  S.votes = {};
+  S.votes = {}; S.voteHist = [];
+  // 離れて遊ぶリンク用：この回の番号と目印（発表リンクと予想を結びつける）。送った印は回ごとに消す
+  S.gno = (S.gno||0) + 1;
+  S.gid = Math.random().toString(36).slice(2,8);
+  S.sent = {}; S.sentAny = false;
+  S.dealNow = -1; S.dsStamped = {};
   STATS.plays++;
   if (!t.mine && STATS.seen.indexOf(t.word) < 0) STATS.seen.push(t.word);
   saveStats(); renderStats();
-  track('haa_start',{word:t.word,cat:S.cat,players:S.players});
+  track('haa_start',{word:t.word,cat:S.cat,players:S.players,actors:S.k});
+  if (document.body.classList.contains('stream')){ try { localStorage.setItem('haa-guide-seen','1'); } catch(e){} if ($('firstGuide')) $('firstGuide').open = false; }
   $('dealWord').textContent = t.word;
   $('performWord').textContent = t.word;
   renderDeal();
@@ -709,45 +1808,275 @@ $('startGame').addEventListener('click', startGame);
 
 function renderDeal(){
   const g = $('dealGrid'); g.innerHTML='';
-  for (let i=0;i<S.players;i++){
-    const c = COLORS[i%COLORS.length];
+  for (let i=0;i<S.k;i++){
+    const p = S.act[i], c = COLORS[p%COLORS.length];
     const b = document.createElement('button');
     b.type='button'; b.className='deal-card'+(S.seen[i]?' done':'');
+    b.style.animationDelay = (i*0.09)+'s';
     b.style.setProperty('--pc', c.bg);
-    b.innerHTML = '<span class="n">'+(i+1)+'</span><span class="who">'+c.n+'</span>';
-    b.setAttribute('aria-label', 'player '+(i+1)+' '+c.n+' — see your role');
+    b.innerHTML = '<span class="n">'+(p+1)+'</span><span class="who">'+esc(pName(p))+'</span>';
+    b.setAttribute('aria-label', pLabel(p)+' — see your role');
     b.addEventListener('click', ()=>openReveal(i));
-    g.appendChild(b);
+    const cell = document.createElement('div'); cell.className = 'deal-cell';
+    cell.appendChild(b);
+    // 離れた場所の人へ：その人の気持ちだけが入ったリンクを送る（スマホは共有シート、PCはコピー）。この画面には出さない
+    const key = 'r'+i, st = S.sent && S.sent[key];
+    const ln = document.createElement('button');
+    ln.type='button'; ln.className='deal-link'+(st?' sent':'');
+    ln.textContent = st === 'copied' ? 'コピーしました' : st === 'qr' ? 'QRで渡した（送る）' : st ? '送った（もう一度）' : pName(p)+'さんに送る';
+    ln.setAttribute('aria-label', pLabel(p)+' さんに演技カードのリンクを送る');
+    ln.addEventListener('click', ()=>sendLink(roleUrl(i), 'はぁの演技カードです（開くまで見えません）', ln, key, ()=>{ S.seen[i] = true; track('haa_role_link',{players:S.players}); }));
+    cell.appendChild(ln);
+    // 同じ部屋の人には、その場でQR（ふだんのモードだけ。配信モードはカードを押すと小窓にQRが出る）
+    const qb = document.createElement('button');
+    qb.type='button'; qb.className='deal-qr'+(st==='qr'?' sent':'');
+    qb.textContent = 'QRで渡す';
+    qb.setAttribute('aria-label', pLabel(p)+' さんにQRで渡す（同じ部屋の人）');
+    qb.addEventListener('click', ()=>qrGive(roleUrl(i), pLabel(p)+' さん', 'スマホのカメラで読み取ると、その人の画面にだけ気持ちが出ます（気持ちはこの画面に出ません）', key, ()=>{ S.seen[i] = true; }));
+    cell.appendChild(qb);
+    g.appendChild(cell);
   }
+  // 演じない人（当てる人）には「参加リンク」。お題と候補だけで、気持ちは入らない
+  const jb = $('joinBox');
+  const others = []; for (let p=0;p<S.players;p++) if (S.act.indexOf(p) < 0) others.push(p);
+  jb.hidden = !others.length;
+  if (others.length){
+    jb.innerHTML = '<p class="join-h">当てる人に参加リンク</p><p class="join-s">離れた場所の人に。お題と候補だけが入っていて、自分の予想を選べます（答えは入っていません）</p><div class="join-row"></div>';
+    const row = jb.querySelector('.join-row');
+    others.forEach(p=>{
+      const key = 'j'+p, st = S.sent && S.sent[key];
+      const b = document.createElement('button');
+      b.type='button'; b.className='join-link'+(st?' sent':'');
+      b.textContent = st === 'copied' ? pName(p)+'さん コピーしました' : st === 'qr' ? pName(p)+'さん QRで渡した（送る）' : st ? pName(p)+'さん 送った' : pName(p)+'さんに送る';
+      b.addEventListener('click', ()=>sendLink(joinUrl(p), 'はぁの参加リンクです（候補を見て予想を選べます）', b, key, ()=>track('haa_join_link',{players:S.players})));
+      const one = document.createElement('span'); one.className = 'join-one';
+      one.appendChild(b);
+      const qb = document.createElement('button');
+      qb.type='button'; qb.className='join-qr';
+      qb.textContent = 'QRで渡す（同じ部屋の人）';
+      qb.setAttribute('aria-label', pLabel(p)+' さんに参加リンクをQRで渡す（同じ部屋の人）');
+      qb.addEventListener('click', ()=>qrGive(joinUrl(p), pLabel(p)+' さん（参加リンク）', 'スマホのカメラで読み取ると、お題と候補が開いて予想を選べます（答えは入っていません）', key, null, 'j'));
+      one.appendChild(qb);
+      row.appendChild(one);
+    });
+  }
+  $('sentHint').hidden = !S.sentAny;
   $('toPerform').disabled = S.seen.some(v=>!v);
   const seenN = S.seen.filter(Boolean).length;
-  $('dockMsg').textContent = 'Tap the cards in turn (seen '+seenN+' / '+S.players+')';
-  $('dockMsg').hidden = seenN >= S.players;
+  $('dockMsg').textContent = 'Tap the cards in turn (seen '+seenN+' / '+S.k+')';
+  $('dockMsg').hidden = seenN >= S.k;
+  renderDealScroll();
+  if (S.step === 'deal') pushView();
+}
+// ===== 配る場面の巻物（配信モードだけ・2026-10-20）=====
+// 視聴者に「いま◯◯さんが確認中」「全員の確認が済んだら始まります」と確認済みの判子を見せる。名前と印だけで、だれがどの気持ちかは入れない
+// s: 0=まだ 1=確認中 2=確認済み
+// 確認中＝別ウィンドウ（小窓）やこの画面で役を開いている人。小窓が閉じられたら確認済み（送ったリンクは送った時点で確認済み）
+function watchPopup(w, i){
+  clearInterval(S.dsWatch);
+  S.dsWatch = setInterval(()=>{
+    let c = true; try { c = !w || w.closed; } catch(e){}
+    if (!c) return;
+    clearInterval(S.dsWatch);
+    if (S.dealNow === i){ S.dealNow = -1; if (S.step === 'deal') renderDeal(); }
+  }, 600);
+}
+function dealMarks(){
+  const all = S.seen.every(Boolean) && !(S.dealNow >= 0);
+  return S.act.map((p,i)=>({n:pName(p), s: all ? 2 : (i === S.dealNow ? 1 : (S.seen[i] ? 2 : 0))}));
+}
+function dealScrollText(mk, word){
+  const all = mk.every(m=>m.s === 2), cur = mk.find(m=>m.s === 1), done = mk.filter(m=>m.s === 2).length;
+  const fuda = all ? (mk.length > 1 ? '全員の確認が済みました' : '確認が済みました') : cur ? 'いま '+cur.n+' さんが確認中' : '気持ちの確認';
+  const sub = all ? 'まもなく始まります' : (cur ? '' : '演じる人が自分の気持ちを、こっそり見ます。') + (mk.length > 1 ? '全員の' : '') + '確認が済んだら始まります（'+done+' / '+mk.length+'）';
+  return {fuda, sub, all};
+}
+function renderDealScroll(){
+  const el = $('dealScroll'); if (!el) return;
+  const on = document.body.classList.contains('stream') && !!S.theme && !!S.act;
+  el.hidden = !on; if (!on) return;
+  const mk = dealMarks(), t = dealScrollText(mk);
+  S.dsStamped = S.dsStamped || {};
+  el.innerHTML = '<span class="ds-fuda">'+esc(t.fuda)+'</span><span class="ds-word">「'+esc(S.theme.word)+'」</span><span class="ds-sub">'+esc(t.sub)+'</span>'
+    + '<span class="ds-ppl">' + mk.map((m,i)=>{
+      const fresh = m.s === 2 && !S.dsStamped[i]; if (m.s === 2) S.dsStamped[i] = 1;
+      return '<span class="ds-p s'+m.s+(fresh?' fresh':'')+'"><span class="ds-n">'+esc(m.n)+'</span><span class="ds-mk">'+(m.s === 2 ? '済' : m.s === 1 ? '確認中' : 'まだ')+'</span></span>';
+    }).join('') + '</span>';
+}
+// いまの状態を上の1行に（何回目・いま演じる人・何をする時間か）。名前がなければ色の名前
+function updateNow(){
+  const na = $('nowActor'), step = S.step; if (!na) return;
+  const playing = !!S.act && ['deal','perform','vote','result'].indexOf(step) >= 0 && !document.body.classList.contains('gmode');
+  na.hidden = !playing; if (!playing) return;
+  const who = S.k >= S.players && S.players > 1 ? 'everyone' : S.act.map(p=>'<b>'+esc(pName(p))+'</b>').join(', ');
+  const what = {deal:'checking roles', perform:'acting and guessing', vote:'voting',
+    result:(document.body.classList.contains('veiling') ? 'before the reveal' : 'reveal')}[step];
+  na.innerHTML = 'Round '+(S.gno||1)+' · '+(step === 'result' ? 'acted: ' : 'acting: ')+who+' · '+what;
 }
 // 主な操作を画面下の #dock に集める。ボタンはそのまま移すので、押したときの動きは変わらない
 function syncDock(name){
-  const dock = $('dock'); if (!dock) return;
+  const dock = $('dock'); if (!dock || document.body.classList.contains('gmode')) return;
   if (!dock.dataset.ready){
     ['startGame','toPerform','toVote','toReveal','voteSkip','newGame'].forEach(id=>{ const b=$(id); if (b) dock.appendChild(b); });
     dock.dataset.ready = '1';
   }
   dock.dataset.step = name;
+  const stepName = {deal:'Roles 3/6', perform:'Perform 4/6', vote:'Vote 5/6', result:'Reveal 6/6'};
+  if (document.body.classList.contains('stream')) Object.assign(stepName, {deal:'役を見る', perform:'演じる', vote:'投票', result:'答え合わせ'});
+  // 遊んでいる間は、何をする時間かを上の1行（#nowActor）に出すので、ここは進み具合（3/6）だけ
+  $('hbStep').textContent = S.act && stepName[name] ? (stepName[name].split(' ')[1] || '') : (stepName[name] || '');
   // ボタンの位置を画面ごとに動かさないため、main を画面の高さまで伸ばして #dock を下端に置く（2回目以降はヘッダーが畳まれるので毎回測る）
   const mn = document.querySelector('main');
   if (mn) document.documentElement.style.setProperty('--mainTop', Math.round(mn.getBoundingClientRect().top + scrollY) + 'px');
 }
 
+// ===== 離れて遊ぶリンク =====
+// 中身はURLの中だけ（サーバーに保存しない）。読みにくくするだけで暗号ではない（本人に送る前提）
+// ?r= 演じる人（その人の気持ちだけ）／?j= 当てる人（お題と候補だけ）／?a= 発表（全員の答え）
+function b64e(o){ return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+function b64d(s){ const raw = String(s).replace(/-/g,'+').replace(/_/g,'/'); return JSON.parse(decodeURIComponent(escape(atob(raw + '==='.slice((raw.length+3)%4))))); }
+// 配信する／しない（配信モードだけ・この端末に覚える）。既定は「配信する」
+const CAST_KEY = 'haa-stream-cast';
+function castOn(){ try { return localStorage.getItem(CAST_KEY) !== 'off'; } catch(e){ return true; } }
+// 運営者のテスト中（?kkptest=1）だけ、作るリンクにも kkptest=1 を付ける（開いた側でもAdvertisement・GA4 を止める）。ふだんは何も付けない
+function ktq(){ return window.__kkpTest ? '&kkptest=1' : ''; }
+function linkBase(){
+  const o = {v:2, w:S.theme.word, c:S.pool.slice().sort((a,b)=>a-b).map(ai=>S.theme.acts[ai]), A:S.act.map(p=>[pName(p), p]), g:S.gid, rd:S.gno};
+  // 配信モードの「配信しない」（オンライン飲み会・リモート交流など）では s を付けない＝受け取った画面は答え合わせのあとにAdvertisement（2026-10-19）
+  if (document.body.classList.contains('stream') && castOn()) o.s = 1;
+  return o;
+}
+// popup=true は配信モードの別ウィンドウ用（これまでの形のまま。開いて閉じるだけ）
+function roleUrl(i, popup){
+  if (popup){
+    // q = 小窓に出すQRの中身（「◯◯さんに送る」と同じ ?r= の中身）
+    return location.origin + '/?r=' + b64e({w:S.theme.word, a:S.theme.acts[S.assign[i]], n:pLabel(S.act[i]), q:roleUrl(i).split('?r=')[1].split('&')[0]}) + ktq();
+  }
+  const o = linkBase(); o.a = S.theme.acts[S.assign[i]]; o.n = pName(S.act[i]); o.me = i;
+  return location.origin + '/?r=' + b64e(o) + ktq();
+}
+function joinUrl(p){
+  const o = linkBase(); o.n = pName(p);
+  return location.origin + '/?j=' + b64e(o) + ktq();
+}
+// ===== QRで渡す（同じ部屋の人に）。QR は同梱の js/qrcode.js（qrcode-generator・MIT）を使うときだけ読み込む =====
+function loadQR(cb){
+  if (window.qrcode){ cb(); return; }
+  const sc = document.createElement('script'); sc.src = '/js/qrcode.js'; sc.onload = cb; document.head.appendChild(sc);
+}
+function drawQR(el, text){
+  const q = qrcode(0, 'L'); q.addData(text); q.make();
+  el.innerHTML = q.createSvgTag({cellSize:10, margin:40, scalable:true});
+  // 1マスを整数ピクセルにする（端数だとカメラが読みにくい）。260px 以上
+  const n = q.getModuleCount() + 8, px = n * Math.max(3, Math.ceil(260 / n)), svg = el.querySelector('svg');
+  if (svg){ svg.style.width = px + 'px'; svg.style.height = px + 'px'; }
+  el.setAttribute('data-qr', text);
+}
+// 配信モードは別の小さなウィンドウ（haaRole）にQRだけを出す。配信画面と /view/ には出さない。ふだんのモードはその場で小窓
+function qrGive(url, who, cap, key, after, kind){
+  const mark = ()=>{ S.sent = S.sent || {}; S.sent[key] = 'qr'; S.sentAny = true; if (after) after(); renderDeal(); renderAnn(); track('haa_qr_give',{kind:kind||'r', players:S.players}); };
+  if (document.body.classList.contains('stream')){
+    const w = window.open(location.origin + '/?r=' + b64e({n:who.replace(/ さん.*$/,''), qk:kind||'r', q:url.split(/\?[rj]=/)[1].split('&')[0]}) + ktq(), 'haaRole', 'width=520,height=800');
+    if (w){ if ((kind||'r') === 'r'){ const ri = +String(key).slice(1); S.dealNow = ri; watchPopup(w, ri); } mark(); return; }
+  }
+  loadQR(()=>{
+    $('qmWho').textContent = who;
+    drawQR($('qmBox'), url);
+    $('qmCap').textContent = cap;
+    $('qrModal').hidden = false;
+    mark();
+  });
+}
+$('qmClose').addEventListener('click', ()=>{ $('qrModal').hidden = true; $('qmBox').innerHTML = ''; });
+function annUrl(){
+  const o = linkBase(); const sorted = S.pool.slice().sort((a,b)=>a-b);
+  o.X = S.assign.map(ai=>sorted.indexOf(ai));
+  return location.origin + '/?a=' + b64e(o) + ktq();
+}
+// 送る：スマホは共有シート（LINE・Discordを選ぶだけ）、PCや共有が使えないときはクリップボードにコピー
+function copyText(t, ok){
+  const fb = ()=>{ window.prompt('このリンクをコピーして送ってください', t); ok(); };
+  try { navigator.clipboard.writeText(t).then(ok, fb); } catch(e){ fb(); }
+}
+function sendLink(url, label, btn, key, after){
+  const done = (how)=>{
+    S.sent = S.sent || {}; S.sent[key] = how === 'copy' ? 'copied' : 'shared'; S.sentAny = true;
+    if (after) after();
+    renderDeal(); renderAnn();
+    if (how === 'copy') setTimeout(()=>{ if (S.sent[key] === 'copied'){ S.sent[key] = 'shared'; if (S.step === 'deal') renderDeal(); } }, 1400);
+  };
+  const coarse = window.matchMedia && window.matchMedia('(pointer:coarse)').matches;
+  if (navigator.share && coarse){
+    navigator.share({text:label, url:url}).then(()=>done('share'), e=>{ if (e && e.name === 'AbortError') return; copyText(label+': '+url, ()=>done('copy')); });
+    return;
+  }
+  copyText(label+': '+url, ()=>done('copy'));
+}
+function renderAnn(){
+  const b = $('annBox'); if (!b) return;
+  b.hidden = !S.sentAny;
+  const ab = $('annBtn');
+  if (ab && !ab.dataset.busy){ ab.classList.remove('sent'); ab.textContent = (navigator.share && window.matchMedia && window.matchMedia('(pointer:coarse)').matches) ? '発表リンクを送る' : '発表リンクをコピー'; }
+}
+$('annBtn').addEventListener('click', ()=>{
+  const ab = $('annBtn'), url = annUrl(), label = 'はぁの発表リンクです（開くと答えが出ます）';
+  const ok = (how)=>{ ab.dataset.busy = '1'; ab.classList.add('sent'); ab.textContent = how === 'copy' ? 'コピーしました。グループに貼ってください' : '送りました'; track('haa_ann_link',{players:S.players}); setTimeout(()=>{ delete ab.dataset.busy; renderAnn(); }, 2500); };
+  const coarse = window.matchMedia && window.matchMedia('(pointer:coarse)').matches;
+  if (navigator.share && coarse){ navigator.share({text:label, url:url}).then(()=>ok('share'), e=>{ if (e && e.name === 'AbortError') return; copyText(label+': '+url, ()=>ok('copy')); }); return; }
+  copyText(label+': '+url, ()=>ok('copy'));
+});
 function openReveal(i){
-  const c = COLORS[i%COLORS.length];
-  $('revealWho').textContent = 'You are player '+(i+1)+' · '+c.n;
+  S.dealNow = i;
+  clearInterval(S.dsWatch);
+  // 配信モードでは、役を別の小さなウィンドウで開く（OBSで本体のウィンドウだけを取り込んでいれば配信に映らない）
+  if (document.body.classList.contains('stream')){
+    const w = window.open(roleUrl(i, true), 'haaRole', 'width=520,height=800');
+    if (w){
+      S.seen[i] = true; S.sent = S.sent || {}; S.sent['r'+i] = 'qr'; S.sentAny = true; renderDeal(); renderAnn();
+      $('dockMsg').hidden = false;
+      $('dockMsg').textContent = '別ウィンドウを開きました（「QRを出す」で渡す・自分の役は「どんな気持ちで言うか見る」で）。終わったら「覚えた！閉じる」で閉じてください';
+      watchPopup(w, i); fitStream();
+      track('haa_role_window',{});
+      return;
+    }
+    // ポップアップが止められたときは、いつもの画面で出す（配信では映像を隠してもらう）
+  }
+  $('revealWho').textContent = pLabel(S.act[i]);
   $('revealWordLine').textContent = 'Your line: \u201c'+S.theme.word+'\u201d';
   $('revealAct').textContent = S.theme.acts[S.assign[i]];
+  $('revealAct').classList.remove('maskable','masked'); $('revealTapNote').hidden = true;
+  $('revealAct').hidden = false; $('revealShow').hidden = true; $('revealShow').onclick = null;
+  // 配信モードで小窓が止められたときは、気持ちを最初は隠しておく（配信画面に映らないように・2026-10-17）
+  if (document.body.classList.contains('stream')){
+    const act = S.theme.acts[S.assign[i]];
+    $('revealAct').textContent = ''; $('revealAct').hidden = true;
+    $('revealShow').hidden = false;
+    $('revealShow').onclick = ()=>{ $('revealAct').textContent = act; $('revealAct').hidden = false; $('revealShow').hidden = true; };
+    $('dockMsg').hidden = false;
+    $('dockMsg').textContent = '小さなウィンドウが開けませんでした（ブラウザでポップアップを許可すると開きます）。気持ちは「どんな気持ちで言うか見る」を押したときだけ出ます';
+    renderDeal();
+  }
   $('reveal').classList.add('show');
   $('reveal').dataset.i = i;
 }
+// 受け取った演技カードは、タップするまで隠す（配信に映っても見えない）。もう一度タップで隠す
+$('revealAct').addEventListener('click', ()=>{
+  const a = $('revealAct'); if (!a.classList.contains('maskable')) return;
+  a.classList.toggle('masked'); $('revealTapNote').hidden = a.classList.contains('masked');
+});
 $('revealClose').addEventListener('click', ()=>{
+  if ($('reveal').classList.contains('from-link')){
+    // 本体から別ウィンドウで開いたときは、そのウィンドウを閉じる
+    if (window.opener && window.name === 'haaRole'){ try { window.close(); } catch(e){} }
+    $('reveal').classList.remove('show','from-link'); $('revealClose').textContent = 'Got it — next player';
+    $('revealNow').hidden = true; $('revealSoft').hidden = true;
+    $('revealAct').classList.remove('maskable','masked'); $('revealTapNote').hidden = true;
+    if (document.body.classList.contains('gmode')) { $('gMyCard').hidden = !G.cur || !G.cur.a; window.scrollTo(0,0); }
+    return;
+  }
   const i = +$('reveal').dataset.i;
   S.seen[i] = true;
+  if (S.dealNow === i) S.dealNow = -1;
   $('reveal').classList.remove('show');
   renderDeal();
 });
@@ -755,123 +2084,986 @@ $('revealClose').addEventListener('click', ()=>{
 $('toPerform').addEventListener('click', ()=>{
   renderPerform(); show('perform');
 });
-$('dealBack').addEventListener('click', ()=>show('setup'));
+// 配ったあとに戻ると、この回の役が消える。押しまちがいに備えて2回目で戻る（ワンクッション）
+$('dealBack').addEventListener('click', ()=>{
+  const b = $('dealBack');
+  if (!b.dataset.ask){ b.dataset.ask = '1'; b.textContent = 'この回の役が消えます。戻る？（もう一度押す）'; setTimeout(()=>{ delete b.dataset.ask; b.textContent = '↺ Back to setup'; }, 4000); return; }
+  delete b.dataset.ask; b.textContent = '↺ Back to setup'; show('setup');
+});
 
+// 画面が切り替わった直後の押しまちがい防止。新しく出た「答えが出る」ボタンは 0.8 秒は押しても効かない
+// （2026-10-19 るはね配信：「Everyone has looked → perform」を押した2秒以内に、同じ位置に出た「答えだけ見る」→「すぐ発表する」が押されて、演じる前に答えが出た）
+const GUARD_MS = 800; let GUARD_AT = 0;
+function armGuard(){ GUARD_AT = Date.now(); }
+function guarded(){ return Date.now() - GUARD_AT < GUARD_MS; }
+
+const NUMS = ['①','②','③','④','⑤','⑥','⑦','⑧'];
+// 候補の番号（並びは pool の昇順で固定）。視聴者がコメントで「②」と当てられる
+function numOf(ai){ const i = S.pool.slice().sort((a,b)=>a-b).indexOf(ai); return NUMS[i] || ''; }
 function renderPerform(){
+  const st = $('performStage');
+  st.classList.remove('drop'); void st.offsetWidth; st.classList.add('drop'); sfx('drop');
+  st.innerHTML = '<img class="st-pic" src="/img/stage-mic.webp?v=2" width="600" height="600" alt="" decoding="async">'
+    + '<div class="st-who">'+(S.k===1 ? esc(pLabel(S.act[0]))+', your turn' : S.k+' players take turns')+'</div>'
+    + '<div class="st-word">\u201c'+esc(S.theme.word)+'\u201d</div>'
+    + '<div class="st-sub">Voice and face only. Let them guess the feeling</div>'
+    + '';
+  const cw = $('performCands');
+  cw.innerHTML = '<div class="cl">The feelings (each actor has one of these)</div><ul>'
+    + S.pool.slice().sort((a,b)=>a-b).map(ai=>'<li><span class="no">'+numOf(ai)+'</span>'+esc(S.theme.acts[ai])+'</li>').join('') + '</ul>';
+  // 配信や1人演技では、口やコメントで当ててすぐ答えを見る方がテンポがよい。ふだんは投票が主
+  const quick = S.k === 1 || STREAM_MQ.matches;
+  const tv = $('toVote'), tr = $('toReveal');
+  resetRevealAsk();
+  // 投票もできる回（2人以上で1人ずつ演じる）は、2つを同じ大きさで横に並べる。片方だけ目立つと、投票したいのに答えを先に押してしまう
+  const both = quick && S.players >= 2;
+  document.body.classList.toggle('perform-eq', both);
+  tv.className = both ? 'btn-eq' : (quick ? 'btn-sub' : 'btn-primary');
+  tr.className = both ? 'btn-eq' : (quick ? 'btn-primary' : 'btn-sub');
+  tr.textContent = both ? 'Just reveal' : (quick ? 'Reveal' : 'Skip voting — just reveal');
+  tv.textContent = both ? '投票する' : (quick ? '投票して得点をつける' : 'Everyone has performed → vote');
+  if (both && tr.parentNode === tv.parentNode) tv.parentNode.insertBefore(tv, tr);
+  else if (quick && tr.parentNode === tv.parentNode) tv.parentNode.insertBefore(tr, tv);
+  else if (!quick && tr.parentNode === tv.parentNode) tv.parentNode.insertBefore(tv, tr);
+  $('revealHint').textContent = document.body.classList.contains('stream') ? 'コメントで番号が出そろったら、答えを見ます' : S.players === 1 ? '視聴者やまわりの人が当てたら、答えを見ます' : 'Guess out loud first. Handy for big groups or young kids';
   const w = $('performList'); w.innerHTML='';
-  S.order.forEach((p,n)=>{
-    const c = COLORS[p%COLORS.length];
+  if (S.k === 1) return;
+  S.order.forEach((j,n)=>{
+    const p = S.act[j];
     const row = document.createElement('div');
     row.className='res-row';
-    row.innerHTML = '<span class="nm">#'+(n+1)+'</span><span class="act">player '+(p+1)+' · '+c.n+'</span>';
+    row.innerHTML = '<span class="nm">#'+(n+1)+'</span><span class="act">'+esc(pLabel(p))+'</span>';
     w.appendChild(row);
   });
 }
-$('toVote').addEventListener('click', ()=>{ S.voter=0; S.target=-1; nextVote(); show('vote'); });
+$('toVote').addEventListener('click', ()=>{ S.voter=0; S.target=-1; S.voteShownAt = Date.now(); nextVote(); show('vote'); });
 // 投票は人数×(人数−1)回スマホを回す（6人で30回）。そこで止まる人が多いので、口で当て合って答えだけ見る道を用意する
-$('toReveal').addEventListener('click', ()=>{ S.votes = {}; finish('quick'); });
-$('voteSkip').addEventListener('click', ()=>finish('partial'));
+// 配信モードでは2回押し（1回目で「もう一度押すと答えが出ます」）。演じる前に答えが出ると、その回が遊べなくなる（2026-10-19）
+$('toReveal').addEventListener('click', ()=>{
+  if (guarded()) return;
+  const b = $('toReveal');
+  if (STREAM_MQ.matches){
+    if (!b.dataset.ask){
+      b.dataset.ask = String(Date.now()); b.dataset.label = b.textContent; b.textContent = 'もう一度押すと答えが出ます';
+      clearTimeout(b._askT); b._askT = setTimeout(resetRevealAsk, 4000); return;
+    }
+    if (Date.now() - +b.dataset.ask < 400) return; // 連打の2回目は数えない
+  }
+  resetRevealAsk();
+  S.votes = {}; finish('quick'); countdownReveal();
+});
+function resetRevealAsk(){
+  const b = $('toReveal'); clearTimeout(b._askT);
+  if (b.dataset.ask){ delete b.dataset.ask; if (b.dataset.label) b.textContent = b.dataset.label; }
+}
+$('voteSkip').addEventListener('click', ()=>{ if (guarded()) return; finish(useGrid() && voteDoneN() >= voteTotalN() ? 'vote' : 'partial'); });
 
 // ===== 投票（カード版でいちばん面倒なところ） =====
 function nextVote(){
   // 自分以外の全員に投票する。1人ぶん終わったら次の人へスマホを回す
   do {
     S.target++;
-    if (S.target >= S.players){ S.target = 0; S.voter++; }
+    if (S.target >= S.k){ S.target = 0; S.voter++; }
     if (S.voter >= S.players) return finish();
-  } while (S.target === S.voter);
+  } while (S.act[S.target] === S.voter);
   renderVote();
 }
+function useGrid(){ return STREAM_MQ.matches; }
 function renderVote(){
-  const vc = COLORS[S.voter%COLORS.length], tc = COLORS[S.target%COLORS.length];
-  $('voteWho').textContent = '📱 player '+(S.voter+1)+' · '+vc.n+', your turn';
-  $('voteTarget').innerHTML = 'How did <b>player '+(S.target+1)+' · '+tc.n+'</b> feel?';
-  const w = $('voteList'); w.innerHTML='';
-  const used = S.assign.slice().sort((a,b)=>a-b);
+  setTimeout(()=>pushView(), 0);
+  $('voteGrid').hidden = !useGrid(); $('voteList').hidden = useGrid(); if (!useGrid()) $('voteLegend').hidden = true;
+  if (useGrid()) return renderVoteGrid();
+  const vw = $('voteWho'); if (vw){ vw.classList.remove('swap'); void vw.offsetWidth; vw.classList.add('swap'); }
+  if (STREAM_MQ.matches) $('voteHint').innerHTML = '離れた場所の人の答えは、DMやチャットで聞いて代わりに押してください。<br>視聴者のみなさんの答えは、コメントで。';
+  $('voteWho').textContent = '📱 '+pLabel(S.voter)+', your turn';
+  $('voteTarget').innerHTML = 'How did <b>'+esc(pLabel(S.act[S.target]))+'</b> feel?';
+  const w = $('voteList'); w.innerHTML=''; const shownAt = Date.now();
+  const used = S.pool.slice().sort((a,b)=>a-b);
   used.forEach(ai=>{
     const b = document.createElement('button');
     b.type='button'; b.className='vote-item';
-    b.textContent = S.theme.acts[ai];
+    b.innerHTML = '<span class="no">'+numOf(ai)+'</span>'+esc(S.theme.acts[ai]);
     b.addEventListener('click', ()=>{
+      if (w.dataset.busy || Date.now() - shownAt < 350) return; w.dataset.busy = '1';
+      b.classList.add('picked'); sfx('pick');
       S.votes[S.voter] = S.votes[S.voter] || {};
       S.votes[S.voter][S.target] = ai;
-      nextVote();
+      (S.voteHist = S.voteHist || []).push({voter:S.voter, target:S.target});
+      setTimeout(()=>{ delete w.dataset.busy; nextVote(); }, 260);
     });
     w.appendChild(b);
   });
-  const total = S.players*(S.players-1);
+  const total = S.players*S.k - S.k;
   let done = 0;
   Object.values(S.votes).forEach(v=>done += Object.keys(v).length);
   $('voteProg').textContent = 'votes '+done+' / '+total;
+  $('voteUndo').hidden = !(S.voteHist && S.voteHist.length);
 }
+// 押し間違えたときだけ、1つ前の票に戻ってやり直す（押す回数は増やさない・2026-10-17）
+$('voteUndo').addEventListener('click', ()=>{
+  const h = S.voteHist && S.voteHist.pop(); if (!h) return;
+  if (useGrid()){
+    if (h.prev === undefined){ if (S.votes[h.voter]){ delete S.votes[h.voter][h.target]; if (!Object.keys(S.votes[h.voter]).length) delete S.votes[h.voter]; } }
+    else { S.votes[h.voter] = S.votes[h.voter] || {}; S.votes[h.voter][h.target] = h.prev; }
+    renderVote(); return;
+  }
+  if (S.votes[h.voter]){ delete S.votes[h.voter][h.target]; if (!Object.keys(S.votes[h.voter]).length) delete S.votes[h.voter]; }
+  S.voter = h.voter; S.target = h.target;
+  renderVote();
+});
 
 // ===== 結果 =====
+// 配信モード：PCの広い画面では自動でON。スイッチで切り替えた値はこの端末に覚える。?mode=stream でも強制ON
+const STREAM_KEY = 'haa-stream';
+const STREAM_MQ = { get matches(){ return document.body.classList.contains('stream'); } };
+function applyStream(){
+  let v = null; try { v = localStorage.getItem(STREAM_KEY); } catch(e){}
+  const on = !!window.__haaStream;
+  document.body.classList.toggle('stream', on);
+  const t = document.getElementById('streamToggle'); if (t) t.checked = on;
+}
 function finish(mode){
   mode = mode || 'vote';
   const body = $('resultBody'); body.innerHTML='';
+  // 配信向けの広い画面では「答えを見る」で一拍おく（視聴者が当ててから開ける）
+  const veil = true;
+  body.classList.toggle('veiled', veil); $('scoreBox').classList.toggle('veiled', veil); $('unveil').hidden = !veil;
+  $('unveil').classList.remove('unveil-skip'); $('unveilMsg').after($('unveil'));
+  document.body.classList.toggle('veiling', veil);
+  // 答えが出るまでは候補を見せておく（視聴者が最後まで番号で予想できるように）
+  $('resCands').innerHTML = '<div class="cl">The feelings for \u201c'+esc(S.theme.word)+'\u201d</div><ul>'
+    + S.pool.slice().sort((a,b)=>a-b).map(ai=>'<li><span class="no">'+numOf(ai)+'</span>'+esc(S.theme.acts[ai])+'</li>').join('') + '</ul>';
+  $('unveilMsg').hidden = !(veil && mode !== 'quick');
+  $('unveilMsg').innerHTML = STREAM_MQ.matches ? '投票がそろいました。<br>視聴者のみなさんも、コメントで番号を書いてから開けましょう' : 'All votes are in. Reveal together on three!';
   // 誰がどの気持ちだったかを開示
-  for (let i=0;i<S.players;i++){
-    const c = COLORS[i%COLORS.length];
-    const row = document.createElement('div');
-    row.className='res-row';
-    row.innerHTML = '<span class="nm">player '+(i+1)+'</span>'
-      + '<span class="act">'+c.n+'：'+S.theme.acts[S.assign[i]]+'</span>';
-    body.appendChild(row);
+  // 演じた人ごとに「答えのカード」。投票したときは、誰が当てたか（○）・外したか（×と選んだ番号）も出す
+  body.className = 'ans-grid' + (S.k === 1 ? ' one' : '') + (veil ? ' veiled' : '');
+  renderAnn();
+  S.lastMode = mode; S.lastAnswers = []; S.lastScores = null;
+  for (let i=0;i<S.k;i++){
+    const p = S.act[i], ai = S.assign[i];
+    const va = {name:pName(p), color:COLORS[p%COLORS.length].bg, no:numOf(ai), act:S.theme.acts[ai], chips:[]};
+    S.lastAnswers.push(va);
+    const card = document.createElement('div');
+    card.className = 'ans-card';
+    card.style.setProperty('--pc', COLORS[p%COLORS.length].bg);
+    let who = '';
+    if (mode !== 'quick'){
+      const chips = [];
+      for (let v=0; v<S.players; v++){
+        if (v === p) continue;
+        const g = S.votes[v] && S.votes[v][i];
+        if (g === undefined) continue;
+        va.chips.push({name:pName(v), ok:g===ai, no:numOf(g)});
+        chips.push(g === ai
+          ? '<span class="vc ok">○ '+esc(pName(v))+'</span>'
+          : '<span class="vc ng">× '+esc(pName(v))+' <small>'+numOf(g)+'</small></span>');
+      }
+      if (chips.length) who = '<div class="ans-votes">'+chips.join('')+'</div>';
+    }
+    card.innerHTML = '<div class="ans-top"><span class="ans-dot"></span><span class="ans-name">'+esc(pName(p))+'</span><span class="ans-word">\u201c'+esc(S.theme.word)+'\u201d</span></div>'
+      + '<div class="ans-main"><span class="ans-kick">Answer</span><span class="ans-no">'+numOf(ai)+'</span><span class="ans-act">'+esc(S.theme.acts[ai])+'</span></div>'
+      + who;
+    body.appendChild(card);
   }
   // 得点：当てた人に1点、当ててもらえた人にも1点（カード版と同じ考え方）
   const sc = new Array(S.players).fill(0);
   for (let v=0;v<S.players;v++){
-    for (let t=0;t<S.players;t++){
-      if (v===t) continue;
+    for (let t=0;t<S.k;t++){
+      if (v===S.act[t]) continue;
       const g = S.votes[v] && S.votes[v][t];
       if (g === undefined) continue;
-      if (g === S.assign[t]){ sc[v]++; sc[t]++; }
+      if (g === S.assign[t]){ sc[v]++; sc[S.act[t]]++; }
     }
   }
   const box = $('scoreBox');
   const max = Math.max.apply(null, sc);
+  logRound(mode, sc);
   if (mode === 'quick'){
-    box.innerHTML = '<p class="quick-note">No votes this round. Check the answers against your guesses.</p>';
+    box.innerHTML = '<p class="quick-note">' + (document.body.classList.contains('stream') ? 'コメントの番号と比べてみてください。' : 'No votes this round. Check the answers against your guesses.') + '</p>';
     track('haa_finish',{word:S.theme.word,players:S.players,hits:0,mode:mode});
     show('result');
     return;
   }
-  let h = '<h3>Score</h3>';
-  sc.map((v,i)=>({i,v})).sort((a,b)=>b.v-a.v).forEach(o=>{
-    const c = COLORS[o.i%COLORS.length];
-    h += '<div class="sr"><span>player '+(o.i+1)+' · '+c.n+(o.v===max&&max>0?' 👑':'')+'</span><b>'+o.v+'</b></div>';
+  // 「Play again」で合計していく。順位は合計で、今回の得点は「+2」で添える
+  if (S.total.length !== S.players) { S.total = new Array(S.players).fill(0); S.rounds = 0; S.sid = newSid(); logFixSid(); }
+  for (let i=0;i<S.players;i++) S.total[i] += sc[i];
+  S.rounds++;
+  const tmax = Math.max.apply(null, S.total);
+  let h = '<h3>'+(S.rounds > 1 ? 'Total score<span class="sr-rd">after '+S.rounds+' rounds</span>' : 'Score')+'</h3>', rank = 0, prev = null;
+  const ppl = logPeople(logLoad().r.filter(r=>r.sid === S.sid));
+  S.total.map((v,i)=>({i,v})).sort((a,b)=>b.v-a.v).forEach((o,n)=>{
+    if (o.v !== prev){ rank = n+1; prev = o.v; }
+    const w = tmax > 0 ? Math.round(o.v / tmax * 100) : 0;
+    const pp = ppl[pName(o.i)];
+    const hitTxt = pp ? '<small class="sr-hit">guessed '+pp.hit+'/'+pp.tries+' · read '+pp.got+'×</small>' : '';
+    h += '<div class="sr'+(rank===1&&tmax>0?' top':'')+'"><span class="sr-rk">#'+rank+'</span><span class="sr-nm">'+esc(pName(o.i))+hitTxt+'</span>'
+      + '<span class="sr-bar"><i style="width:'+w+'%;background:'+COLORS[o.i%COLORS.length].bg+'"></i></span><b>'+o.v+(S.rounds > 1 ? '<small class="sr-add">+'+sc[o.i]+'</small>' : '')+'</b></div>';
   });
+  S.lastScores = {rounds:S.rounds, rows:S.total.map((v,i)=>{ const pp = ppl[pName(i)]; return {name:pName(i), color:COLORS[i%COLORS.length].bg, total:v, add:sc[i], hit:pp?pp.hit:0, tries:pp?pp.tries:0, got:pp?pp.got:0}; }).sort((a,b)=>b.total-a.total)};
+  const ttl = logTitles(ppl, S.rounds); S.lastScores.titles = ttl;
+  if (ttl) h += '<p class="sr-titles">'+ttl.map(x=>'<span class="sr-ttl"><b>'+esc(x.t)+'</b>'+esc(x.names)+'<small>'+esc(x.why)+'</small></span>').join('')+'</p>';
+  if (S.rounds > 1) h += '<button type="button" class="sr-reset" id="scoreReset">Reset the total</button>';
   box.innerHTML = h;
+  const rb = $('scoreReset');
+  // 押しまちがいで合計が消えないよう、2回目で戻す（ワンクッション）
+  if (rb) rb.addEventListener('click', ()=>{
+    if (!rb.dataset.ask){ rb.dataset.ask = '1'; rb.textContent = 'Reset to 0? (tap again)'; setTimeout(()=>{ if (!rb.disabled){ delete rb.dataset.ask; rb.textContent = 'Reset the total'; } }, 4000); return; }
+    S.total = []; S.rounds = 0; S.sid = newSid(); rb.textContent = '0に戻しました。次の回から数えます'; rb.disabled = true;
+  });
   const hits = sc.reduce((t,v)=>t+v,0);
   track('haa_finish',{word:S.theme.word,players:S.players,hits:hits,mode:mode});
   show('result');
 }
 
-$('newGame').addEventListener('click', ()=>{ renderPick(); startGame(); });
+// ===== OBS表示用ページ（/view/）へ今の状態を送る =====
+// 同じパソコンの中だけ（BroadcastChannel＋localStorage）。外へは送らない。役（だれがどの気持ちか）は答えが出るまで送らない
+let VIEW_CH = null; try { VIEW_CH = new BroadcastChannel('haa-view'); } catch(e){}
+function pushView(extra){
+  const st = {t:Date.now(), step:S.step||'setup', site:'haa.kkpwebninja.com'};
+  if (S.theme && st.step !== 'setup'){
+    st.word = S.theme.word;
+    st.cands = (S.pool||[]).slice().sort((a,b)=>a-b).map(ai=>({no:numOf(ai), text:S.theme.acts[ai]}));
+    st.actors = (S.act||[]).map(p=>pName(p));
+  }
+  if (st.step === 'deal' && S.act && S.seen){ st.dealPpl = dealMarks(); }
+  if (st.step === 'vote' && S.act){
+    st.voter = pName(S.voter); st.target = pName(S.act[S.target]||0);
+    let done = 0; Object.values(S.votes||{}).forEach(v=>done += Object.keys(v).length);
+    st.voteDone = done; st.voteTotal = S.players*S.k - S.k;
+  }
+  if (st.step === 'result'){
+    st.veiling = document.body.classList.contains('veiling');
+    st.quick = S.lastMode === 'quick';
+    if (!st.veiling){ st.answers = S.lastAnswers || []; st.scores = S.lastScores; st.ask = S.ask || ''; }
+  }
+  if (typeof LOG_KEY === 'string' && st.step !== 'setup' && !(st.step === 'result' && st.veiling)) st.recent = recentRounds(5);
+  if (typeof LOG_UI === 'object' && LOG_UI && LOG_UI.open && LOG_UI.cast) st.summary = summaryData();
+  if (extra) Object.assign(st, extra);
+  try { localStorage.setItem('haa-view-state', JSON.stringify(st)); } catch(e){}
+  try { VIEW_CH && VIEW_CH.postMessage(st); } catch(e){}
+  if (typeof LOG_KEY === 'string') fitStream();
+}
+// 効果音（配信モードだけ・ブラウザで合成。音のファイルは使わない）
+let AC = null;
+const SFX_KEY = 'haa-sfx';
+function sfxOn(){ if (!document.body.classList.contains('stream')) return false; const t = $('sfxToggle'); return !t || t.checked; }
+function tone(freq, t0, dur, type, vol){
+  const o = AC.createOscillator(), g = AC.createGain();
+  o.type = type || 'sine'; o.frequency.setValueAtTime(freq, AC.currentTime + t0);
+  g.gain.setValueAtTime(0.0001, AC.currentTime + t0);
+  g.gain.exponentialRampToValueAtTime(vol || 0.2, AC.currentTime + t0 + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, AC.currentTime + t0 + dur);
+  o.connect(g); g.connect(AC.destination); o.start(AC.currentTime + t0); o.stop(AC.currentTime + t0 + dur + 0.05);
+}
+function sfx(kind, force){
+  if (!force && !sfxOn()) return;
+  try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); } catch(e){ return; }
+  if (kind === 'tick') tone(880, 0, 0.08, 'square', 0.06);
+  else if (kind === 'last') tone(660, 0, 0.06, 'triangle', 0.08);
+  else if (kind === 'cd') { tone(523, 0, 0.18, 'square', 0.12); }
+  else if (kind === 'pick') { tone(740, 0, 0.07, 'triangle', 0.12); tone(988, 0.06, 0.09, 'triangle', 0.12); }
+  else if (kind === 'drop') { tone(330, 0, 0.12, 'sine', 0.15); tone(495, 0.08, 0.14, 'sine', 0.12); }
+  else if (kind === 'fanfare') { [523,659,784,1047].forEach((f,i)=>tone(f, i*0.11, 0.22, 'triangle', 0.18)); tone(1047, 0.44, 0.6, 'triangle', 0.16); tone(1319, 0.44, 0.6, 'sine', 0.08); }
+}
+try { const v = localStorage.getItem(SFX_KEY); if (v !== null) $('sfxToggle').checked = v === '1'; } catch(e){}
+$('sfxToggle').addEventListener('change', e=>{ try{ localStorage.setItem(SFX_KEY, e.target.checked ? '1' : '0'); }catch(_){} if (e.target.checked) sfx('pick'); });
+// 紙吹雪（答えが出た瞬間）。2.6秒で消す
+// 答えのあとの問いかけ（毎回変える。決まった言葉を書かせず、自由に話したくなる形に）
+const ASKS = ['Did you get it?','How was that performance?','Did anyone read that feeling?','Who should act next?','Did it sound like a different feeling?','Which number fooled you most?'];
+let ASK_I = Math.floor(Math.random()*ASKS.length);
+function nextAsk(){ ASK_I = (ASK_I + 1) % ASKS.length; if (S.players === 1 && ASKS[ASK_I].indexOf('Who should') >= 0) ASK_I = (ASK_I + 1) % ASKS.length; return ASKS[ASK_I]; }
+function confetti(){
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const box = document.createElement('div'); box.className = 'confetti';
+  const cols = ['#ff8a3d','#ffd43b','#ff6b9d','#51cf66','#4c6ef5','#fff3e2'];
+  const n = document.body.classList.contains('stream') ? 90 : 50;
+  for (let i=0;i<n;i++){
+    const p = document.createElement('i');
+    p.style.left = (Math.random()*100)+'vw';
+    p.style.background = cols[i % cols.length];
+    p.style.animationDuration = (1.4 + Math.random()*1.2)+'s';
+    p.style.animationDelay = (Math.random()*0.4)+'s';
+    p.style.transform = 'rotate('+(Math.random()*360)+'deg)';
+    box.appendChild(p);
+  }
+  document.body.appendChild(box);
+  setTimeout(()=>box.remove(), 3200);
+}
+// ボタンを押した場所に輪が広がる（押したことが分かるように）
+document.addEventListener('pointerdown', e=>{
+  const b = e.target.closest('button, .pick-item, .deal-card');
+  if (!b || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+  const r = document.createElement('span'); r.className = 'tap-ring';
+  r.style.left = e.clientX+'px'; r.style.top = e.clientY+'px';
+  document.body.appendChild(r); setTimeout(()=>r.remove(), 500);
+}, {passive:true});
+function pushResultAd(){
+  if (window.__adPushed || window.__haaStream || window.__haaGuestNoAd) return;
+  window.__adPushed = true;
+  try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
+}
+// 配信モードは「最終予想タイム」10秒 → 3・2・1。リスナーがコメントを書く時間を作る（「すぐ発表する」で飛ばせる）
+let LAST_T = null;
+function startLastCall(){
+  let n = 10; const cd = $('cdown'); const u = $('unveil');
+  $('unveilMsg').hidden = true; cd.hidden = false; cd.classList.add('last');
+  u.hidden = false; u.textContent = 'すぐ発表する'; u.classList.add('unveil-skip'); cd.after(u); armGuard();
+  const tick = ()=>{
+    if (n === 0){ LAST_T = null; S.lastDone = true; countdownReveal(); return; }
+    cd.innerHTML = '<small>最終予想タイム！コメントで番号を</small>' + n;
+    sfx(n <= 3 ? 'tick' : 'last');
+    pushView({last:n});
+    n--; LAST_T = setTimeout(tick, 1000);
+  };
+  tick();
+  track('haa_lastcall',{});
+}
+// 3・2・1 で発表。コメントで当てる時間を作り、答えが出る瞬間をそろえる
+function countdownReveal(){
+  if (STREAM_MQ.matches && LAST_T === null && !S.lastDone){ startLastCall(); return; }
+  if (LAST_T){ clearTimeout(LAST_T); LAST_T = null; }
+  S.lastDone = false;
+  $('cdown').classList.remove('last'); $('unveil').textContent = 'Reveal';
+  $('unveil').classList.remove('unveil-skip'); $('unveilMsg').after($('unveil'));
+  const cd = $('cdown'); $('unveil').hidden = true; $('unveilMsg').hidden = true; cd.hidden = false;
+  let n = 3;
+  const tick = ()=>{
+    if (n === 0){
+      cd.hidden = true;
+      $('resultBody').classList.remove('veiled'); $('scoreBox').classList.remove('veiled');
+      document.body.classList.remove('veiling');
+      updateNow();
+      setTimeout(pushResultAd, 60);
+      $('resultBody').querySelectorAll('.ans-card').forEach((r,k)=>{ r.style.animationDelay = (k*0.12)+'s'; r.classList.add('pop'); });
+      confetti(); sfx('fanfare');
+      S.ask = nextAsk(); if ($('ctaComment')) $('ctaComment').textContent = S.ask;
+      renderRecStrip(true);
+      pushView();
+      return;
+    }
+    pushView({cd:n});
+    sfx('cd');
+    cd.textContent = n; cd.classList.remove('tick'); void cd.offsetWidth; cd.classList.add('tick');
+    n--; setTimeout(tick, 700);
+  };
+  tick();
+  track('haa_unveil',{players:S.players});
+}
+$('unveil').addEventListener('click', ()=>{ if (guarded()) return; countdownReveal(); });
+// 次のお題を選んだら、そのお題で。選んでいなければ今までどおり（2026-10-17：押しただけで始まらないよう、選ぶ→ボタンで始める形に）
+$('newGame').addEventListener('click', ()=>{
+  if (S.nextTheme){ S.theme = S.nextTheme; S.nextTheme = null; track('haa_next_pick',{word:S.theme.word,cat:S.cat}); startGame(); return; }
+  renderPick(); startGame();
+});
+// 次のお題を選ぶ（答え合わせの画面で）。今のカテゴリから、まだ遊んでいないお題を優先して3つ
+function renderNextPick(){
+  const w = $('npList'); if (!w || S.cat === MY_KEY) return;
+  $('npCat').textContent = THEMES[S.cat].label;
+  let list = THEMES[S.cat].list.filter(t => !S.theme || t.word !== S.theme.word);
+  const fresh = list.filter(t => STATS.seen.indexOf(t.word) < 0);
+  if (fresh.length >= 3) list = fresh;
+  const bag = list.slice(), picked = [];
+  while (picked.length < 3 && bag.length) picked.push(bag.splice(Math.floor(Math.random()*bag.length),1)[0]);
+  w.innerHTML = '';
+  S.nextTheme = null; $('newGame').textContent = 'Play again';
+  picked.forEach(t=>{
+    const b = document.createElement('button');
+    b.type='button'; b.className='pick-item';
+    b.innerHTML = '<span class="pi-w">\u201c'+esc(t.word)+'\u201d</span><span class="pi-s">'+esc(t.acts.slice(0,3).join(' / '))+' …and more</span>';
+    b.setAttribute('aria-pressed','false');
+    b.addEventListener('click', ()=>{
+      const on = S.nextTheme !== t;
+      S.nextTheme = on ? t : null;
+      w.querySelectorAll('.pick-item').forEach(x=>x.setAttribute('aria-pressed', x === b && on ? 'true' : 'false'));
+      $('newGame').textContent = on ? 'Start with \u201c'+t.word+'\u201d' : 'Play again';
+    });
+    w.appendChild(b);
+  });
+}
+$('npMore').addEventListener('click', renderNextPick);
+$('npCatChange').addEventListener('click', ()=>{ renderPick(); show('setup'); setTimeout(()=>$('catGrid').scrollIntoView({behavior:'smooth',block:'center'}), 50); });
 $('resultBack').addEventListener('click', ()=>{ renderPick(); show('setup'); });
+$('redraw').addEventListener('click', ()=>{ renderPick(); track('haa_redraw',{cat:S.cat}); });
 
 function show(name){
+  const changed = S.step !== name;
+  S.step = name;
+  if (changed) armGuard();
   ['setup','deal','perform','vote','result'].forEach(s=>{
     const el = $('step-'+s); if (el) el.classList.toggle('hidden', s!==name);
   });
+  const cur = $('step-'+name);
+  if (cur && changed){ cur.classList.remove('enter'); void cur.offsetWidth; cur.classList.add('enter'); }
   document.body.classList.toggle('at-result', name==='result');
+  if (name === 'result') renderNextPick();
+  if (name === 'result' || name === 'setup') renderActorPick();
+  updateNow();
   syncDock(name);
-  if (name === 'result' && !window.__adPushed) {
-    window.__adPushed = true;
-    try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
-  }
+  // Advertisementは答えが出てから（隠れたまま push すると幅0で枠が死ぬ）
+  if (name === 'result' && !document.body.classList.contains('veiling')) pushResultAd();
   document.body.classList.toggle('playing', name!=='setup');
   window.scrollTo({top:0,behavior:'smooth'});
+  pushView();
 }
 
 // FAQ は build.py が静的HTMLと構造化データの両方に差し込む（ここでは描画しない）
 
+// ===== 振り返り（2026-10-20）: 回ごとの記録・人ごとのまとめ・名場面 =====
+// この端末の localStorage（haa-log）だけに残す。外へは送らない。ゲームを途中で閉じても残る（答えが決まった時点で書く）
+var LOG_KEY = 'haa-log', LOG_MAX = 200, LOG_UI = {open:false, cast:false, scope:'today'};
+function newSid(){ return Math.random().toString(36).slice(2,8); }
+S.sid = newSid();
+function logLoad(){ try { const v = JSON.parse(localStorage.getItem(LOG_KEY)||'null'); if (v && Array.isArray(v.r)) return v; } catch(e){} return {v:1, r:[]}; }
+function logSave(L){ try { if (L.r.length > LOG_MAX) L.r = L.r.slice(-LOG_MAX); localStorage.setItem(LOG_KEY, JSON.stringify(L)); } catch(e){} }
+function dayKey(t){ const d = new Date(t); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }
+// 1回ぶん。a=演じた人と本当の気持ち／g=当てる人ごとの予想（ok＝当たり）／p=その回の点
+function logRound(mode, sc){
+  const r = {t:Date.now(), d:dayKey(Date.now()), sid:S.sid, gid:S.gid, no:S.gno||1, word:S.theme.word, mode:mode, a:[], g:[], p:{}};
+  for (let i=0;i<S.k;i++){
+    const p = S.act[i], ai = S.assign[i];
+    r.a.push({n:pName(p), no:numOf(ai), act:S.theme.acts[ai]});
+    if (mode === 'quick') continue;
+    for (let v=0; v<S.players; v++){
+      if (v === p) continue;
+      const g = S.votes[v] && S.votes[v][i];
+      if (g === undefined) continue;
+      r.g.push({v:pName(v), to:pName(p), ok:g===ai, no:numOf(g)});
+    }
+  }
+  if (mode !== 'quick') for (let i=0;i<S.players;i++) r.p[pName(i)] = sc[i];
+  const L = logLoad();
+  const k = L.r.findIndex(x=>x.gid === r.gid && x.sid === r.sid);
+  if (k >= 0) L.r[k] = r; else L.r.push(r);
+  logSave(L);
+}
+// 合計得点を0から数え直した回は、その回の記録も新しい区切りに入れる
+function logFixSid(){ const L = logLoad(), x = L.r[L.r.length-1]; if (x && x.gid === S.gid){ x.sid = S.sid; logSave(L); } }
+// 名場面：全員が当てた回＝伝わった！／全員が外した回＝まさかの！（予想が1つ以上ある回だけ）
+function roundMark(r){ if (!r.g || !r.g.length) return ''; const ok = r.g.filter(x=>x.ok).length; return ok === r.g.length ? 'all' : ok === 0 ? 'none' : ''; }
+// 人ごと：当てた数／予想した数・伝わった回数（当ててもらえた人数）・演じた回数・合計点
+function logPeople(rounds){
+  const P = {};
+  const get = n => P[n] || (P[n] = {name:n, hit:0, tries:0, got:0, acted:0, pts:0});
+  rounds.forEach(r=>{
+    (r.a||[]).forEach(a=>{ get(a.n).acted++; });
+    (r.g||[]).forEach(g=>{ const v = get(g.v); v.tries++; if (g.ok){ v.hit++; get(g.to).got++; } });
+    Object.keys(r.p||{}).forEach(n=>{ get(n).pts += r.p[n]; });
+  });
+  return P;
+}
+// 何回か遊んだあと（3回目から）：見抜き名人＝当てた数1位／伝え上手＝伝わった回数1位（同点は全員）
+function logTitles(P, rounds){
+  if (rounds < 3) return null;
+  const list = Object.values(P), out = [];
+  const top = (key, t, why) => { const m = Math.max(0, ...list.map(x=>x[key])); if (m <= 0) return; const who = list.filter(x=>x[key] === m); out.push({t, names:who.map(x=>x.name).join('・'), why:why(who[0])}); };
+  top('hit', '見抜き名人', x=>'当てた '+x.hit+'/'+x.tries);
+  top('got', '伝え上手', x=>'伝わった '+x.got+'回');
+  return out.length ? out : null;
+}
+// 直近の回（今の区切り）。配信の○×の帯と /view/ に使う
+function recentRounds(n){
+  return logLoad().r.filter(r=>r.sid === S.sid).slice(-n).map(r=>({no:r.no, word:r.word, who:(r.a||[]).map(a=>a.n).join('・'), ans:(r.a||[]).map(a=>a.no).join(''), g:(r.g||[]).map(g=>({v:g.v, ok:g.ok})), mark:roundMark(r)}));
+}
+function recHtml(x){
+  const g = x.g.length ? x.g.map(y=>'<i class="'+(y.ok?'o':'x')+'" title="'+esc(y.v)+'">'+(y.ok?'○':'×')+'</i>').join('') : '<i class="q">口で</i>';
+  return '<span class="rs'+(x.mark?' m-'+x.mark:'')+'"><b>'+esc(x.no)+'</b>「'+esc(x.word)+'」'+esc(x.ans)+g+(x.mark==='all'?'<em>伝わった！</em>':x.mark==='none'?'<em>まさかの！</em>':'')+'</span>';
+}
+function renderRecStrip(fresh){
+  const el = $('recStrip'); if (!el) return;
+  const list = recentRounds(5);
+  el.innerHTML = list.length ? '<span class="rs-h">直近</span>' + list.map(recHtml).join('') : '';
+  if (fresh && el.lastElementChild) el.lastElementChild.classList.add('new');
+}
+// 今日のまとめ（配信の締め用）・これまでの記録
+function logScoped(){
+  const all = logLoad().r;
+  if (LOG_UI.scope === 'all') return all;
+  if (LOG_UI.scope === 'sid') return all.filter(r=>r.sid === S.sid);
+  const today = dayKey(Date.now()); let r = all.filter(x=>x.d === today);
+  if (!r.length && all.length){ const last = all[all.length-1].d; r = all.filter(x=>x.d === last); }
+  return r;
+}
+function summaryData(){
+  const rounds = logScoped(), P = logPeople(rounds);
+  const people = Object.values(P).sort((a,b)=>b.pts-a.pts || b.hit-a.hit || b.got-a.got);
+  const voted = rounds.filter(r=>r.mode !== 'quick').length;
+  return {n:rounds.length, people:people, titles:logTitles(P, Math.max(3, voted)), all:rounds.filter(r=>roundMark(r)==='all').map(r=>({no:r.no, word:r.word, who:r.a.map(a=>a.n).join('・')})), none:rounds.filter(r=>roundMark(r)==='none').map(r=>({no:r.no, word:r.word, who:r.a.map(a=>a.n).join('・')}))};
+}
+function renderLog(){
+  const rounds = logScoped(), sd = summaryData();
+  $('logTitle').textContent = LOG_UI.cast ? '今日のまとめ' : 'これまでの記録';
+  const sc = [['today','今日'],['sid','この区切り'],['all','全部']];
+  $('logScope').innerHTML = sc.map(([k,l])=>'<button type="button" data-k="'+k+'" aria-pressed="'+(LOG_UI.scope===k)+'">'+l+'</button>').join('');
+  if (!rounds.length){ $('logBody').innerHTML = '<p class="log-empty">まだ記録がありません。答え合わせをすると、ここに1回ずつ残ります。</p>'; return; }
+  let h = '<h3 class="log-h">人ごとのまとめ<small>'+rounds.length+'回ぶん</small></h3>';
+  if (sd.titles) h += '<p class="log-titles">'+sd.titles.map(x=>'<span class="lt"><b>'+esc(x.t)+'</b>'+esc(x.names)+'<small>'+esc(x.why)+'</small></span>').join('')+'</p>';
+  h += '<table class="log-ppl"><thead><tr><th>名前</th><th>当てた</th><th>伝わった</th><th>点</th></tr></thead><tbody>'
+    + sd.people.map(p=>'<tr><th>'+esc(p.name)+'</th><td>'+p.hit+'<small>/'+p.tries+'</small></td><td>'+p.got+'<small>回</small></td><td><b>'+p.pts+'</b></td></tr>').join('') + '</tbody></table>';
+  if (sd.all.length || sd.none.length){
+    h += '<h3 class="log-h">名場面</h3><ul class="log-marks">'
+      + sd.all.map(x=>'<li class="m-all"><em>伝わった！</em>'+esc(x.no)+'回目「'+esc(x.word)+'」'+esc(x.who)+'</li>').join('')
+      + sd.none.map(x=>'<li class="m-none"><em>まさかの！</em>'+esc(x.no)+'回目「'+esc(x.word)+'」'+esc(x.who)+'</li>').join('') + '</ul>';
+  }
+  h += '<h3 class="log-h">回ごとの記録<small>新しい順</small></h3><ol class="log-rounds">' + rounds.slice().reverse().map(r=>{
+    const mk = roundMark(r);
+    const ans = (r.a||[]).map(a=>'<span class="lr-a"><b>'+esc(a.n)+'</b> '+esc(a.no)+esc(a.act)+'</span>').join('');
+    const g = (r.g||[]).length ? (r.g||[]).map(x=>'<span class="lr-g '+(x.ok?'o':'x')+'">'+(x.ok?'○':'×')+esc(x.v)+((r.a||[]).length>1?'→'+esc(x.to):'')+(x.ok?'':'<small>'+esc(x.no)+'</small>')+'</span>').join('') : '<span class="lr-q">投票なし（口で当て合い）</span>';
+    const pts = Object.keys(r.p||{}).filter(n=>r.p[n]).map(n=>esc(n)+' +'+r.p[n]).join('　');
+    return '<li class="lr'+(mk?' m-'+mk:'')+'"><p class="lr-top"><b>'+esc(r.no)+'回目</b>「'+esc(r.word)+'」'+(mk==='all'?'<em>伝わった！</em>':mk==='none'?'<em>まさかの！</em>':'')+'<small>'+new Date(r.t).toLocaleString('ja-JP',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+'</small></p>'
+      + '<p class="lr-ans">'+ans+'</p><p class="lr-gs">'+g+'</p>'+(pts?'<p class="lr-pts">'+pts+'</p>':'')+'</li>';
+  }).join('') + '</ol>';
+  $('logBody').innerHTML = h;
+}
+function openLog(cast){
+  LOG_UI.open = true; LOG_UI.cast = !!cast; LOG_UI.scope = cast ? 'today' : LOG_UI.scope;
+  const c = $('logClear'); delete c.dataset.ask; c.textContent = '記録を消す';
+  renderLog(); $('logOv').hidden = false; $('logOv').classList.toggle('cast', LOG_UI.cast);
+  document.body.classList.add('log-open');
+  track(cast ? 'haa_summary_open' : 'haa_log_open', {});
+  if (cast) pushView();
+}
+function closeLog(){ LOG_UI.open = false; $('logOv').hidden = true; document.body.classList.remove('log-open'); if (LOG_UI.cast){ LOG_UI.cast = false; pushView(); } }
+$('logOpen').addEventListener('click', ()=>openLog(false));
+$('sumOpen').addEventListener('click', ()=>openLog(true));
+$('logClose').addEventListener('click', closeLog);
+$('logOv').addEventListener('click', e=>{ if (e.target === $('logOv')) closeLog(); });
+document.addEventListener('keydown', e=>{ if (e.key === 'Escape' && LOG_UI.open) closeLog(); });
+$('logScope').addEventListener('click', e=>{ const b = e.target.closest('button[data-k]'); if (!b) return; LOG_UI.scope = b.dataset.k; renderLog(); if (LOG_UI.cast) pushView(); });
+// 消すのは2回押し（押しまちがいで記録が消えないように）
+$('logClear').addEventListener('click', ()=>{
+  const c = $('logClear');
+  if (!c.dataset.ask){ c.dataset.ask = '1'; c.textContent = '本当に消す？（もう一度押す）'; clearTimeout(c._t); c._t = setTimeout(()=>{ delete c.dataset.ask; c.textContent = '記録を消す'; }, 4000); return; }
+  try { localStorage.removeItem(LOG_KEY); } catch(e){}
+  delete c.dataset.ask; c.textContent = '消しました'; track('haa_log_clear', {});
+  renderLog(); renderRecStrip(); if (LOG_UI.cast) pushView();
+});
+
+
+// 配信モードの遊んでいる画面は、スクロールなしで1画面に収める（足りなければ --fit で文字と余白をまとめて縮める）。進行役メニューや記録を開いている間は縮めない
+function fitStream(){
+  const b = document.body, r = document.documentElement;
+  if (!b.classList.contains('stream')) return;
+  // 開いている進行役メニューが見えているときだけ縮めない（隠れた場面のメニューが開いたままだと、縮めずにはみ出していた）
+  if (!b.classList.contains('playing') || [...document.querySelectorAll('.host-menu[open]')].some(d=>d.getClientRects().length > 0) || (LOG_UI && LOG_UI.open)){ r.style.removeProperty('--fit'); return; }
+  let f = 1; r.style.setProperty('--fit', '1');
+  for (let i=0; i<16 && r.scrollHeight > innerHeight + 1 && f > 0.42; i++){ f -= 0.04; r.style.setProperty('--fit', f.toFixed(2)); }
+}
+window.addEventListener('resize', ()=>{ clearTimeout(window.__fitT); window.__fitT = setTimeout(fitStream, 120); });
+document.addEventListener('toggle', e=>{ if (e.target.classList && e.target.classList.contains('host-menu')) fitStream(); }, true);
+// ===== 配信モードの予想の表（2026-10-20）: 縦＝当てる人・横＝番号。1人ずつ画面が切り替わる形をやめる =====
+function voteTotalN(){ return S.players*S.k - S.k; }
+function voteDoneN(){ let d = 0; Object.values(S.votes||{}).forEach(v=>d += Object.keys(v).length); return d; }
+function renderVoteGrid(){
+  const used = S.pool.slice().sort((a,b)=>a-b);
+  const one = S.k === 1;
+  $('voteWho').textContent = '予想を入れる';
+  $('voteHint').innerHTML = '離れた場所の人の予想は、DMやチャットで聞いて、その人の行の番号を押してください。押し直すときは、同じ行の別の番号を押すだけです。';
+  $('voteTarget').innerHTML = one ? '<b>'+esc(pName(S.act[0]))+'</b> さんは、どの気持ちだった？' : '演じた人ごとに、当てる人の予想を押します';
+  let h = '';
+  for (let t=0;t<S.k;t++){
+    if (!one) h += '<p class="vg-t"><b>'+esc(pName(S.act[t]))+'</b> さんの気持ち</p>';
+    h += '<div class="vg-tbl" role="table" aria-label="'+esc(pName(S.act[t]))+'さんの気持ちの予想">';
+    for (let v=0; v<S.players; v++){
+      if (v === S.act[t]) continue;
+      const cur = S.votes[v] && S.votes[v][t];
+      h += '<div class="vg-row'+(cur!==undefined?' done':'')+'" role="row"><span class="vg-nm" role="rowheader"><i style="background:'+COLORS[v%COLORS.length].bg+'"></i>'+esc(pName(v))+'</span><span class="vg-bs" role="cell">'
+        + used.map(ai=>'<button type="button" class="vg-b" data-v="'+v+'" data-t="'+t+'" data-a="'+ai+'" aria-pressed="'+(cur===ai)+'" aria-label="'+esc(pName(v))+'さんの予想 '+numOf(ai)+' '+esc(S.theme.acts[ai])+'">'+numOf(ai)+'</button>').join('')
+        + '</span></div>';
+    }
+    h += '</div>';
+  }
+  $('voteGrid').innerHTML = h;
+  const lg = $('voteLegend');
+  if (lg){ lg.hidden = !one; lg.innerHTML = one ? used.map(ai=>'<span><b>'+numOf(ai)+'</b>'+esc(S.theme.acts[ai])+'</span>').join('') : ''; }
+  const done = voteDoneN(), total = voteTotalN();
+  $('voteProg').textContent = '予想 '+done+' / '+total+(done >= total ? '（そろいました）' : '');
+  $('voteUndo').hidden = !(S.voteHist && S.voteHist.length);
+  $('voteSkip').textContent = done >= total ? '予想がそろった → 答え合わせへ' : '予想をここまでにして答え合わせへ';
+}
+$('voteGrid').addEventListener('click', e=>{
+  const b = e.target.closest('.vg-b'); if (!b) return;
+  if (Date.now() - (S.voteShownAt||0) < 350) return; // 画面が出た直後の押しまちがいは数えない
+  const v = +b.dataset.v, t = +b.dataset.t, ai = +b.dataset.a;
+  const prev = S.votes[v] && S.votes[v][t];
+  if (prev === ai) return;
+  S.votes[v] = S.votes[v] || {}; S.votes[v][t] = ai;
+  (S.voteHist = S.voteHist || []).push({voter:v, target:t, prev:prev});
+  sfx('pick'); renderVoteGrid(); pushView();
+});
+
+// ===== 配信モード：進行役だけが使う部品は「進行役メニュー」1行に畳む（開けば使える。配信画面を大事な情報に回す） =====
+function hostMenu(card, ids, label){
+  const d = document.createElement('details'); d.className = 'host-menu';
+  d.innerHTML = '<summary>'+label+'</summary>';
+  ids.forEach(sel=>{ const el = typeof sel === 'string' ? card.querySelector(sel) : sel; if (el) d.appendChild(el); });
+  return d;
+}
+function setupHostMenus(){
+  if (!document.body.classList.contains('stream')) return;
+  const deal = $('step-deal'), dm = hostMenu(deal, ['.deal-remote','#joinBox','#sentHint'], '進行役メニュー（離れた人への送り方・参加リンク）');
+  deal.insertBefore(dm, $('dealBack'));
+  const vote = $('step-vote'), vm = hostMenu(vote, ['#voteHint'], '進行役メニュー（予想の入れ方）');
+  vote.insertBefore(vm, $('voteSkip') && $('voteSkip').parentNode === vote ? $('voteSkip') : null);
+  const res = $('step-result'), rm = hostMenu(res, ['#annBox'], '進行役メニュー（発表リンク）');
+  res.insertBefore(rm, $('resCands'));
+  const main = res.querySelector('.res-main');
+  if (main) ['apNext','nextPick','resultBack'].forEach(id=>{ const el = $(id); if (el) main.appendChild(el); });
+}
+
 // Init
 renderStats();
+applyStream();
+renderActorPick();
+setupHostMenus();
+renderRecStrip();
+const GUIDE_KEY = 'haa-guide-seen';
+try { if ($('firstGuide')) $('firstGuide').open = !localStorage.getItem(GUIDE_KEY); } catch(e){ if ($('firstGuide')) $('firstGuide').open = true; }
+if (document.body.classList.contains('stream') && $('namesBox')) $('namesBox').open = true;
+// 配信モードでは、市販版のリンク（PR）を「始める」ボタンの下へ移す（ボタンがPRの下に押し下げられないように）
+if (document.body.classList.contains('stream')){
+  const sm = document.querySelector('.shop-mini'), dock = $('dock');
+  if (sm && dock) dock.parentNode.insertBefore(sm, dock.nextSibling);
+}
+$('viewOpenBtn').addEventListener('click', ()=>{ pushView(); window.open('/view/', 'haaView', 'width=1280,height=720'); track('haa_view_open',{}); });
+$('viewCopyBtn').addEventListener('click', ()=>{ const u = location.origin + '/view/'; try { navigator.clipboard.writeText(u).then(()=>{ $('viewCopyBtn').textContent = 'コピーしました'; }); } catch(e){ window.prompt('このURLを、操作する画面と同じブラウザで開いてください', u); } });
+(function(){
+  const v = castOn() ? 'on' : 'off';
+  document.querySelectorAll('input[name=haaCast]').forEach(r=>{
+    r.checked = r.value === v;
+    r.addEventListener('change', ()=>{ if (!r.checked) return; try { localStorage.setItem(CAST_KEY, r.value); } catch(e){} track('haa_stream_cast',{cast:r.value}); });
+  });
+})();
+$('streamToggle').addEventListener('change', e=>{
+  try{ localStorage.setItem(STREAM_KEY, e.target.checked ? '1' : '0'); }catch(_){}
+  track('haa_stream_toggle',{on:e.target.checked});
+  const u = new URL(location.href); u.searchParams.delete('mode');
+  setTimeout(()=>location.replace(u.pathname + u.search), 150);
+});
+// /odai/ からの「このお題で遊ぶ」（?cat=定番のキー&word=お題）
+const Q = new URLSearchParams(location.search);
+// ===== 参加者画面（離れて遊ぶリンクを開いた人） =====
+// 予想と成績はこの端末の localStorage（気持ちは入れない）。自分のカードはその回だけ sessionStorage（次の回で上書き・ほかの人のカードは持たない）
+const G = {cur:null, ann:null, kind:'', revealed:false};
+const GS_KEY = 'haa-guest', GC_KEY = 'haa-guest-card', GV_KEY = 'haa-guest-view';
+function gLoad(){ try { const v = JSON.parse(localStorage.getItem(GS_KEY)||'null'); if (v && typeof v === 'object') return {p:v.p||{}, r:v.r||{}, m:v.m||{}, o:Array.isArray(v.o)?v.o:[]}; } catch(e){} return {p:{}, r:{}, m:{}, o:[]}; }
+// その回で自分が何番目の演じる人か（気持ちは入れない）。発表リンクを別のタブで開いても「あなた」が分かるように
+function gMe(g){ if (G.cur && G.cur.g === g) return G.cur.me; const m = gLoad().m[g]; return Number.isInteger(m) ? m : -1; }
+function gSave(v){
+  while (v.o.length > 40){ const g = v.o.shift(); delete v.p[g]; delete v.r[g]; delete v.m[g]; }
+  try { localStorage.setItem(GS_KEY, JSON.stringify(v)); } catch(e){}
+}
+function gTouch(v, g){ if (v.o.indexOf(g) < 0) v.o.push(g); }
+function gClean(o, k){
+  if (!o || o.v !== 2 || typeof o.w !== 'string' || !o.w || !Array.isArray(o.c) || o.c.length < 2 || o.c.length > 8 || !o.c.every(x=>typeof x === 'string')) return null;
+  if (!Array.isArray(o.A) || !o.A.length || o.A.length > 8) return null;
+  const c = {v:2, k:k, w:o.w.slice(0,40), c:o.c.map(x=>x.slice(0,60)), A:o.A.map(x=>[String(Array.isArray(x)?x[0]:x).slice(0,12), Math.abs(+(Array.isArray(x)?x[1]:0)|0) % 8]),
+    g:String(o.g||'').replace(/[^a-z0-9]/gi,'').slice(0,12) || 'x', rd:Math.max(0, +o.rd|0), n:typeof o.n === 'string' ? o.n.slice(0,12) : '', s:o.s === 1 ? 1 : 0, me:-1};
+  if (k === 'r'){
+    if (typeof o.a !== 'string' || !(o.me >= 0 && o.me < c.A.length)) return null;
+    c.a = o.a.slice(0,60); c.me = o.me|0;
+  }
+  if (k === 'a'){
+    if (!Array.isArray(o.X) || o.X.length !== c.A.length || !o.X.every(x=>Number.isInteger(x) && x >= 0 && x < c.c.length)) return null;
+    c.X = o.X.slice();
+  }
+  return c;
+}
+function gParse(text){
+  const m = String(text||'').match(/[?&](r|j|a)=([A-Za-z0-9_\-%]+)/);
+  if (!m) return null;
+  let o = null; try { o = b64d(decodeURIComponent(m[2])); } catch(e){ return {k:m[1], o:null}; }
+  return {k:m[1], o:o};
+}
+// 参加者画面は、演技を見ている間に画面が暗くならないように（Wake Lock が使える端末だけ。失敗しても何も出さない）
+let G_WL = null;
+function gKeepAwake(){
+  try {
+    if (G_WL || !('wakeLock' in navigator) || document.visibilityState !== 'visible') return;
+    navigator.wakeLock.request('screen').then(l=>{ G_WL = l; window.__haaWL = 1; l.addEventListener('release', ()=>{ G_WL = null; }); }).catch(()=>{});
+  } catch(e){}
+}
+document.addEventListener('visibilitychange', ()=>{ if (document.body.classList.contains('gmode')) gKeepAwake(); });
+function gHost(o){ return o && o.s === 1 ? '配信者さん' : '送ってくれた人'; }
+function enterGuest(){
+  gKeepAwake();
+  const b = document.body;
+  b.classList.add('gmode'); b.classList.remove('stream','playing','at-result','veiling');
+  $('guest').hidden = false;
+}
+function gNo(i){ return NUMS[i] || ''; }
+function gView(st){
+  // 自分の配信に映すとき（このブラウザで表示ページを開いたときだけ）。自分のカードは入れない・答えは発表のあとだけ
+  let on = false; try { on = sessionStorage.getItem(GV_KEY) === '1'; } catch(e){}
+  if (!on) return;
+  const base = G.ann || G.cur; if (!base) return;
+  const s = Object.assign({t:Date.now(), site:'haa.kkpwebninja.com', word:base.w,
+    cands:base.c.map((t,i)=>({no:gNo(i), text:t})), actors:base.A.map(x=>x[0])}, st);
+  try { localStorage.setItem('haa-view-state', JSON.stringify(s)); } catch(e){}
+  try { VIEW_CH && VIEW_CH.postMessage(s); } catch(e){}
+}
+function gTargets(o){ const t = []; for (let i=0;i<o.A.length;i++) if (i !== o.me) t.push(i); return t; }
+function gRenderRound(){
+  const o = G.ann || G.cur, isAnn = !!G.ann;
+  $('gErr').hidden = true; $('gMain').hidden = false;
+  $('gWho').textContent = isAnn ? '答え合わせ' : (o.n ? o.n+' さんの画面' : '参加者の画面');
+  $('gRound').textContent = o.rd ? o.rd+'回目' : '';
+  $('hbStep').textContent = '';
+  $('gWord').textContent = '「'+o.w+'」';
+  const names = o.A.map(x=>x[0]+' さん').join('・');
+  const mine = G.cur && (!G.ann || G.cur.g === G.ann.g) && G.cur.a ? G.cur : null;
+  if (isAnn) $('gRole').textContent = '演じたのは ' + names;
+  else if (o.k === 'r') $('gRole').textContent = o.A.length === 1 ? 'あなたが演じる番です' : 'あなたも演じます（'+names+'）';
+  else $('gRole').textContent = '演じるのは ' + names;
+  // いまあなたがすること（1文）。演じる人には配信に映さない注意も
+  const hs = gHost(o), nowEl = $('gNow');
+  nowEl.hidden = isAnn;
+  if (!isAnn) nowEl.textContent = o.k === 'r'
+    ? (o.A.length === 1 ? 'さっきの気持ちで「'+o.w+'」と言ってね' : 'さっきの気持ちで「'+o.w+'」と言ってね。ほかの人の番では、何番の気持ちか予想してね')
+    : '演じる人を見て（聞いて）、何番の気持ちか'+hs+'に伝えてね';
+  $('gSoft').hidden = isAnn || !mine || o.s !== 1;  // 配信で作られたリンクのときだけ
+  $('gMyCard').hidden = !mine || $('reveal').classList.contains('show');
+  $('gMyAct').hidden = true; $('gMyCard').textContent = '自分のカードをもう一度見る';
+  if (mine){ const i = mine.c.indexOf(mine.a); $('gMyAct').textContent = (i >= 0 ? gNo(i)+' ' : '') + mine.a; }
+  gRenderCands();
+}
+function gRenderCands(){
+  const o = G.ann || G.cur, v = gLoad(), picks = v.p[o.g] || {};
+  const me = gMe(o.g);
+  const tg = gTargets({A:o.A, me:me});
+  const canPick = !G.revealed && tg.length > 0;
+  const one = tg.length === 1;
+  const list = $('gCands'); list.innerHTML = '';
+  $('gCandH').innerHTML = canPick && one ? '気持ちの候補<small>予想を1つ選ぶ（自分の画面だけ）</small>' : '気持ちの候補';
+  const ansSet = {};
+  if (G.revealed && G.ann) G.ann.X.forEach((x,i)=>{ ansSet[x] = (ansSet[x]||[]).concat(i); });
+  o.c.forEach((text, ci)=>{
+    const el = document.createElement(canPick && one ? 'button' : 'div');
+    el.className = 'g-c';
+    if (canPick && one){ el.type = 'button'; el.setAttribute('aria-pressed', String(picks[tg[0]] === ci)); }
+    let tag = '';
+    if (G.revealed && ansSet[ci]) { el.classList.add('ans'); tag = '<span class="g-tag t-ans">正解'+(o.A.length > 1 ? '・'+esc(ansSet[ci].map(i=>o.A[i][0]).join('・')) : '')+'</span>'; }
+    else if (one && picks[tg[0]] === ci) tag = '<span class="g-tag t-me">あなたの予想</span>';
+    el.innerHTML = '<span class="no">'+gNo(ci)+'</span><span>'+esc(text)+'</span>'+tag;
+    if (canPick && one) el.addEventListener('click', ()=>gPick(tg[0], ci));
+    list.appendChild(el);
+  });
+  // 演じる人が2人以上：1人ずつ番号で予想
+  const tw = $('gTargets'); tw.innerHTML = '';
+  if (canPick && !one){
+    tg.forEach(ti=>{
+      const row = document.createElement('div'); row.className = 'g-tg';
+      row.innerHTML = '<span class="g-tn">'+esc(o.A[ti][0])+' さんは？</span>';
+      o.c.forEach((_, ci)=>{
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'g-nb';
+        b.textContent = gNo(ci); b.setAttribute('aria-pressed', String(picks[ti] === ci));
+        b.setAttribute('aria-label', o.A[ti][0]+' さんは '+gNo(ci));
+        b.addEventListener('click', ()=>gPick(ti, ci));
+        row.appendChild(b);
+      });
+      tw.appendChild(row);
+    });
+  }
+  const msg = $('gMsg'), say = $('gSay'), nx = $('gNext'), hs = gHost(o);
+  say.hidden = true; nx.hidden = false;
+  if (G.revealed){ msg.innerHTML = ''; nx.textContent = '次の回は'+hs+'がまた送ります。届いたリンクを開けば、この画面で続きます（このページは閉じても大丈夫）'; }
+  else if (!tg.length){ msg.innerHTML = ''; nx.textContent = '演じ終わったら、'+hs+'が答えを送ります（このページは閉じても大丈夫）'; }
+  else {
+    const chosen = tg.filter(ti=>picks[ti] !== undefined);
+    if (chosen.length){
+      // 伝えるときに読み上げやすいよう、選んだ番号を大きく（この画面だけ・どこにも送らない）
+      say.hidden = false;
+      say.innerHTML = '<small>'+esc(hs)+'に伝える番号</small>' + chosen.map(ti=>(one ? '' : '<span class="g-sn">'+esc(o.A[ti][0])+' さん</span>')+'<b>'+gNo(picks[ti])+'</b>').join('');
+    }
+    msg.innerHTML = chosen.length ? '選び直せます。しるしはこの画面だけで、どこにも送られません' : '番号をタップすると、自分の予想にしるしが付きます（この画面だけ）';
+    nx.textContent = '答えは'+hs+'が送ります（このページは閉じても大丈夫）';
+  }
+}
+function gPick(ti, ci){
+  const o = G.ann || G.cur; if (G.revealed) return;
+  const v = gLoad(); v.p[o.g] = v.p[o.g] || {}; v.p[o.g][ti] = ci; gTouch(v, o.g); gSave(v);
+  sfx('pick', o.s === 1);
+  gRenderCands();
+  track('haa_guest_pick',{});
+}
+function gTallyText(v){
+  let h = 0, t = 0; Object.keys(v.r).forEach(g=>{ h += v.r[g][0]|0; t += v.r[g][1]|0; });
+  return t ? 'この端末の成績：<b>'+t+'</b> 回の予想で <b>'+h+'</b> 回当たり' : '';
+}
+function gReveal(instant){
+  const o = G.ann; G.revealed = false;
+  $('gResSec').hidden = false; $('gAns').innerHTML = ''; $('gMine').textContent = ''; $('gMine').className = 'g-mine'; $('gTally').innerHTML = '';
+  $('gAd').hidden = true;
+  const cd = $('gCd');
+  const finishReveal = ()=>{
+    cd.hidden = true; G.revealed = true;
+    const v = gLoad(), picks = v.p[o.g] || {};
+    const me = gMe(o.g);
+    $('gAns').className = 'ans-grid' + (o.A.length === 1 ? ' one' : '');
+    let hit = 0, tot = 0;
+    o.A.forEach((x, i)=>{
+      const card = document.createElement('div'); card.className = 'ans-card' + (instant ? '' : ' pop');
+      card.style.setProperty('--pc', COLORS[x[1]%COLORS.length].bg); card.style.animationDelay = (i*0.12)+'s';
+      let chip = '';
+      if (i !== me && picks[i] !== undefined){ tot++; const ok = picks[i] === o.X[i]; if (ok) hit++;
+        chip = '<div class="ans-votes"><span class="vc '+(ok?'ok':'ng')+'">'+(ok?'○ あなたの予想 ':'× あなたの予想 ')+gNo(picks[i])+'</span></div>'; }
+      card.innerHTML = '<div class="ans-top"><span class="ans-dot"></span><span class="ans-name">'+esc(x[0])+(i === me ? '（あなた）' : '')+'</span><span class="ans-word">「'+esc(o.w)+'」</span></div>'
+        + '<div class="ans-main"><span class="ans-kick">正解</span><span class="ans-no">'+gNo(o.X[i])+'</span><span class="ans-act">'+esc(o.c[o.X[i]])+'</span></div>' + chip;
+      $('gAns').appendChild(card);
+    });
+    // 同じ回を2回数えない（開き直し・貼り直し）
+    if (tot && !v.r[o.g]){ v.r[o.g] = [hit, tot]; gTouch(v, o.g); gSave(v); }
+    const mineEl = $('gMine');
+    if (tot){ mineEl.textContent = tot === 1 ? (hit ? '当たり！' : 'はずれ…') : tot+'人中 '+hit+'人 当たり'; mineEl.className = 'g-mine ' + (hit ? 'ok' : 'ng'); }
+    else mineEl.textContent = me >= 0 && o.A.length === 1 ? 'みんなは当てられたかな？' : '';
+    const tv = gLoad(), tt = gTallyText(tv);
+    $('gTally').innerHTML = tt ? tt + ' <button type="button" class="g-reset" id="gReset">成績を0に戻す</button>' : '';
+    const rb = $('gReset'); if (rb) rb.addEventListener('click', ()=>{ const w = gLoad(); w.r = {}; gSave(w); $('gTally').textContent = '成績を0に戻しました'; });
+    gRenderCands();
+    if (!instant){ confetti(); sfx('fanfare', o.s === 1); }
+    gView({step:'result', veiling:false, quick:true, answers:o.A.map((x,i)=>({name:x[0], color:COLORS[x[1]%COLORS.length].bg, no:gNo(o.X[i]), act:o.c[o.X[i]], chips:[]})), scores:null, ask:''});
+    // Advertisementは答えのあと（配信モードで作られたリンク・配信モードの端末では出さない）
+    if (!window.__haaStream && !window.__haaGuestNoAd){ $('gAd').hidden = false; const gPush = ()=>setTimeout(()=>{ if (window.__gAdPushed) return; window.__gAdPushed = true; try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){} }, 60); if (window.__haaLoadAds) window.__haaLoadAds(gPush); else gPush(); }
+    if (!instant) track('haa_guest_reveal',{hit:hit, tot:tot});
+  };
+  if (instant){ finishReveal(); return; }
+  gRenderCands();
+  cd.hidden = false; let n = 3;
+  const tick = ()=>{
+    if (n === 0){ finishReveal(); return; }
+    gView({step:'result', veiling:true, cd:n});
+    sfx('cd', o.s === 1);
+    cd.textContent = n; cd.classList.remove('tick'); void cd.offsetWidth; cd.classList.add('tick');
+    n--; setTimeout(tick, 700);
+  };
+  tick();
+}
+// リンクを開いた／貼ったとき。fromStore はページを読み直したとき（カードを出し直さない）
+function guestOpen(k, o, how){
+  enterGuest();
+  if (k === 'a'){
+    G.ann = o; G.revealed = false;
+    if (G.cur && G.cur.g !== o.g) G.cur = null;
+    gRenderRound();
+    window.scrollTo(0,0);
+    const done = gLoad().r[o.g];
+    gReveal(!!done && how !== 'paste');
+  } else {
+    G.cur = o; G.ann = null; G.revealed = false;
+    $('gResSec').hidden = true; $('gAd').hidden = true;
+    // その回の自分のカードだけをこのタブに残す（次の回で上書き。localStorage には残さない）
+    try { sessionStorage.setItem(GC_KEY, JSON.stringify(o)); } catch(e){}
+    if (k === 'r'){ const v = gLoad(); v.m[o.g] = o.me; gTouch(v, o.g); gSave(v); }
+    gRenderRound();
+    if (k === 'r' && how !== 'store'){
+      $('revealWho').textContent = (o.n || '') + ' さん';
+      $('revealWordLine').textContent = '言う言葉は「' + o.w + '」';
+      $('revealAct').textContent = o.a;
+      $('revealAct').classList.add('maskable','masked'); $('revealTapNote').hidden = true;
+      $('revealClose').textContent = '覚えた！閉じる';
+      $('revealNow').textContent = '下をタップして気持ちを見たら、その気持ちで「' + o.w + '」と言ってね'; $('revealNow').hidden = false;
+      $('revealSoft').hidden = o.s !== 1;
+      $('reveal').classList.add('show','from-link');
+      $('gMyCard').hidden = true;
+    }
+    window.scrollTo(0,0);
+    gView({step:'perform'});
+  }
+  track('haa_guest_open',{kind:k, how:how||'link', mode:o && o.s === 1 ? 'stream' : 'remote'});
+}
+function guestError(){
+  enterGuest(); $('gMain').hidden = true; $('gErr').hidden = false; $('hbStep').textContent = '';
+}
+$('gMyCard').addEventListener('click', ()=>{
+  const a = $('gMyAct'); a.hidden = !a.hidden;
+  $('gMyCard').textContent = a.hidden ? '自分のカードをもう一度見る' : '自分のカードを隠す';
+});
+function gPasteGo(){
+  const inp = $('gPaste'), msg = $('gPasteMsg'), r = gParse(inp.value);
+  const o = r && gClean(r.o, r.k);
+  if (!o){ msg.textContent = 'リンクが読めませんでした。届いたリンクをそのまま貼ってください'; msg.className = 'g-pmsg ng'; return; }
+  inp.value = ''; msg.textContent = 'リンクをそのまま開いても、この画面で続きます'; msg.className = 'g-pmsg';
+  $('reveal').classList.remove('show','from-link');
+  guestOpen(r.k, o, 'paste');
+}
+$('gPasteGo').addEventListener('click', gPasteGo);
+$('gPaste').addEventListener('keydown', e=>{ if (e.key === 'Enter'){ e.preventDefault(); gPasteGo(); } });
+$('gViewOpen').addEventListener('click', ()=>{
+  try { sessionStorage.setItem(GV_KEY, '1'); } catch(e){}
+  if (G.ann && G.revealed) gReveal(true); else gView({step:'perform'});
+  window.open('/view/', 'haaView', 'width=1280,height=720'); track('haa_view_open',{guest:1});
+});
+
+// 届いたリンク（?r= 演じる人／?j= 当てる人／?a= 発表）。開いたらURLから消す
+{
+  let gk = null; ['r','j','a'].forEach(k=>{ if (!gk && Q.get(k)) gk = k; });
+  if (gk){
+    let o = null; try { o = b64d(String(Q.get(gk)).match(/^[A-Za-z0-9_-]*/)[0]); } catch(e){}
+    if (gk === 'r' && o && !o.v){
+      // これまでの形（10/15〜16の ?r=・配信モードの別ウィンドウ）。役だけを出して、閉じたらトップ
+      $('revealWho').textContent = String(o.n||'') + ' さん';
+      $('revealWordLine').textContent = o.w ? '言う言葉は「' + String(o.w) + '」' : '';
+      $('revealClose').textContent = '覚えた！閉じる';
+      const qs = (typeof o.q === 'string' && /^[A-Za-z0-9_-]+$/.test(o.q)) ? o.q : '';
+      if (qs){
+        // 配信モードの小窓（10/16〜）：まずその人用のQRだけ。気持ちは「どんな気持ちで言うか見る」を押したときだけ入れる（ほかの人のQRを開いても役が目に入らない）
+        const qk = o.qk === 'j' ? 'j' : 'r', act = o.a ? String(o.a) : '';
+        $('reveal').classList.add('has-qr');
+        $('revealAct').textContent = ''; $('revealAct').hidden = true;
+        $('revealQrCap').textContent = qk === 'r' ? 'スマホで読み取ると、その人の画面にだけ気持ちが出ます' : 'スマホで読み取ると、お題と候補が開いて予想を選べます（答えは入っていません）';
+        if (qk === 'j'){ $('revealWho').textContent = String(o.n||'') + ' さん（参加リンク）'; $('revealWarn').hidden = true; $('revealClose').textContent = '閉じる'; }
+        // QRはいきなり出さず、「QRを出す」を押してから（10/16 ユーザー指示）
+        $('revealQrBtn').hidden = false;
+        $('revealQrBtn').addEventListener('click', ()=>{
+          $('revealQrBtn').hidden = true;
+          loadQR(()=>{ drawQR($('revealQr'), location.origin + '/?' + qk + '=' + qs + ktq()); $('revealQr').hidden = false; $('revealQrCap').hidden = false; });
+        });
+        if (act){
+          $('revealShow').hidden = false;
+          $('revealShow').addEventListener('click', ()=>{
+            $('revealAct').textContent = act; $('revealAct').hidden = false;
+            $('revealShow').hidden = true; $('revealQrBtn').hidden = true; $('revealQr').hidden = true; $('revealQrCap').hidden = true;
+            $('reveal').classList.remove('has-qr');
+          });
+        }
+      } else {
+        $('revealAct').textContent = String(o.a||'');
+      }
+      $('reveal').classList.add('show','from-link');
+      track('haa_role_open',{});
+      try { history.replaceState(null, '', location.pathname); } catch(e){}
+    } else {
+      const c = gClean(o, gk);
+      if (c){ guestOpen(gk, c, 'link'); if (gk === 'r') track('haa_role_open',{v:2}); try { history.replaceState(null, '', location.pathname + '?play'); } catch(e){} }
+      else { guestError(); try { history.replaceState(null, '', location.pathname); } catch(e){} }
+    }
+  } else if (Q.has('play')){
+    // 読み直したとき：このタブに残したその回のカードで続ける
+    let o = null; try { o = JSON.parse(sessionStorage.getItem(GC_KEY) || 'null'); } catch(e){}
+    const c = o && gClean(o, o.k === 'r' ? 'r' : 'j');
+    if (c) guestOpen(c.k, c, 'store');
+    else { try { history.replaceState(null, '', location.pathname); } catch(e){} }
+  }
+}
+if (Q.get('cat') && THEMES[Q.get('cat')]) S.cat = Q.get('cat');
 renderCats();
-renderPick();
-setPlayers(4);
+renderPick(Q.get('word') || '');
+// 配信モードは前回の人数で始める（配信中に読み直しても4人に戻らない）。ふだんは4人から
+{ let np = 4; if (document.body.classList.contains('stream')){ try { const v = +localStorage.getItem('haa-players'); if (v >= 1 && v <= 8) np = v; } catch(e){} } setPlayers(np); }
+if (Q.get('cat')) { try { history.replaceState(null, '', location.pathname + (Q.get('mode')==='stream' ? '?mode=stream' : '')); } catch(e){} }
 syncDock('setup');
+// 配信から来た人への一言（参加者画面・配信モードでは出さない。閉じたらこのタブでは出さない）
+(function(){
+  const box = $('fromStream'); if (!box || document.body.classList.contains('stream')) return;
+  if (/[?&](r|j|a)=/.test(location.search) || /[?&]play\b/.test(location.search)) return;
+  let ref = ''; try { ref = new URL(document.referrer).hostname; } catch(e){}
+  const hit = /(^|\.)(youtube\.com|youtu\.be|twitch\.tv|tiktok\.com|x\.com|t\.co|twitter\.com|nicovideo\.jp)$/.test(ref) || /[?&]from=stream\b/.test(location.search);
+  if (!hit) return;
+  try { if (sessionStorage.getItem('haa-fs-x')) return; } catch(e){}
+  box.hidden = false;
+  track('haa_from_stream', {ref: ref || 'param'});
+  $('fromStreamX').addEventListener('click', ()=>{ box.hidden = true; try { sessionStorage.setItem('haa-fs-x','1'); } catch(e){} });
+})();
 
 // Advertisementは結果画面が表示されてから1回だけ読み込む。
 // 読み込み時に押すと、枠が非表示（幅0）のままなのでAdvertisementが入らず、枠が死んでいた（2026-09-20 修正）。

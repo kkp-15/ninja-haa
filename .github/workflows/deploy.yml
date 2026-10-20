@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Remove non-public files
         # Pages の deploy は .assetsignore を見ないので、配信しないファイルはここで消す
-        run: rm -rf ./*.md .claude .github .gitignore .assetsignore wrangler.jsonc .wrangler build.py build_en.py scripts_build_odai.py
+        run: rm -rf ./*.md .claude .github .gitignore .assetsignore wrangler.jsonc .wrangler build.py build_en.py scripts_build_odai.py check_en.mjs
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
