@@ -212,6 +212,12 @@ body.stream .cast-sw{display:flex;flex-wrap:wrap;justify-content:center;gap:.2re
 .cast-sw input{width:20px;height:20px;accent-color:var(--orange)}
 .cast-sw .hint{flex-basis:100%;margin:0;text-align:center}
 body.stream .sfx-sw{display:flex!important;margin-top:0}
+body.stream .lis-sw.off{display:none!important}
+/* 候補の数（配信モード）：人数のすぐ下に、見出しを大きく（2026-10-21「選択肢もっと増やしてやりたい」） */
+.cn-mem{display:none}
+body.stream .cand-n .cn-l{font-size:1.15rem;font-weight:800;color:var(--ink)}
+body.stream .cand-n .cn-v{font-size:1.2rem}
+body.stream .cand-n .cn-mem{display:inline}
 .stream-sw input{width:20px;height:20px;accent-color:var(--orange)}
 @media(min-width:768px){.stream-sw{display:flex}}
 body.stream .stream-sw{font-size:1.05rem}
@@ -882,6 +888,9 @@ html body.stream #step-vote .stage.sm .st-q b{color:var(--sumi)}
 .vg-b{min-width:48px;min-height:48px;padding:0 .3em;border:2px solid var(--sumi,#1f1a17);border-radius:6px;background:var(--kinari,#fbf3e4);color:var(--sumi,#1f1a17);font:inherit;font-weight:900;font-size:1.3rem;cursor:pointer;line-height:1}
 .vg-b[aria-pressed="true"]{background:var(--shu,#d9432a);color:#fff;transform:translate(2px,2px)}
 .vg-row.done .vg-b[aria-pressed="false"]{opacity:.45}
+/* リスナーの行（2026-10-21）：プレイヤーと同じ形・上に細い罫線で区切る */
+.vg-row.lis{border-top:2px dashed var(--line)}
+.vg-row.lis .vg-nm{font-weight:900}
 html body.stream .vg-tbl{gap:calc(.7*var(--u))}
 html body.stream .vg-row{gap:calc(1.4*var(--u));padding:calc(.4*var(--u)) calc(1*var(--u));border-width:calc(.3*var(--u))}
 html body.stream .vg-nm{font-size:calc(3.6*var(--u));min-width:7em}
@@ -928,6 +937,10 @@ html body.stream #cdown.last[hidden]{display:none}
 html body.stream #cdown.last small{display:inline;margin:0;font-size:calc(3*var(--u))}
 html body.stream.veiling .res-cands li{font-size:calc(3.8*var(--u))}
 html body.stream .cdown{font-size:calc(16*var(--u))}
+/* カウントダウンは候補の番号（朱の ①②）と見分ける：墨の色・単位つき・数字だけ太く（2026-10-21） */
+html body.stream .cdown .cd-t{display:inline-flex;align-items:baseline;gap:.08em;color:var(--sumi);font-size:calc(5.6*var(--u));font-weight:800;line-height:1.1}
+html body.stream .cdown .cd-t b{font-family:system-ui,sans-serif;font-size:2.4em;font-weight:900;color:var(--sumi);font-variant-numeric:tabular-nums;padding:0 .08em}
+html body.stream #cdown.last .cd-t{font-size:calc(3.6*var(--u))}
 html body.stream .unveil-msg{font-size:calc(3*var(--u))}
 html body.stream .cta-comment{font-size:calc(2.8*var(--u));color:var(--shu)}
 /* 進行役メニュー（配信モードだけ作る）：1行に畳む */
@@ -969,6 +982,25 @@ html body.stream .deal-card{aspect-ratio:4/3}
 html body.stream .deal-card .n{font-size:calc(4*var(--u))}html body.stream .deal-card .who{font-size:calc(2*var(--u))}
 html body.stream .deal-card::before,html body.stream .deal-card.done::after{font-size:calc(1.3*var(--u))}
 html body.stream .deal-link{font-size:calc(1.7*var(--u));min-height:calc(4*var(--u));padding:calc(.2*var(--u))}
+/* 参加リンクの1行（2026-10-20 案C）：kit の k-fold を配信の大きさに。送信済みは小さな印 */
+.join-menu[hidden]{display:none}
+html body.stream .join-menu{margin:calc(.6*var(--u)) 0 calc(.4*var(--u))}
+html body.stream .join-menu>summary{min-height:calc(4.6*var(--u));padding:calc(.4*var(--u)) calc(.4*var(--u));gap:calc(1*var(--u));font-family:var(--k-body);font-weight:800;font-size:calc(2.4*var(--u));color:var(--k-shu)}
+html body.stream .join-menu>summary small{font-size:.8em;color:var(--k-sumi)}
+html body.stream .join-menu>summary::after{width:calc(3*var(--u));height:calc(3*var(--u));font-size:calc(1.8*var(--u))}
+html body.stream .join-menu .join-h{display:none}
+html body.stream .join-menu>.join-box{margin:0;padding:0 0 calc(.8*var(--u));border-top:0}
+html body.stream .join-menu.done{border-color:transparent}
+html body.stream .join-menu.done>summary{min-height:calc(3.6*var(--u));padding:calc(.2*var(--u)) calc(.4*var(--u));font-size:calc(1.8*var(--u));color:#2f7a45}
+html body.stream .join-menu.done>summary::after{width:calc(2.4*var(--u));height:calc(2.4*var(--u));font-size:calc(1.4*var(--u))}
+/* 発表リンクの1行（2026-10-21）：参加リンクの1行と同じ形。押すとコピー、済んだら小さな印 */
+html body.stream .ann.ann-out{margin:calc(.4*var(--u)) 0;padding:0;border:0;border-top:1px solid var(--k-line-soft);border-bottom:1px solid var(--k-line-soft);background:none}
+html body.stream .ann.ann-out .ann-h{display:none}
+html body.stream .ann.ann-out .ann-btn{display:flex;align-items:center;gap:calc(1*var(--u));width:100%;min-height:calc(4.6*var(--u));padding:calc(.4*var(--u));border:0;border-radius:0;background:none;text-align:left;font-family:var(--k-body);font-weight:800;font-size:calc(2.4*var(--u));color:var(--k-shu)}
+html body.stream .ann.ann-out .ann-btn small{font-size:.8em;color:var(--k-sumi)}
+html body.stream .ann.ann-out.done{border-color:transparent}
+html body.stream .ann.ann-out.done .ann-btn{min-height:calc(3.6*var(--u));padding:calc(.2*var(--u)) calc(.4*var(--u));font-size:calc(1.8*var(--u));color:#2f7a45}
+html body.stream .ann .k-seal,html body.stream .join-menu .k-seal{width:calc(2.8*var(--u));height:calc(2.8*var(--u));font-size:calc(1.5*var(--u))}
 /* 配る場面の巻物（2026-10-20）：視聴者に「いま◯◯さんが確認中」「全員の確認が済んだら始まります」・確認済みの人に判子。名前と印だけ */
 .deal-scroll{display:none;overflow:clip}
 html body.stream #step-deal>.hint:first-of-type{display:none}
@@ -1217,8 +1249,10 @@ html body.stream .vc-mk{margin-left:.3em;font-size:.7em;opacity:.85;font-family:
     <button class="btn-ghost" id="candDec" aria-label="候補を1つ減らす">−</button>
     <span class="cn-v"><b id="candCount">6</b>択</span>
     <button class="btn-ghost" id="candInc" aria-label="候補を1つ増やす">＋</button>
-    <span class="cn-h">多いほど当てにくい</span>
+    <span class="cn-h">多いほど当てにくい<span class="cn-mem">・前回の数を覚えています</span></span>
   </div>
+  <!-- 配信モード（配信する）だけ：予想の表に「リスナー」の行を足す（多かった番号を1タップで。集め方は配信者に任せ、サイトでは案内しない。2026-10-21） -->
+  <label class="stream-sw sfx-sw lis-sw" id="lisSw"><input type="checkbox" id="lisToggle" checked> 予想の表に「リスナー」の行（リスナーの答え＝多かった番号を押す）</label>
   <label class="stream-sw sfx-sw"><input type="checkbox" id="sfxToggle" checked> 効果音（カウントダウン・発表のファンファーレ）</label>
   <details class="view-open" id="viewOpen">
     <summary>OBSの取り込み方（くわしく）</summary>
@@ -1273,6 +1307,8 @@ html body.stream .vc-mk{margin-left:.3em;font-size:.7em;opacity:.85;font-family:
   <div class="deal-scroll" id="dealScroll" hidden aria-live="polite"></div>
   <div class="deal-grid" id="dealGrid"></div>
   <div class="join-box" id="joinBox" hidden></div>
+  <!-- 配信モードで離れた人がいる回だけ：当てる人に送る参加リンクを、進行役メニューの外に1行で出す（2026-10-20 案C）。開くと #joinBox をここへ移して使う。参加リンクに答えは入っていない -->
+  <details class="k-fold join-menu" id="joinMenu" hidden><summary id="joinSum"></summary></details>
   <p class="sent-hint" id="sentHint" hidden>送った人に「見た？」と声で確かめてね</p>
   <p class="hint deal-remote">離れた場所から遊ぶときは、カードの下の「◯◯さんに送る」でLINEやDiscordに送ってください。その人の画面にだけ気持ちが出ます<span class="normal-txt">。同じ部屋の人には「QRで渡す」で、その人のスマホで読み取ってもらえます</span><span class="stream-txt">。<b>配信モードでは、カードを押すと小窓にその人用のQRが出ます。自分の役は「どんな気持ちで言うか見る」で。</b>OBSでこのウィンドウだけを取り込めば、小窓は映りません</span></p>
   <button class="btn-sub" id="toPerform" disabled>全員見終わった → 演じる</button>
@@ -1494,11 +1530,11 @@ const THEMES = {
       { word: 'うん', acts: ['素直な「うん」','しぶしぶの「うん」','考えながらの「うん」','聞いていない「うん」','うれしい「うん」','心配な「うん」','あきらめの「うん」','決意の「うん」'] },
       { word: 'ねぇ', acts: ['甘える「ねぇ」','怒っている「ねぇ」','呼びかける「ねぇ」','内緒話の「ねぇ」','不安な「ねぇ」','からかう「ねぇ」','急かす「ねぇ」','なだめる「ねぇ」'] },
       { word: 'まぁ', acts: ['納得の「まぁ」','しかたない「まぁ」','驚きの「まぁ」','ごまかす「まぁ」','あきれた「まぁ」','なぐさめる「まぁ」','遠慮する「まぁ」','うれしい「まぁ」'] },
-      { word: 'ふーん', acts: ['納得の「ふーん」','興味がない「ふーん」','疑っている「ふーん」','感心した「ふーん」','嫉妬した「ふーん」','怒りをこらえた「ふーん」','意外だった「ふーん」','聞き流す「ふーん」'] },
-      { word: 'へえ', acts: ['素直に感心','初めて知った','興味がない','疑っている','うらやましい','皮肉まじり','思わず驚いた','相づちだけ'] },
+      { word: 'ふーん', acts: ['納得の「ふーん」','興味がない「ふーん」','疑っている「ふーん」','感心した「ふーん」','嫉妬した「ふーん」','怒りをこらえた「ふーん」','意外だった「ふーん」','すねている「ふーん」'] },
+      { word: 'へえ', acts: ['素直に感心','初めて知った','興味がない','疑っている','うらやましい','皮肉まじり','思わず驚いた','なつかしい'] },
       { word: 'あの', acts: ['話しかける','言いにくい','思い出せない','怒っている','照れている','急いでいる','謝る直前','内緒話をもちかける'] },
       { word: 'ちょっと', acts: ['呼び止める','怒っている','困っている','照れている','待ってほしい','ほんの少しだけ','嫌がっている','自慢げに'] },
-      { word: 'そうなんだ', acts: ['素直に納得','興味がない','驚いた','疑っている','うらやましい','聞き流している','心配している','話を切り上げたい'] },
+      { word: 'そうなんだ', acts: ['素直に納得','興味がない','驚いた','疑っている','うらやましい','同情している','心配している','話を切り上げたい'] },
       { word: 'いや', acts: ['否定する','照れ隠し','嫌がる','考え直す','驚き','笑いながら','怒っている','言いよどむ'] },
       { word: 'おっ', acts: ['何かを見つけた','驚いた','うれしい','警戒している','感心した','心当たりがある','困った','気づかないふりをやめた'] },
       { word: 'さあ', acts: ['知らない','始める合図','はぐらかす','面倒くさい','誘っている','気合いを入れる','考え中','相手に押しつける'] },
@@ -1542,12 +1578,12 @@ const THEMES = {
       { word: 'ちょっといいですか', acts: ['軽い相談','言いにくい報告','怒っている','助けを求める','雑談を始める','急ぎの用件','遠慮がち','いたずらっぽい'] },
       { word: 'お先に失礼します', acts: ['定時で帰る','気まずく帰る','疲れきって帰る','うれしそうに帰る','忙しい人を残して帰る','急いで帰る','初出勤の日','最終日'] },
       { word: '大丈夫です', acts: ['本当に平気','やせ我慢','遠慮している','やんわり断る','イライラしている','相手を安心させる','自信がない','急いでいる'] },
-      { word: '難しいですね', acts: ['本当に困っている','やんわり断る','考え込んでいる','感心している','皮肉まじり','他人事','興味がない','前向きに検討中'] },
+      { word: '難しいですね', acts: ['本当に困っている','やんわり断る','考え込んでいる','感心している','皮肉まじり','他人事','わくわくして','前向きに検討中'] },
       { word: '確認します', acts: ['すぐ動く','面倒くさい','困っている','自信満々','時間稼ぎ','怒りをこらえた','不慣れで不安','ていねいに'] },
       { word: '了解です', acts: ['ふつうに','しぶしぶ','本当は分かっていない','急いでいる','あきれている','やる気満々','怒りをこらえて','聞き流している'] },
       { word: 'お疲れさまです', acts: ['元気よく','本当に疲れて','すれ違いざまに','相手をねぎらう','気まずい相手に','早く帰りたくて','朝いちばんに','電話口で'] },
       { word: '申し訳ございません', acts: ['心から謝る','形だけ','電話口でていねいに','何度目か','泣きそう','怒りをこらえて','笑いをこらえて','早く終わらせたい'] },
-      { word: '検討します', acts: ['前向きに','断るつもりで','困って','その場しのぎ','本気で悩む','うれしそうに','重々しく','すでに忘れそう'] },
+      { word: '検討します', acts: ['前向きに','断るつもりで','困って','上の人の顔色を見て','本気で悩む','うれしそうに','重々しく','すでに忘れそう'] },
       { word: '今やります', acts: ['張り切って','あせって','しぶしぶ','やる気がない','頼もしく','言い訳っぽく','本当はもう終わっている','眠そうに'] },
       { word: 'お願いします', acts: ['ていねいに','必死に','軽く','気まずそうに','押しつけるように','期待をこめて','申し訳なさそうに','面接のように元気よく'] },
       { word: 'いいと思います', acts: ['本気で賛成','とりあえず','迷いながら','遠回しに反対','感動して','上の人に合わせて','眠そうに','自信がない'] },
@@ -1559,13 +1595,13 @@ const THEMES = {
     desc: '教室でそのまま使える。子どもでも演じ分けやすい。',
     list: [
       { word: 'はい', acts: ['元気な返事','眠い返事','しぶしぶの返事','怒られている時','手をあげる時','聞き返す「はい」','電話に出る「はい」','うれしい返事'] },
-      { word: 'いいよ', acts: ['気持ちよく許す','しぶしぶ許す','あきらめの「いいよ」','照れた「いいよ」','怒っている「いいよ」','投げやりな「いいよ」','うれしい「いいよ」','心配しながらの「いいよ」'] },
+      { word: 'いいよ', acts: ['気持ちよく許す','しぶしぶ許す','あきらめの「いいよ」','照れた「いいよ」','怒っている「いいよ」','いたずらっぽい「いいよ」','うれしい「いいよ」','心配しながらの「いいよ」'] },
       { word: 'あっ', acts: ['忘れ物に気づいた','人にぶつかった','思い出した','見つけた','失敗した','ひらめいた','危ないと思った','恥ずかしい'] },
       { word: 'やった', acts: ['大喜び','小さくガッツポーズ','信じられない','ほっとした','人前で控えめに','からかい混じり','疲れきった達成感','思わず出た'] },
       { word: 'ごめん', acts: ['本気で謝る','軽く謝る','しぶしぶ謝る','照れながら謝る','言い訳まじり','大失敗のあと','断るときの「ごめん」','小声の「ごめん」'] },
       { word: '先生', acts: ['呼びかける','告げ口する','困っている','甘える','怒っている','質問がある','驚いた','小声で'] },
       { word: '貸して', acts: ['軽く頼む','急いでいる','強引に','遠慮がち','怒っている','甘えて','初対面で緊張','取り返す'] },
-      { word: 'やばい', acts: ['いい意味で','悪い意味で','時間がない','おいしい','こわい','感動している','失敗した','うれしい'] },
+      { word: 'やばい', acts: ['いい意味で','悪い意味で','時間がない','おいしい','こわい','感動している','失敗した','眠気の限界'] },
       { word: 'やったー', acts: ['心から','控えめに','大げさに','泣きながら','周りを気にして小声で','本当は負けた','疲れて','信じられない'] },
       { word: 'わかった', acts: ['ひらめいた','しぶしぶ','わかったふり','うれしい','おこって','安心した','考えながら','やくそくする'] },
       { word: 'しゅくだい', acts: ['わすれた','おわった自慢','いやいや','いま思い出した','たくさんすぎる','たのしみ','友だちに聞く','かくしている'] },
@@ -1580,21 +1616,21 @@ const THEMES = {
     desc: '大人数でも回る。演じるほど笑いになる言葉。',
     list: [
       { word: 'うわー', acts: ['感動の「うわー」','ドン引きの「うわー」','痛がる「うわー」','驚きの「うわー」','うんざりの「うわー」','うらやましい「うわー」','こわい「うわー」','うれしい「うわー」'] },
-      { word: 'それな', acts: ['心から同意','軽く流す','無理やり合わせる','食い気味に同意','しみじみ同意','からかう','聞いていない','初めて聞いた'] },
-      { word: 'まじで', acts: ['本気で驚く','疑っている','感心する','あきれる','うれしい','こわい話を聞いた','聞き返す','冗談だと思っている'] },
-      { word: 'いやいや', acts: ['謙遜する','否定する','照れる','あきれる','止めようとする','怒っている','笑いをこらえる','困っている'] },
-      { word: 'かんぱい', acts: ['盛り上がった乾杯','静かな乾杯','形式的な乾杯','うれしい乾杯','送別の乾杯','疲れた乾杯','初対面の乾杯','再会の乾杯'] },
+      { word: 'それな', acts: ['心から同意','軽く流す','無理やり合わせる','食い気味に同意','しみじみ同意','からかう','得意げに','初めて聞いた'] },
+      { word: 'まじで', acts: ['本気で驚く','疑っている','感心する','あきれる','うれしい','こわい話を聞いた','聞き返す','うらやましい'] },
+      { word: 'いやいや', acts: ['謙遜する','否定する','面倒くさい','あきれる','止めようとする','怒っている','笑いをこらえる','困っている'] },
+      { word: 'かんぱい', acts: ['盛り上がった乾杯','静かな乾杯','形式的な乾杯','お祝いの乾杯','送別の乾杯','疲れた乾杯','初対面の乾杯','再会の乾杯'] },
       { word: 'もう一杯', acts: ['元気に','限界なのに','遠慮がち','強引にすすめる','しぶしぶ','うれしそうに','こっそり','これで最後'] },
-      { word: 'えー', acts: ['不満','おどろき','甘える','納得いかない','照れ隠し','聞き返す','期待している','がっかり'] },
-      { word: 'ないわー', acts: ['本気で否定','笑いながら','あきれて','冗談で','ドン引きして','悔しがって','かばいながら','自分にあきれて'] },
+      { word: 'えー', acts: ['不満','おどろき','甘える','うらやましい','照れ隠し','聞き返す','期待している','がっかり'] },
+      { word: 'ないわー', acts: ['本気で否定','笑いながら','あきれて','照れて','ドン引きして','悔しがって','かばいながら','自分にあきれて'] },
       { word: 'お会計', acts: ['金額に驚いて','おごるつもりで','まだ飲みたいのに','さっと終わらせたい','割り勘を切り出す','酔っぱらって','気まずそうに','名残惜しく'] },
       { word: 'そろそろ', acts: ['帰りたい','盛り上げたい','終電が心配','名残惜しい','疲れた','二次会へ','空気を読んで','怒って'] },
       { word: 'いいね', acts: ['本心から','社交辞令','酔って','うらやましい','乗り気でない','大げさに','感心して','誘いに乗る'] },
       { word: 'おごるよ', acts: ['気前よく','見栄をはって','酔って','後悔しながら','冗談で','照れながら','本当はお金がない','先輩らしく'] },
-      { word: 'わかるー', acts: ['心から共感','適当に合わせる','酔って','大げさに','実はわかっていない','しみじみ','食い気味に','眠そうに'] },
+      { word: 'わかるー', acts: ['心から共感','適当に合わせる','酔って','大げさに','なつかしそうに','しみじみ','食い気味に','眠そうに'] },
       { word: 'もう飲めない', acts: ['本当に限界','まだいけそう','楽しそうに','断る口実','泣きそう','強がって','もう寝そう','次の一杯を持ちながら'] },
-      { word: 'あるある', acts: ['大笑いしながら','しみじみ','適当に','初めて聞いたのに','くやしそうに','食い気味に','自分の失敗を思い出して','感心して'] },
-      { word: 'またやろう', acts: ['心から楽しかった','社交辞令','酔って大声で','名残惜しい','本当はもういい','照れて','約束するように','眠そうに'] },
+      { word: 'あるある', acts: ['大笑いしながら','しみじみ','大げさに','初めて聞いたのに','くやしそうに','食い気味に','自分の失敗を思い出して','感心して'] },
+      { word: 'またやろう', acts: ['心から楽しかった','社交辞令','酔って大声で','名残惜しい','負けてくやしくて','照れて','約束するように','眠そうに'] },
       { word: 'どうぞどうぞ', acts: ['ゆずる','押しつける','遠慮がち','お酌をすすめる','ふざけて','あわてて','気前よく','本当は自分がほしい'] },
     ]
   },
@@ -1613,9 +1649,9 @@ const THEMES = {
       { word: '（まばたきするだけ）', acts: ['びっくり','目にごみが入った','合図を送る','眠い','信じられない','見とれている','とぼけている','涙をこらえる'] },
       { word: '（にっこりするだけ）', acts: ['心からうれしい','愛想笑い','何かたくらんでいる','安心した','照れている','怒りをかくして','ごまかしている','やさしく見守る'] },
       { word: '（眉を上げるだけ）', acts: ['驚き','疑い','感心','からかう','あきれた','興味しんしん','いい知らせを聞いた','とぼける'] },
-      { word: '（口をとがらせるだけ）', acts: ['すねている','不満','考え中','甘える','ふてくされた','くやしい','言いたいことをがまん','口笛を吹く前'] },
+      { word: '（口をとがらせるだけ）', acts: ['すねている','不満','考え中','甘える','変顔でふざける','くやしい','言いたいことをがまん','口笛を吹く前'] },
       { word: '（じっと見つめるだけ）', acts: ['見とれている','怒っている','疑っている','おねだり','考えごと','驚いて固まる','眠くてぼーっと','何かを待っている'] },
-      { word: '（鼻で笑うだけ）', acts: ['思わず吹き出す','あきれた','自分の失敗に','余裕を見せる','照れかくし','こらえきれない','強がり','くだらないけど面白い'] },
+      { word: '（鼻で笑うだけ）', acts: ['思わず吹き出す','あきれた','自分の失敗に','余裕を見せる','照れかくし','ばかにして','強がり','くだらないけど面白い'] },
     ]
   },
   kazoku: {
@@ -1627,7 +1663,7 @@ const THEMES = {
       { word: 'もう', acts: ['あきれた','怒った','甘えた','照れた','急かす','あきらめた','かわいがって','限界の'] },
       { word: 'はいはい', acts: ['適当に','やさしく','イライラして','急いで','子どもをなだめて','あきれて','照れ隠しに','納得して'] },
       { word: 'あとで', acts: ['面倒くさい','やさしく','約束する','ごまかす','怒っている','急いでいる','楽しみにして','やんわり断る'] },
-      { word: 'だめ', acts: ['強く禁じる','やさしく','困って','照れて','冗談で','あきらめて','心配して','怒って'] },
+      { word: 'だめ', acts: ['強く禁じる','やさしく','困って','照れて','冗談で','あきらめて','心配して','甘えて'] },
       { word: 'ごはんだよ', acts: ['ふつうに','何度も呼んでいる','機嫌が悪い','自信作ができた','急いで','眠そうに','外から大声で','こっそり'] },
       { word: 'もう寝なさい', acts: ['やさしく','怒って','何度目か','自分も眠い','笑いながら','心配して','冗談で大人に','ため息まじり'] },
       { word: 'いってきます', acts: ['元気よく','眠い','急いで','行きたくない','遠くへ行く日','親に内緒で','小声で','忘れ物に気づく直前'] },
@@ -1644,7 +1680,7 @@ const THEMES = {
     desc: '言葉より気持ちがはみ出す一言。大人向けにいちばん盛り上がる。',
     list: [
       { word: 'べつに', acts: ['本当に何でもない','怒っている','照れている','すねている','興味がない','すごく気にしている','ごまかしている','悲しい'] },
-      { word: 'うそ', acts: ['おどろき','疑い','うれしい驚き','信じられない','冗談だと思った','がっかり','怒り','からかい'] },
+      { word: 'うそ', acts: ['おどろき','疑い','うれしい驚き','照れて','冗談だと思った','がっかり','怒り','からかい'] },
       { word: 'すき', acts: ['告白する','照れながら','軽く','食べ物のこと','しみじみ','ごまかして','冗談っぽく','勇気を出して'] },
       { word: 'どうかな', acts: ['自信がない','期待している','本当に迷っている','相手を試す','興味がない','照れ隠し','心配している','わくわくして'] },
       { word: 'いいけど', acts: ['快く','しぶしぶ','条件つきで','怒りながら','照れて','興味なさそうに','心配しながら','意味ありげに'] },
@@ -1727,7 +1763,7 @@ const THEMES = {
       { word: '見ないで', acts: ['本気でいやがって','恥ずかしくて','失敗した直後','泣き顔を隠して','ふざけて','集中してるから','変顔のあとで','本当は見てほしい'] },
       { word: 'ちがうし', acts: ['本気で否定','笑いながら','図星であせって','すねて','照れ隠しで','小声で','泣きそうで','ドヤ顔で否定'] },
       { word: 'だれそれ', acts: ['本当に知らない','怪しんで','ふざけて','あきれて','嫉妬して','興味ないふり','すねて','ドキッとして'] },
-      { word: 'いいなー', acts: ['心からうらやましい','ぼそっと','冗談で','甘えておねだり','すねて','嫉妬して','あきらめて','心からお祝いして'] },
+      { word: 'いいなー', acts: ['心からうらやましい','ぼそっと','冗談で','甘えておねだり','すねて','ひやかして','あきらめて','心からお祝いして'] },
       { word: '会いたかった', acts: ['心から','大げさに','ほっとして','泣きそうで','ふざけて','待ちくたびれてすねて','照れながら','犬が飛びつくように'] },
       { word: '行かないで', acts: ['引き止めて','泣きそうで','甘えて','冗談で','ドラマのように大げさに','寝ぼけて','小声で','強がりながら'] },
       { word: 'はずかしい', acts: ['本当に恥ずかしい','顔を隠して','ふざけて','怒って','小声で','うれしいけど恥ずかしい','泣きそうで','ドヤ顔なのに恥ずかしい'] },
@@ -1750,7 +1786,7 @@ const THEMES = {
       { word: 'いろいろあったね', acts: ['しみじみと','笑いながら','遠い目をして','思い出して泣きそうに','気まずい話題をそらして','来年に期待して','乾杯の前に重々しく','本当は何もなかった'] },
       { word: '来年こそ', acts: ['決意をこめて','あきらめ半分で','燃えている','照れながら','毎年言っている','人のことを言う','くじに外れたあとで','ほろ酔いで大声で'] },
       { word: 'ビンゴ', acts: ['当たって大喜び','あと1つでじれったく','静かに手を挙げて','信じられずに確かめながら','景品がいまいち','みんなに先を越されて','言い間違えて恥ずかしく','最後まで出なかった'] },
-      { word: '二次会', acts: ['ぜひ行きたい','行く気満々で','誘われて困って','終電を気にして','幹事として呼びかけて','もう眠くて','カラオケが楽しみで','こっそり帰りたい'] },
+      { word: '二次会', acts: ['ぜひ行きたい','誰も来なくてさびしく','誘われて困って','終電を気にして','幹事として呼びかけて','もう眠くて','カラオケが楽しみで','こっそり帰りたい'] },
       { word: '終電', acts: ['時計を見て青ざめて','あと5分でダッシュ','もう行っちゃった','人に言われて気づく','気にせず飲み続ける','わざと逃したい','余裕を見せて','乗り過ごして遠い駅で'] },
       { word: 'ごちそうさま', acts: ['満足して','かしこまって','おごってもらって','もう食べられない','まだ食べ足りない','思ったより高かった','幹事に感謝して','皮肉っぽく'] },
       { word: 'よーっ', acts: ['一本締めの掛け声で','張り切りすぎて','緊張でうわずって','タイミングを外して','誰もついてこない','ようやく終わってほっと','歌舞伎の掛け声のように','眠気をこらえて'] },
@@ -1770,9 +1806,9 @@ const THEMES = {
       { word: 'きれい', acts: ['イルミネーションに見とれて','ツリーを飾り終えて','雪が降ってきて','声が出ないほど','写真をとりながら','人ごみの中で','お世辞で','思ったより地味だった'] },
       { word: 'さむい', acts: ['外に出た瞬間','雪にはしゃぎながら','手をこすりながら','待ち合わせで待たされて','こたつから出たくない','ひとりで帰り道','相手に寄りそいたくて','ギャグがすべって'] },
       { word: 'これほしかった', acts: ['飛び上がって','涙ぐんで','信じられずに','照れながら','大人びたふりで','覚えていてくれたことに感激して','中身を見る前に早とちり','ほんとうは違うけど気をつかって'] },
-      { word: 'いい子にしてた', acts: ['自信満々に','胸をはって','サンタに聞こえるように','親に念を押すように','目をそらして','言い訳しながら','ちょっとだけと小声で','ほんとうは自信がない'] },
+      { word: 'いい子にしてた', acts: ['自信満々に','きょうだいと張り合って','サンタに聞こえるように','親に念を押すように','目をそらして','言い訳しながら','ちょっとだけと小声で','ほんとうは自信がない'] },
       { word: 'ゆき', acts: ['うれしい','さむそう','びっくり','うっとり','すぐとけてがっかり','こどもにかえって','まちくたびれた','こわごわあるく'] },
-      { word: 'あけていい', acts: ['わくわく','まちきれない','おそるおそる','がまんできない','ないしょで','もうあけてた','ていねいに','ほしいものじゃなさそう'] },
+      { word: 'あけていい', acts: ['わくわく','まちきれない','おそるおそる','あまえて','ないしょで','もうあけてた','ていねいに','ほしいものじゃなさそう'] },
       { word: 'ねむれない', acts: ['わくわく','サンタをまつ','こわい','さびしい','たべすぎて','あまえて','こっそり','つよがり'] },
     ]
   },
@@ -2097,7 +2133,10 @@ function startGame(){
   // 離れて遊ぶリンク用：この回の番号と目印（発表リンクと予想を結びつける）。送った印は回ごとに消す
   S.gno = (S.gno||0) + 1;
   S.gid = Math.random().toString(36).slice(2,8);
-  S.sent = {}; S.sentAny = false;
+  // 前の回に離れた人がいたら、次の回も参加リンクの1行を最初から出す（この画面を開いている間だけ）
+  if (S.act && document.body.classList.contains('stream') && sentRemote()) S.remoteSeen = true;
+  S.sent = {}; S.sentAny = false; S.annDone = false;
+  S.lis = lisOn(); S.lv = {};  // リスナーの予想（演じた人の番号 → 候補）
   S.dealNow = -1; S.dsStamped = {};
   // 回答コード：ラウンドの種（ゲームID＋回）・受け取った予想（答え合わせまで配信画面に出さない）・受付の順
   S.rsd = rcSeed(S.gid, S.gno); S.codes = {}; S.vOrd = {}; S.vseq = 0;
@@ -2167,6 +2206,7 @@ function renderDeal(){
       row.appendChild(one);
     });
   }
+  placeJoin(others);
   $('sentHint').hidden = !S.sentAny;
   $('toPerform').disabled = S.seen.some(v=>!v);
   const seenN = S.seen.filter(Boolean).length;
@@ -2175,6 +2215,34 @@ function renderDeal(){
   renderDealScroll();
   if (S.step === 'deal') pushView();
 }
+// ===== 配信モード：参加リンクの1行（2026-10-20 案C）=====
+// 離れた人がいる回だけ出す。決め方：配信しない（オンライン飲み会・リモート交流）／演じる人に「送る」を使った（QRで渡したのは同じ部屋かもしれないので数えない）
+// ／参加リンクを送った・回答コードが届いた（回答コードの貼る欄を出す条件 rcRemote と同じ）／この画面で前の回までに離れた人がいた
+function sentRemote(){ return rcRemote() || Object.keys(S.sent||{}).some(k=>k[0] === 'r' && S.sent[k] !== 'qr'); }
+function dealRemote(){ return !castOn() || !!S.remoteSeen || sentRemote(); }
+function placeJoin(others){
+  const jm = $('joinMenu'), jb = $('joinBox');
+  if (!jm || !document.body.classList.contains('stream')) return;
+  const on = others.length > 0 && dealRemote();
+  if (on){
+    if (jb.parentNode !== jm) jm.appendChild(jb);
+    const left = others.filter(p=>!(S.sent && S.sent['j'+p])).length, all = left === 0;
+    // 全員に送ったら小さな印に（開いていたら閉じる。押せばまた開いて送り直せる）
+    if (all && !jm.classList.contains('done')) jm.open = false;
+    jm.classList.toggle('done', all);
+    jmLabel('進行役メニュー（離れた人への送り方）');
+    $('joinSum').innerHTML = all ? '<span class="k-seal" aria-hidden="true">済</span>参加リンク 送信済み' : '当てる人に参加リンクを送る<small>（まだ'+left+'人）</small>';
+  } else {
+    // 同じ部屋の回は何も出さない（参加リンクは今までどおり進行役メニューの中）
+    const hint = $('sentHint');
+    if (jb.parentNode === jm && hint && hint.parentNode) hint.parentNode.insertBefore(jb, hint);
+    jm.open = false; jm.classList.remove('done');
+    jmLabel('進行役メニュー（離れた人への送り方・参加リンク）');
+  }
+  jm.hidden = !on;
+}
+function jmLabel(t){ const h = $('sentHint'), d = h && h.closest('.host-menu'), sm = d && d.querySelector('summary'); if (sm && sm.textContent !== t) sm.textContent = t; }
+$('joinMenu').addEventListener('toggle', ()=>{ if ($('joinMenu').open) track('haa_join_row_open', {}); fitStream(); });
 // ===== 配る場面の巻物（配信モードだけ・2026-10-20）=====
 // 視聴者に「いま◯◯さんが確認中」「全員の確認が済んだら始まります」と確認済みの判子を見せる。名前と印だけで、だれがどの気持ちかは入れない
 // s: 0=まだ 1=確認中 2=確認済み
@@ -2364,13 +2432,29 @@ function sendLink(url, label, btn, key, after){
 }
 function renderAnn(){
   const b = $('annBox'); if (!b) return;
-  b.hidden = !S.sentAny;
+  // 配信モードで離れた人がいる回（参加リンクの1行と同じ決め方）は、進行役メニューの外に1行で出す（2026-10-21：配信の遅れで、離れたゲストが答えの瞬間を見られなかった）
+  const out = document.body.classList.contains('stream') && !!S.act && dealRemote();
+  if (document.body.classList.contains('stream')) annPlace(out);
+  b.hidden = !(S.sentAny || out);
+  b.classList.toggle('ann-out', out); b.classList.toggle('done', out && !!S.annDone);
   const ab = $('annBtn');
-  if (ab && !ab.dataset.busy){ ab.classList.remove('sent'); ab.textContent = (navigator.share && window.matchMedia && window.matchMedia('(pointer:coarse)').matches) ? '発表リンクを送る' : '発表リンクをコピー'; }
+  if (ab && !ab.dataset.busy){
+    ab.classList.remove('sent');
+    const lbl = (navigator.share && window.matchMedia && window.matchMedia('(pointer:coarse)').matches) ? '発表リンクを送る' : '発表リンクをコピー';
+    if (!out) ab.textContent = lbl;
+    else ab.innerHTML = S.annDone ? '<span class="k-seal" aria-hidden="true">済</span>発表リンク 送信済み' : lbl + '<small>（離れた人にも同時に出る）</small>';
+  }
+}
+function annPlace(out){
+  const b = $('annBox'), home = $('annMenu'), res = $('step-result');
+  if (!b || !home || !res) return;
+  if (out && b.parentNode === home) res.insertBefore(b, $('resCands'));
+  else if (!out && b.parentNode !== home) home.appendChild(b);
+  home.hidden = out;  // 中身が外に出たら、空になった進行役メニューは出さない
 }
 $('annBtn').addEventListener('click', ()=>{
   const ab = $('annBtn'), url = annUrl(), label = 'はぁの発表リンクです（開くと答えが出ます）';
-  const ok = (how)=>{ ab.dataset.busy = '1'; ab.classList.add('sent'); ab.textContent = how === 'copy' ? 'コピーしました。グループに貼ってください' : '送りました'; track('haa_ann_link',{players:S.players}); setTimeout(()=>{ delete ab.dataset.busy; renderAnn(); }, 2500); };
+  const ok = (how)=>{ S.annDone = true; ab.dataset.busy = '1'; ab.classList.add('sent'); ab.textContent = how === 'copy' ? 'コピーしました。グループに貼ってください' : '送りました'; track('haa_ann_link',{players:S.players}); setTimeout(()=>{ delete ab.dataset.busy; renderAnn(); }, 2500); };
   const coarse = window.matchMedia && window.matchMedia('(pointer:coarse)').matches;
   if (navigator.share && coarse){ navigator.share({text:label, url:url}).then(()=>ok('share'), e=>{ if (e && e.name === 'AbortError') return; copyText(label+': '+url, ()=>ok('copy')); }); return; }
   copyText(label+': '+url, ()=>ok('copy'));
@@ -2553,6 +2637,7 @@ function renderVote(){
 // 押し間違えたときだけ、1つ前の票に戻ってやり直す（押す回数は増やさない・2026-10-17）
 $('voteUndo').addEventListener('click', ()=>{
   const h = S.voteHist && S.voteHist.pop(); if (!h) return;
+  if (h.voter === 'L'){ if (h.prev === undefined) delete S.lv[h.target]; else S.lv[h.target] = h.prev; renderVote(); return; }
   if (useGrid()){
     if (h.prev === undefined){ if (S.votes[h.voter]){ delete S.votes[h.voter][h.target]; if (!Object.keys(S.votes[h.voter]).length) delete S.votes[h.voter]; } }
     else { S.votes[h.voter] = S.votes[h.voter] || {}; S.votes[h.voter][h.target] = h.prev; }
@@ -2615,6 +2700,12 @@ function finish(mode){
           ? '<span class="vc ok">○ '+esc(pName(v))+mkh+'</span>'
           : '<span class="vc ng">× '+esc(pName(v))+mkh+' <small>'+numOf(g)+'</small></span>');
       });
+      // リスナー（多かった番号）。プレイヤーと同じ並びで最後に
+      const lg = S.lis && S.lv ? S.lv[i] : undefined;
+      if (lg !== undefined){
+        va.chips.push({name:'リスナー', ok:lg===ai, no:numOf(lg), mk:''});
+        chips.push(lg === ai ? '<span class="vc ok lis">○ リスナー</span>' : '<span class="vc ng lis">× リスナー <small>'+numOf(lg)+'</small></span>');
+      }
       if (chips.length) who = '<div class="ans-votes">'+chips.join('')+'</div>';
     }
     card.innerHTML = '<div class="ans-top"><span class="ans-dot"></span><span class="ans-name">'+esc(pName(p))+'</span><span class="ans-word">「'+esc(S.theme.word)+'」</span></div>'
@@ -2643,20 +2734,44 @@ function finish(mode){
   }
   // 「もう1回遊ぶ」で合計していく。順位は合計で、今回の得点は「+2」で添える
   if (S.total.length !== S.players) { S.total = new Array(S.players).fill(0); S.rounds = 0; S.sid = newSid(); logFixSid(); }
+  // 点の内訳（当てた＋◯／伝わった＋◯）。合計と同じ時に0から数える（2026-10-21「なんで4点も入ってんの？」）
+  if (!S.ptHit || S.ptHit.length !== S.players || S.rounds === 0){ S.ptHit = new Array(S.players).fill(0); S.ptGot = new Array(S.players).fill(0); }
+  for (let v=0;v<S.players;v++) for (let t=0;t<S.k;t++){
+    if (v===S.act[t]) continue;
+    const g = S.votes[v] && S.votes[v][t];
+    if (g !== undefined && g === S.assign[t]){ S.ptHit[v]++; S.ptGot[S.act[t]]++; }
+  }
   for (let i=0;i<S.players;i++) S.total[i] += sc[i];
+  // リスナーの点は「当てた」だけ（演じないので「伝わった」はない）。入れた回だけ数える
+  if (S.rounds === 0){ S.lTot = 0; S.lTries = 0; }
+  let lsc = 0, lin = false;
+  if (S.lis) for (let t=0;t<S.k;t++){ const g = S.lv[t]; if (g === undefined) continue; lin = true; S.lTries++; if (g === S.assign[t]) lsc++; }
+  S.lTot += lsc; S.lAdd = lsc;
   S.rounds++;
   const tmax = Math.max.apply(null, S.total);
   let h = '<h3>'+(S.rounds > 1 ? '合計得点<span class="sr-rd">'+S.rounds+'回目まで</span>' : '得点')+'</h3>', rank = 0, prev = null;
   const ppl = logPeople(logLoad().r.filter(r=>r.sid === S.sid));
-  S.total.map((v,i)=>({i,v})).sort((a,b)=>b.v-a.v).forEach((o,n)=>{
+  // リスナーは一度でも入れたら、プレイヤーと同じように並べる
+  const lisRow = S.lis && S.lTries > 0;
+  const tmaxL = lisRow ? Math.max(tmax, S.lTot) : tmax;
+  const rowsAll = S.total.map((v,i)=>({i,v}));
+  if (lisRow) rowsAll.push({i:-1, v:S.lTot});
+  rowsAll.sort((a,b)=>b.v-a.v).forEach((o,n)=>{
     if (o.v !== prev){ rank = n+1; prev = o.v; }
-    const w = tmax > 0 ? Math.round(o.v / tmax * 100) : 0;
+    const w = tmaxL > 0 ? Math.round(o.v / tmaxL * 100) : 0;
+    if (o.i < 0){
+      h += '<div class="sr lis'+(rank===1&&tmaxL>0?' top':'')+'"><span class="sr-rk">'+rank+'位</span><span class="sr-nm">リスナー<small class="sr-hit">'+lisLine()+'</small></span>'
+        + '<span class="sr-bar"><i style="width:'+w+'%;background:'+LIS_COLOR+'"></i></span><b>'+o.v+'点'+(S.rounds > 1 ? '<small class="sr-add">+'+S.lAdd+'</small>' : '')+'</b></div>';
+      return;
+    }
     const pp = ppl[pName(o.i)];
-    const hitTxt = pp ? '<small class="sr-hit">当てた '+pp.hit+'/'+pp.tries+'・伝わった '+pp.got+'回</small>' : '';
-    h += '<div class="sr'+(rank===1&&tmax>0?' top':'')+'"><span class="sr-rk">'+rank+'位</span><span class="sr-nm">'+esc(pName(o.i))+hitTxt+'</span>'
+    const hitTxt = '<small class="sr-hit">'+ptLine(S.ptHit[o.i], S.ptGot[o.i], pp ? pp.tries : null)+'</small>';
+    h += '<div class="sr'+(rank===1&&tmaxL>0?' top':'')+'"><span class="sr-rk">'+rank+'位</span><span class="sr-nm">'+esc(pName(o.i))+hitTxt+'</span>'
       + '<span class="sr-bar"><i style="width:'+w+'%;background:'+COLORS[o.i%COLORS.length].bg+'"></i></span><b>'+o.v+'点'+(S.rounds > 1 ? '<small class="sr-add">+'+sc[o.i]+'</small>' : '')+'</b></div>';
   });
-  S.lastScores = {rounds:S.rounds, rows:S.total.map((v,i)=>{ const pp = ppl[pName(i)]; return {name:pName(i), color:COLORS[i%COLORS.length].bg, total:v, add:sc[i], hit:pp?pp.hit:0, tries:pp?pp.tries:0, got:pp?pp.got:0}; }).sort((a,b)=>b.total-a.total)};
+  S.lastScores = {rounds:S.rounds, rows:S.total.map((v,i)=>{ const pp = ppl[pName(i)]; return {name:pName(i), color:COLORS[i%COLORS.length].bg, total:v, add:sc[i], hit:S.ptHit[i], tries:pp?pp.tries:null, got:S.ptGot[i], pt:ptLine(S.ptHit[i], S.ptGot[i], pp ? pp.tries : null)}; })};
+  if (lisRow) S.lastScores.rows.push({name:'リスナー', color:LIS_COLOR, total:S.lTot, add:S.lAdd, hit:S.lTot, tries:S.lTries, got:0, pt:lisLine(), lis:true});
+  S.lastScores.rows.sort((a,b)=>b.total-a.total);
   const ttl = logTitles(ppl, S.rounds); S.lastScores.titles = ttl;
   if (ttl) h += '<p class="sr-titles">'+ttl.map(x=>'<span class="sr-ttl"><b>'+esc(x.t)+'</b>'+esc(x.names)+'<small>'+esc(x.why)+'</small></span>').join('')+'</p>';
   if (S.rounds > 1) h += '<button type="button" class="sr-reset" id="scoreReset">合計を0に戻す</button>';
@@ -2672,6 +2787,9 @@ function finish(mode){
   show('result');
 }
 
+// 点の内訳を1行で：当てた＋2・伝わった＋1（合計点と同じ数え方。何回中かは「今日のまとめ」で）
+function lisLine(){ return '当てた＋'+S.lTot; }
+function ptLine(hit, got){ return '当てた＋'+hit+'・伝わった＋'+got; }
 // ===== OBS表示用ページ（/view/）へ今の状態を送る =====
 // 同じパソコンの中だけ（BroadcastChannel＋localStorage）。外へは送らない。役（だれがどの気持ちか）は答えが出るまで送らない
 let VIEW_CH = null; try { VIEW_CH = new BroadcastChannel('haa-view'); } catch(e){}
@@ -2725,6 +2843,12 @@ function sfx(kind, force){
   else if (kind === 'fanfare') { [523,659,784,1047].forEach((f,i)=>tone(f, i*0.11, 0.22, 'triangle', 0.18)); tone(1047, 0.44, 0.6, 'triangle', 0.16); tone(1319, 0.44, 0.6, 'sine', 0.08); }
 }
 try { const v = localStorage.getItem(SFX_KEY); if (v !== null) $('sfxToggle').checked = v === '1'; } catch(e){}
+// リスナーの行（配信モードで「配信する」のときだけ・既定はオン・この端末に覚える）
+const LIS_KEY = 'haa-listener';
+try { if (localStorage.getItem(LIS_KEY) === 'off') $('lisToggle').checked = false; } catch(e){}
+$('lisToggle').addEventListener('change', e=>{ try { localStorage.setItem(LIS_KEY, e.target.checked ? 'on' : 'off'); } catch(_){} track('haa_listener_toggle',{on:e.target.checked}); });
+function lisOn(){ return document.body.classList.contains('stream') && castOn() && $('lisToggle').checked; }
+function lisSwSync(){ $('lisSw').classList.toggle('off', !castOn()); }
 $('sfxToggle').addEventListener('change', e=>{ try{ localStorage.setItem(SFX_KEY, e.target.checked ? '1' : '0'); }catch(_){} if (e.target.checked) sfx('pick'); });
 // 紙吹雪（答えが出た瞬間）。2.6秒で消す
 // 答えのあとの問いかけ（毎回変える。決まった言葉を書かせず、自由に話したくなる形に）
@@ -2769,7 +2893,8 @@ function startLastCall(){
   u.hidden = false; u.textContent = 'すぐ発表する'; u.classList.add('unveil-skip'); cd.after(u); armGuard();
   const tick = ()=>{
     if (n === 0){ LAST_T = null; S.lastDone = true; countdownReveal(); return; }
-    cd.innerHTML = '<small>最終予想タイム！コメントで番号を</small>' + n;
+    // 数字は「あと◯秒」と単位つき・墨の色で（候補の番号 ①② と見分けるため。2026-10-21「カウントダウンで3が出たから3と錯覚」）
+    cd.innerHTML = '<small>最終予想タイム！コメントで番号を</small><span class="cd-t">あと<b>' + n + '</b>秒</span>';
     sfx(n <= 3 ? 'tick' : 'last');
     pushView({last:n});
     n--; LAST_T = setTimeout(tick, 1000);
@@ -2802,7 +2927,8 @@ function countdownReveal(){
     }
     pushView({cd:n});
     sfx('cd');
-    cd.textContent = n; cd.classList.remove('tick'); void cd.offsetWidth; cd.classList.add('tick');
+    if (document.body.classList.contains('stream')) cd.innerHTML = '<span class="cd-t">答えまで あと<b>' + n + '</b></span>'; else cd.textContent = n;
+    cd.classList.remove('tick'); void cd.offsetWidth; cd.classList.add('tick');
     n--; setTimeout(tick, 700);
   };
   tick();
@@ -3004,7 +3130,7 @@ function fitStream(){
   const b = document.body, r = document.documentElement;
   if (!b.classList.contains('stream')) return;
   // 開いている進行役メニューが見えているときだけ縮めない（隠れた場面のメニューが開いたままだと、縮めずにはみ出していた）
-  if (!b.classList.contains('playing') || [...document.querySelectorAll('.host-menu[open]')].some(d=>d.getClientRects().length > 0) || (LOG_UI && LOG_UI.open)){ r.style.removeProperty('--fit'); return; }
+  if (!b.classList.contains('playing') || [...document.querySelectorAll('.host-menu[open],.join-menu[open]')].some(d=>d.getClientRects().length > 0) || (LOG_UI && LOG_UI.open)){ r.style.removeProperty('--fit'); return; }
   let f = 1; r.style.setProperty('--fit', '1');
   for (let i=0; i<16 && r.scrollHeight > innerHeight + 1 && f > 0.42; i++){ f -= 0.04; r.style.setProperty('--fit', f.toFixed(2)); }
 }
@@ -3032,24 +3158,41 @@ function renderVoteGrid(){
         continue;
       }
       const cur = S.votes[v] && S.votes[v][t];
-      h += '<div class="vg-row'+(cur!==undefined?' done':'')+'" role="row"><span class="vg-nm" role="rowheader"><i style="background:'+COLORS[v%COLORS.length].bg+'"></i>'+esc(pName(v))+'</span><span class="vg-bs" role="cell">'
-        + used.map(ai=>'<button type="button" class="vg-b" data-v="'+v+'" data-t="'+t+'" data-a="'+ai+'" aria-pressed="'+(cur===ai)+'" aria-label="'+esc(pName(v))+'さんの予想 '+numOf(ai)+' '+esc(S.theme.acts[ai])+'">'+numOf(ai)+'</button>').join('')
-        + '</span></div>';
+      h += vgRow(v, t, cur, used);
     }
+    if (S.lis) h += vgRow('L', t, S.lv[t], used);
     h += '</div>';
   }
   $('voteGrid').innerHTML = h;
+  voteGridTail(one, used);
+}
+// 予想の表の1行。v='L' はリスナー（多かった番号を配信者が押す。集め方は配信者に任せる）
+function vgRow(v, t, cur, used){
+  const L = v === 'L', nm = L ? 'リスナー' : pName(v);
+  return '<div class="vg-row'+(cur!==undefined?' done':'')+(L?' lis':'')+'" role="row"><span class="vg-nm" role="rowheader"><i style="background:'+(L?LIS_COLOR:COLORS[v%COLORS.length].bg)+'"></i>'+esc(nm)+'</span><span class="vg-bs" role="cell">'
+    + used.map(ai=>'<button type="button" class="vg-b" data-v="'+v+'" data-t="'+t+'" data-a="'+ai+'" aria-pressed="'+(cur===ai)+'" aria-label="'+esc(nm)+(L?'の答え（多かった番号） ':'さんの予想 ')+numOf(ai)+' '+esc(S.theme.acts[ai])+'">'+numOf(ai)+'</button>').join('')
+    + '</span></div>';
+}
+const LIS_COLOR = '#8a7f74';
+function voteGridTail(one, used){
   const lg = $('voteLegend');
   if (lg){ lg.hidden = !one; lg.innerHTML = one ? used.map(ai=>'<span><b>'+numOf(ai)+'</b>'+esc(S.theme.acts[ai])+'</span>').join('') : ''; }
   const done = voteDoneN(), total = voteTotalN();
-  $('voteProg').textContent = '予想 '+done+' / '+total+(done >= total ? '（そろいました）' : '')+(rcCount() ? '・回答コード '+rcCount()+'人回答済み' : '');
+  $('voteProg').textContent = '予想 '+done+' / '+total+(done >= total ? '（そろいました）' : '')+(rcCount() ? '・回答コード '+rcCount()+'人回答済み' : '')+(S.lis && Object.keys(S.lv||{}).length ? '・リスナー入力済み' : '');
   $('voteUndo').hidden = !(S.voteHist && S.voteHist.length);
   $('voteSkip').textContent = done >= total ? '予想がそろった → 答え合わせへ' : '予想をここまでにして答え合わせへ';
 }
 $('voteGrid').addEventListener('click', e=>{
   const b = e.target.closest('.vg-b'); if (!b) return;
   if (Date.now() - (S.voteShownAt||0) < 350) return; // 画面が出た直後の押しまちがいは数えない
-  const v = +b.dataset.v, t = +b.dataset.t, ai = +b.dataset.a;
+  const t = +b.dataset.t, ai = +b.dataset.a;
+  if (b.dataset.v === 'L'){
+    const pv = S.lv[t]; if (pv === ai) return;
+    S.lv[t] = ai; (S.voteHist = S.voteHist || []).push({voter:'L', target:t, prev:pv});
+    if (pv === undefined) track('haa_listener_pick', {});
+    sfx('pick'); renderVoteGrid(); pushView(); return;
+  }
+  const v = +b.dataset.v;
   const prev = S.votes[v] && S.votes[v][t];
   if (prev === ai) return;
   if (S.codes && S.codes[v]) return;
@@ -3172,7 +3315,7 @@ function setupHostMenus(){
   deal.insertBefore(dm, $('dealBack'));
   const vote = $('step-vote'), vm = hostMenu(vote, ['#voteHint'], '進行役メニュー（予想の入れ方）');
   vote.insertBefore(vm, $('voteSkip') && $('voteSkip').parentNode === vote ? $('voteSkip') : null);
-  const res = $('step-result'), rm = hostMenu(res, ['#annBox'], '進行役メニュー（発表リンク）');
+  const res = $('step-result'), rm = hostMenu(res, ['#annBox'], '進行役メニュー（発表リンク）'); rm.id = 'annMenu';
   res.insertBefore(rm, $('resCands'));
   const main = res.querySelector('.res-main');
   if (main) ['apNext','nextPick','resultBack'].forEach(id=>{ const el = $(id); if (el) main.appendChild(el); });
@@ -3199,8 +3342,11 @@ $('viewCopyBtn').addEventListener('click', ()=>{ const u = location.origin + '/v
   const v = castOn() ? 'on' : 'off';
   document.querySelectorAll('input[name=haaCast]').forEach(r=>{
     r.checked = r.value === v;
-    r.addEventListener('change', ()=>{ if (!r.checked) return; try { localStorage.setItem(CAST_KEY, r.value); } catch(e){} track('haa_stream_cast',{cast:r.value}); });
+    r.addEventListener('change', ()=>{ if (!r.checked) return; try { localStorage.setItem(CAST_KEY, r.value); } catch(e){} track('haa_stream_cast',{cast:r.value}); lisSwSync(); });
   });
+  lisSwSync();
+  // 配信モードは、候補の数を人数のすぐ下へ（よく見える位置）
+  if (document.body.classList.contains('stream')){ const cn = document.querySelector('.cand-n'), sw = $('streamSw'); if (cn && sw) sw.parentNode.insertBefore(cn, sw); }
 })();
 $('streamToggle').addEventListener('change', e=>{
   try{ localStorage.setItem(STREAM_KEY, e.target.checked ? '1' : '0'); }catch(_){}

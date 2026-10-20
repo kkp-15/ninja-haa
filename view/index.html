@@ -36,6 +36,10 @@ body.bg-cream{background:#fff8f0}
 .msg small{display:block;font-size:2.8vh;font-weight:700;color:var(--muted);margin-top:.6vh}
 .cd{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
 .cd span{font-size:40vh;font-weight:900;color:var(--orange);text-shadow:0 0 2vh #fff,0 0 4vh #fff;animation:pop .7s ease both}
+/* カウントダウンは候補の番号（朱の ①②）と見分ける：墨の色・単位つき（2026-10-21） */
+.cd span{display:inline-flex;align-items:baseline;color:var(--sumi);font-family:system-ui,sans-serif;font-variant-numeric:tabular-nums;font-size:30vh;line-height:1.05;padding:0 5vh .5vh;background:var(--kinari);border:.7vh solid var(--sumi);border-radius:2vh;box-shadow:1.2vh 1.2vh 0 var(--sumi);text-shadow:none}
+.cd span small{font-family:"M PLUS Rounded 1c",sans-serif;font-size:.24em;font-weight:800;margin-right:.15em}
+.stage.last .word small{font-size:.35em;margin:0 .1em}
 @keyframes pop{0%{transform:scale(.4);opacity:0}30%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
 .answers{display:grid;gap:1.6vh}
 .answers.many{grid-template-columns:1fr 1fr}
@@ -91,7 +95,7 @@ body.vert .sr .bar{display:none}
 body.vert .rk{font-size:3.4vw}
 body.vert .msg{font-size:5vw}body.vert .cta{font-size:4.2vw}
 body.vert .winpic{display:none}
-body.vert .cd span{font-size:50vw}
+body.vert .cd span{font-size:34vw}
 body.vert .stage.last .word{font-size:30vw}
 body.vert .credit{font-size:2.8vw}
 .idle{text-align:center;font-size:5vh;font-weight:900}
@@ -139,7 +143,7 @@ body.vert .scores.many .hitx{display:none}
 .ttls b{display:inline-block;margin-right:.8vw;padding:0 1vw;background:var(--shu);color:#fff;border-radius:.6vh}
 .ttls small{margin-left:.6vw;color:#4a3f37;font-size:2.8vh}
 .scores.mid .sr{font-size:3.8vh}.scores.mid .hitx{font-size:2.4vh}
-.scores.many .sr{font-size:3vh;padding:0}.scores.many .hitx{display:inline;font-size:2vh;margin-left:.6vw}.scores.many h3{font-size:2.8vh;margin-bottom:.4vh}.scores.many .ttls{font-size:2.6vh;margin-top:.4vh}
+.scores.many .sr{font-size:3vh;padding:0}.scores.many .hitx{display:block;font-size:2vh;margin-left:0;white-space:nowrap;line-height:1.2}.sr .pt{white-space:nowrap}.scores.many h3{font-size:2.8vh;margin-bottom:.4vh}.scores.many .ttls{font-size:2.6vh;margin-top:.4vh}
 /* 直近の回の○×（右上に小さく。新しい回は右から入る） */
 .recent{position:fixed;left:1.2vw;bottom:.8vh;display:flex;gap:.8vw;font-size:2.6vh;font-weight:800;z-index:5}
 .recent .rs{display:inline-flex;align-items:center;gap:.3em;padding:.2vh .8vw;background:#fff;border:.3vh solid var(--sumi);border-radius:.6vh;white-space:nowrap;color:var(--sumi)}
@@ -286,7 +290,7 @@ body.vert .stamp .t b{font-size:5.4vw}body.vert .stamp .t small{font-size:3.6vw}
         var max = Math.max.apply(null, s.rows.map(function(r){return r.total;})) || 0, rank = 0, prev = null;
         h += '<div class="panel scores'+(s.rows.length>=5?' mid many':s.rows.length>=4?' mid':'')+'"><h3>'+(s.rounds>1?'合計得点<small>'+esc(s.rounds)+'回目まで</small>':'得点')+'</h3>' + s.rows.map(function(r,i){
           if (r.total !== prev){ rank = i+1; prev = r.total; }
-          return '<div class="sr'+(rank===1&&max>0?' top':'')+'"><span class="rk">'+rank+'位</span><span class="nm">'+esc(r.name)+(r.tries!=null?'<small class="hitx">当てた '+esc(r.hit)+'/'+esc(r.tries)+'・伝わった '+esc(r.got)+'回</small>':'')+'</span>'
+          return '<div class="sr'+(rank===1&&max>0?' top':'')+'"><span class="rk">'+rank+'位</span><span class="nm">'+esc(r.name)+(r.pt?'<small class="hitx">'+esc(r.pt)+'</small>':(r.tries!=null?'<small class="hitx">当てた '+esc(r.hit)+'/'+esc(r.tries)+'・伝わった '+esc(r.got)+'回</small>':''))+'</span>'
             + '<span class="bar"><i style="width:'+(max>0?Math.round(r.total/max*100):0)+'%;background:'+esc(r.color)+'"></i></span><span class="pt">'+esc(r.total)+'点'+(s.rounds>1?'<small>+'+esc(r.add)+'</small>':'')+'</span></div>';
         }).join('') + (s.titles ? '<div class="ttls">'+s.titles.map(function(x){ return '<span><b>'+esc(x.t)+'</b>'+esc(x.names)+'<small>'+esc(x.why)+'</small></span>'; }).join('')+'</div>' : '') + '</div>';
       }
@@ -310,8 +314,8 @@ body.vert .stamp .t b{font-size:5.4vw}body.vert .stamp .t small{font-size:3.6vw}
     if (st.step === 'result' && !st.veiling && lastKey !== key && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) burst();
     lastKey = key;
     wrap.innerHTML = h;
-    cd.innerHTML = (st.step === 'result' && st.cd) ? '<span>'+esc(st.cd)+'</span>' : '';
-    if (st.step === 'result' && st.veiling && st.last) wrap.innerHTML = '<div class="stage scroll last"><div class="who">最終予想タイム！</div><div class="word">'+esc(st.last)+'</div><div class="chat">コメントで番号を（例：③）</div></div>' + cands(st, '気持ちの候補「'+(st.word||'')+'」');
+    cd.innerHTML = (st.step === 'result' && st.cd) ? '<span><small>答えまで あと</small>'+esc(st.cd)+'</span>' : '';
+    if (st.step === 'result' && st.veiling && st.last) wrap.innerHTML = '<div class="stage scroll last"><div class="who">最終予想タイム！</div><div class="word"><small>あと</small>'+esc(st.last)+'<small>秒</small></div><div class="chat">コメントで番号を（例：③）</div></div>' + cands(st, '気持ちの候補「'+(st.word||'')+'」');
     fit();
   }
   var lastKey = '', lastRecent = '';
