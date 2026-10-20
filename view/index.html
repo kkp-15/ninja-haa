@@ -162,6 +162,9 @@ body.vert .recent{display:none}
 .sum .marks .m-none em{background:var(--sumi)}
 body.vert .sum table{font-size:5vw}body.vert .sum h2{font-size:9vw}
 body.vert .stage.scroll .who{font-size:6vw}body.vert .stage.scroll .word{font-size:15vw}body.vert .cands div{font-size:6.4vw}
+/* 2026-10-20 16:9 以外の窓（例 960x740）でも切れないように：はみ出すときは全体を少しずつ縮める（fit()・--f。ito と同じ型）。候補の「…」は途中で折らない */
+.wrap>*{zoom:var(--f,1);flex-shrink:0}
+.cands .q{display:inline-block}
 @media (prefers-reduced-motion:reduce){.stage.scroll .who,.kick,.recent .rs.new,.ans,.stage,.cd span{animation:none!important}.confetti{display:none}}
 </style>
 </head>
@@ -181,7 +184,7 @@ body.vert .stage.scroll .who{font-size:6vw}body.vert .stage.scroll .word{font-si
   function cands(st, label){
     if (!st.cands || !st.cands.length) return '';
     return '<div class="panel"><div class="cl">'+esc(label||'気持ちの候補')+'</div><div class="cands">'
-      + st.cands.map(function(c){ return '<div><span class="no">'+esc(c.no)+'</span>'+esc(c.text)+'</div>'; }).join('') + '</div></div>';
+      + st.cands.map(function(c){ return '<div><span class="no">'+esc(c.no)+'</span>'+esc(c.text).replace(/「[^」]*」/, function(m){ return '<span class="q">'+m+'</span>'; })+'</div>'; }).join('') + '</div></div>';
   }
   function stage(st, who){
     return '<div class="stage scroll"><div class="who">'+esc(who)+'</div><div class="word">「'+esc(st.word)+'」</div>'
@@ -242,8 +245,14 @@ body.vert .stage.scroll .who{font-size:6vw}body.vert .stage.scroll .word{font-si
     wrap.innerHTML = h;
     cd.innerHTML = (st.step === 'result' && st.cd) ? '<span>'+esc(st.cd)+'</span>' : '';
     if (st.step === 'result' && st.veiling && st.last) wrap.innerHTML = '<div class="stage scroll last"><div class="who">最終予想タイム！</div><div class="word">'+esc(st.last)+'</div><div class="chat">コメントで番号を（例：③）</div></div>' + cands(st, '気持ちの候補「'+(st.word||'')+'」');
+    fit();
   }
   var lastKey = '', lastRecent = '';
+  function fit(){
+    var f = 1; wrap.style.setProperty('--f', '1');
+    for (var i = 0; i < 24 && wrap.scrollHeight > wrap.clientHeight + 1 && f > 0.4; i++) { f -= 0.04; wrap.style.setProperty('--f', f.toFixed(2)); }
+  }
+  window.addEventListener('resize', function(){ clearTimeout(window.__fitT); window.__fitT = setTimeout(fit, 120); });
   function burst(){
     var box = document.createElement('div'); box.className = 'confetti';
     var cols = ['#ff8a3d','#ffd43b','#ff6b9d','#51cf66','#4c6ef5','#fff3e2'];

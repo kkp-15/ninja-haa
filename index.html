@@ -887,6 +887,11 @@ html body.stream .vg-row{gap:calc(1.4*var(--u));padding:calc(.4*var(--u)) calc(1
 html body.stream .vg-nm{font-size:calc(3.6*var(--u));min-width:7em}
 html body.stream .vg-bs{gap:calc(.7*var(--u))}
 html body.stream .vg-b{min-width:calc(6.4*var(--u));min-height:calc(6.4*var(--u));font-size:calc(4.2*var(--u));border-width:calc(.3*var(--u))}
+.vg-legend{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0 0 8px;font-weight:800;color:var(--sumi,#1f1a17)}
+.vg-legend[hidden]{display:none}
+.vg-legend b{color:var(--shu,#d9432a);margin-right:.15em}
+.vg-legend span{white-space:nowrap}
+html body.stream .vg-legend{font-size:calc(2.8*var(--u));gap:calc(.4*var(--u)) calc(2*var(--u))}
 html body.stream #voteProg{font-size:calc(2.4*var(--u));font-weight:800;color:var(--sumi)}
 /* 答え合わせ：答えは最大・判子がドンと押される・当たった人の名前を大きく。得点は横に並べて1画面に */
 @media(min-width:700px){html body.stream .res-pair{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:calc(2*var(--u));align-items:start}}
@@ -1215,6 +1220,8 @@ html body.stream .res-cands{margin:0 0 calc(.6*var(--u))}
   <div class="vote-list" id="voteList"></div>
   <!-- 配信モード：離れた人の予想を1画面の表で入れる（縦＝当てる人・横＝番号）。進行役が聞いて代わりに押す -->
   <div class="vote-grid" id="voteGrid" hidden></div>
+  <!-- 配信モード：表は番号だけなので、見ている人が番号の意味を追えるよう候補を1行で添える -->
+  <div class="vg-legend" id="voteLegend" hidden></div>
   <p class="vote-prog" id="voteProg"></p>
   <button type="button" class="np-link vote-undo" id="voteUndo" hidden>↶ 1つ前の票をやり直す</button>
   <button class="btn-sub" id="voteSkip">投票をここでやめて答えを見る</button>
@@ -2339,7 +2346,7 @@ function nextVote(){
 function useGrid(){ return STREAM_MQ.matches; }
 function renderVote(){
   setTimeout(()=>pushView(), 0);
-  $('voteGrid').hidden = !useGrid(); $('voteList').hidden = useGrid();
+  $('voteGrid').hidden = !useGrid(); $('voteList').hidden = useGrid(); if (!useGrid()) $('voteLegend').hidden = true;
   if (useGrid()) return renderVoteGrid();
   const vw = $('voteWho'); if (vw){ vw.classList.remove('swap'); void vw.offsetWidth; vw.classList.add('swap'); }
   if (STREAM_MQ.matches) $('voteHint').innerHTML = '離れた場所の人の答えは、DMやチャットで聞いて代わりに押してください。<br>視聴者のみなさんの答えは、コメントで。';
@@ -2840,6 +2847,8 @@ function renderVoteGrid(){
     h += '</div>';
   }
   $('voteGrid').innerHTML = h;
+  const lg = $('voteLegend');
+  if (lg){ lg.hidden = !one; lg.innerHTML = one ? used.map(ai=>'<span><b>'+numOf(ai)+'</b>'+esc(S.theme.acts[ai])+'</span>').join('') : ''; }
   const done = voteDoneN(), total = voteTotalN();
   $('voteProg').textContent = '予想 '+done+' / '+total+(done >= total ? '（そろいました）' : '');
   $('voteUndo').hidden = !(S.voteHist && S.voteHist.length);

@@ -16,7 +16,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "配信・実況で声と表情で当てるゲームをする方法", "datePublished": "2026-10-15", "dateModified": "2026-10-16", "author": {"@type": "Organization", "name": "web忍者の砦"}, "publisher": {"@type": "Organization", "name": "web忍者の砦"}, "mainEntityOfPage": "https://haa.kkpwebninja.com/haishin/"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "配信・実況で声と表情で当てるゲームをする方法", "datePublished": "2026-10-15", "dateModified": "2026-10-20", "author": {"@type": "Organization", "name": "web忍者の砦"}, "publisher": {"@type": "Organization", "name": "web忍者の砦"}, "mainEntityOfPage": "https://haa.kkpwebninja.com/haishin/"}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "配信で使ってもいいですか？許可はいりますか？", "acceptedAnswer": {"@type": "Answer", "text": "許諾の申請はいりません。配信・アーカイブ・切り抜き・収益化も可能です。使うときは、お問い合わせかX（@kkp_webninja）で一言いただけると助かります。ご要望があれば、優先してアップデートします。概要欄にサイト名「web忍者の砦」とURLを書いてください。条件は配信・紹介・掲載のガイドラインにまとめています。"}}, {"@type": "Question", "name": "コラボ相手が別々の場所にいても遊べますか？", "acceptedAnswer": {"@type": "Answer", "text": "遊べます。役を見る画面で、名前の下の「◯◯さんに送る」を押してLINEやDiscordで送ると、その人の画面にだけ気持ちが出ます（タップするまで隠れているので、相手の配信に映っても見えません）。演じない人には参加リンクを送ると、候補を見て自分の予想を選べます。答え合わせでは発表リンクをグループに貼ると、全員の画面で同じ答えが出て、予想が当たったかも分かります。"}}, {"@type": "Question", "name": "視聴者も参加できますか？", "acceptedAnswer": {"@type": "Answer", "text": "できます。演技の画面に気持ちの候補が番号つき（①〜⑥など）で出るので、視聴者はコメントで番号を書いて当てられます。「答えを見る」を押すと、3・2・1のカウントダウンのあとに答えが出ます。"}}, {"@type": "Question", "name": "1人の配信でも遊べますか？", "acceptedAnswer": {"@type": "Answer", "text": "遊べます。参加人数を1人にすると、配信者が演じて視聴者がコメントで当てる形になります。"}}, {"@type": "Question", "name": "配信画面に映すと、文字が小さくなりませんか？", "acceptedAnswer": {"@type": "Answer", "text": "設定の画面で「配信モード」をオンにすると、広告が出なくなり、文字が大きくなって、遊んでいる間はゲーム以外の説明が隠れます。"}}, {"@type": "Question", "name": "市販の『はぁって言うゲーム』と同じですか？", "acceptedAnswer": {"@type": "Answer", "text": "違います。このサイトは非公式の無料ツールで、お題はすべてオリジナルです。元のゲームの名称を配信で扱うときは、発売元の定めるガイドラインにも従ってください。"}}]}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-2LM85GJN0L"></script>
 <script>
@@ -98,16 +98,17 @@ dl dt{font-weight:700;margin-top:1rem} dl dd{margin:0}
 <div class="wrap">
 
 <h1>配信・実況で遊ぶ方法<span class="c">声と表情で当てるゲーム（はぁって言うゲーム風・非公式）</span></h1>
-<p class="upd">更新日 <time datetime="2026-10-16">2026-10-16</time></p>
+<p class="upd">更新日 <time datetime="2026-10-20">2026-10-20</time></p>
 <p class="lead">同じ一言を、それぞれ違う気持ちで演じて当て合う遊びを、ブラウザだけで配信に乗せられます。インストールも登録もいりません。コラボ相手が離れた場所にいても遊べて、視聴者はコメントで当てて参加できます。</p>
 
 <a class="cta" href="https://haa.kkpwebninja.com/">いますぐ開く（無料・登録不要）</a>
 
 <h2>配信の前に（1分）</h2>
 <ol class="steps">
-<li>パソコンのブラウザで <a href="https://haa.kkpwebninja.com/?mode=stream">haa.kkpwebninja.com</a> を開き、配信モードをオンにします。ここが操作する画面です（配信には映しません）</li>
-<li>設定の画面の「OBS用の表示ページを開く」で表示ページ（<code>https://haa.kkpwebninja.com/view/</code>）を開き、そのウィンドウをOBSの「ウィンドウキャプチャ」で取り込みます。表示ページには、お題・候補・答え・得点だけが出て、<b>役（答え）や操作ボタンは映りません</b>。操作する画面と同じパソコンの同じブラウザで開いてください（OBSの「ブラウザソース」に入れると、操作する画面とつながらず、表示が変わりません）</li>
-<li>設定の画面で<b>「配信モード」</b>をオンにします。<b>広告が出なくなり</b>、文字が大きくなって、遊んでいる間はゲームだけが映ります（URLの最後に <code>?mode=stream</code> を付けて開いても同じです）</li>
+<li>パソコンのブラウザで <a href="https://haa.kkpwebninja.com/?mode=stream">haa.kkpwebninja.com</a> を開き、設定の画面で<b>「配信モード」</b>をオンにします。<b>広告が出なくなり</b>、文字が大きくなって、遊んでいる間はゲームだけが映ります（URLの最後に <code>?mode=stream</code> を付けて開いても同じです）</li>
+<li>OBSの<b>「ウィンドウキャプチャ」</b>で、このウィンドウをそのまま取り込みます。いちばん簡単な方法です。役（答え）は別の小さなウィンドウに出るので配信には映らず、運営用のボタンは「進行役メニュー」に畳まれます</li>
+<li>操作ボタンも映したくないときや、画面全体を取り込んでいるときは、設定の画面の「OBSの取り込み方（くわしく）」→「OBS用の表示ページを開く」で表示ページ（<code>https://haa.kkpwebninja.com/view/</code>）を開き、そのウィンドウを取り込みます。表示ページには、お題・候補・答え・得点だけが出ます。操作する画面と同じパソコンの同じブラウザで開いてください（OBSの「ブラウザソース」に入れると、操作する画面とつながらず、表示が変わりません）</li>
+<li>置き場所：コメント欄や立ち絵とかぶらない所に置きます。画面の半分（左右どちらか）でも、番号つきの候補が読める大きさになります</li>
 <li>参加人数を選び、「プレイヤー名を入れる」に名前を入れると、画面に名前が出ます</li>
 <li>配信モードでは、1人ずつ交代で演じる遊び方になります。視聴者はコメントで番号を当て、一緒に遊ぶ人は画面で投票もできます。配信モードはパソコンの画面でだけ使えます。<b>気持ちの候補の数</b>は3〜8択から選べます（はじめは6択。多いほど当てにくくなります）</li>
 <li>配信モードでは、毎回だれが演じるかを選べます（設定の画面の「最初に演じる人」と、答え合わせのあとの「次に演じる人」。選ばなければ順番に交代します）</li>
