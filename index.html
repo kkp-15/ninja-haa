@@ -3530,6 +3530,9 @@ function gPick(ti, ci){
   const v = gLoad(); v.p[o.g] = v.p[o.g] || {}; v.p[o.g][ti] = ci; gTouch(v, o.g); gSave(v);
   sfx('pick', o.s === 1);
   gRenderCands();
+  // 回答コードの「コピー」が画面の下に切れていたら、見えるところまで寄せる（ノートPC 1366x768 で候補6つ以上のとき下に隠れていた）
+  const cb = $('gCodeBtn');
+  if (!$('gCode').hidden && cb){ const r = cb.getBoundingClientRect(); if (r.bottom > innerHeight - 8) try { $('gCode').scrollIntoView({block:'nearest', behavior:'smooth'}); } catch(e){} }
   track('haa_guest_pick',{});
 }
 function gTallyText(v){
