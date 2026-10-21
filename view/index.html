@@ -255,7 +255,6 @@ body.vert .vob.many{grid-template-columns:1fr}body.vert .vc,body.vert .vp{font-s
 <div class="stamp" id="stamp" hidden></div>
 <div class="recent" id="recent" aria-label="直近の回"></div>
 <div class="credit">haa.kkpwebninja.com</div>
-<div class="howto" id="howto">操作は同じパソコンのゲームのページで。OBSの「ウィンドウキャプチャ」で取り込みます（「ブラウザソース」はつながりません）</div>
 <script>
 (function(){
   var q = new URLSearchParams(location.search);
@@ -318,8 +317,8 @@ body.vert .vob.many{grid-template-columns:1fr}body.vert .vc,body.vert .vp{font-s
   }
   function render(st){
     if (st) showStamp(st);
-    if (!st) { wrap.innerHTML = '<div class="panel idle">声と表情で当てるゲーム<small>操作ページでゲームを始めると、ここに表示されます</small></div>'; return; }
-    document.getElementById('howto').hidden = st.step !== 'setup';
+    // 2026-10-21 待ち画面は題字と「まもなく始まります」だけ（配信者向けの説明は操作画面に）
+    if (!st) { wrap.innerHTML = '<div class="panel idle">声と表情で当てるゲーム<small>まもなく始まります</small></div>'; return; }
     var one = st.actors && st.actors.length === 1 ? st.actors[0] + ' さんの番' : (st.actors ? st.actors.length + '人が順番に演じます' : '');
     var h = '';
     if (st.step === 'setup'){
