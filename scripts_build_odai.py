@@ -112,7 +112,7 @@ out = f'''<!DOCTYPE html>
 <script src="/kit/kit.js" defer></script>
 <style>
 /* 読み物ページ：地は白、本文16px・#333・行間1.8。クリームは見出し帯とボタンまわりだけ */
-:root{{--orange:#ff8a3d;--orange-d:#e07b39;--cream:#fff8f0;
+:root{{--orange:#ff8a3d;--orange-d:#a8501a;--cream:#fff8f0;
   --ink:#333;--muted:#6b5a48;--line:#e6dccb}}
 *{{box-sizing:border-box}}
 body{{margin:0;background:#fff;color:var(--ink);
@@ -121,22 +121,22 @@ body{{margin:0;background:#fff;color:var(--ink);
 .wrap{{max-width:760px;margin:0 auto;padding:18px 16px 60px}}
 h1{{font-size:1.4rem;line-height:1.5;margin:.2rem 0 .4rem}}
 h1 .c{{display:block;font-size:1rem;color:var(--muted);font-weight:700}}
-.upd{{font-size:.85rem;color:var(--muted);margin:0 0 .8rem}}
+.upd{{font-size:.875rem;color:var(--muted);margin:0 0 .8rem}}
 .lead{{margin:0 0 1rem}}
 .cta{{display:block;text-align:center;background:var(--orange);color:#fff;font-weight:800;font-size:.95rem;
   padding:.75rem .5rem;border-radius:8px;text-decoration:none;margin:0 0 1.2rem}}
 .toc{{margin:0 0 1.6rem;padding:.5rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}}
 .toc a{{display:inline-block;padding:.35rem 0;margin-right:1.1rem;white-space:nowrap}}
-.toc a span{{color:var(--muted);font-size:.85rem;margin-left:.2rem}}
+.toc a span{{color:var(--muted);font-size:.875rem;margin-left:.2rem}}
 h2{{font-size:20px;line-height:1.5;margin:0 0 .5rem;padding-left:.6rem;border-left:4px solid var(--orange)}}
 .cat,.sec{{margin:0 0 2.4rem}}
-.cat h2 .n{{font-size:.85rem;color:var(--muted);font-weight:400;margin-left:.6rem}}
+.cat h2 .n{{font-size:.875rem;color:var(--muted);font-weight:400;margin-left:.6rem}}
 .cd{{margin:0 0 .8rem}}
 .sec ol{{margin:0 0 .8rem;padding-left:1.4rem}}
 .sec li{{margin:0 0 .3rem}}
 .w{{margin:0 0 1.2rem}}
 .w h3{{margin:0 0 .3rem;font-size:1.1rem;line-height:1.5;background:var(--cream);padding:.25rem .6rem}}
-.w h3 .pw{{float:right;font-size:.8rem;font-weight:700;color:#b3541a;text-decoration:none;padding:.15rem .55rem;border:1px solid var(--orange);border-radius:6px;background:#fff;margin:.1rem 0 0 .6rem}}
+.w h3 .pw{{float:right;font-size:.875rem;font-weight:700;color:#b3541a;text-decoration:none;padding:.15rem .55rem;border:1px solid var(--orange);border-radius:6px;background:#fff;margin:.1rem 0 0 .6rem}}
 .w ol{{margin:0;padding-left:2rem}}
 .play{{margin:.4rem 0 0}}
 .play .btn{{display:inline-block;font-size:.95rem;color:#b3541a;text-decoration:none;font-weight:700;
@@ -213,7 +213,7 @@ details.block summary{{min-height:48px}}
 
 <!-- WEBNINJA_RELATED_APPS -->
 <div class="kkp-rel" style="max-width:680px;margin:2rem auto 0;padding:1rem 1.2rem;background:#fffcf7;border:1px solid #f0e6d2;border-radius:12px;font-family:inherit;">
-  <div style="font-weight:800;color:#8b6b3d;font-size:0.9rem;margin-bottom:0.3rem;">あわせて使えるアプリ</div>
+  <div style="font-weight:800;color:#6e5530;font-size:0.9rem;margin-bottom:0.3rem;">あわせて使えるアプリ</div>
   <a href="https://wordwolf.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ワードウルフ — 少数派をさがす定番パーティーゲーム</a>
   <a href="https://ito.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ito お題と数字の配布 — スマホ1台で遊べる協力ゲーム</a>
   <a href="https://gesture.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ジェスチャーおでこ当て — 言葉を使わずお題を伝える</a>
@@ -222,15 +222,15 @@ details.block summary{{min-height:48px}}
 </div>
 
 <!-- WEBNINJA_UNIFIED_FOOTER -->
-<footer style="text-align:center;padding:2rem 1rem 2.5rem;font-size:0.78rem;color:#94a3b8;line-height:2;border-top:1px solid #f0e6d2;margin-top:2.5rem;background:#fffcf7;">
-  <div style="font-weight:800;color:#8b6b3d;font-size:0.85rem;margin-bottom:0.4rem;">web忍者の砦</div>
+<footer style="text-align:center;padding:2rem 1rem 2.5rem;font-size:.875rem;color:#5f6b7a;line-height:2;border-top:1px solid #f0e6d2;margin-top:2.5rem;background:#fffcf7;">
+  <div style="font-weight:800;color:#6e5530;font-size:.875rem;margin-bottom:0.4rem;">web忍者の砦</div>
   <div>
-    <a href="https://kkpwebninja.com/" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">本丸トップ</a>·
-    <a href="https://privacypolicy.kkpwebninja.com/" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">プライバシーポリシー</a>·
-    <a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">お問い合わせ</a>·
-    <a href="https://x.com/kkp_webninja" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">@kkp_webninja</a>
+    <a href="https://kkpwebninja.com/" target="_blank" rel="noopener" style="color:#6e5530;text-decoration:none;margin:0 0.5rem;">本丸トップ</a>·
+    <a href="https://privacypolicy.kkpwebninja.com/" target="_blank" rel="noopener" style="color:#6e5530;text-decoration:none;margin:0 0.5rem;">プライバシーポリシー</a>·
+    <a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener" style="color:#6e5530;text-decoration:none;margin:0 0.5rem;">お問い合わせ</a>·
+    <a href="https://x.com/kkp_webninja" target="_blank" rel="noopener" style="color:#6e5530;text-decoration:none;margin:0 0.5rem;">@kkp_webninja</a>
   </div>
-  <div style="margin-top:0.5rem;color:#bfa97a;">© 2025-2026 web忍者の砦</div>
+  <div style="margin-top:0.5rem;color:#7a6440;">© 2025-2026 web忍者の砦</div>
 </footer>
 </div>
 <script>
@@ -250,7 +250,7 @@ def d4_fonts(html):
     return html.replace('<!-- k-fonts:start --><!-- k-fonts:end -->', '<!-- k-fonts:start -->\n<link href="' + url + '" rel="stylesheet">\n<!-- k-fonts:end -->')
 out = d4_fonts(out)
 # あわせて使えるアプリ欄の D4（2026-10-20 第6弾と同じ。@media screen だけ・中身とリンクは変えない）
-REL_D4 = '<!-- kkp-rel-d4:start -->\n<style id="kkp-rel-d4">\n/* あわせて使えるアプリ（統一仕様の欄）を D4 に: 和紙の面・筆の見出し・墨の字＋オレンジの下線＋道しるべ。入れ物なので影なし（kit: 影は押せるものだけ）。中身とリンクは触らない（インライン style に勝つため !important） */\n@media screen{\n.kkp-rel{box-sizing:border-box;background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0/320px auto!important;border:var(--k-bw-s) solid var(--k-sumi)!important;border-radius:var(--k-r)!important;box-shadow:none!important;padding:12px 16px 6px!important;color:var(--k-sumi);text-align:left}\n.kkp-rel>div:first-child,.kkp-rel>b:first-child{display:block;margin:0 0 4px!important;padding:0!important;border:0!important;font-family:var(--k-brush)!important;font-weight:400!important;font-size:19px!important;line-height:1.3!important;letter-spacing:.12em;color:var(--k-sumi)!important;font-feature-settings:"palt" 1}\n.kkp-rel>a{display:flex!important;align-items:center;gap:12px;box-sizing:border-box;min-height:48px;margin:0!important;padding:10px 0!important;border:0!important;border-top:1px dashed var(--k-line-soft)!important;background:none!important;color:var(--k-sumi)!important;font-size:15px!important;font-weight:700!important;line-height:1.55!important;letter-spacing:.02em;text-decoration:underline!important;text-decoration-color:var(--k-orange)!important;text-decoration-thickness:2px!important;text-underline-offset:4px;-webkit-tap-highlight-color:transparent}\n.kkp-rel>a::after{content:"";flex:none;width:26px;height:17px;margin-left:auto;background:var(--k-sign) center/100% 100% no-repeat;transition:transform .2s}\n.kkp-rel>a:hover{color:var(--k-shu)!important}\n.kkp-rel>a:hover::after,.kkp-rel>a:active::after,.kkp-rel>a:focus-visible::after{transform:translateX(4px)}\n}\n@media screen and (max-width:712px){.kkp-rel{max-width:calc(100vw - 24px)!important;margin-left:auto!important;margin-right:auto!important}}\n</style>\n<!-- kkp-rel-d4:end -->\n'
+REL_D4 = '<!-- kkp-rel-d4:start -->\n<style id="kkp-rel-d4">\n/* あわせて使えるアプリ（統一仕様の欄）を D4 に: 和紙の面・筆の見出し・墨の字＋オレンジの下線＋道しるべ。入れ物なので影なし（kit: 影は押せるものだけ）。中身とリンクは触らない（インライン style に勝つため !important） */\n@media screen{\n.kkp-rel{box-sizing:border-box;background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0/320px auto!important;border:var(--k-bw-s) solid var(--k-sumi)!important;border-radius:var(--k-r)!important;box-shadow:none!important;padding:12px 16px 6px!important;color:var(--k-sumi);text-align:left}\n.kkp-rel>div:first-child,.kkp-rel>b:first-child{display:block;margin:0 0 4px!important;padding:0!important;border:0!important;font-family:var(--k-head)!important;font-weight:800!important;font-size:19px!important;line-height:1.3!important;letter-spacing:.02em;color:var(--k-sumi)!important;font-feature-settings:"palt" 1}\n.kkp-rel>a{display:flex!important;align-items:center;gap:12px;box-sizing:border-box;min-height:48px;margin:0!important;padding:10px 0!important;border:0!important;border-top:1px dashed var(--k-line-soft)!important;background:none!important;color:var(--k-sumi)!important;font-size:15px!important;font-weight:700!important;line-height:1.55!important;letter-spacing:.02em;text-decoration:underline!important;text-decoration-color:var(--k-orange)!important;text-decoration-thickness:2px!important;text-underline-offset:4px;-webkit-tap-highlight-color:transparent}\n.kkp-rel>a::after{content:"";flex:none;width:26px;height:17px;margin-left:auto;background:var(--k-sign) center/100% 100% no-repeat;transition:transform .2s}\n.kkp-rel>a:hover{color:var(--k-shu)!important}\n.kkp-rel>a:hover::after,.kkp-rel>a:active::after,.kkp-rel>a:focus-visible::after{transform:translateX(4px)}\n}\n@media screen and (max-width:712px){.kkp-rel{max-width:calc(100vw - 24px)!important;margin-left:auto!important;margin-right:auto!important}}\n</style>\n<!-- kkp-rel-d4:end -->\n'
 if '<!-- kkp-rel-d4:start -->' not in out: out = out.replace('</head>', REL_D4 + '</head>', 1)
 os.makedirs(os.path.join(ROOT,'odai'), exist_ok=True)
 open(os.path.join(ROOT,'odai','index.html'),'w',encoding='utf-8').write(out)

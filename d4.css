@@ -105,7 +105,7 @@ body.d4-play:not(.stream) button.btn-eq:active{transform:translate(3px,3px);box-
 
 /* 読みもの（遊び方・よくある質問） */
 .d4-play:not(.stream) details.block{background:var(--k-surface);border:var(--k-bw-s) solid var(--k-sumi);border-radius:var(--k-r);box-shadow:var(--k-sh-s);color:var(--k-sumi)}
-.d4-play:not(.stream) details.block h2{font-family:var(--k-brush);font-weight:400;color:var(--k-sumi);letter-spacing:.06em}
+.d4-play:not(.stream) details.block h2{font-family:var(--k-head);font-weight:800;color:var(--k-sumi);letter-spacing:.02em}
 .d4-play:not(.stream) details.block dt,.d4-play:not(.stream) details.block dd{color:var(--k-sumi)}
 .d4-play:not(.stream) .wrap>p.note a,.d4-play:not(.stream) details.block a{color:var(--k-sumi);font-weight:700}
 .d4-play:not(.stream) #odaiLink{color:var(--k-sumi)!important;text-decoration:underline!important;text-decoration-color:var(--k-orange)!important}
@@ -115,9 +115,9 @@ body.d4-play:not(.stream) button.btn-eq:active{transform:translate(3px,3px);box-
 .k-page .wrap>footer::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46px;background:url(/kit/img/d4-line.webp) left bottom/auto 100% repeat-x;opacity:.12;pointer-events:none}
 
 /* ===== 読みもの（/haishin/・/odai/） ===== */
-.d4-read h1{font-family:var(--k-brush);font-weight:400;letter-spacing:.06em;line-height:1.45;font-feature-settings:"palt" 1}
+.d4-read h1{font-family:var(--k-head);font-weight:800;letter-spacing:.02em;line-height:1.45;font-feature-settings:"palt" 1}
 .d4-read h1 .c{font-family:var(--k-body);font-weight:700;color:var(--k-text-2)}
-.d4-read h2{font-family:var(--k-brush);font-weight:400;letter-spacing:.08em;font-feature-settings:"palt" 1;background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0/320px auto;border-left:5px solid var(--k-sumi);padding:.3rem .7rem}
+.d4-read h2{font-family:var(--k-head);font-weight:800;letter-spacing:.02em;font-feature-settings:"palt" 1;background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0/320px auto;border-left:5px solid var(--k-sumi);padding:.3rem .7rem}
 .d4-read h2 .n{font-family:var(--k-body)}
 .d4-read details.block h2{background:none;border:0;padding:0}
 .d4-read details.block{border-color:var(--k-line-soft)}
