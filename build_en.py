@@ -72,21 +72,21 @@ html = re.sub(r'\s*<div class="shop">.*?</div>\s*(?=</div>)', '\n  ', html, flag
 
 RELATED = '''<!-- WEBNINJA_RELATED_APPS -->
 <div style="max-width:680px;margin:2rem auto 0;padding:1rem 1.2rem;background:#fffcf7;border:1px solid #f0e6d2;border-radius:12px;font-family:inherit;">
-  <div style="font-weight:800;color:#8b6b3d;font-size:0.9rem;margin-bottom:0.3rem;">More one-phone party games</div>
+  <div style="font-weight:800;color:#6e5530;font-size:0.9rem;margin-bottom:0.3rem;">More one-phone party games</div>
   <!-- 英語版が実在するものだけ並べる。/en/ が日本語ページを返すサイトを入れない -->
   <a href="https://ito.kkpwebninja.com/en/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ito — line up your secret numbers without saying them</a>
 </div>'''
 html = re.sub(r'<!-- WEBNINJA_RELATED_APPS -->.*?\n</div>', RELATED, html, count=1, flags=re.S)
 
 FOOTER = '''<!-- WEBNINJA_UNIFIED_FOOTER -->
-<footer style="text-align:center;padding:2rem 1rem 2.5rem;font-size:0.78rem;color:#94a3b8;line-height:2;border-top:1px solid #f0e6d2;margin-top:2.5rem;background:#fffcf7;">
-  <div style="font-weight:800;color:#8b6b3d;font-size:0.85rem;margin-bottom:0.4rem;">web忍者の砦</div>
+<footer style="text-align:center;padding:2rem 1rem 2.5rem;font-size:.875rem;color:#5f6b7a;line-height:2;border-top:1px solid #f0e6d2;margin-top:2.5rem;background:#fffcf7;">
+  <div style="font-weight:800;color:#6e5530;font-size:.875rem;margin-bottom:0.4rem;">web忍者の砦</div>
   <div>
-    <a href="https://kkpwebninja.com/" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">All our free web apps</a>·
-    <a href="https://privacypolicy.kkpwebninja.com/en/" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">Privacy policy</a>·
-    <a href="https://x.com/kkp_webninja" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">@kkp_webninja</a>
+    <a href="https://kkpwebninja.com/" target="_blank" rel="noopener" style="color:#6e5530;text-decoration:none;margin:0 0.5rem;">All our free web apps</a>·
+    <a href="https://privacypolicy.kkpwebninja.com/en/" target="_blank" rel="noopener" style="color:#6e5530;text-decoration:none;margin:0 0.5rem;">Privacy policy</a>·
+    <a href="https://x.com/kkp_webninja" target="_blank" rel="noopener" style="color:#6e5530;text-decoration:none;margin:0 0.5rem;">@kkp_webninja</a>
   </div>
-  <div style="margin-top:0.5rem;color:#bfa97a;">© 2025-2026 web忍者の砦</div>
+  <div style="margin-top:0.5rem;color:#7a6440;">© 2025-2026 web忍者の砦</div>
 </footer>'''
 html = re.sub(r'<!-- WEBNINJA_UNIFIED_FOOTER -->.*?</footer>', FOOTER, html, count=1, flags=re.S)
 
@@ -97,8 +97,8 @@ T = [
  ('<h1>声と表情で当てるゲーム</h1>', '<h1>Emotion Charades<span class="h1-sub">Say one line with a secret feeling</span></h1>'),
  # 本家（幻冬舎）を応援する一文は日本語版だけ（英語圏では知られていないため、導入文と同じ扱い）
  ('      <p class="hero-fan">『はぁって言うゲーム』を楽しむための非公式ツール。本家のカードは<a href="https://www.gentosha.co.jp/s/haa-game/" target="_blank" rel="noopener">こちら（幻冬舎の公式ページ）</a></p>\n', ''),
- ('<p>同じ一言を、それぞれ違う気持ちで演じて当て合う。<br>アプリ不要で配役から得点まで。非公式の無料ツール。</p>',
-  '<p>Everyone says the same line with a different feeling.<br>One phone handles the roles, the voting and the score. No app, no sign-up.</p>'),
+ ('<p>同じ一言を違う気持ちで演じて、当て合う。<br>配役から得点まで、アプリ不要・無料（非公式）。</p>',
+  '<p>Everyone says the same line with a different feeling.<br>One phone runs the roles, votes and score. No app, no sign-up.</p>'),
  # 遊び方
  ('遊び方（30秒で読めます）', 'How to play (30 seconds)'),
  # 日本の市販カードゲームに触れる導入は、英語版では出さない（英語圏では知られていないため）
@@ -175,7 +175,7 @@ T = [
  ("'<div class=\"sr\"><span>'+(o.i+1)+'人目・'+c.n", "'<div class=\"sr\"><span>player '+(o.i+1)+' · '+c.n"),
  # 2026-10-02: 投票なしの答え合わせ・じぶんで作る
  ('<button class="btn-sub" id="toReveal">投票しないで答えを見る</button>', '<button class="btn-sub" id="toReveal">Skip voting — just reveal</button>'),
- ('口で当て合ったあとに。人数が多いときや小さい子がいるときに', 'Guess out loud first. Handy for big groups or young kids'),
+ ('大人数や小さい子と、口で当て合うときに', 'Guess out loud first. Handy for big groups or young kids'),
  ('投票をここでやめて答えを見る', 'Stop voting and reveal now'),
  ("'みんなで考えた一言でも遊べます。この端末にだけ保存されます。'", "'Use your own line and feelings. Saved on this device only.'"),
  ("'＋じぶんで作る'", "'+ Make your own'"),
@@ -216,21 +216,20 @@ T2 = [
  ("const stepName = {deal:'役を見る 3/6', perform:'演じる 4/6', vote:'投票 5/6', result:'答え合わせ 6/6'};",
   "const stepName = {deal:'Roles 3/6', perform:'Perform 4/6', vote:'Vote 5/6', result:'Reveal 6/6'};"),
  # 人数
- ('3〜8人がふつう。4〜6人がいちばん当てにくいです。1〜2人は、配信やまわりの人が当てる形で', '3 to 8 players. 4 to 6 is the hardest to read'),
- ("? '3〜8人がふつう。4〜6人がいちばん当てにくいです'", "? '3 to 8 players. 4 to 6 is the hardest to read'"),
- ("(S.players === 1 ? '1人で演じて、視聴者やまわりの人が候補から当てる形。投票はありません。候補の数は下で選べます'",
+ ('3〜8人がふつう。4〜6人がいちばん当てにくいです', '3 to 8 players. 4 to 6 is the hardest to read'),
+ ("(S.players === 1 ? '1人が演じて、まわりや視聴者が候補から当てます。投票なし'",
   "(S.players === 1 ? 'One person acts and everyone around guesses from the list. No voting'"),
  (": '2人なら、1人が演じてもう1人が当てる形。候補は3つ出ます');", ": 'With two, one acts and the other guesses from three feelings');"),
  ('<p class="act-lbl">1回に演じる人</p>', '<p class="act-lbl">Actors per round</p>'),
  ('aria-label="演じる人をone fewer player"', 'aria-label="one fewer actor"'),
  ('aria-label="演じる人をone more player"', 'aria-label="one more actor"'),
- ('<p class="hint" id="actHint">ふつうは全員が演じます。1人ずつ交代で遊ぶときは減らせます（演じない人は投票だけ）</p>',
-  '<p class="hint" id="actHint">Usually everyone acts. Lower it to take turns one at a time (the others only vote)</p>'),
- ("? (S.players === 1 ? '演じるのはあなた1人です' : 'ふつうは全員が演じます。1人ずつ交代で遊ぶときは減らせます（演じない人は投票だけ）')",
-  "? (S.players === 1 ? 'You are the only actor' : 'Usually everyone acts. Lower it to take turns one at a time (the others only vote)')"),
+ ('<p class="hint" id="actHint">ふつうは全員が演じます。減らすと交代で演じ、ほかの人は投票だけ</p>',
+  '<p class="hint" id="actHint">Usually everyone acts. Lower it to take turns; the others only vote</p>'),
+ ("? (S.players === 1 ? '演じるのはあなた1人です' : 'ふつうは全員が演じます。減らすと交代で演じ、ほかの人は投票だけ')",
+  "? (S.players === 1 ? 'You are the only actor' : 'Usually everyone acts. Lower it to take turns; the others only vote')"),
  (": (k === 1 ? '演じない'+(S.players-k)+'人は投票だけ。気持ちの候補は'+poolN()+'つ'",
   ": (k === 1 ? 'The other '+(S.players-k)+' only vote. '+poolN()+' feelings to choose from'"),
- (": '演じるのは'+k+'人（毎回交代）。ほかの'+(S.players-k)+'人は投票だけします。気持ちの候補は'+poolN()+'つから選びます');",
+ (": '演じるのは'+k+'人（毎回交代）。ほかの'+(S.players-k)+'人は投票だけ。候補は'+poolN()+'つ');",
   ": k+' act each round (taking turns). The other '+(S.players-k)+' only vote. '+poolN()+' feelings to choose from');"),
  # 名前
  ('<summary class="names-sum">プレイヤー名を入れる（任意）<span id="namesCount"></span></summary>', '<summary class="names-sum">Player names (optional)<span id="namesCount"></span></summary>'),
@@ -258,7 +257,7 @@ T2 = [
  ("na.innerHTML = (S.gno||1)+'回目・'+(step === 'result' ? '演じた人：' : 'いま演じる人：')+who+'・'+what;",
   "na.innerHTML = 'Round '+(S.gno||1)+' · '+(step === 'result' ? 'acted: ' : 'acting: ')+who+' · '+what;"),
  # 配る
- ('<p class="hint">全員が同じ「<b id="dealWord"></b>」を言います。<br>気持ちだけが1人ずつ違います。みんなには、こっそり見てね</p>',
+ ('<p class="hint">全員が「<b id="dealWord"></b>」を言います。<br>気持ちだけ1人ずつ違うので、こっそり見てね</p>',
   '<p class="hint">Everyone says the same "<b id="dealWord"></b>".<br>Only the feeling differs. Keep yours secret!</p>'),
  ("$('dockMsg').textContent = 'カードを順番にタップ（見た人 '+seenN+' / '+S.k+'人）';", "$('dockMsg').textContent = 'Tap the cards in turn (seen '+seenN+' / '+S.k+')';"),
  ("b.setAttribute('aria-label', pLabel(p)+' の役を見る');", "b.setAttribute('aria-label', pLabel(p)+' — see your role');"),
@@ -275,8 +274,8 @@ T2 = [
   '<p class="hint perf-hint"><b>Voice and face only</b> — no gestures. Take turns saying "<b id="performWord"></b>".</p>'),
  ("row.innerHTML = '<span class=\"nm\">'+(n+1)+'番目</span><span class=\"act\">'+esc(pLabel(p))+'</span>';", "row.innerHTML = '<span class=\"nm\">#'+(n+1)+'</span><span class=\"act\">'+esc(pLabel(p))+'</span>';"),
  # 投票
- ('<p class="hint" id="voteHint">スマホを回して、1人ずつ投票します。<br>自分以外の演じた人が「どの気持ち」だったかを選んでください。</p>',
-  '<p class="hint" id="voteHint">Pass the phone and vote one at a time.<br>Choose the feeling you think each of the other actors had.</p>'),
+ ('<p class="hint" id="voteHint">スマホを回して、1人ずつ投票します。<br>ほかの人の気持ちを当ててください。</p>',
+  '<p class="hint" id="voteHint">Pass the phone and vote one at a time.<br>Guess the feeling of each other actor.</p>'),
  ("$('voteWho').textContent = '📱 '+pLabel(S.voter)+' さんの番';", "$('voteWho').textContent = '📱 '+pLabel(S.voter)+', your turn';"),
  ("$('voteTarget').innerHTML = '<b>'+esc(pLabel(S.act[S.target]))+'</b> さんは、どの気持ちだった？';", "$('voteTarget').innerHTML = 'How did <b>'+esc(pLabel(S.act[S.target]))+'</b> feel?';"),
  ('<button type="button" class="np-link vote-undo" id="voteUndo" hidden>↶ 1つ前の票をやり直す</button>', '<button type="button" class="np-link vote-undo" id="voteUndo" hidden>↶ Undo the last vote</button>'),
@@ -287,8 +286,7 @@ T2 = [
  ("+ '<div class=\"ans-main\"><span class=\"ans-kick\">正解</span><span class=\"ans-no\">'+numOf(ai)+'</span>", "+ '<div class=\"ans-main\"><span class=\"ans-kick\">Answer</span><span class=\"ans-no\">'+numOf(ai)+'</span>"),
  ("let h = '<h3>'+(S.rounds > 1 ? '合計得点<span class=\"sr-rd\">'+S.rounds+'回目まで</span>' : '得点')+'</h3>', rank = 0, prev = null;",
   "let h = '<h3>'+(S.rounds > 1 ? 'Total score<span class=\"sr-rd\">after '+S.rounds+' rounds</span>' : 'Score')+'</h3>', rank = 0, prev = null;"),
- ("const hitTxt = pp ? '<small class=\"sr-hit\">当てた '+pp.hit+'/'+pp.tries+'・伝わった '+pp.got+'回</small>' : '';",
-  "const hitTxt = pp ? '<small class=\"sr-hit\">guessed '+pp.hit+'/'+pp.tries+' · read '+pp.got+'×</small>' : '';"),
+ ("function ptLine(hit, got){ return '当てた＋'+hit+'・伝わった＋'+got; }", "function ptLine(hit, got){ return 'guessed +'+hit+' · read +'+got; }"),
  ("<span class=\"sr-rk\">'+rank+'位</span>", "<span class=\"sr-rk\">#'+rank+'</span>"),
  ("</i></span><b>'+o.v+'点'+(S.rounds > 1", "</i></span><b>'+o.v+(S.rounds > 1"),
  ("const ASKS = ['当たった？外れた？','今の演技、どうだった？','この気持ち、分かった人いる？','次はだれに演じてほしい？','ほかの気持ちに聞こえた人いる？','いちばん迷ったのは何番だった？'];",
@@ -302,6 +300,8 @@ T2 = [
  # 答えを見る・投票なし・合計のリセット（2026-10-20）
  ("tr.textContent = both ? '答えだけ見る' : (quick ? '答えを見る' : '投票しないで答えを見る');", "tr.textContent = both ? 'Just reveal' : (quick ? 'Reveal' : 'Skip voting — just reveal');"),
  ("$('unveil').textContent = '答えを見る';", "$('unveil').textContent = 'Reveal';"),
+ ('<span id="resTitle">答え合わせ</span>', '<span id="resTitle">Reveal</span>'),
+ ("$('resTitle').textContent = '答え合わせ';", "$('resTitle').textContent = 'Reveal';"),
  ("'投票なしで答え合わせしました。口で当てた答えと比べてみてください。'", "'No votes this round. Check the answers against your guesses.'"),
  ("<span class=\"ans-word\">「'+esc(S.theme.word)+'」</span>", "<span class=\"ans-word\">\\u201c'+esc(S.theme.word)+'\\u201d</span>"),
  ("id=\"scoreReset\">合計を0に戻す</button>", "id=\"scoreReset\">Reset the total</button>"),
@@ -332,7 +332,7 @@ if n_st != 1:
     sys.exit('[NG] 配信モードの判定（mode=stream）が見つかりません')
 
 # お題一覧ページへのリンクは英語版にまだ無いので、行ごと落とす
-html = re.sub(r'\s*<p style="text-align:center;font-size:\.85rem;margin-top:\.8rem">\s*<a href="/odai/".*?</a>\s*</p>', '', html, flags=re.S)
+html = re.sub(r'\s*<p style="text-align:center;font-size:\.875?rem;margin-top:\.8rem">\s*<a href="/odai/".*?</a>\s*</p>', '', html, flags=re.S)
 
 # FAQ を差し替え（日本語版は build.py が静的HTMLで差し込んでいるので、そのブロックごと英語に置き換える）
 FAQ = [

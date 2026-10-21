@@ -1207,7 +1207,7 @@ html body.stream .score .sr.top .sr-rk{color:#fff}
     <div class="hero-t">
       <h1>声と表情で当てるゲーム</h1>
       <p class="hero-fan">『はぁって言うゲーム』を楽しむための非公式ツール。本家のカードは<a href="https://www.gentosha.co.jp/s/haa-game/" target="_blank" rel="noopener">こちら（幻冬舎の公式ページ）</a></p>
-      <p>同じ一言を、それぞれ違う気持ちで演じて当て合う。<br>アプリ不要で配役から得点まで。非公式の無料ツール。</p>
+      <p>同じ一言を違う気持ちで演じて、当て合う。<br>配役から得点まで、アプリ不要・無料（非公式）。</p>
       <p class="hen"><a href="/haishin/">配信・実況で使う方へ</a>　<a href="/en/">English version</a></p>
     </div>
   </div>
@@ -1274,7 +1274,7 @@ html body.stream .score .sr.top .sr-rk{color:#fff}
   </div>
   <details class="g-obs" id="gObs">
     <summary>自分の配信にも映す（OBS）</summary>
-    <p>このブラウザで表示ページを開き、OBSの「ウィンドウキャプチャ」で取り込みます。お題と候補が出て、答えは発表のあとに出ます。自分のカードは映りません。</p>
+    <p>表示ページを開いて、OBSの「ウィンドウキャプチャ」で取り込みます。答えは発表のあとに出て、自分のカードは映りません。</p>
     <button type="button" class="np-link" id="gViewOpen">表示ページを開く</button>
   </details>
   <div class="g-foot">
@@ -1295,8 +1295,8 @@ html body.stream .score .sr.top .sr-rk{color:#fff}
 
   <!-- 配信（YouTube・Twitch・TikTok・X など）から来た人にだけ出す一言。2026-10-19 reBON の配信に合わせて -->
   <div class="from-stream" id="fromStream" hidden>
-    <p><b>配信で見たゲームはこれです。</b>スマホ1台をみんなで順番に回して遊べます（アプリ・登録なし）。</p>
-    <p>人数とお題を選んで、下のボタンで始められます。</p>
+    <p><b>配信で見たゲームはこれです。</b>スマホ1台を順番に回して遊べます（アプリ・登録なし）。</p>
+    <p>人数とお題を選んで始めます。</p>
     <button type="button" class="fs-x" id="fromStreamX" aria-label="閉じる">閉じる</button>
   </div>
   <!-- 2026-10-21 遊び方を最初に1つ選ぶ（案A）。「配信モード」のスイッチと「配信する／しない」をまとめた。
@@ -1307,7 +1307,7 @@ html body.stream .score .sr.top .sr-rk{color:#fff}
     <label class="pm-o"><input type="radio" name="haaMode" value="online"><span class="pm-t">オンラインで<small>（PCで進める・配信はしない）</small></span><span class="pm-d">ゲストの画面の最後に広告</span></label>
     <label class="pm-o"><input type="radio" name="haaMode" value="cast"><span class="pm-t">配信する<small>（PCで進めて OBS に映す）</small></span><span class="pm-d">広告なし・答えは映さない・リスナーの行</span></label>
   </div>
-  <p class="hint pm-sp">オンライン・配信で遊ぶときは、パソコンで開いてください</p>
+  <p class="hint pm-sp">オンライン・配信はパソコンで開いてください</p>
   <h2><span class="step-label">STEP 1</span>人数を選ぶ</h2>
   <div class="num">
     <button class="btn-ghost" id="dec" aria-label="1人減らす">−</button>
@@ -1315,7 +1315,7 @@ html body.stream .score .sr.top .sr-rk{color:#fff}
     <span class="unit">人</span>
     <button class="btn-ghost" id="inc" aria-label="1人増やす">＋</button>
   </div>
-  <p class="hint" id="playersHint">3〜8人がふつう。4〜6人がいちばん当てにくいです。1〜2人は、配信やまわりの人が当てる形で</p>
+  <p class="hint" id="playersHint">3〜8人がふつう。4〜6人がいちばん当てにくいです</p>
   <p class="act-lbl">1回に演じる人</p>
   <div class="num">
     <button class="btn-ghost" id="actDec" aria-label="演じる人を1人減らす">−</button>
@@ -1323,7 +1323,7 @@ html body.stream .score .sr.top .sr-rk{color:#fff}
     <span class="unit">人</span>
     <button class="btn-ghost" id="actInc" aria-label="演じる人を1人増やす">＋</button>
   </div>
-  <p class="hint" id="actHint">ふつうは全員が演じます。1人ずつ交代で遊ぶときは減らせます（演じない人は投票だけ）</p>
+  <p class="hint" id="actHint">ふつうは全員が演じます。減らすと交代で演じ、ほかの人は投票だけ</p>
   <!-- 配信モードだけ：候補の数（元のカードは8択。3択だと当たりやすすぎる） -->
   <div class="cand-n">
     <span class="cn-l">気持ちの候補</span>
@@ -1337,10 +1337,10 @@ html body.stream .score .sr.top .sr-rk{color:#fff}
   <label class="stream-sw sfx-sw"><input type="checkbox" id="sfxToggle" checked> 効果音（カウントダウン・発表のファンファーレ）</label>
   <details class="view-open" id="viewOpen">
     <summary>OBSの取り込み方（くわしく）</summary>
-    <p class="hint">ふつうは、このウィンドウを「ウィンドウキャプチャ」で取り込むだけで大丈夫です（役は別ウィンドウで開くので映りません）。画面全体を取り込んでいるときや、操作ボタンも映したくないときは、表示ページを使ってください</p>
+    <p class="hint">ふつうはこのウィンドウを「ウィンドウキャプチャ」で取り込むだけ（役は小窓に出るので映りません）。操作ボタンも隠したいときは、表示ページを取り込みます</p>
     <button type="button" class="np-link" id="viewOpenBtn">OBS用の表示ページを開く</button>
     <button type="button" class="np-link" id="viewCopyBtn">URLをコピー</button>
-    <p class="hint">縦型配信（9:16）や縦の切り抜き用には <code>https://haa.kkpwebninja.com/view/?layout=v</code> を取り込んでください</p>
+    <p class="hint">縦型（9:16）は <code>https://haa.kkpwebninja.com/view/?layout=v</code> を取り込みます</p>
   </details>
   <p class="hint stream-note" id="streamNote">1人ずつ交代で演じて、リスナーはコメントで番号を当てます</p>
   <!-- 名前は任意。色だけだと誰の番か分かりにくい（itoと同じ作り）。入れなければ色の名前のまま。この端末にだけ保存 -->
@@ -1383,7 +1383,7 @@ html body.stream .score .sr.top .sr-rk{color:#fff}
 <!-- STEP 2 配役 -->
 <section class="card hidden" id="step-deal">
   <h2><span class="step-label">STEP 3</span>順番にタップして自分の役を見る</h2>
-  <p class="hint">全員が同じ「<b id="dealWord"></b>」を言います。<br>気持ちだけが1人ずつ違います。みんなには、こっそり見てね</p>
+  <p class="hint">全員が「<b id="dealWord"></b>」を言います。<br>気持ちだけ1人ずつ違うので、こっそり見てね</p>
   <!-- 配信モードだけ：配る場面を配信に映したとき、視聴者にも「いま何をしているか」が分かるように（名前と確認の印だけ。だれがどの気持ちかは出さない） -->
   <div class="deal-scroll" id="dealScroll" hidden aria-live="polite"></div>
   <div class="deal-grid" id="dealGrid"></div>
@@ -1391,7 +1391,7 @@ html body.stream .score .sr.top .sr-rk{color:#fff}
   <!-- 配信モードで離れた人がいる回だけ：当てる人に送る参加リンクを、進行役メニューの外に1行で出す（2026-10-20 案C）。開くと #joinBox をここへ移して使う。参加リンクに答えは入っていない -->
   <details class="k-fold join-menu" id="joinMenu" hidden><summary id="joinSum"></summary></details>
   <p class="sent-hint" id="sentHint" hidden>送った人に「見た？」と声で確かめてね</p>
-  <p class="hint deal-remote">離れた場所から遊ぶときは、カードの下の「◯◯さんに送る」でLINEやDiscordに送ってください。その人の画面にだけ気持ちが出ます<span class="normal-txt">。同じ部屋の人には「QRで渡す」で、その人のスマホで読み取ってもらえます</span><span class="stream-txt">。<b>オンライン・配信では、カードを押すと小窓にその人用のQRが出ます。自分の役は「どんな気持ちで言うか見る」で。</b>OBSでこのウィンドウだけを取り込めば、小窓は映りません</span></p>
+  <p class="hint deal-remote">離れた人には、カードの下の「◯◯さんに送る」で送ります（その人にだけ気持ちが出ます）<span class="normal-txt">。同じ部屋なら「QRで渡す」</span><span class="stream-txt">。<b>カードを押すと小窓にQRが出ます。自分の役は「どんな気持ちで言うか見る」で</b>（小窓は配信に映りません）</span></p>
   <button class="btn-sub" id="toPerform" disabled>全員見終わった → 演じる</button>
   <button class="btn-sub" id="dealBack">↺ 設定に戻る</button>
 </section>
@@ -1408,7 +1408,7 @@ html body.stream .score .sr.top .sr-rk{color:#fff}
   <div class="rc-strip" id="rcStrip" hidden aria-live="polite"></div>
   <button class="btn-primary" id="toVote">全員演じ終わった → 投票へ</button>
   <button class="btn-sub" id="toReveal">投票しないで答えを見る</button>
-  <p class="hint" id="revealHint">口で当て合ったあとに。人数が多いときや小さい子がいるときに</p>
+  <p class="hint" id="revealHint">大人数や小さい子と、口で当て合うときに</p>
   <!-- 配信モード（配信する・2人以上）の流れ（2026-10-21 reBON 要望）：予想は手元で入れて伏せたまま → 「投票結果を見る」で一斉オープン → 「答え合わせをする」で 3・2・1 → 答え -->
   <button type="button" class="btn-sub" id="handBtn" hidden>手元の予想を入れる<small>（小窓・配信に映らない）</small></button>
   <button type="button" class="btn-primary" id="openVotes" hidden>投票結果を見る</button>
@@ -1417,7 +1417,7 @@ html body.stream .score .sr.top .sr-rk{color:#fff}
 <!-- STEP 4 投票（ここがカード版でいちばん面倒なところ） -->
 <section class="card hidden" id="step-vote">
   <h2><span class="step-label">STEP 5</span>投票</h2>
-  <p class="hint" id="voteHint">スマホを回して、1人ずつ投票します。<br>自分以外の演じた人が「どの気持ち」だったかを選んでください。</p>
+  <p class="hint" id="voteHint">スマホを回して、1人ずつ投票します。<br>ほかの人の気持ちを当ててください。</p>
   <div class="stage sm k-reveal-bg"><p class="vote-who" id="voteWho"></p><p class="st-q" id="voteTarget"></p></div>
   <div class="vote-list" id="voteList"></div>
   <!-- 配信モード：離れた人の予想を1画面の表で入れる（縦＝当てる人・横＝番号）。進行役が聞いて代わりに押す -->
@@ -1437,7 +1437,7 @@ html body.stream .score .sr.top .sr-rk{color:#fff}
   <p class="unveil-msg" id="unveilMsg" hidden>投票がそろいました。<br>視聴者のみなさんも、コメントで番号を書いてから開けましょう</p>
   <button type="button" class="btn-primary unveil" id="unveil" hidden>答えを見る</button>
   <!-- 離れた人へ：答えを1本のリンクにしてグループに貼る（リンクを送った回だけ出す） -->
-  <div class="ann" id="annBox" hidden><button type="button" class="ann-btn" id="annBtn">発表リンクをコピー</button><span class="ann-h">グループに貼ると、離れた人の画面でも 3・2・1 のあとに同じ答えが出ます</span></div>
+  <div class="ann" id="annBox" hidden><button type="button" class="ann-btn" id="annBtn">発表リンクをコピー</button><span class="ann-h">グループに貼ると、離れた人にも同じ答えが出ます</span></div>
   <div class="cands res-cands" id="resCands"></div>
   <div class="cdown" id="cdown" hidden aria-live="polite"></div>
   <div class="res-pair">
@@ -1482,7 +1482,7 @@ html body.stream .score .sr.top .sr-rk{color:#fff}
   <div class="shop">
     <h3>もっと遊びたくなったら</h3>
     <span class="pr">PR・アフィリエイト広告を含みます</span>
-    <p>このゲームの原型になっている市販のカードゲームがあります。演じるお題がさらに増え、カードを配るだけで遊べます。</p>
+    <p>このゲームの原型になっている市販のカードゲームです。お題がさらに多く、カードを配るだけで遊べます。</p>
     <a class="buy" href="https://www.amazon.co.jp/s?k=%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazonで探す</a>
     <a class="buy alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F" target="_blank" rel="nofollow sponsored noopener">楽天で探す</a>
   </div>
@@ -1516,7 +1516,7 @@ html body.stream .score .sr.top .sr-rk{color:#fff}
     <dt>どんなお題（例題）がありますか？</dt><dd>たとえば「おはよう」というお題なら、寝起きの「おはよう」／元気いっぱいの「おはよう」／気まずい「おはよう」 など。「やばい」なら、いい意味で／悪い意味で／時間がない など。1つのお題に8通りあり、全部をお題一覧ページに載せています。</dd>
     <dt>お題は何種類ありますか？</dt><dd>226種類のお題に、それぞれ8通りのシチュエーションを用意しています（全1808通り）。すべてこのサイトのオリジナルです。</dd>
     <dt>家族や親戚の集まり（お正月・帰省）でも遊べますか？</dt><dd>遊べます。「お正月・帰省」と「家族」のお題は、子どもからおじいちゃん・おばあちゃんまで言える一言だけにしています。スマホ1台を回すだけなので、こたつを囲んだままでも始められます。</dd>
-    <dt>配信や実況で使えますか？</dt><dd>使えます。許諾の申請はいりません。使うときは、お問い合わせかX（@kkp_webninja）で一言いただけると助かります。ご要望があれば、優先してアップデートします。パソコンで「配信モード」をオンにすると、広告が出なくなり文字が大きくなります（配信モードは1人ずつ交代で演じる遊び方で、パソコンの画面でだけ使えます）。離れた場所のコラボ相手には、名前ごとに役のリンクを送れます。使い方は「配信・実況で使う方へ」のページにまとめています。</dd>
+    <dt>配信や実況で使えますか？</dt><dd>使えます。許諾の申請はいりません。使うときは、お問い合わせかX（@kkp_webninja）で一言いただけると助かります。ご要望があれば、優先してアップデートします。パソコンで、設定の画面の「遊び方」から「配信する」を選ぶと、広告が出なくなり文字が大きくなります（1人ずつ交代で演じる遊び方で、パソコンの画面でだけ選べます）。離れた場所のコラボ相手には、名前ごとに役のリンクを送れます。使い方は「配信・実況で使う方へ」のページにまとめています。</dd>
     <dt>離れた場所の人と（オンラインで）遊べますか？</dt><dd>遊べます。役を見る画面で、名前の下の「◯◯さんに送る」を押すと、その人の気持ちだけが入ったリンクをLINEやDiscordで送れます（開いた画面では、タップするまで気持ちが隠れています）。演じない人には「参加リンク」を送ると、候補を見て自分の予想を選べます。答え合わせでは「発表リンク」をグループに貼ると、全員の画面で同じ答えが出て、予想が当たったかも分かります。リンクの中身はサーバーに保存しません。</dd>
     <dt>1回に演じる人を減らせますか？（配信・大人数向け）</dt><dd>できます。人数の下の「1回に演じる人」で、1人から人数ぶんまで選べます。演じない人は投票だけします。投票で選ぶ気持ちの候補は人数ぶん出るので、演じるのが1人でも答えはすぐには分かりません。演じる人は回ごとに自動で交代します（1人なら1人目→2人目→3人目…）。プレイヤー名も入れられます。</dd>
     <dt>忘年会やクリスマス会など、9人以上でも遊べますか？</dt><dd>1回に演じられるのは8人までです。9人以上のときは、2人1組で1つの役を受け持ち、相談して1人が演じる形にすると全員が参加できます（人数は組の数で設定・16人まで）。「忘年会・新年会」「クリスマス」のお題は、その場で言いやすい一言にしています。11月から12月25日までは、季節のお題が定番の次に出ます。</dd>
@@ -1987,7 +1987,7 @@ function setPlayers(n){
   document.body.dataset.players = S.players;
   $('playersHint').textContent = S.players >= 3
     ? '3〜8人がふつう。4〜6人がいちばん当てにくいです'
-    : (S.players === 1 ? '1人で演じて、視聴者やまわりの人が候補から当てる形。投票はありません。候補の数は下で選べます'
+    : (S.players === 1 ? '1人が演じて、まわりや視聴者が候補から当てます。投票なし'
                        : '2人なら、1人が演じてもう1人が当てる形。候補は3つ出ます');
   renderActors();
   renderNames();
@@ -2041,9 +2041,9 @@ function renderActors(){
   const k = actorsN();
   $('actorCount').textContent = k;
   $('actHint').textContent = k >= S.players
-    ? (S.players === 1 ? '演じるのはあなた1人です' : 'ふつうは全員が演じます。1人ずつ交代で遊ぶときは減らせます（演じない人は投票だけ）')
+    ? (S.players === 1 ? '演じるのはあなた1人です' : 'ふつうは全員が演じます。減らすと交代で演じ、ほかの人は投票だけ')
     : (k === 1 ? '演じない'+(S.players-k)+'人は投票だけ。気持ちの候補は'+poolN()+'つ'
-             : '演じるのは'+k+'人（毎回交代）。ほかの'+(S.players-k)+'人は投票だけします。気持ちの候補は'+poolN()+'つから選びます');
+             : '演じるのは'+k+'人（毎回交代）。ほかの'+(S.players-k)+'人は投票だけ。候補は'+poolN()+'つ');
 }
 function setActors(n){
   n = Math.max(1, Math.min(S.players, n));
@@ -2269,7 +2269,7 @@ function renderDeal(){
     qb.type='button'; qb.className='deal-qr'+(st==='qr'?' sent':'');
     qb.textContent = 'QRで渡す';
     qb.setAttribute('aria-label', pLabel(p)+' さんにQRで渡す（同じ部屋の人）');
-    qb.addEventListener('click', ()=>qrGive(roleUrl(i), pLabel(p)+' さん', 'スマホのカメラで読み取ると、その人の画面にだけ気持ちが出ます（気持ちはこの画面に出ません）', key, ()=>{ S.seen[i] = true; }));
+    qb.addEventListener('click', ()=>qrGive(roleUrl(i), pLabel(p)+' さん', 'スマホで読み取ると、その人の画面にだけ気持ちが出ます', key, ()=>{ S.seen[i] = true; }));
     cell.appendChild(qb);
     g.appendChild(cell);
   }
@@ -2278,7 +2278,7 @@ function renderDeal(){
   const others = []; for (let p=0;p<S.players;p++) if (S.act.indexOf(p) < 0) others.push(p);
   jb.hidden = !others.length;
   if (others.length){
-    jb.innerHTML = '<p class="join-h">当てる人に参加リンク</p><p class="join-s">離れた場所の人に。お題と候補だけが入っていて、自分の予想を選べます（答えは入っていません）</p><div class="join-row"></div>';
+    jb.innerHTML = '<p class="join-h">当てる人に参加リンク</p><p class="join-s">離れた人に。お題と候補だけで、答えは入っていません</p><div class="join-row"></div>';
     const row = jb.querySelector('.join-row');
     others.forEach(p=>{
       const key = 'j'+p, st = S.sent && S.sent[key];
@@ -2292,7 +2292,7 @@ function renderDeal(){
       qb.type='button'; qb.className='join-qr';
       qb.textContent = 'QRで渡す（同じ部屋の人）';
       qb.setAttribute('aria-label', pLabel(p)+' さんに参加リンクをQRで渡す（同じ部屋の人）');
-      qb.addEventListener('click', ()=>qrGive(joinUrl(p), pLabel(p)+' さん（参加リンク）', 'スマホのカメラで読み取ると、お題と候補が開いて予想を選べます（答えは入っていません）', key, null, 'j'));
+      qb.addEventListener('click', ()=>qrGive(joinUrl(p), pLabel(p)+' さん（参加リンク）', 'スマホで読み取ると、候補から予想を選べます（答えは入っていません）', key, null, 'j'));
       one.appendChild(qb);
       row.appendChild(one);
     });
@@ -2574,7 +2574,7 @@ function openReveal(i){
     if (w){
       S.seen[i] = true; S.sent = S.sent || {}; S.sent['r'+i] = 'qr'; S.sentAny = true; renderDeal(); renderAnn();
       $('dockMsg').hidden = false;
-      $('dockMsg').textContent = '別ウィンドウを開きました（「QRを出す」で渡す・自分の役は「どんな気持ちで言うか見る」で）。終わったら「覚えた！閉じる」で閉じてください';
+      $('dockMsg').textContent = '小窓を開きました。終わったら「覚えた！閉じる」で閉じてください';
       watchPopup(w, i); fitStream();
       track('haa_role_window',{});
       return;
@@ -2593,7 +2593,7 @@ function openReveal(i){
     $('revealShow').hidden = false;
     $('revealShow').onclick = ()=>{ $('revealAct').textContent = act; $('revealAct').hidden = false; $('revealShow').hidden = true; };
     $('dockMsg').hidden = false;
-    $('dockMsg').textContent = '小さなウィンドウが開けませんでした（ブラウザでポップアップを許可すると開きます）。気持ちは「どんな気持ちで言うか見る」を押したときだけ出ます';
+    $('dockMsg').textContent = '小窓が開けませんでした（ポップアップを許可すると開きます）。気持ちは「どんな気持ちで言うか見る」で出ます';
     renderDeal();
   }
   $('reveal').classList.add('show');
@@ -2665,7 +2665,7 @@ function renderPerform(){
   if (both && tr.parentNode === tv.parentNode) tv.parentNode.insertBefore(tv, tr);
   else if (quick && tr.parentNode === tv.parentNode) tv.parentNode.insertBefore(tr, tv);
   else if (!quick && tr.parentNode === tv.parentNode) tv.parentNode.insertBefore(tv, tr);
-  $('revealHint').textContent = document.body.classList.contains('stream') ? 'コメントで番号が出そろったら、答えを見ます' : S.players === 1 ? '視聴者やまわりの人が当てたら、答えを見ます' : '口で当て合ったあとに。人数が多いときや小さい子がいるときに';
+  $('revealHint').textContent = document.body.classList.contains('stream') ? 'コメントで番号が出そろったら、答えを見ます' : S.players === 1 ? '視聴者やまわりの人が当てたら、答えを見ます' : '大人数や小さい子と、口で当て合うときに';
   // 配信する・2人以上：予想は手元で入れて伏せる →「投票結果を見る」→「答え合わせをする」（2026-10-21）
   S.vf = vfOn(); document.body.classList.toggle('vflow', S.vf);
   if (S.vf){ document.body.classList.remove('perform-eq'); vfDock(); }
@@ -2718,7 +2718,7 @@ function renderVote(){
   $('voteGrid').hidden = !useGrid(); $('voteList').hidden = useGrid(); if (!useGrid()) $('voteLegend').hidden = true;
   if (useGrid()) return renderVoteGrid();
   const vw = $('voteWho'); if (vw){ vw.classList.remove('swap'); void vw.offsetWidth; vw.classList.add('swap'); }
-  if (STREAM_MQ.matches) $('voteHint').innerHTML = '離れた場所の人の答えは、DMやチャットで聞いて代わりに押してください。<br>視聴者のみなさんの答えは、コメントで。';
+  if (STREAM_MQ.matches) $('voteHint').innerHTML = '離れた人の答えは、聞いて代わりに押してください。<br>視聴者のみなさんはコメントで。';
   $('voteWho').textContent = '📱 '+pLabel(S.voter)+' さんの番';
   $('voteTarget').innerHTML = '<b>'+esc(pLabel(S.act[S.target]))+'</b> さんは、どの気持ちだった？';
   const w = $('voteList'); w.innerHTML=''; const shownAt = Date.now();
@@ -3260,7 +3260,7 @@ function renderVoteGrid(){
   const used = S.pool.slice().sort((a,b)=>a-b);
   const one = S.k === 1;
   $('voteWho').textContent = '予想を入れる';
-  $('voteHint').innerHTML = '離れた場所の人の予想は、DMやチャットで聞いて、その人の行の番号を押してください。押し直すときは、同じ行の別の番号を押すだけです。';
+  $('voteHint').innerHTML = '離れた人の予想は、聞いてその人の行の番号を押します。押し直すときは、同じ行の別の番号を。';
   $('voteTarget').innerHTML = one ? '<b>'+esc(pName(S.act[0]))+'</b> さんは、どの気持ちだった？' : '演じた人ごとに、当てる人の予想を押します';
   let h = '';
   for (let t=0;t<S.k;t++){
@@ -3373,7 +3373,7 @@ function handOpen(){
   const d = w.document;
   d.open();
   d.write('<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><'+'title>手元の予想（配信に映りません）</'+'title><style>'+HAND_CSS+'</style></head><body>'
-    + '<h1>手元の予想</h1><p class="n">配信者さん・同じ部屋の人・リスナーの予想をここで入れます。押した番号は「投票結果を見る」まで、配信画面にも表示ページにも出ません（配信画面には「受け取りました」と受付の印だけ）。</p>'
+    + '<h1>手元の予想</h1><p class="n">配信者・同じ部屋の人・リスナーの予想を入れます。番号は「投票結果を見る」まで配信に出ません。</p>'
     + '<div id="rows"></div><button type="button" class="cl" id="cl">閉じる</button></body></html>');
   d.close();
   d.addEventListener('click', e=>{
@@ -3599,7 +3599,7 @@ function rcPlace(name){
 function setupCodeMenu(){
   const d = document.createElement('details'); d.className = 'host-menu rc-menu'; d.id = 'rcMenu'; d.hidden = true;
   d.innerHTML = '<summary>回答コードを貼る（離れた人の予想）</summary>'
-    + '<p class="rc-h">届いたコードを、ここに貼ってください。何人分まとめてでも大丈夫です（中身は伏せて表示します）</p>'
+    + '<p class="rc-h">届いたコードを貼ってください。何人分まとめても大丈夫です</p>'
     + '<div class="rc-row"><textarea id="rcIn" rows="1" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="回答コードを貼る" placeholder="ここに貼る"></textarea><button type="button" class="rc-go" id="rcGo">受け取る</button></div>'
     + '<p class="rc-msg" id="rcMsg" aria-live="polite"></p><ul class="rc-list" id="rcList"></ul>';
   document.body.appendChild(d);
@@ -3985,7 +3985,7 @@ $('gViewOpen').addEventListener('click', ()=>{
         const qk = o.qk === 'j' ? 'j' : 'r', act = o.a ? String(o.a) : '';
         $('reveal').classList.add('has-qr');
         $('revealAct').textContent = ''; $('revealAct').hidden = true;
-        $('revealQrCap').textContent = qk === 'r' ? 'スマホで読み取ると、その人の画面にだけ気持ちが出ます' : 'スマホで読み取ると、お題と候補が開いて予想を選べます（答えは入っていません）';
+        $('revealQrCap').textContent = qk === 'r' ? 'スマホで読み取ると、その人の画面にだけ気持ちが出ます' : 'スマホで読み取ると、候補から予想を選べます（答えは入っていません）';
         if (qk === 'j'){ $('revealWho').textContent = String(o.n||'') + ' さん（参加リンク）'; $('revealWarn').hidden = true; $('revealClose').textContent = '閉じる'; }
         // QRはいきなり出さず、「QRを出す」を押してから（10/16 ユーザー指示）
         $('revealQrBtn').hidden = false;
