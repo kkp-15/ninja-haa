@@ -1315,7 +1315,7 @@ html body.stream .score .sr.top .sr-rk{color:#fff}
     <span class="cn-h">多いほど当てにくい<span class="cn-mem">・前回の数を覚えています</span></span>
   </div>
   <!-- 配信モード（配信する）だけ：予想の表に「リスナー」の行を足す（多かった番号を1タップで。集め方は配信者に任せ、サイトでは案内しない。2026-10-21） -->
-  <label class="stream-sw sfx-sw lis-sw" id="lisSw"><input type="checkbox" id="lisToggle" checked> 予想の表に「リスナー」の行（リスナーの答え＝多かった番号を押す）</label>
+  <label class="stream-sw sfx-sw lis-sw" id="lisSw"><input type="checkbox" id="lisToggle" checked> 「リスナー」の予想も入れる（多かった番号を1つ）</label>
   <label class="stream-sw sfx-sw"><input type="checkbox" id="sfxToggle" checked> 効果音（カウントダウン・発表のファンファーレ）</label>
   <details class="view-open" id="viewOpen">
     <summary>OBSの取り込み方（くわしく）</summary>
@@ -3409,6 +3409,8 @@ function voHtml(d, flip){
 function openVotes(){
   if (!S.vf || S.step !== 'perform' || guarded()) return;
   handClose();
+  // 受け取りのハンコが残っていたら止める（投票結果の上に重ならないように）
+  rcStampQ = []; clearTimeout(rcStampT); rcStampT = null; $('rcStamp').hidden = true; $('rcStamp').classList.remove('go');
   // 届いた予想をここで初めて票に入れる（戻ったら入れ直す）
   S.votes = {}; S.lv = {};
   guessers().forEach(p=>{ const a = ansOf(p); if (a !== undefined) S.votes[p] = {0:a}; });

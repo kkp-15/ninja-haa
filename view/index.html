@@ -209,11 +209,12 @@ body.vert .stage.deal .who{font-size:5vw}body.vert .stage.deal .word{font-size:1
 body.vert .stamp .t b{font-size:5.4vw}body.vert .stamp .t small{font-size:3.9vw}body.vert .stamp .no{font-size:4vw}body.vert .stamp .hk{width:11vw;height:11vw;font-size:5.4vw}body.vert .rcw{font-size:4.4vw}body.vert .rcw .h,body.vert .rcw .p small{font-size:3.9vw}body.vert .rcw .hk{width:6vw;height:6vw;font-size:3.9vw}
 @media (prefers-reduced-motion:reduce){.stamp.go,.stamp.go .hk{animation:none!important}}
 /* 投票結果（2026-10-21）：1920x1080 の1/3に縮めても読める大きさ（4vh以上） */
-.stage.scroll.vo .word{font-size:9vh}
+.stage.scroll.vo .word{font-size:7.5vh}
+.stage.scroll.vo{padding:.2vh 2vw .6vh}
 .stage.scroll.vo .sub{color:#c93b23;font-size:4vh}
-.vob{display:grid;gap:1vh;perspective:1400px}
+.vob{display:grid;gap:.8vh;perspective:1400px;padding:1.4vh 1.6vw}
 .vob.many{grid-template-columns:1fr 1fr;column-gap:1.6vw}
-.vr{display:flex;flex-wrap:wrap;align-items:center;row-gap:.6vh;gap:1vw;min-height:8vh;padding:.6vh 1vw;background:#fff;border:.4vh solid #c9bfb3;border-radius:.8vh;min-width:0}
+.vr{display:flex;flex-wrap:wrap;align-items:center;row-gap:.6vh;gap:1vw;min-height:6.6vh;padding:.4vh 1vw;background:#fff;border:.4vh solid #c9bfb3;border-radius:.8vh;min-width:0}
 .vr.has{border-color:var(--sumi);background:var(--kinari)}
 .vr.same{border-color:#c93b23;box-shadow:.6vh .6vh 0 #c93b23}
 .vr.miss{border-style:dashed;background:none}
@@ -231,6 +232,7 @@ body.vert .stamp .t b{font-size:5.4vw}body.vert .stamp .t small{font-size:3.9vw}
 .vob.flip .vp{animation:voFlip .55s var(--d,0s) cubic-bezier(.2,.9,.3,1.3) both}
 @keyframes voFlip{0%{transform:rotateX(90deg);opacity:0}100%{transform:none;opacity:1}}
 .rcw .w{font-size:4vh;color:#4a3f37}
+.rcw{padding:.6vh 1.6vw;row-gap:.4vh}.rcw .hk{width:5vh;height:5vh}
 .rcw .n small{font-size:4vh;color:#4a3f37;margin-left:.2em}
 body.vert .vob.many{grid-template-columns:1fr}body.vert .vc,body.vert .vp{font-size:4.4vw}body.vert .vk{font-size:3.6vw}body.vert .stage.scroll.vo .word{font-size:12vw}body.vert .stage.scroll.vo .sub{font-size:3.6vw}
 @media (prefers-reduced-motion:reduce){.vob.flip .vp{animation:none!important}}
@@ -306,6 +308,7 @@ body.vert .vob.many{grid-template-columns:1fr}body.vert .vc,body.vert .vp{font-s
   var stampEl = document.getElementById('stamp'), lastStamp = '', stampT = null;
   function showStamp(st){
     var x = st.stamp; if (!x || x.id === lastStamp) return; lastStamp = x.id;
+    if (st.step !== 'deal' && st.step !== 'perform' && st.step !== 'vote') return;
     if (Date.now() - (st.t||0) > 4000) return;
     stampEl.innerHTML = '<span class="hk">済</span><span class="t"><b>'+esc(x.n)+(x.l ? '' : 'さん')+'</b><small>受け取りました</small></span>'+(x.mk ? '<span class="no">受付 '+esc(x.mk)+'</span>' : '');
     stampEl.hidden = false; stampEl.classList.remove('go'); void stampEl.offsetWidth; stampEl.classList.add('go');
