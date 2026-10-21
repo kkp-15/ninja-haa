@@ -2913,7 +2913,8 @@ function live(){ return LIVE || (LIVE = KKit.live({ ch:'haa-view', role:'op' }))
 function viewSend(st){ live().send(st); }
 // ===== 2026-10-21 続きから（配信・オンラインだけ）。回の中身をこの端末に12時間置く。選ぶまでは /view/ に送らない =====
 // 2026-10-22 kit の KKit.resume に置き換え（選ぶまで kit が live を止める＝表示ページは前の画面のまま。その間は保存も消しもしない）
-var RES = { pending:false, save(){}, clear(){} }, RUN_PRE = null, RESUMING = false;
+// 配信モード以外は続きからを使わない。startGame が RES.dismiss() を呼ぶので空の dismiss も持たせる（2026-10-22 これが無くて、ふつうのモードで「始める」が止まっていた）
+var RES = { pending:false, save(){}, clear(){}, dismiss(){ return false; } }, RUN_PRE = null, RESUMING = false;
 function runSave(){
   if (!document.body.classList.contains('stream') || RES.pending) return;
   const step = S.step || 'setup';
