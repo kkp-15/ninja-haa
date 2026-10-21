@@ -327,7 +327,8 @@ EN_HIDE = ('<style id="en-hide">\n'
   '</style>\n</head>')
 html = html.replace('</head>', EN_HIDE, 1)
 # 配信モードは英語版では使わない（PCでも配信モードにしない）
-html, n_st = re.subn(r"if \(/\[\?&\]mode=stream\\b/\.test\(location\.search\)\) on = true;", "on = false; // 英語版は配信モードなし", html, count=1)
+# 2026-10-22 日本語版は kit の KKit.stream で判定する（var on = KKit.stream.on;）
+html, n_st = re.subn(r"var on = KKit\.stream\.on;", "var on = false; // 英語版は配信モードなし", html, count=1)
 if n_st != 1:
     sys.exit('[NG] 配信モードの判定（mode=stream）が見つかりません')
 
