@@ -245,6 +245,13 @@ body.vert .vob.many{grid-template-columns:1fr}body.vert .vc,body.vert .vp{font-s
 
 /* 2026-10-21 読みやすさ: 1920x1080 を1/3に縮めても読める 42px（3.9cqh）以上。直近の回の帯と中身が重ならないよう、下は JS（直近の回の高さ）で空ける */
 .rk{white-space:nowrap}body.vert .hitx{display:block;margin-left:0;line-height:1.3}
+/* 2026-10-22 長い名前（12字）でも1画面に：得点の名前・当てた人の札は1行で切る（…）。札は外れた人から「× ほか◯人」にまとめる（squeeze の drop） */
+.sr,.scores.many .sr{grid-template-columns:max-content minmax(0,1fr) max-content}
+.sr .nm{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.scores.many .sr .nm{white-space:normal}
+.scores.many .sr .nm .n{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.vert .sr,body.vert .scores.mid .sr{grid-template-columns:max-content minmax(0,1fr) max-content}
 </style>
 </head>
 <body class="k-view">
@@ -320,11 +327,11 @@ body.vert .vob.many{grid-template-columns:1fr}body.vert .vc,body.vert .vp{font-s
     stampEl.hidden = false; stampEl.classList.remove('go'); void stampEl.offsetWidth; stampEl.classList.add('go');
     clearTimeout(stampT); stampT = setTimeout(function(){ stampEl.hidden = true; stampEl.classList.remove('go'); }, 1000);
   }
-  function render(st){
+  function render(st, force){
     if (st) showStamp(st);
     lastSt = st;
     // 2026-10-21 待ち画面は題字と「まもなく始まります」だけ（配信者向けの説明は操作画面に）。kit の k-view-idle
-    if (!st || st.step === 'setup') { wrap.innerHTML = ''; recentEl.innerHTML = ''; cd.innerHTML = ''; V.idle(true, '声と表情で当てるゲーム'); return; }
+    if (!st || st.step === 'setup') { lastSig = ''; cd._h = ''; wrap.innerHTML = ''; recentEl.innerHTML = ''; cd.innerHTML = ''; V.idle(true, '声と表情で当てるゲーム'); return; }
     V.idle(false);
     var one = st.actors && st.actors.length === 1 ? st.actors[0] + ' さんの番' : (st.actors ? st.actors.length + '人が順番に演じます' : '');
     var h = '';
@@ -354,7 +361,7 @@ body.vert .vob.many{grid-template-columns:1fr}body.vert .vc,body.vert .vp{font-s
         var max = Math.max.apply(null, s.rows.map(function(r){return r.total;})) || 0, rank = 0, prev = null;
         h += '<div class="panel scores'+(s.rows.length>=5?' mid many':s.rows.length>=4?' mid':'')+'"><h3>'+(s.rounds>1?'合計得点<small>'+esc(s.rounds)+'回目まで</small>':'得点')+'</h3>' + s.rows.map(function(r,i){
           if (r.total !== prev){ rank = i+1; prev = r.total; }
-          return '<div class="sr'+(rank===1&&max>0?' top':'')+'"><span class="rk">'+rank+'位</span><span class="nm">'+esc(r.name)+(r.pt?'<small class="hitx">'+esc(r.pt)+'</small>':(r.tries!=null?'<small class="hitx">当てた '+esc(r.hit)+'/'+esc(r.tries)+'・伝わった '+esc(r.got)+'回</small>':''))+'</span>'
+          return '<div class="sr'+(rank===1&&max>0?' top':'')+'"><span class="rk">'+rank+'位</span><span class="nm"><span class="n">'+esc(r.name)+'</span>'+(r.pt?'<small class="hitx">'+esc(r.pt)+'</small>':(r.tries!=null?'<small class="hitx">当てた '+esc(r.hit)+'/'+esc(r.tries)+'・伝わった '+esc(r.got)+'回</small>':''))+'</span>'
             + '<span class="bar"><i style="width:'+(max>0?Math.round(r.total/max*100):0)+'%;background:'+esc(r.color)+'"></i></span><span class="pt">'+esc(r.total)+'点'+(s.rounds>1?'<small>+'+esc(r.add)+'</small>':'')+'</span></div>';
         }).join('') + (s.titles ? '<div class="ttls">'+s.titles.map(function(x){ return '<span><b>'+esc(x.t)+'</b>'+esc(x.names)+'<small>'+esc(x.why)+'</small></span>'; }).join('')+'</div>' : '') + '</div>';
       }
@@ -369,6 +376,14 @@ body.vert .vob.many{grid-template-columns:1fr}body.vert .vc,body.vert .vp{font-s
     }
     var rc = st.recent || [];
     var rkey = rc.length ? rc[rc.length-1].no + '|' + rc.length : '';
+    // 2026-10-22 中身が変わったときだけ描き直す（V.fit は測るたびに動きを頭から出し直すため。窓の大きさ・背景・字が変わったときは refit から force）
+    var cdH = (st.step === 'result' && st.cd) ? '<span><small>答えまで あと</small>'+esc(st.cd)+'</span>' : '';
+    if (st.step === 'result' && st.veiling && st.last) h = '<div class="stage scroll last"><div class="who">最終予想タイム！</div><div class="word"><small>あと</small><span class="sec">#</span><small>秒</small></div><div class="chat">コメントで番号を（例：③）</div></div>' + cands(st, '気持ちの候補「'+(st.word||'')+'」');
+    // 3・2・1 と最終予想タイムの秒は、その字だけを書きかえる（毎秒 描き直すと、出てくる動きが毎秒やり直しになる）
+    if (cd._h !== cdH){ cd.innerHTML = cdH; cd._h = cdH; }
+    var sig = h + '§' + JSON.stringify(rc);
+    if (!force && sig === lastSig){ var sec = wrap.querySelector('.stage.last .sec'); if (sec) sec.textContent = st.last; return; }
+    lastSig = sig;
     recentEl.innerHTML = rc.length ? rc.map(function(x, i){
       var g = (x.g||[]).length ? x.g.map(function(y){ return '<i class="'+(y.ok?'o':'x')+'">'+(y.ok?'○':'×')+'</i>'; }).join('') : '<i class="x">口で</i>';
       return '<span class="rs'+(x.mark?' m-'+x.mark:'')+(i===rc.length-1 && rkey!==lastRecent?' new':'')+'"><b>'+esc(x.no)+'</b>「'+esc(x.word)+'」'+esc(x.ans)+g+(x.mark==='all'?'<em>伝わった！</em>':x.mark==='none'?'<em>まさかの！</em>':'')+'</span>';
@@ -381,13 +396,14 @@ body.vert .vob.many{grid-template-columns:1fr}body.vert .vc,body.vert .vp{font-s
     if (st.step === 'result' && !st.veiling && lastKey !== key && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) burst();
     lastKey = key;
     wrap.innerHTML = h;
-    cd.innerHTML = (st.step === 'result' && st.cd) ? '<span><small>答えまで あと</small>'+esc(st.cd)+'</span>' : '';
-    if (st.step === 'result' && st.veiling && st.last) wrap.innerHTML = '<div class="stage scroll last"><div class="who">最終予想タイム！</div><div class="word"><small>あと</small>'+esc(st.last)+'<small>秒</small></div><div class="chat">コメントで番号を（例：③）</div></div>' + cands(st, '気持ちの候補「'+(st.word||'')+'」');
+    var sec0 = wrap.querySelector('.stage.last .sec'); if (sec0) sec0.textContent = st.last;
     squeeze();
   }
   // 縮めて1画面に（kit の KKit.view.fit。測る間は動きを止める）。縮めきっても入らないとき（8人・細い窓など。字は42pxより小さくしない）は、なくても困らない行を順に外して入れ直す
   function squeeze(){
     V.fit(wrap, { drop: ['.panel.msg.cta', '.stage .chat', '.stage .sub', '.ttls', '.cl', '.panel.msg small', '.hitx',
+      // 答えの札（12字の名前×7人で3〜4段になる）：外れた人は「× ほか◯人」に、まだ入らなければ当てた人も「○ ◯人」に
+      function(){ return chipFold('ng', '× ほか'); }, function(){ return chipFold('ok', '○ '); },
       // 未回答の名前は人数だけに
       function(){ var mv = wrap.querySelector('.vr.miss .vps'); if (mv && mv.children.length > 1){ mv.innerHTML = '<span class="vp">' + mv.children.length + '人</span>'; return true; } },
       function(){ if (recentEl.children.length){ recentEl.innerHTML = ''; wrap.style.bottom = ''; return true; } },
@@ -395,9 +411,20 @@ body.vert .vob.many{grid-template-columns:1fr}body.vert .vc,body.vert .vp{font-s
       '.cands .q', '.vc .q',
       // 回答の帯は「◯人回答済み」だけに（縦型・細い窓）
       '.rcw .w', '.rcw .h', '.rcw .n small', '.rcw .p',
-      '.panel.msg'] });
+      '.panel.msg',
+      // 2026-10-22 小さい窓・8人：答えの判子（42pxの字が判子からはみ出す）と「得点」の見出し（順位があれば分かる）
+      '.ans .kick', '.scores h3'] });
   }
-  var lastKey = '', lastRecent = '', lastSt = null;
+  function chipFold(c, label){
+    var hit = false;
+    [].forEach.call(wrap.querySelectorAll('.chips'), function(box){
+      var L = box.querySelectorAll('.chip.'+c+':not(.sum)'); if (L.length < (c === 'ng' ? 2 : 1)) return;
+      var n = L.length; [].forEach.call(L, function(x){ x.remove(); });
+      var e = document.createElement('span'); e.className = 'chip '+c+' sum'; e.textContent = label + n + '人'; box.appendChild(e); hit = true;
+    });
+    return hit;
+  }
+  var lastKey = '', lastRecent = '', lastSt = null, lastSig = '';
   function burst(){
     var box = document.createElement('div'); box.className = 'confetti';
     var cols = ['#ff8a3d','#ffd43b','#ff6b9d','#51cf66','#4c6ef5','#fff3e2'];
@@ -408,7 +435,7 @@ body.vert .vob.many{grid-template-columns:1fr}body.vert .vc,body.vert .vp{font-s
   // 操作ページ（同じブラウザ）から kit の KKit.live で受け取る。s が null＝まだ何もない（待ち画面）
   KKit.live({ ch: 'haa-view', role: 'view', onState: function(s){ render(s); } }).start();
   // 字のデータ（日本語は字ごとに分かれている）が後から届いた・窓の大きさが変わったときは測り直す（kit の KKit.view.refit）
-  KKit.view.refit(function(){ if (lastSt) render(lastSt); });
+  KKit.view.refit(function(){ if (lastSt) render(lastSt, true); });
 })();
 </script>
 </body>
