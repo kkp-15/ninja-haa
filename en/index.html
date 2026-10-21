@@ -1082,7 +1082,8 @@ html body.stream .res-cands{margin:0 0 calc(.6*var(--u))}
     </div>
     <div class="ad-slot g-ad" id="gAd" hidden>
       <div class="ad-label">Advertisement</div>
-      <ins class="adsbygoogle" style="display:block"
+      <!-- 2026-10-21 class stays adsbygoogle-later until the reveal: push({}) fills the first unused ins.adsbygoogle, so this hidden slot was taking the result-screen push (width 0) -->
+      <ins class="adsbygoogle-later" style="display:block"
            data-ad-client="ca-pub-1298304917726270"
            data-ad-slot="2937937957"
            data-ad-format="rectangle" data-full-width-responsive="false"></ins>
@@ -2937,7 +2938,7 @@ function gReveal(instant){
     if (!instant){ confetti(); sfx('fanfare', o.s === 1); }
     gView({step:'result', veiling:false, quick:true, answers:o.A.map((x,i)=>({name:x[0], color:COLORS[x[1]%COLORS.length].bg, no:gNo(o.X[i]), act:o.c[o.X[i]], chips:[]})), scores:null, ask:''});
     // Advertisementは答えのあと（配信モードで作られたリンク・配信モードの端末では出さない）
-    if (!window.__haaStream && !window.__haaGuestNoAd){ $('gAd').hidden = false; const gPush = ()=>setTimeout(()=>{ if (window.__gAdPushed) return; window.__gAdPushed = true; try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){} }, 60); if (window.__haaLoadAds) window.__haaLoadAds(gPush); else gPush(); }
+    if (!window.__haaStream && !window.__haaGuestNoAd){ $('gAd').hidden = false; const gPush = ()=>{ const gi = $('gAd').querySelector('ins.adsbygoogle-later'); if (gi) gi.className = 'adsbygoogle'; setTimeout(()=>{ if (window.__gAdPushed) return; window.__gAdPushed = true; try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){} }, 60); }; if (window.__haaLoadAds) window.__haaLoadAds(gPush); else gPush(); }
     if (!instant) track('haa_guest_reveal',{hit:hit, tot:tot});
   };
   if (instant){ finishReveal(); return; }
