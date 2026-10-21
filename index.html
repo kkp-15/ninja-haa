@@ -191,7 +191,7 @@ body.stream .hero-pic{width:130px}
 body.stream .hero-t h1{font-size:1.25rem;margin:0}
 body.stream #playersHint{display:none}
 .view-open{border-top:2px solid var(--k-shu,#c93b23);border-bottom:1px solid rgba(31,26,23,.15);padding:8px 0 4px}
-.k-resume[hidden],.haa-live[hidden]{display:none}
+.haa-live[hidden]{display:none}
 #haaResume{text-align:left}
 /* 遊んでいる間の「表示ページ：つながっています」（配信するときだけ） */
 .haa-live{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin:0 0 6px}
@@ -1107,7 +1107,7 @@ html body.stream .vg-rc small{font-size:max(14px,calc(2.4*var(--u)))}
 /* 演じる場面の帯：名前と受付の印だけ */
 .rc-strip{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;margin:0 0 8px;font-weight:900;color:var(--sumi,#1f1a17)}
 .rc-strip[hidden]{display:none}
-.rcb-h{font-size:.8em;color:#4a3f37}
+.rcb-h{font-size:max(14px,.8em);color:#4a3f37}
 .rcb-p{display:inline-flex;align-items:center;gap:.3em}
 .rcb-p small{font-size:.75em;color:#4a3f37;font-family:system-ui,sans-serif}
 .rcb-hk{width:1.8em;height:1.8em;font-size:.8em}
@@ -1175,7 +1175,7 @@ body.vopen #step-result>*:not(h2):not(#voteOpen):not(#cdown){display:none!import
 @keyframes voFlip{0%{transform:rotateX(90deg);opacity:0}100%{transform:none;opacity:1}}
 body.vopen #cdown:not([hidden]){position:fixed;inset:0;width:max-content;height:max-content;max-width:calc(100vw - 32px);z-index:70;margin:auto;padding:calc(1.6*var(--u,8px)) calc(4*var(--u,8px));background:#fbf3e4;border:calc(.5*var(--u,8px)) solid #1f1a17;border-radius:8px;box-shadow:calc(1*var(--u,8px)) calc(1*var(--u,8px)) 0 #1f1a17;white-space:nowrap}
 /* 演じる場面の帯：まだのときの一言・リスナー */
-.rcb-w{font-size:.85em;color:#4a3f37;font-weight:800}
+.rcb-w{font-size:max(14px,.85em);color:#4a3f37;font-weight:800}
 .rcb-n small{font-size:.75em;color:#4a3f37;margin-left:.2em}
 @media (prefers-reduced-motion:reduce){.vo-board.flip .vo-p,.vo-fuda{animation:none}}
 /* 読みやすさの下限（2026-10-21）：配信モードの遊ぶ画面は、1画面に収めるために縮めても字は14px以上 */
@@ -1325,7 +1325,7 @@ html body.stream .score .sr.top .sr-rk{color:#fff}
   <div class="view-open" id="viewOpen">
     <p class="vo-h">OBS には<b>表示ページ</b>を「ウィンドウキャプチャ」で取り込みます（お題・候補・答え・得点だけが映ります）</p>
     <p class="vo-live"><span class="k-live" data-k-live="haa-view">表示ページ：つながっていません</span></p>
-    <!-- 表示ページを開く・URLをコピー・背景3択・OBS の1行（kit の k-view-open。開けないときは「ポップアップを許可して」） -->
+    <!-- 表示ページを開く・URLをコピー・背景6つ・OBS の1行（kit の k-view-open。開けないときは「ポップアップを許可して」） -->
     <div class="k-view-open" id="viewOpenKit" data-k-view="/view/" data-k-ch="haa-view" data-k-name="haaView"></div>
     <details class="vo-more"><summary>くわしく</summary><p class="hint">操作するのと同じパソコン・同じブラウザで開いてください（OBS の「ブラウザ」ソースではつながりません）。縦型（9:16）は URL の末尾に <code>?layout=v</code></p></details>
   </div>
@@ -2216,7 +2216,7 @@ function renderPick(forceWord){
 // ===== 配役 =====
 function startGame(){
   // 「続きから」を選ばずに新しく始めたときは、前回の続きを消す（kit の KKit.resume）
-  if (RES.pending){ $('haaResume').hidden = true; RES.pending = false; RES.clear(); live().hold(false); }
+  RES.dismiss();
   if (S.cat === MY_KEY){ checkMine(); if (!S.theme){ $('myMsg').scrollIntoView({block:'center'}); return; } }
   if (!S.theme) renderPick();
   const t = S.theme;
@@ -2642,22 +2642,12 @@ $('toPerform').addEventListener('click', ()=>{
 });
 // 配ったあとに戻ると、この回の役が消える。押しまちがいに備えて2回目で戻る（ワンクッション・kit の KKit.twice）
 KKit.twice($('dealBack'), { text:'この回の役が消えます。もう一度押すと戻ります', ok:()=>show('setup') });
-// 2度押し（kit の KKit.twice）に、画面が切り替わった直後のガードと「連打の2回目は数えない」（400ms）を足す。
-// 先に登録した click で止める（kit の click より前に走る）
-function twiceGuarded(b, o){
-  let at = 0, tw = null;
-  b.addEventListener('click', e=>{
-    if (guarded() || (tw && tw.armed() && Date.now() - at < 400)){ e.stopImmediatePropagation(); return; }
-    if (tw && !tw.armed()) at = Date.now();
-  });
-  tw = KKit.twice(b, o);
-  return tw;
-}
+// 2度押しの「連打の2回目は数えない」（400ms）・出た直後は効かない・画面が切り替わった直後は効かない（armGuard → KKit.twice.block）は kit の KKit.twice（2026-10-22 第4波）
 
 // 画面が切り替わった直後の押しまちがい防止。新しく出た「答えが出る」ボタンは 0.8 秒は押しても効かない
 // （2026-10-19 るはね配信：「全員見終わった → 演じる」を押した2秒以内に、同じ位置に出た「答えだけ見る」→「すぐ発表する」が押されて、演じる前に答えが出た）
 const GUARD_MS = 800; let GUARD_AT = 0;
-function armGuard(){ GUARD_AT = Date.now(); }
+function armGuard(){ GUARD_AT = Date.now(); KKit.twice.block(GUARD_MS); }
 function guarded(){ return Date.now() - GUARD_AT < GUARD_MS; }
 
 const NUMS = ['①','②','③','④','⑤','⑥','⑦','⑧'];
@@ -2705,7 +2695,7 @@ function renderPerform(){
 $('toVote').addEventListener('click', ()=>{ S.voter=0; S.target=-1; S.voteShownAt = Date.now(); nextVote(); show('vote'); });
 // 投票は人数×(人数−1)回スマホを回す（6人で30回）。そこで止まる人が多いので、口で当て合って答えだけ見る道を用意する
 // 配信モードでは2回押し（1回目で「もう一度押すと答えが出ます」）。演じる前に答えが出ると、その回が遊べなくなる（2026-10-19）
-const TW_REVEAL = twiceGuarded($('toReveal'), { text:'もう一度押すと答えが出ます', when:()=>STREAM_MQ.matches,
+const TW_REVEAL = KKit.twice($('toReveal'), { text:'もう一度押すと答えが出ます', when:()=>STREAM_MQ.matches,
   ok:()=>{
     // 回答コードが届いていれば、その予想は答え合わせに出す（手元の人は口で当てる）
     S.votes = {}; finish(rcCount() ? 'partial' : 'quick'); countdownReveal();
@@ -2713,7 +2703,7 @@ const TW_REVEAL = twiceGuarded($('toReveal'), { text:'もう一度押すと答�
 function resetRevealAsk(){ TW_REVEAL.disarm(); }
 // 2026-10-21 配信モードで投票が済む前に押すと、残りの投票が消える。2度押しで確かめる
 const voteAllDone = ()=>useGrid() && voteDoneN() >= voteTotalN();
-twiceGuarded($('voteSkip'), { text:'まだの人がいます。もう一度押すと答えへ', when:()=>STREAM_MQ.matches && !voteAllDone(),
+KKit.twice($('voteSkip'), { text:'まだの人がいます。もう一度押すと答えへ', when:()=>STREAM_MQ.matches && !voteAllDone(),
   ok:()=>finish(voteAllDone() ? 'vote' : 'partial') });
 
 // ===== 投票（カード版でいちばん面倒なところ） =====

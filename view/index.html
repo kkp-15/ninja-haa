@@ -80,8 +80,7 @@ body.vert .scores.many{column-count:1}body.vert .scores.mid .sr{grid-template-co
 @keyframes fall{to{transform:translateY(110cqh) rotate(720deg)}}
 .cta{color:var(--orange-d);font-size:calc(max(4cqh * var(--f,1), var(--k-v-min)) / var(--f,1))}
 .stage.last .word{font-size:max(16cqh, calc(var(--k-v-min) / var(--f,1)))}
-/* 縦型配信（9:16）・縦の切り抜き用 ?layout=v。高さ基準(vh)の文字を幅基準(vw)に寄せる */
-body.vert .k-view-stage{width:100vw;height:100vh}
+/* 縦型配信（9:16）・縦の切り抜き用 ?layout=v（body.vert と 9:16 の箱は kit の KKit.view）。高さ基準(vh)の文字を幅基準(vw)に寄せる */
 body.vert .wrap{inset:2.4cqh 4cqw 1cqh}
 body.vert .word{font-size:max(15cqw, calc(var(--k-v-min) / var(--f,1)))}
 body.vert .who{font-size:max(4.6cqw, calc(var(--k-v-min) / var(--f,1)))}body.vert .sub{font-size:max(3.9cqw, calc(var(--k-v-min) / var(--f,1)))}
@@ -186,7 +185,6 @@ body.vert .stage.scroll .who{font-size:max(6cqw, calc(var(--k-v-min) / var(--f,1
 .pp.s0 .mk{width:auto;height:auto;padding:.2cqh 1cqw;background:none;border:.35cqh dashed #b9ad9f;border-radius:.6cqh;color:#7a6e64;font-family:inherit;font-size:calc(max(3.9cqh * var(--f,1), var(--k-v-min)) / var(--f,1));font-weight:700;transform:none}
 body.vert .stage.deal .who{font-size:max(5cqw, calc(var(--k-v-min) / var(--f,1)))}body.vert .stage.deal .word{font-size:max(12cqw, calc(var(--k-v-min) / var(--f,1)))}body.vert .stage.deal .sub{font-size:max(3.9cqw, calc(var(--k-v-min) / var(--f,1)))}body.vert .pp{font-size:max(5cqw, calc(var(--k-v-min) / var(--f,1)))}body.vert .pp .mk{width:9cqw;height:9cqw;font-size:max(4cqw, calc(var(--k-v-min) / var(--f,1)))}body.vert .pp.s1 .mk,body.vert .pp.s0 .mk{width:auto;height:auto;font-size:max(3.9cqw, calc(var(--k-v-min) / var(--f,1)))}
 @media (prefers-reduced-motion:reduce){.pp.fresh .mk,.stage.scroll .who,.kick,.recent .rs.new,.ans,.stage,.cd span{animation:none!important}.confetti{display:none}}
-.wrap.measuring,.wrap.measuring *,.wrap.sq,.wrap.sq *{animation:none!important}
 /* 回答コード（2026-10-20）：届いた人の名前と受付の印だけ。答えは答え合わせまで届かない */
 .rcw{display:flex;flex-wrap:wrap;align-items:center;gap:1cqh 2.4cqw;font-size:calc(max(4cqh * var(--f,1), var(--k-v-min)) / var(--f,1));font-weight:900;color:var(--sumi);padding:1.2cqh 2cqw}
 .rcw .h{font-size:calc(max(3.9cqh * var(--f,1), var(--k-v-min)) / var(--f,1));color:#4a3f37}
@@ -262,17 +260,17 @@ body.vert .vob.many{grid-template-columns:1fr}body.vert .vc,body.vert .vp{font-s
 </div>
 <script>
 (function(){
-  var q = new URLSearchParams(location.search);
-  // 背景（?bg= ＞ 操作ページで選んだもの ＞ クリーム）と待ち画面は kit の KKit.view
+  // 背景（?bg= ＞ 操作ページで選んだもの ＞ クリーム）・待ち画面・縦型（?layout=v）は kit の KKit.view
   var V = KKit.view({ ch: 'haa-view' });
-  if (q.get('layout') === 'v') document.body.classList.add('vert');
   var vstage = document.getElementById('vstage');
   var wrap = document.getElementById('wrap'), cd = document.getElementById('cd'), recentEl = document.getElementById('recent');
   function esc(t){ return String(t==null?'':t).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  // 候補の中の「ふーん」（上に出ている言葉と同じ）は .q に。入らないときは外す（squeeze の drop）
+  function q(t){ return esc(t).replace(/「[^」]*」/, function(m){ return '<span class="q">'+m+'</span>'; }); }
   function cands(st, label){
     if (!st.cands || !st.cands.length) return '';
     return '<div class="panel"><div class="cl">'+esc(label||'気持ちの候補')+'</div><div class="cands">'
-      + st.cands.map(function(c){ return '<div><span class="no">'+esc(c.no)+'</span>'+esc(c.text).replace(/「[^」]*」/, function(m){ return '<span class="q">'+m+'</span>'; })+'</div>'; }).join('') + '</div></div>';
+      + st.cands.map(function(c){ return '<div><span class="no">'+esc(c.no)+'</span>'+q(c.text)+'</div>'; }).join('') + '</div></div>';
   }
   function stage(st, who){
     return '<div class="stage scroll"><div class="who">'+esc(who)+'</div><div class="word">「'+esc(st.word)+'」</div>'
@@ -308,7 +306,7 @@ body.vert .vob.many{grid-template-columns:1fr}body.vert .vc,body.vert .vp{font-s
     var many = d.rows.length >= 5;
     return '<div class="stage scroll vo"><div class="who">投票結果</div><div class="word">「'+esc(d.word)+'」</div><div class="sub">'+esc(d.who)+'さんの演技、みんなの予想は…（答えはこのあと）</div></div>'
       + '<div class="panel vob'+(many?' many':'')+(flip?' flip':'')+'">'
-      + d.rows.map(function(r){ return '<div class="vr'+(r.ppl.length?' has':'')+(r.ppl.length>=2?' same':'')+'"><span class="vc"><b>'+esc(r.no)+'</b>'+esc(r.text)+'</span><span class="vps">'+(r.ppl.length>=2?'<span class="vk">'+r.ppl.length+'人</span>':'')+r.ppl.map(chip).join('')+'</span></div>'; }).join('')
+      + d.rows.map(function(r){ return '<div class="vr'+(r.ppl.length?' has':'')+(r.ppl.length>=2?' same':'')+'"><span class="vc"><b>'+esc(r.no)+'</b>'+q(r.text)+'</span><span class="vps">'+(r.ppl.length>=2?'<span class="vk">'+r.ppl.length+'人</span>':'')+r.ppl.map(chip).join('')+'</span></div>'; }).join('')
       + ((d.none||[]).length || d.lisNone ? '<div class="vr miss"><span class="vc">未回答</span><span class="vps">'+d.none.map(chip).join('')+(d.lisNone?'<span class="vp lis"><i style="background:#8a7f74"></i>リスナー</span>':'')+'</span></div>' : '')
       + '</div>';
   }
@@ -387,29 +385,19 @@ body.vert .vob.many{grid-template-columns:1fr}body.vert .vc,body.vert .vp{font-s
     if (st.step === 'result' && st.veiling && st.last) wrap.innerHTML = '<div class="stage scroll last"><div class="who">最終予想タイム！</div><div class="word"><small>あと</small>'+esc(st.last)+'<small>秒</small></div><div class="chat">コメントで番号を（例：③）</div></div>' + cands(st, '気持ちの候補「'+(st.word||'')+'」');
     squeeze();
   }
-  // 縮めて1画面に。縮めきっても入らないとき（8人・細い窓など。字は42pxより小さくしない）は、なくても困らない行を順に外して入れ直す
+  // 縮めて1画面に（kit の KKit.view.fit。測る間は動きを止める）。縮めきっても入らないとき（8人・細い窓など。字は42pxより小さくしない）は、なくても困らない行を順に外して入れ直す
   function squeeze(){
-    // 測る間は動きを止める（出てくる動きの途中は小さく見えて、外す行を外しそこねていた）
-    wrap.classList.add('sq');
-    fit();
-    ['.panel.msg.cta', '.stage .chat', '.stage .sub', '.ttls', '.cl', '.panel.msg small', '.hitx', 'miss', '.recent', '.panel.msg'].forEach(function(sel){
-      if (wrap.scrollHeight <= wrap.clientHeight + 1) return;
-      if (sel === '.recent'){ if (recentEl.children.length){ recentEl.innerHTML = ''; wrap.style.bottom = ''; fit(); } return; }
+    V.fit(wrap, { drop: ['.panel.msg.cta', '.stage .chat', '.stage .sub', '.ttls', '.cl', '.panel.msg small', '.hitx',
       // 未回答の名前は人数だけに
-      if (sel === 'miss'){ var mv = wrap.querySelector('.vr.miss .vps'); if (mv && mv.children.length > 1){ mv.innerHTML = '<span class="vp">' + mv.children.length + '人</span>'; fit(); } return; }
-      var els = wrap.querySelectorAll(sel); if (els.length){ [].forEach.call(els, function(el){ el.remove(); }); fit(); }
-    });
-    wrap.classList.remove('sq');
+      function(){ var mv = wrap.querySelector('.vr.miss .vps'); if (mv && mv.children.length > 1){ mv.innerHTML = '<span class="vp">' + mv.children.length + '人</span>'; return true; } },
+      function(){ if (recentEl.children.length){ recentEl.innerHTML = ''; wrap.style.bottom = ''; return true; } },
+      // 候補の中の「ふーん」（上に大きく出ている言葉と同じ）を外して1行に
+      '.cands .q', '.vc .q',
+      // 回答の帯は「◯人回答済み」だけに（縦型・細い窓）
+      '.rcw .w', '.rcw .h', '.rcw .n small', '.rcw .p',
+      '.panel.msg'] });
   }
   var lastKey = '', lastRecent = '', lastSt = null;
-  function fit(){
-    // 2026-10-20 出てくる動き（縮んだ所から拡大）の途中で測ると低く見えて縮めそこねる。測る間だけ動きを止める
-    wrap.classList.add('measuring');
-    var f = 1; wrap.style.setProperty('--f', '1');
-    for (var i = 0; i < 24 && wrap.scrollHeight > wrap.clientHeight + 1 && f > 0.4; i++) { f -= 0.04; wrap.style.setProperty('--f', f.toFixed(2)); }
-    wrap.classList.remove('measuring');
-  }
-  window.addEventListener('resize', function(){ clearTimeout(window.__fitT); window.__fitT = setTimeout(function(){ render(lastSt); }, 120); });
   function burst(){
     var box = document.createElement('div'); box.className = 'confetti';
     var cols = ['#ff8a3d','#ffd43b','#ff6b9d','#51cf66','#4c6ef5','#fff3e2'];
@@ -419,9 +407,8 @@ body.vert .vob.many{grid-template-columns:1fr}body.vert .vc,body.vert .vp{font-s
   }
   // 操作ページ（同じブラウザ）から kit の KKit.live で受け取る。s が null＝まだ何もない（待ち画面）
   KKit.live({ ch: 'haa-view', role: 'view', onState: function(s){ render(s); } }).start();
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ if (lastSt) render(lastSt); });
-  // 字のデータ（日本語は字ごとに分かれている）が後から届くと高さが変わるので、届いたら測り直す
-  if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', function(){ clearTimeout(window.__sqT); window.__sqT = setTimeout(squeeze, 80); });
+  // 字のデータ（日本語は字ごとに分かれている）が後から届いた・窓の大きさが変わったときは測り直す（kit の KKit.view.refit）
+  KKit.view.refit(function(){ if (lastSt) render(lastSt); });
 })();
 </script>
 </body>
