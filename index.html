@@ -3339,7 +3339,7 @@ function handOpen(){
   HAND_W = w;
   const d = w.document;
   d.open();
-  d.write('<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>手元の予想（配信に映りません）</title><style>'+HAND_CSS+'</style></head><body>'
+  d.write('<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><'+'title>手元の予想（配信に映りません）</'+'title><style>'+HAND_CSS+'</style></head><body>'
     + '<h1>手元の予想</h1><p class="n">配信者さん・同じ部屋の人・リスナーの予想をここで入れます。押した番号は「投票結果を見る」まで、配信画面にも表示ページにも出ません（配信画面には「受け取りました」と受付の印だけ）。</p>'
     + '<div id="rows"></div><button type="button" class="cl" id="cl">閉じる</button></body></html>');
   d.close();
