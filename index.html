@@ -4032,7 +4032,7 @@ $('gViewOpen').addEventListener('click', ()=>{
   try { sessionStorage.setItem(GV_KEY, '1'); } catch(e){}
   if (G.ann && G.revealed) gReveal(true); else gView({step:'perform'});
   if (KKit.openView({ url:'/view/', ch:'haa-view', name:'haaView' })) track('haa_view_open',{guest:1});
-  else alert('ポップアップを許可して、もう一度押してください');
+  else KKit.toast('ポップアップを許可して、もう一度押してください', 4000);
 });
 
 // 届いたリンク（?r= 演じる人／?j= 当てる人／?a= 発表）。開いたらURLから消す
