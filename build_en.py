@@ -322,7 +322,7 @@ for a, b in T2:
 # 英語版で出さない部品（日本語向けの機能）。要素は残して隠す（JS が id で触るため）
 EN_HIDE = ('<style id="en-hide">\n'
   '/* 英語版では出さない：配信モード・離れて遊ぶリンク・市販版（日本の商品）・振り返りの記録・はじめての方へ・配信から来た人への一言 */\n'
-  '#streamSw,#castSw,.cand-n,.sfx-sw,#viewOpen,#streamNote,#firstGuide,#fromStream,.shop-mini,\n'
+  '#streamSw,#castSw,#playMode,.pm-sp,.cand-n,.sfx-sw,#viewOpen,#streamNote,#firstGuide,#fromStream,.shop-mini,\n'
   '.deal-link,.deal-qr,#joinBox,#sentHint,.deal-remote,#annBox,#logLinks,#recStrip,.deal-scroll{display:none!important}\n'
   '</style>\n</head>')
 html = html.replace('</head>', EN_HIDE, 1)
