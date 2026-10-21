@@ -253,8 +253,8 @@ T2 = [
   "const who = S.k >= S.players && S.players > 1 ? 'everyone' : S.act.map(p=>'<b>'+esc(pName(p))+'</b>').join(', ');"),
  ("const what = {deal:'役を見る時間', perform:(S.players === 1 ? '演じて当ててもらう時間' : '演じて当てる時間'), vote:'投票の時間',",
   "const what = {deal:'checking roles', perform:'acting and guessing', vote:'voting',"),
- ("result:(document.body.classList.contains('veiling') ? '答えを見る前' : '答え合わせ')}[step];",
-  "result:(document.body.classList.contains('veiling') ? 'before the reveal' : 'reveal')}[step];"),
+ ("result:(S.vopen ? '投票結果' : document.body.classList.contains('veiling') ? '答えを見る前' : '答え合わせ')}[step];",
+  "result:(S.vopen ? 'votes' : document.body.classList.contains('veiling') ? 'before the reveal' : 'reveal')}[step];"),
  ("na.innerHTML = (S.gno||1)+'回目・'+(step === 'result' ? '演じた人：' : 'いま演じる人：')+who+'・'+what;",
   "na.innerHTML = 'Round '+(S.gno||1)+' · '+(step === 'result' ? 'acted: ' : 'acting: ')+who+' · '+what;"),
  # 配る
@@ -310,9 +310,13 @@ T2 = [
  ("$('newGame').textContent = on ? '「'+t.word+'」で始める' : 'Play again';", "$('newGame').textContent = on ? 'Start with \\u201c'+t.word+'\\u201d' : 'Play again';"),
  ("b.innerHTML = '<span class=\"pi-w\">「'+esc(t.word)+'」</span>", "b.innerHTML = '<span class=\"pi-w\">\\u201c'+esc(t.word)+'\\u201d</span>"),
 ]
+# 日本語版の文言が変わってペアが見つからないときは、止めずに飛ばして最後に一覧を出す
+# （その所は日本語のまま残る。英語版を日本語版に追いつかせるときに、この一覧を見てペアを直す）
+MISSING = []
 for a, b in T2:
     if a not in html:
-        sys.exit('[NG] 英語化のペアが日本語版に見つかりません（日本語版の文言が変わった？）: ' + a[:80])
+        MISSING.append(a)
+        continue
     html = html.replace(a, b)
 
 # 英語版で出さない部品（日本語向けの機能）。要素は残して隠す（JS が id で触るため）
@@ -386,3 +390,7 @@ if leftover:
     print('[info] ソースに日本語を含む行 %d（英語版では出さない部分を含む）。画面の確認: node check_en.mjs' % len(leftover))
     if '-v' in sys.argv:
         print('\n'.join(leftover))
+if MISSING:
+    print('[warn] 日本語版で見つからなかった英語化のペア %d（その所は日本語のまま。英語版を追いつかせるときに直す）:' % len(MISSING))
+    for a in MISSING:
+        print('  - ' + a[:90].replace('\n', ' '))

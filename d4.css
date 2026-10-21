@@ -81,7 +81,7 @@ body.d4-play:not(.stream) button.btn-eq:active{transform:translate(3px,3px);box-
 .d4-play:not(.stream) .ans-card{border:var(--k-bw) solid var(--k-sumi);border-radius:var(--k-r);box-shadow:var(--k-sh-s)}
 .d4-play:not(.stream) .score h3,.d4-play:not(.stream) .vote-who{font-family:var(--k-bold);font-weight:400}
 .d4-play:not(.stream) .score .sr b{color:var(--k-shu)}
-.d4-play:not(.stream) .sr.top .sr-rk{background:var(--k-shu)}
+.d4-play:not(.stream) .sr.top .sr-rk{background:var(--k-shu);color:#fff}
 .d4-play:not(.stream) .unveil-msg{font-family:var(--k-bold);font-weight:400}
 
 /* 名前入れ・はじめての方へ・配信から来た人の一言 */
