@@ -1206,6 +1206,112 @@ html body.stream .score .sr.top .sr-rk{color:#fff}
 @media screen and (max-width:712px){.kkp-rel{max-width:calc(100vw - 24px)!important;margin-left:auto!important;margin-right:auto!important}}
 </style>
 <!-- kkp-rel-d4:end -->
+<style id="haa-fit">
+/* ===== 2026-10-22 配信モードの遊ぶ画面：小さい窓（960x540 など）でも縮めずに1画面に。
+   ふつうのモード・スマホは変えない（どれも body.stream の中だけ）。fitStream が、字が14pxの下限に届いても入らないときに cmp1→cmp2→cmp3 を付ける ===== */
+/* 押せる所は 44px 以上 */
+html body.stream.playing main button,html body.stream.playing main summary,html body.stream.playing header button{min-height:44px}
+html body.stream.playing :is(main,header) :is(button,summary):not(#dock>button):not(.vg-b):not(.deal-card):not(.btn-primary):not(.unveil){min-height:max(44px,calc(4*var(--u)))!important}
+html body.stream.playing #dock>button{min-height:max(44px,calc(6*var(--u)))}
+html body.stream.playing #dock>button.btn-sub,html body.stream.playing .btn-eq{min-height:max(44px,calc(5.4*var(--u)))}
+html body.stream.playing #dock>#judgeBtn{min-height:max(44px,calc(6*var(--u)))}
+html body.stream.playing .vg-b{min-width:max(44px,calc(6.4*var(--u)));min-height:max(44px,calc(6.4*var(--u)))}
+html body.stream.playing .host-menu>summary,html body.stream.playing .join-menu>summary{min-height:44px;display:flex;align-items:center}
+html body.stream.playing .ann.ann-out .ann-btn{min-height:44px}
+html body.stream.playing .np-link{display:inline-flex;align-items:center;justify-content:center}
+html body.stream.playing .np-link[hidden],html body.stream .deal-link[hidden],html body.stream .deal-card .who[hidden]{display:none}
+/* 始める前（設定）も押せる所は 44px（配信モードだけ。市販品の紹介リンクは触らない） */
+html body.stream:not(.playing) #step-setup :is(button,summary):not(.k-view-open *){min-height:44px}
+html body.stream:not(.playing) #step-setup summary{display:flex;align-items:center}
+html body.stream:not(.playing) #namesGrid input{min-height:44px}
+/* サイト名の帯に「直近」と「表示ページ：つながっています」を並べる（3行を1行に） */
+html body.stream.playing .hbar{align-items:center;flex-wrap:nowrap;column-gap:12px;min-height:44px}
+html body.stream.playing .hbar>.hb-name,html body.stream.playing .hbar>.hb-url,html body.stream.playing .hbar>.hb-step{flex:none;white-space:nowrap}
+html body.stream.playing .hbar>.rec-strip{flex:1 1 0;min-width:0;margin:0}
+html body.stream.playing .hbar>.rec-strip:empty{display:block}
+html body.stream.playing .hbar>.haa-live{flex:none;margin:0 0 0 auto;gap:10px}
+html body.stream.playing .hbar>.haa-live .k-btn{min-height:44px}
+/* 配る：カードの名前・送るボタンは1行で切る */
+html body.stream .deal-card .who,html body.stream .deal-link{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html body.stream .deal-card{min-width:0}
+/* 投票結果：未回答の名前は横に並べて全幅（縦に積み上がっていた） */
+html body.stream .vo-board.many .vo-row.miss{grid-column:1/-1}
+html body.stream .vo-row.miss .vo-ppl{justify-content:flex-start;margin-left:0}
+html body.stream .vo-p{max-width:14em}
+/* 次に演じる人の ◀ ▶（cmp1 のときだけ） */
+.ap-step{display:none}
+
+/* --- cmp1：並べ方を変える --- */
+html body.stream.playing.cmp1 main .card>h2{margin-bottom:4px}
+/* 答え合わせ：得点は1行ずつ（名前は1行で切る・当てた数は右）。当てた人の札は名前を切って横に詰める */
+html body.stream.cmp1 .score .sr{grid-template-columns:auto minmax(0,1fr) auto;padding:1px 0;line-height:1.25}
+html body.stream.cmp1 .score .sr-nm{display:flex;align-items:baseline;gap:.8em;min-width:0}
+html body.stream.cmp1 .score .sr-n{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html body.stream.cmp1 .score .sr-hit{flex:none}
+html body.stream.cmp1 .ans-top{flex-wrap:nowrap;min-width:0}
+html body.stream.cmp1 .ans-top .ans-name{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html body.stream.cmp1 .ans-top .ans-word{flex:none;margin-left:auto}
+html body.stream.cmp1 .ans-votes{gap:4px 6px;margin-top:6px}
+html body.stream.cmp1 .vc{display:inline-flex;align-items:baseline;gap:.2em;max-width:100%;white-space:nowrap}
+html body.stream.cmp1 .vc .vc-n{display:inline-block;max-width:7em;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom}
+html body.stream.cmp1 .ans-card{padding:6px 10px 8px}
+html body.stream.cmp1 .ans-main{margin-top:4px}
+html body.stream.cmp1 .cta-comment{margin:4px 0 0}
+/* 次に演じる人：選んだ人だけを ◀ 名前 ▶ で */
+html body.stream.cmp1 #apNext.on{display:flex;flex-wrap:nowrap;align-items:center;gap:10px}
+html body.stream.cmp1 #apNext .ap-row{flex-wrap:nowrap;min-width:0}
+html body.stream.cmp1 #apNext .ap-btn[aria-pressed="false"]{display:none}
+html body.stream.cmp1 #apNext .ap-btn{min-width:0;max-width:16em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+html body.stream.cmp1 #apNext .ap-step{display:inline-grid;place-items:center;flex:none;width:44px;min-height:44px;padding:0;border:2px solid #e6d5bd;border-radius:8px;background:#fff;font:inherit;font-size:16px;color:var(--sumi);cursor:pointer}
+/* 次のお題：見出し・3つ・「ほかの3つ」「カテゴリを変える」を1行に */
+html body.stream.cmp1:not(.veiling):not([data-cat="mine"]) .res-main .next-pick{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:4px 8px}
+html body.stream.cmp1 .res-main .next-pick .np-h{margin:0;flex:none}
+html body.stream.cmp1 .res-main .next-pick .np-h .np-cat{display:none}
+html body.stream.cmp1 .res-main .next-pick .pick-list{flex:1 1 auto;flex-wrap:nowrap;min-width:0}
+html body.stream.cmp1 .res-main .next-pick .pick-list .pick-item{min-width:0;min-height:44px}
+html body.stream.cmp1 .res-main .next-pick .np-links{margin:0;flex:none;gap:6px}
+/* 投票の表：当てる人を2列に（名前は1行で切る）。候補の意味は下に1行 */
+html body.stream.cmp1 .vg-tbl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 10px}
+html body.stream.cmp1 .vg-row{gap:8px;padding:2px 6px;min-width:0}
+html body.stream.cmp1 .vg-nm{flex:0 1 auto;display:block;min-width:3em;max-width:none;font-size:14px}
+html body.stream.cmp1 .vg-nm i{display:inline-block;vertical-align:-.05em;margin-right:.4em}
+html body.stream.cmp1 .vg-bs{flex:none;flex-wrap:nowrap;gap:4px}
+html body.stream.cmp1 .vg-b{min-width:44px;min-height:44px;font-size:18px}
+html body.stream.cmp1 .vg-legend{font-size:14px;gap:2px 14px;margin:4px 0}
+html body.stream.cmp1 #step-vote .stage.sm{padding-top:4px;padding-bottom:4px}
+html body.stream.cmp1 #step-vote .stage.sm .vote-who{display:inline;margin:0 .8em 0 0}
+html body.stream.cmp1 #step-vote .stage.sm .st-q{display:inline;margin:0}
+
+/* 窓の幅いっぱいを使う（名前を切らずに済む幅を増やす） */
+html body.stream.playing.cmp1 .wrap{max-width:none}
+/* 答え合わせの並び：左＝答え・問いかけ・次に演じる人／右＝得点・記録・設定に戻る／下の1行＝次のお題 */
+html body.stream.cmp1 .res-pair{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) auto;grid-template-areas:"ans score score" "cta score score" "ap links back" "np np np";column-gap:12px;row-gap:6px;align-items:start}
+html body.stream.cmp1 .res-pair>.res-main,html body.stream.cmp1 .res-pair>.res-side{display:contents}
+html body.stream.cmp1 #resultBody{grid-area:ans}
+html body.stream.cmp1 #ctaComment{grid-area:cta}
+html body.stream.cmp1 #apNext{grid-area:ap}
+html body.stream.cmp1 #nextPick{grid-area:np}
+html body.stream.cmp1 #resultBack{grid-area:back;width:auto;margin:0;padding:0 12px}
+html body.stream.cmp1 #scoreBox{grid-area:score}
+html body.stream.cmp1 #logLinks{grid-area:links;flex-wrap:wrap;align-self:center}
+html body.stream.cmp1 #apNext:not(.on){display:none}
+/* 投票：「予想 0 / 7」「1つ前をやり直す」「進行役メニュー」を1行に */
+html body.stream.cmp1 #step-vote:not(.hidden){display:flex;flex-wrap:wrap;align-items:center;column-gap:14px}
+html body.stream.cmp1 #step-vote>*{flex:1 1 100%}
+html body.stream.cmp1 #step-vote>#voteProg,html body.stream.cmp1 #step-vote>#voteUndo{flex:0 0 auto;margin:0}
+html body.stream.cmp1 #step-vote>.host-menu{flex:1 1 0;min-width:12em;margin:0}
+
+/* --- cmp2：補助の行を外す（なくても進められるもの） --- */
+html body.stream.cmp2 .cta-comment{display:none}
+html body.stream.cmp2 .score .sr-hit{display:none}
+html body.stream.cmp2 .ans-top .ans-word{display:none}
+html body.stream.playing.cmp2 .hbar>.hb-url{display:none}
+html body.stream.cmp2 #step-vote .stage.sm .vote-who{display:none}
+
+/* --- cmp3：場面名の墨帯を外す・外れた人の札は名前を短く --- */
+html body.stream.playing.cmp3 main .card>h2{display:none}
+html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
+</style>
 </head>
 <body class="k-page d4-play">
 <div class="wrap">
@@ -2085,6 +2191,15 @@ function renderActorPick(){
       b.addEventListener('click', ()=>{ S.rot = i; renderActorPick(); track('haa_actor_pick',{at:id==='apFirst'?'setup':'next',players:S.players}); });
       row.appendChild(b);
     }
+    // 2026-10-22 配信モードの答え合わせで狭いとき（body.cmp1）は、選んだ人だけを出して ◀ ▶ で送る（8人の名前の段をたたむ）
+    if (id === 'apNext'){
+      const step = d => { S.rot = ((S.rot + d) % S.players + S.players) % S.players; renderActorPick(); track('haa_actor_pick',{at:'next',players:S.players}); };
+      [['ap-prev','◀','前の人'],['ap-next','▶','次の人']].forEach(([c,t,l],k)=>{
+        const x = document.createElement('button'); x.type = 'button'; x.className = 'ap-step '+c; x.textContent = t; x.setAttribute('aria-label', '次に演じる人を'+l+'に');
+        x.addEventListener('click', ()=>step(k ? 1 : -1));
+        if (k) row.appendChild(x); else row.insertBefore(x, row.firstChild);
+      });
+    }
   });
 }
 $('actInc').addEventListener('click', ()=>setActors(actorsN()+1));
@@ -2692,7 +2807,7 @@ function renderPerform(){
     w.appendChild(row);
   });
 }
-$('toVote').addEventListener('click', ()=>{ S.voter=0; S.target=-1; S.voteShownAt = Date.now(); nextVote(); show('vote'); });
+$('toVote').addEventListener('click', ()=>{ S.voter=0; S.target=-1; nextVote(); show('vote'); });
 // 投票は人数×(人数−1)回スマホを回す（6人で30回）。そこで止まる人が多いので、口で当て合って答えだけ見る道を用意する
 // 配信モードでは2回押し（1回目で「もう一度押すと答えが出ます」）。演じる前に答えが出ると、その回が遊べなくなる（2026-10-19）
 const TW_REVEAL = KKit.twice($('toReveal'), { text:'もう一度押すと答えが出ます', when:()=>STREAM_MQ.matches,
@@ -2725,14 +2840,15 @@ function renderVote(){
   if (STREAM_MQ.matches) $('voteHint').innerHTML = '離れた人の答えは、聞いて代わりに押してください。<br>視聴者のみなさんはコメントで。';
   $('voteWho').textContent = '📱 '+pLabel(S.voter)+' さんの番';
   $('voteTarget').innerHTML = '<b>'+esc(pLabel(S.act[S.target]))+'</b> さんは、どの気持ちだった？';
-  const w = $('voteList'); w.innerHTML=''; const shownAt = Date.now();
+  // 出た直後（次の人の番に切り替わった直後）の押しまちがいは数えない（2026-10-22 手書きの 350ms を kit の KKit.settle に）
+  const w = $('voteList'); w.innerHTML=''; KKit.settle(w, 350).block();
   const used = S.pool.slice().sort((a,b)=>a-b);
   used.forEach(ai=>{
     const b = document.createElement('button');
     b.type='button'; b.className='vote-item';
     b.innerHTML = '<span class="no">'+numOf(ai)+'</span>'+esc(S.theme.acts[ai]);
     b.addEventListener('click', ()=>{
-      if (w.dataset.busy || Date.now() - shownAt < 350) return; w.dataset.busy = '1';
+      if (w.dataset.busy) return; w.dataset.busy = '1';
       b.classList.add('picked'); sfx('pick');
       S.votes[S.voter] = S.votes[S.voter] || {};
       S.votes[S.voter][S.target] = ai;
@@ -2811,8 +2927,8 @@ function finish(mode){
         va.chips.push({name:pName(v), ok:g===ai, no:numOf(g), mk:mk});
         const mkh = mk ? '<small class="vc-mk">'+esc(mk)+'</small>' : '';
         chips.push(g === ai
-          ? '<span class="vc ok">○ '+esc(pName(v))+mkh+'</span>'
-          : '<span class="vc ng">× '+esc(pName(v))+mkh+' <small>'+numOf(g)+'</small></span>');
+          ? '<span class="vc ok">○ <span class="vc-n">'+esc(pName(v))+'</span>'+mkh+'</span>'
+          : '<span class="vc ng">× <span class="vc-n">'+esc(pName(v))+'</span>'+mkh+' <small>'+numOf(g)+'</small></span>');
       });
       // リスナー（多かった番号）。プレイヤーと同じ並びで最後に
       const lg = S.lis && S.lv ? S.lv[i] : undefined;
@@ -2874,13 +2990,13 @@ function finish(mode){
     if (o.v !== prev){ rank = n+1; prev = o.v; }
     const w = tmaxL > 0 ? Math.round(o.v / tmaxL * 100) : 0;
     if (o.i < 0){
-      h += '<div class="sr lis'+(rank===1&&tmaxL>0?' top':'')+'"><span class="sr-rk">'+rank+'位</span><span class="sr-nm">リスナー<small class="sr-hit">'+lisLine()+'</small></span>'
+      h += '<div class="sr lis'+(rank===1&&tmaxL>0?' top':'')+'"><span class="sr-rk">'+rank+'位</span><span class="sr-nm"><span class="sr-n">リスナー</span><small class="sr-hit">'+lisLine()+'</small></span>'
         + '<span class="sr-bar"><i style="width:'+w+'%;background:'+LIS_COLOR+'"></i></span><b>'+o.v+'点'+(S.rounds > 1 ? '<small class="sr-add">+'+S.lAdd+'</small>' : '')+'</b></div>';
       return;
     }
     const pp = ppl[pName(o.i)];
     const hitTxt = '<small class="sr-hit">'+ptLine(S.ptHit[o.i], S.ptGot[o.i], pp ? pp.tries : null)+'</small>';
-    h += '<div class="sr'+(rank===1&&tmaxL>0?' top':'')+'"><span class="sr-rk">'+rank+'位</span><span class="sr-nm">'+esc(pName(o.i))+hitTxt+'</span>'
+    h += '<div class="sr'+(rank===1&&tmaxL>0?' top':'')+'"><span class="sr-rk">'+rank+'位</span><span class="sr-nm"><span class="sr-n">'+esc(pName(o.i))+'</span>'+hitTxt+'</span>'
       + '<span class="sr-bar"><i style="width:'+w+'%;background:'+COLORS[o.i%COLORS.length].bg+'"></i></span><b>'+o.v+'点'+(S.rounds > 1 ? '<small class="sr-add">+'+sc[o.i]+'</small>' : '')+'</b></div>';
   });
   S.lastScores = {rounds:S.rounds, rows:S.total.map((v,i)=>{ const pp = ppl[pName(i)]; return {name:pName(i), color:COLORS[i%COLORS.length].bg, total:v, add:sc[i], hit:S.ptHit[i], tries:pp?pp.tries:null, got:S.ptGot[i], pt:ptLine(S.ptHit[i], S.ptGot[i], pp ? pp.tries : null)}; })};
@@ -3201,6 +3317,9 @@ function renderRecStrip(fresh){
   const list = recentRounds(5);
   el.innerHTML = list.length ? '<span class="rs-h">直近</span>' + list.map(recHtml).join('') : '';
   if (fresh && el.lastElementChild) el.lastElementChild.classList.add('new');
+  // 帯に入る分だけ（古い方から外す。全部入らなければ「直近」ごと出さない）
+  while (el.children.length > 1 && el.scrollWidth > el.clientWidth + 1) el.children[1].remove();
+  if (el.children.length === 1) el.innerHTML = '';
 }
 // 今日のまとめ（配信の締め用）・これまでの記録
 function logScoped(){
@@ -3269,12 +3388,19 @@ $('logClear').addEventListener('click', ()=>{
 
 // 配信モードの遊んでいる画面は、スクロールなしで1画面に収める（足りなければ --fit で文字と余白をまとめて縮める）。進行役メニューや記録を開いている間は縮めない
 function fitStream(){
-  const b = document.body, r = document.documentElement;
+  const b = document.body, r = document.documentElement, CMP = ['cmp1','cmp2','cmp3'];
   if (!b.classList.contains('stream')) return;
   // 開いている進行役メニューが見えているときだけ縮めない（隠れた場面のメニューが開いたままだと、縮めずにはみ出していた）
-  if (!b.classList.contains('playing') || [...document.querySelectorAll('.host-menu[open],.join-menu[open]')].some(d=>d.getClientRects().length > 0) || (LOG_UI && LOG_UI.open)){ r.style.removeProperty('--fit'); return; }
-  let f = 1; r.style.setProperty('--fit', '1');
-  for (let i=0; i<16 && r.scrollHeight > innerHeight + 1 && f > 0.42; i++){ f -= 0.04; r.style.setProperty('--fit', f.toFixed(2)); }
+  if (!b.classList.contains('playing') || [...document.querySelectorAll('.host-menu[open],.join-menu[open]')].some(d=>d.getClientRects().length > 0) || (LOG_UI && LOG_UI.open)){ r.style.removeProperty('--fit'); if (!b.classList.contains('playing')) CMP.forEach(c=>b.classList.remove(c)); return; }
+  // 2026-10-22 本文（3*--u）が14pxの下限に届くところまでは --fit で縮める（大きい窓はこれで入る）。それでも入らなければ、それ以上は縮めずに並べ方を変える（cmp1→cmp2→cmp3。小さい窓）。
+  // 下限より先は字が縮まず余白とボタンだけが潰れるので、最後の手段にする
+  const u0 = Math.min(innerWidth / 100, innerHeight * 1.32 / 100), floor = Math.min(1, Math.max(0.42, 4.8 / u0));
+  const over = () => r.scrollHeight > innerHeight;
+  const shrink = lo => { let f = 1; r.style.setProperty('--fit', '1'); for (let i=0; i<16 && over() && f > lo + 0.001; i++){ f = Math.max(lo, f - 0.04); r.style.setProperty('--fit', f.toFixed(2)); } };
+  CMP.forEach(c=>b.classList.remove(c));
+  shrink(floor);
+  for (let k=0; k<CMP.length && over(); k++){ b.classList.add(CMP[k]); shrink(floor); }
+  if (over()) shrink(0.42);
 }
 window.addEventListener('resize', ()=>{ clearTimeout(window.__fitT); window.__fitT = setTimeout(fitStream, 120); });
 document.addEventListener('toggle', e=>{ if (e.target.classList && e.target.classList.contains('host-menu')) fitStream(); }, true);
@@ -3324,9 +3450,10 @@ function voteGridTail(one, used){
   $('voteUndo').hidden = !(S.voteHist && S.voteHist.length);
   $('voteSkip').textContent = done >= total ? '予想がそろった → 答え合わせへ' : '予想をここまでにして答え合わせへ';
 }
+// 予想の表が出た直後の押しまちがいは数えない（2026-10-22 手書きの 350ms を kit の KKit.settle に。出た瞬間は kit が見る）
+KKit.settle('#voteGrid', 350);
 $('voteGrid').addEventListener('click', e=>{
   const b = e.target.closest('.vg-b'); if (!b) return;
-  if (Date.now() - (S.voteShownAt||0) < 350) return; // 画面が出た直後の押しまちがいは数えない
   const t = +b.dataset.t, ai = +b.dataset.a;
   if (b.dataset.v === 'L'){
     const pv = S.lv[t]; if (pv === ai) return;
@@ -3661,6 +3788,9 @@ function setupHostMenus(){
   res.insertBefore(rm, $('resCands'));
   const main = res.querySelector('.res-main');
   if (main) ['apNext','nextPick','resultBack'].forEach(id=>{ const el = $(id); if (el) main.appendChild(el); });
+  // 2026-10-22 小さい窓でも1画面に：サイト名の帯の右に「直近」と「表示ページ：つながっています」を並べる（3行→1行）
+  const hb = document.querySelector('header .hbar');
+  if (hb){ ['recStrip','haaLive'].forEach(id=>{ const el = $(id); if (el) hb.appendChild(el); }); }
 }
 
 // 続きから：読み込んですぐ /view/ に「設定」を送らないよう、ほかの初期化より先に決める
