@@ -1934,7 +1934,20 @@ function syncDock(name){
 // 中身はURLの中だけ（サーバーに保存しない）。読みにくくするだけで暗号ではない（本人に送る前提）
 // ?r= 演じる人（その人の気持ちだけ）／?j= 当てる人（お題と候補だけ）／?a= 発表（全員の答え）
 function b64e(o){ return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
-function b64d(s){ const raw = String(s).replace(/-/g,'+').replace(/_/g,'/'); return JSON.parse(decodeURIComponent(escape(atob(raw + '==='.slice((raw.length+3)%4))))); }
+function b64d(s){ const raw = String(s).replace(/-/g,'+').replace(/_/g,'/'); return haaUnmix(JSON.parse(decodeURIComponent(escape(atob(raw + '==='.slice((raw.length+3)%4)))))); }
+// 2026-10-21 演じる人の気持ち（?r= の a）は、その回の種（ゲームID＋':'＋回＋'|'＋名前）で混ぜて az に入れる。
+// base64 を戻しただけでは読めない（回答コードと同じく、読みにくくするだけで暗号ではない）。古い形（a がそのまま）も読める
+function mixH(t){ let h = 0x811c9dc5; t = String(t); for (let i=0;i<t.length;i++){ h ^= t.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h >>> 0; }
+function mixB(key, bin){ let o = '', h = 0; for (let i=0;i<bin.length;i++){ if ((i & 3) === 0) h = mixH(key + '|x|' + (i >> 2)); o += String.fromCharCode(bin.charCodeAt(i) ^ ((h >>> ((i & 3) * 8)) & 255)); } return o; }
+// 長さで見分けられないよう、48バイトずつにそろえる（後ろの空白は JSON.parse が読み飛ばす）
+function haaPad(b){ while (b.length % 48) b += ' '; return b; }
+function mixKey(o){ return String(o.g) + ':' + o.rd + '|' + o.n; }
+function haaMix(o, v){ return btoa(mixB(mixKey(o), haaPad(unescape(encodeURIComponent(JSON.stringify(v)))))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+function haaUnmix(o){
+  if (!o || typeof o.az !== 'string') return o;
+  try { const t = o.az.replace(/-/g,'+').replace(/_/g,'/'); o.a = JSON.parse(decodeURIComponent(escape(mixB(mixKey(o), atob(t + '==='.slice((t.length+3)%4)))))); } catch(e){}
+  delete o.az; return o;
+}
 // 配信する／しない（配信モードだけ・この端末に覚える）。既定は「配信する」
 const CAST_KEY = 'haa-stream-cast';
 function castOn(){ try { return localStorage.getItem(CAST_KEY) !== 'off'; } catch(e){ return true; } }
@@ -1950,9 +1963,10 @@ function linkBase(){
 function roleUrl(i, popup){
   if (popup){
     // q = 小窓に出すQRの中身（「◯◯さんに送る」と同じ ?r= の中身）
-    return location.origin + '/?r=' + b64e({w:S.theme.word, a:S.theme.acts[S.assign[i]], n:pLabel(S.act[i]), q:roleUrl(i).split('?r=')[1].split('&')[0]}) + ktq();
+    const po = {w:S.theme.word, n:pLabel(S.act[i]), g:S.gid, rd:S.gno}; po.az = haaMix(po, S.theme.acts[S.assign[i]]); po.q = roleUrl(i).split('?r=')[1].split('&')[0];
+    return location.origin + '/?r=' + b64e(po) + ktq();
   }
-  const o = linkBase(); o.a = S.theme.acts[S.assign[i]]; o.n = pName(S.act[i]); o.me = i;
+  const o = linkBase(); o.n = pName(S.act[i]); o.me = i; o.az = haaMix(o, S.theme.acts[S.assign[i]]);   // 気持ちは混ぜて入れる（a のままにしない）
   return location.origin + '/?r=' + b64e(o) + ktq();
 }
 function joinUrl(p){
