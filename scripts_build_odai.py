@@ -9,6 +9,11 @@ import os, re, json, html
 from urllib.parse import quote
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
+# kit の読み込みに版を付ける（ブラウザに古い kit.js が残るのを防ぐ。2026-10-22）
+try:
+    KIT_Q = '?v=' + open(os.path.join(ROOT, 'kit', 'VERSION')).read().strip()
+except OSError:
+    KIT_Q = ''
 SITE = 'https://haa.kkpwebninja.com'
 GA, PUB = 'G-2LM85GJN0L', 'ca-pub-1298304917726270'
 # 公開日と更新日。更新日は中身（お題・本文）を変えた日に手で進める。再生成しただけでは進めない
@@ -66,7 +71,7 @@ page_ld = json.dumps({'@context':'https://schema.org','@type':'Article',
   'headline': f'声と表情で演じるお題一覧【全{N_WORD}お題・{N_ACT}通り】',
   'datePublished': PUBLISHED, 'dateModified': UPDATED, 'inLanguage':'ja',
   'mainEntityOfPage': f'{SITE}/odai/',
-  'image': f'{SITE}/ogp.png',
+  'image': f'{SITE}/ogp.jpg?d=20261022',
   'author':{'@type':'Organization','name':'web忍者の砦','url':'https://kkpwebninja.com/'},
   'publisher':{'@type':'Organization','name':'web忍者の砦','url':'https://kkpwebninja.com/'}}, ensure_ascii=False)
 faq_html = ''.join(f'<dt>{esc(q)}</dt><dd>{esc(a)}</dd>' for q,a in FAQ)
@@ -89,7 +94,7 @@ out = f'''<!DOCTYPE html>
 <meta property="og:type" content="article">
 <meta property="og:url" content="{SITE}/odai/">
 <meta property="og:site_name" content="声と表情で当てるゲーム">
-<meta property="og:image" content="{SITE}/ogp.png?d=20260905">
+<meta property="og:image" content="{SITE}/ogp.jpg?d=20261022">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -108,8 +113,8 @@ out = f'''<!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
 <!-- 共通部品 D4（kkp-kit を kit/ にコピーしたもの。中は手で直さず kkp-kit 側で直して sync.sh） -->
 <!-- k-fonts:start --><!-- k-fonts:end -->
-<link rel="stylesheet" href="/kit/kit.css">
-<script src="/kit/kit.js" defer></script>
+<link rel="stylesheet" href="/kit/kit.css{KIT_Q}">
+<script src="/kit/kit.js{KIT_Q}" defer></script>
 <style>
 /* 読み物ページ：地は白、本文16px・#333・行間1.8。クリームは見出し帯とボタンまわりだけ */
 :root{{--orange:#ff8a3d;--orange-d:#a8501a;--cream:#fff8f0;
