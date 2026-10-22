@@ -71,7 +71,7 @@ page_ld = json.dumps({'@context':'https://schema.org','@type':'Article',
   'headline': f'声と表情で演じるお題一覧【全{N_WORD}お題・{N_ACT}通り】',
   'datePublished': PUBLISHED, 'dateModified': UPDATED, 'inLanguage':'ja',
   'mainEntityOfPage': f'{SITE}/odai/',
-  'image': f'{SITE}/ogp.jpg?d=20261022',
+  'image': f'{SITE}/ogp.jpg?d=20261023',
   'author':{'@type':'Organization','name':'web忍者の砦','url':'https://kkpwebninja.com/'},
   'publisher':{'@type':'Organization','name':'web忍者の砦','url':'https://kkpwebninja.com/'}}, ensure_ascii=False)
 faq_html = ''.join(f'<dt>{esc(q)}</dt><dd>{esc(a)}</dd>' for q,a in FAQ)
@@ -94,7 +94,7 @@ out = f'''<!DOCTYPE html>
 <meta property="og:type" content="article">
 <meta property="og:url" content="{SITE}/odai/">
 <meta property="og:site_name" content="声と表情で当てるゲーム">
-<meta property="og:image" content="{SITE}/ogp.jpg?d=20261022">
+<meta property="og:image" content="{SITE}/ogp.jpg?d=20261023">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
