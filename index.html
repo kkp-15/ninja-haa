@@ -1486,7 +1486,7 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
   <button class="btn-primary" id="startGame">おまかせで始める</button>
   <p style="text-align:center;font-size:.875rem;margin-top:.8rem">
     <a href="/odai/" id="odaiLink" style="color:var(--orange-d);font-weight:bold;text-decoration:none;">
-      📋 お題一覧はこちら（全<span data-word-count>226</span>お題・1808通り）</a>
+      お題一覧はこちら（全<span data-word-count>226</span>お題・1808通り）</a>
   </p>
   <!-- 市販のカード版（幻冬舎）。このツールは非公式なので、カードで遊びたい人は公式へ（2026-10-15 ユーザー指示で途中に置く） -->
   <div class="shop-mini">
@@ -2837,7 +2837,7 @@ function renderVote(){
   if (useGrid()) return renderVoteGrid();
   const vw = $('voteWho'); if (vw){ vw.classList.remove('swap'); void vw.offsetWidth; vw.classList.add('swap'); }
   if (STREAM_MQ.matches) $('voteHint').innerHTML = '離れた人の答えは、聞いて代わりに押してください。<br>視聴者のみなさんはコメントで。';
-  $('voteWho').textContent = '📱 '+pLabel(S.voter)+' さんの番';
+  $('voteWho').textContent = pLabel(S.voter)+' さんの番';
   $('voteTarget').innerHTML = '<b>'+esc(pLabel(S.act[S.target]))+'</b> さんは、どの気持ちだった？';
   // 出た直後（次の人の番に切り替わった直後）の押しまちがいは数えない（2026-10-22 手書きの 350ms を kit の KKit.settle に）
   const w = $('voteList'); w.innerHTML=''; KKit.settle(w, 350).block();

@@ -164,7 +164,7 @@ T = [
  ("'言う言葉は「'+S.theme.word+'」'", '\'Your line: \\u201c\'+S.theme.word+\'\\u201d\''),
  ("'<span class=\"nm\">'+(n+1)+'番目</span><span class=\"act\">'+(p+1)+'人目・'+c.n+'</span>'",
   "'<span class=\"nm\">#'+(n+1)+'</span><span class=\"act\">player '+(p+1)+' · '+c.n+'</span>'"),
- ("'📱 '+(S.voter+1)+'人目・'+vc.n+' さんの番'", "'📱 player '+(S.voter+1)+' · '+vc.n+', your turn'"),
+ ("(S.voter+1)+'人目・'+vc.n+' さんの番'", "'player '+(S.voter+1)+' · '+vc.n+', your turn'"),
  ("'<b>'+(S.target+1)+'人目・'+tc.n+'</b> さんは、どの気持ちだった？'",
   "'How did <b>player '+(S.target+1)+' · '+tc.n+'</b> feel?'"),
  ("'投票 '+done+' / '+total", "'votes '+done+' / '+total"),
@@ -275,7 +275,7 @@ T2 = [
  # 投票
  ('<p class="hint" id="voteHint">スマホを回して、1人ずつ投票します。<br>ほかの人の気持ちを当ててください。</p>',
   '<p class="hint" id="voteHint">Pass the phone and vote one at a time.<br>Guess the feeling of each other actor.</p>'),
- ("$('voteWho').textContent = '📱 '+pLabel(S.voter)+' さんの番';", "$('voteWho').textContent = '📱 '+pLabel(S.voter)+', your turn';"),
+ ("$('voteWho').textContent = pLabel(S.voter)+' さんの番';", "$('voteWho').textContent = pLabel(S.voter)+', your turn';"),
  ("$('voteTarget').innerHTML = '<b>'+esc(pLabel(S.act[S.target]))+'</b> さんは、どの気持ちだった？';", "$('voteTarget').innerHTML = 'How did <b>'+esc(pLabel(S.act[S.target]))+'</b> feel?';"),
  ('<button type="button" class="np-link vote-undo" id="voteUndo" hidden>↶ 1つ前の票をやり直す</button>', '<button type="button" class="np-link vote-undo" id="voteUndo" hidden>↶ Undo the last vote</button>'),
  ("'投票がそろいました。「せーの」で答えを見ましょう';", "'All votes are in. Reveal together on three!';"),

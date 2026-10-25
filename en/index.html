@@ -61,14 +61,15 @@
   gtag('js', new Date());
   gtag('config', 'G-2LM85GJN0L');
 </script>
+<!-- 共通部品 kit（kkp-kit を kit/ にコピーしたもの）。配信モードの判定（KKit.stream）をAdvertisementより先に使うので defer なしで読む -->
+<script src="/kit/kit.js?v=d2e3ac7"></script>
+<script>KKit.stream.init({ key: 'haa-stream' });</script>
 <!-- 配信モード（Advertisementなし）のときは AdSense を読み込まない。切り替えたときはページを読み直す -->
 <script>
 (function(){
-  var on = false;
-  try { on = localStorage.getItem('haa-stream') === '1'; } catch(e){}
-  on = false; // 英語版は配信モードなし
+  // 配信モードは kit の KKit.stream（PC幅768以上で手動・?mode=stream。キーは今までの haa-stream）。
   // スマホ（スマホ1台を回して遊ぶふだんの使い方）では効かない。Advertisementなしで遊ぶ抜け道にしないため
-  if (!window.__kkpTest && !(window.matchMedia && window.matchMedia('(min-width:768px)').matches)) on = false;
+  var on = false; // 英語版は配信モードなし
   window.__haaStream = on;
   // 参加者画面（離れて遊ぶリンク）：配信モードで作られたリンク（s:1）のときはAdvertisementを読まない。
   // 参加者画面は1回ぶんの役・候補・答えを見るだけで、ゲーム本体は遊べない（トップへはページを読み直して移る）
@@ -112,7 +113,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=RocknRoll+One&display=swap&text=0123456789EPQRST%E2%86%92%E2%86%B6%E2%86%BA%E2%88%92%E2%91%A0%E2%91%A1%E2%91%A2%E2%91%A3%E2%91%A4%E2%91%A5%E2%91%A6%E2%91%A7%E3%80%81%E3%80%82%E3%80%8C%E3%80%8D%E3%81%81%E3%81%82%E3%81%84%E3%81%86%E3%81%87%E3%81%88%E3%81%8A%E3%81%8B%E3%81%8C%E3%81%8D%E3%81%8F%E3%81%90%E3%81%91%E3%81%92%E3%81%93%E3%81%94%E3%81%95%E3%81%96%E3%81%97%E3%81%98%E3%81%99%E3%81%9A%E3%81%9B%E3%81%9D%E3%81%9E%E3%81%9F%E3%81%A0%E3%81%A1%E3%81%A3%E3%81%A4%E3%81%A5%E3%81%A6%E3%81%A7%E3%81%A8%E3%81%A9%E3%81%AA%E3%81%AB%E3%81%AD%E3%81%AE%E3%81%AF%E3%81%B0%E3%81%B1%E3%81%B2%E3%81%B3%E3%81%B5%E3%81%B6%E3%81%B8%E3%81%B9%E3%81%BB%E3%81%BC%E3%81%BE%E3%81%BF%E3%82%80%E3%82%81%E3%82%82%E3%82%83%E3%82%84%E3%82%85%E3%82%86%E3%82%87%E3%82%88%E3%82%89%E3%82%8A%E3%82%8B%E3%82%8C%E3%82%8D%E3%82%8F%E3%82%92%E3%82%93%E3%82%A2%E3%82%A4%E3%82%AB%E3%82%AD%E3%82%AF%E3%82%B1%E3%82%B2%E3%82%B3%E3%82%B4%E3%82%B5%E3%82%B9%E3%82%BC%E3%82%BF%E3%83%83%E3%83%86%E3%83%88%E3%83%89%E3%83%8A%E3%83%93%E3%83%94%E3%83%97%E3%83%9E%E3%83%A0%E3%83%A1%E3%83%A4%E3%83%A9%E3%83%AA%E3%83%AC%E3%83%B3%E3%83%BB%E3%83%BC%E4%B8%80%E4%B8%88%E4%B8%8A%E4%B8%8B%E4%B8%96%E4%B8%AD%E4%BA%86%E4%BA%8B%E4%BA%8C%E4%BA%BA%E4%BB%8A%E4%BB%95%E4%BB%BB%E4%BC%9A%E4%BD%9C%E4%BD%BF%E4%BF%A1%E5%85%88%E5%85%A5%E5%85%A8%E5%87%BA%E5%88%86%E5%8B%95%E5%8B%9D%E5%8F%A3%E5%8F%B7%E5%90%88%E5%90%8C%E5%90%8D%E5%91%8A%E5%93%81%E5%93%A1%E5%95%8F%E5%9B%9E%E5%A3%B0%E5%A4%A7%E5%A4%A9%E5%A4%AB%E5%A4%B1%E5%A7%8B%E5%AD%90%E5%AD%A6%E5%AE%9A%E5%AE%9F%E5%AE%B6%E5%AF%9D%E5%B1%8A%E5%B1%8B%E5%B8%B0%E5%B9%B3%E5%B9%B4%E5%B9%B9%E5%BA%83%E5%BA%A6%E5%BD%93%E5%BD%B9%E5%BF%98%E6%80%9D%E6%81%AF%E6%83%85%E6%84%8F%E6%84%9F%E6%88%90%E6%88%BB%E6%89%8B%E6%89%8D%E6%89%BF%E6%8A%95%E6%8A%9E%E6%8A%BC%E6%8C%81%E6%8C%AF%E6%95%B0%E6%96%B0%E6%96%B9%E6%97%8F%E6%97%A5%E6%97%A9%E6%99%AF%E6%9B%B8%E6%9C%88%E6%9C%AB%E6%9C%AC%E6%9D%A5%E6%9D%AF%E6%A0%A1%E6%A4%9C%E6%AC%A1%E6%AD%A3%E6%B0%97%E6%B3%81%E6%B6%88%E6%B8%88%E6%B8%A1%E6%B8%AC%E6%BC%94%E7%84%A1%E7%8E%89%E7%94%9F%E7%94%B3%E7%94%BB%E7%95%AA%E7%96%B2%E7%99%BA%E7%9B%AE%E7%9C%81%E7%9C%89%E7%9F%A5%E7%A2%BA%E7%A4%BC%E7%A5%9E%E7%A5%A8%E7%A7%92%E7%AB%AF%E7%AC%91%E7%AD%94%E7%B5%82%E7%B6%9A%E7%B8%BE%E8%80%85%E8%81%9E%E8%81%B4%E8%87%AA%E8%91%89%E8%A1%8C%E8%A1%A8%E8%A6%8B%E8%A6%96%E8%A6%9A%E8%A7%A3%E8%A8%80%E8%A8%88%E8%A8%8E%E8%A8%AD%E8%A8%B3%E8%A9%B1%E8%AA%8D%E8%AA%AD%E8%B2%A0%E8%B2%B8%E8%B2%BC%E8%B3%AA%E9%81%8A%E9%81%B8%E9%83%A8%E9%85%8D%E9%96%89%E9%96%8B%E9%99%A4%E9%9B%A3%E9%9B%BB%E9%9D%A2%E9%A0%86%E9%A1%8C%E9%A1%98%E9%A3%B2%E9%A6%96%E9%BC%BB%EF%BC%81%EF%BC%88%EF%BC%89%EF%BC%8B%EF%BC%9F" rel="stylesheet">
 <!-- k-fonts:end -->
 <link rel="stylesheet" href="/kit/kit.css?v=d2e3ac7">
-<script src="/kit/kit.js?v=d2e3ac7" defer></script>
 <style>
 :root{
   --orange:#ff8a3d; --orange-d:#a8501a; --cream:#fff8f0; --paper:#fffdf9;
@@ -186,7 +186,16 @@ body.stream .hero-t p:not(.hen){display:none}
 body.stream .hero-pic{width:130px}
 body.stream .hero-t h1{font-size:1.25rem;margin:0}
 body.stream #playersHint{display:none}
-.view-open summary{cursor:pointer;color:var(--muted);font-size:.875rem;padding:6px 0;min-height:36px}
+.view-open{border-top:2px solid var(--k-shu,#c93b23);border-bottom:1px solid rgba(31,26,23,.15);padding:8px 0 4px}
+.haa-live[hidden]{display:none}
+#haaResume{text-align:left}
+/* 遊んでいる間の「表示ページ：つながっています」（配信するときだけ） */
+.haa-live{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin:0 0 6px}
+.haa-live .k-btn{min-height:40px;padding:0 12px;font-size:14px}
+.view-open .vo-h{margin:0 0 6px;font-size:15px;line-height:1.5}
+.view-open .vo-live{margin:0 0 6px}
+.view-open .k-view-open{justify-content:center;text-align:left}
+.view-open summary{cursor:pointer;color:var(--k-text-2,#4a3f37);font-size:14px;padding:6px 0;min-height:36px}
 .cand-n{display:none;align-items:center;justify-content:center;gap:.6rem;flex-wrap:wrap;margin:.5rem 0}
 body.stream .cand-n,body[data-players="1"] .cand-n{display:flex}
 .cand-n .btn-ghost{width:40px;height:40px}
@@ -683,6 +692,8 @@ body:not(.at-result) #postOnly{display:none}
 .deal-card::before,.deal-card.done::after{white-space:nowrap}
 @media(max-width:340px){#postOnly .ad-slot{margin-left:-14px;margin-right:-14px}}
 @media(min-width:768px){main{min-height:0}#dock{position:static;margin:0 0 12px;background:none;border:0;padding:0}#dock>button{max-width:420px;margin:0 auto}}
+/* 2026-10-25 PC（1280x800）でも主ボタンを画面の下に残す。static のままだと「〜で始める」が y=1768 で画面外だった（配信モードはもともと sticky） */
+@media(min-width:768px){body:not(.stream) #dock{position:sticky;bottom:0;padding:8px 12px;background:rgba(255,253,249,.97);border-top:1px solid var(--line)}}
 /* ===== 離れて遊ぶ（2026-10-16）: 名前ごとに送る・参加リンク・発表リンク ===== */
 .deal-link{min-height:44px;line-height:1.3;padding:.3rem .2rem;word-break:keep-all;overflow-wrap:anywhere}
 .deal-link.sent,.join-link.sent{border-color:var(--ok);color:#2f7a45;font-weight:700;background:#f3faf5}
@@ -1094,7 +1105,7 @@ html body.stream .vg-rc small{font-size:max(14px,calc(2.4*var(--u)))}
 /* 演じる場面の帯：名前と受付の印だけ */
 .rc-strip{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;margin:0 0 8px;font-weight:900;color:var(--sumi,#1f1a17)}
 .rc-strip[hidden]{display:none}
-.rcb-h{font-size:.8em;color:#4a3f37}
+.rcb-h{font-size:max(14px,.8em);color:#4a3f37}
 .rcb-p{display:inline-flex;align-items:center;gap:.3em}
 .rcb-p small{font-size:.75em;color:#4a3f37;font-family:system-ui,sans-serif}
 .rcb-hk{width:1.8em;height:1.8em;font-size:.8em}
@@ -1162,7 +1173,7 @@ body.vopen #step-result>*:not(h2):not(#voteOpen):not(#cdown){display:none!import
 @keyframes voFlip{0%{transform:rotateX(90deg);opacity:0}100%{transform:none;opacity:1}}
 body.vopen #cdown:not([hidden]){position:fixed;inset:0;width:max-content;height:max-content;max-width:calc(100vw - 32px);z-index:70;margin:auto;padding:calc(1.6*var(--u,8px)) calc(4*var(--u,8px));background:#fbf3e4;border:calc(.5*var(--u,8px)) solid #1f1a17;border-radius:8px;box-shadow:calc(1*var(--u,8px)) calc(1*var(--u,8px)) 0 #1f1a17;white-space:nowrap}
 /* 演じる場面の帯：まだのときの一言・リスナー */
-.rcb-w{font-size:.85em;color:#4a3f37;font-weight:800}
+.rcb-w{font-size:max(14px,.85em);color:#4a3f37;font-weight:800}
 .rcb-n small{font-size:.75em;color:#4a3f37;margin-left:.2em}
 @media (prefers-reduced-motion:reduce){.vo-board.flip .vo-p,.vo-fuda{animation:none}}
 /* 読みやすさの下限（2026-10-21）：配信モードの遊ぶ画面は、1画面に収めるために縮めても字は14px以上 */
@@ -1193,6 +1204,112 @@ html body.stream .score .sr.top .sr-rk{color:#fff}
 @media screen and (max-width:712px){.kkp-rel{max-width:calc(100vw - 24px)!important;margin-left:auto!important;margin-right:auto!important}}
 </style>
 <!-- kkp-rel-d4:end -->
+<style id="haa-fit">
+/* ===== 2026-10-22 配信モードの遊ぶ画面：小さい窓（960x540 など）でも縮めずに1画面に。
+   ふつうのモード・スマホは変えない（どれも body.stream の中だけ）。fitStream が、字が14pxの下限に届いても入らないときに cmp1→cmp2→cmp3 を付ける ===== */
+/* 押せる所は 44px 以上 */
+html body.stream.playing main button,html body.stream.playing main summary,html body.stream.playing header button{min-height:44px}
+html body.stream.playing :is(main,header) :is(button,summary):not(#dock>button):not(.vg-b):not(.deal-card):not(.btn-primary):not(.unveil){min-height:max(44px,calc(4*var(--u)))!important}
+html body.stream.playing #dock>button{min-height:max(44px,calc(6*var(--u)))}
+html body.stream.playing #dock>button.btn-sub,html body.stream.playing .btn-eq{min-height:max(44px,calc(5.4*var(--u)))}
+html body.stream.playing #dock>#judgeBtn{min-height:max(44px,calc(6*var(--u)))}
+html body.stream.playing .vg-b{min-width:max(44px,calc(6.4*var(--u)));min-height:max(44px,calc(6.4*var(--u)))}
+html body.stream.playing .host-menu>summary,html body.stream.playing .join-menu>summary{min-height:44px;display:flex;align-items:center}
+html body.stream.playing .ann.ann-out .ann-btn{min-height:44px}
+html body.stream.playing .np-link{display:inline-flex;align-items:center;justify-content:center}
+html body.stream.playing .np-link[hidden],html body.stream .deal-link[hidden],html body.stream .deal-card .who[hidden]{display:none}
+/* 始める前（設定）も押せる所は 44px（配信モードだけ。市販品の紹介リンクは触らない） */
+html body.stream:not(.playing) #step-setup :is(button,summary):not(.k-view-open *){min-height:44px}
+html body.stream:not(.playing) #step-setup summary{display:flex;align-items:center}
+html body.stream:not(.playing) #namesGrid input{min-height:44px}
+/* サイト名の帯に「直近」と「表示ページ：つながっています」を並べる（3行を1行に） */
+html body.stream.playing .hbar{align-items:center;flex-wrap:nowrap;column-gap:12px;min-height:44px}
+html body.stream.playing .hbar>.hb-name,html body.stream.playing .hbar>.hb-url,html body.stream.playing .hbar>.hb-step{flex:none;white-space:nowrap}
+html body.stream.playing .hbar>.rec-strip{flex:1 1 0;min-width:0;margin:0}
+html body.stream.playing .hbar>.rec-strip:empty{display:block}
+html body.stream.playing .hbar>.haa-live{flex:none;margin:0 0 0 auto;gap:10px}
+html body.stream.playing .hbar>.haa-live .k-btn{min-height:44px}
+/* 配る：カードの名前・送るボタンは1行で切る */
+html body.stream .deal-card .who,html body.stream .deal-link{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html body.stream .deal-card{min-width:0}
+/* 投票結果：未回答の名前は横に並べて全幅（縦に積み上がっていた） */
+html body.stream .vo-board.many .vo-row.miss{grid-column:1/-1}
+html body.stream .vo-row.miss .vo-ppl{justify-content:flex-start;margin-left:0}
+html body.stream .vo-p{max-width:14em}
+/* 次に演じる人の ◀ ▶（cmp1 のときだけ） */
+.ap-step{display:none}
+
+/* --- cmp1：並べ方を変える --- */
+html body.stream.playing.cmp1 main .card>h2{margin-bottom:4px}
+/* 答え合わせ：得点は1行ずつ（名前は1行で切る・当てた数は右）。当てた人の札は名前を切って横に詰める */
+html body.stream.cmp1 .score .sr{grid-template-columns:auto minmax(0,1fr) auto;padding:1px 0;line-height:1.25}
+html body.stream.cmp1 .score .sr-nm{display:flex;align-items:baseline;gap:.8em;min-width:0}
+html body.stream.cmp1 .score .sr-n{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html body.stream.cmp1 .score .sr-hit{flex:none}
+html body.stream.cmp1 .ans-top{flex-wrap:nowrap;min-width:0}
+html body.stream.cmp1 .ans-top .ans-name{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html body.stream.cmp1 .ans-top .ans-word{flex:none;margin-left:auto}
+html body.stream.cmp1 .ans-votes{gap:4px 6px;margin-top:6px}
+html body.stream.cmp1 .vc{display:inline-flex;align-items:baseline;gap:.2em;max-width:100%;white-space:nowrap}
+html body.stream.cmp1 .vc .vc-n{display:inline-block;max-width:7em;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom}
+html body.stream.cmp1 .ans-card{padding:6px 10px 8px}
+html body.stream.cmp1 .ans-main{margin-top:4px}
+html body.stream.cmp1 .cta-comment{margin:4px 0 0}
+/* 次に演じる人：選んだ人だけを ◀ 名前 ▶ で */
+html body.stream.cmp1 #apNext.on{display:flex;flex-wrap:nowrap;align-items:center;gap:10px}
+html body.stream.cmp1 #apNext .ap-row{flex-wrap:nowrap;min-width:0}
+html body.stream.cmp1 #apNext .ap-btn[aria-pressed="false"]{display:none}
+html body.stream.cmp1 #apNext .ap-btn{min-width:0;max-width:16em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+html body.stream.cmp1 #apNext .ap-step{display:inline-grid;place-items:center;flex:none;width:44px;min-height:44px;padding:0;border:2px solid #e6d5bd;border-radius:8px;background:#fff;font:inherit;font-size:16px;color:var(--sumi);cursor:pointer}
+/* 次のお題：見出し・3つ・「ほかの3つ」「カテゴリを変える」を1行に */
+html body.stream.cmp1:not(.veiling):not([data-cat="mine"]) .res-main .next-pick{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:4px 8px}
+html body.stream.cmp1 .res-main .next-pick .np-h{margin:0;flex:none}
+html body.stream.cmp1 .res-main .next-pick .np-h .np-cat{display:none}
+html body.stream.cmp1 .res-main .next-pick .pick-list{flex:1 1 auto;flex-wrap:nowrap;min-width:0}
+html body.stream.cmp1 .res-main .next-pick .pick-list .pick-item{min-width:0;min-height:44px}
+html body.stream.cmp1 .res-main .next-pick .np-links{margin:0;flex:none;gap:6px}
+/* 投票の表：当てる人を2列に（名前は1行で切る）。候補の意味は下に1行 */
+html body.stream.cmp1 .vg-tbl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 10px}
+html body.stream.cmp1 .vg-row{gap:8px;padding:2px 6px;min-width:0}
+html body.stream.cmp1 .vg-nm{flex:0 1 auto;display:block;min-width:3em;max-width:none;font-size:14px}
+html body.stream.cmp1 .vg-nm i{display:inline-block;vertical-align:-.05em;margin-right:.4em}
+html body.stream.cmp1 .vg-bs{flex:none;flex-wrap:nowrap;gap:4px}
+html body.stream.cmp1 .vg-b{min-width:44px;min-height:44px;font-size:18px}
+html body.stream.cmp1 .vg-legend{font-size:14px;gap:2px 14px;margin:4px 0}
+html body.stream.cmp1 #step-vote .stage.sm{padding-top:4px;padding-bottom:4px}
+html body.stream.cmp1 #step-vote .stage.sm .vote-who{display:inline;margin:0 .8em 0 0}
+html body.stream.cmp1 #step-vote .stage.sm .st-q{display:inline;margin:0}
+
+/* 窓の幅いっぱいを使う（名前を切らずに済む幅を増やす） */
+html body.stream.playing.cmp1 .wrap{max-width:none}
+/* 答え合わせの並び：左＝答え・問いかけ・次に演じる人／右＝得点・記録・設定に戻る／下の1行＝次のお題 */
+html body.stream.cmp1 .res-pair{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) auto;grid-template-areas:"ans score score" "cta score score" "ap links back" "np np np";column-gap:12px;row-gap:6px;align-items:start}
+html body.stream.cmp1 .res-pair>.res-main,html body.stream.cmp1 .res-pair>.res-side{display:contents}
+html body.stream.cmp1 #resultBody{grid-area:ans}
+html body.stream.cmp1 #ctaComment{grid-area:cta}
+html body.stream.cmp1 #apNext{grid-area:ap}
+html body.stream.cmp1 #nextPick{grid-area:np}
+html body.stream.cmp1 #resultBack{grid-area:back;width:auto;margin:0;padding:0 12px}
+html body.stream.cmp1 #scoreBox{grid-area:score}
+html body.stream.cmp1 #logLinks{grid-area:links;flex-wrap:wrap;align-self:center}
+html body.stream.cmp1 #apNext:not(.on){display:none}
+/* 投票：「予想 0 / 7」「1つ前をやり直す」「進行役メニュー」を1行に */
+html body.stream.cmp1 #step-vote:not(.hidden){display:flex;flex-wrap:wrap;align-items:center;column-gap:14px}
+html body.stream.cmp1 #step-vote>*{flex:1 1 100%}
+html body.stream.cmp1 #step-vote>#voteProg,html body.stream.cmp1 #step-vote>#voteUndo{flex:0 0 auto;margin:0}
+html body.stream.cmp1 #step-vote>.host-menu{flex:1 1 0;min-width:12em;margin:0}
+
+/* --- cmp2：補助の行を外す（なくても進められるもの） --- */
+html body.stream.cmp2 .cta-comment{display:none}
+html body.stream.cmp2 .score .sr-hit{display:none}
+html body.stream.cmp2 .ans-top .ans-word{display:none}
+html body.stream.playing.cmp2 .hbar>.hb-url{display:none}
+html body.stream.cmp2 #step-vote .stage.sm .vote-who{display:none}
+
+/* --- cmp3：場面名の墨帯を外す・外れた人の札は名前を短く --- */
+html body.stream.playing.cmp3 main .card>h2{display:none}
+html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
+</style>
 <style id="en-hide">
 /* 英語版では出さない：配信モード・離れて遊ぶリンク・市販版（日本の商品）・振り返りの記録・はじめての方へ・配信から来た人への一言 */
 #streamSw,#castSw,#playMode,.pm-sp,.cand-n,.sfx-sw,#viewOpen,#streamNote,#firstGuide,#fromStream,.shop-mini,
@@ -1284,10 +1401,14 @@ html body.stream .score .sr.top .sr-rk{color:#fff}
 </section>
 
 <main>
+<!-- 遊んでいる間の表示ページとのつながり（配信するときだけ・右上に小さく）。閉じてしまったときはここから開き直す -->
+<p class="haa-live" id="haaLive" hidden><span class="k-live" data-k-live="haa-view">表示ページ：つながっていません</span><button type="button" class="k-btn k-btn-sub" id="haaLiveOpen">表示ページを開く</button></p>
 
 <!-- STEP 1 -->
 <section class="card" id="step-setup">
   <div class="stats-bar hidden" id="statsBar"></div>
+  <!-- 2026-10-21 続きから（配信・オンラインだけ。再読み込み・ブラウザが落ちたあと。12時間・この端末の中だけ） -->
+  <div id="haaResume" hidden></div><!-- 中は kit の KKit.resume が作る -->
   <!-- 配信モードだけ：はじめての方へ（最初の1回は開いておく。一度始めたら畳む。この端末にだけ覚える） -->
   <details class="first-guide" id="firstGuide"><summary>はじめての方へ</summary>
     <p><span>①人数と名前を入れる</span><span>②演じる人を選ぶ</span><span>③お題を選んでスタート</span></p>
@@ -1308,6 +1429,14 @@ html body.stream .score .sr.top .sr-rk{color:#fff}
     <label class="pm-o"><input type="radio" name="haaMode" value="cast"><span class="pm-t">配信する<small>（PCで進めて OBS に映す）</small></span><span class="pm-d">答えは配信に映らない・リスナーも当てられる</span></label>
   </div>
   <p class="hint pm-sp">オンライン・配信はパソコンで開いてください</p>
+  <!-- 2026-10-21 OBS は表示ページ（/view/）を取り込むのが基本（操作画面だと参加リンクや未回答の人の名前まで映る）。開くボタンは折りたたまずに出す -->
+  <div class="view-open" id="viewOpen">
+    <p class="vo-h">OBS には<b>表示ページ</b>を「ウィンドウキャプチャ」で取り込みます（お題・候補・答え・得点だけが映ります）</p>
+    <p class="vo-live"><span class="k-live" data-k-live="haa-view">表示ページ：つながっていません</span></p>
+    <!-- 表示ページを開く・URLをコピー・背景6つ・OBS の1行（kit の k-view-open。開けないときは「ポップアップを許可して」） -->
+    <div class="k-view-open" id="viewOpenKit" data-k-view="/view/" data-k-ch="haa-view" data-k-name="haaView"></div>
+    <details class="vo-more"><summary>くわしく</summary><p class="hint">操作するのと同じパソコン・同じブラウザで開いてください（OBS の「ブラウザ」ソースではつながりません）。縦型（9:16）は URL の末尾に <code>?layout=v</code></p></details>
+  </div>
   <h2><span class="step-label">STEP 1</span>Players</h2>
   <div class="num">
     <button class="btn-ghost" id="dec" aria-label="one fewer player">−</button>
@@ -1335,13 +1464,6 @@ html body.stream .score .sr.top .sr-rk{color:#fff}
   <!-- 配信モード（配信する）だけ：予想の表に「リスナー」の行を足す（多かった番号を1タップで。集め方は配信者に任せ、サイトでは案内しない。2026-10-21） -->
   <label class="stream-sw sfx-sw lis-sw" id="lisSw"><input type="checkbox" id="lisToggle" checked> 「リスナー」の予想も入れる（多かった番号を1つ）</label>
   <label class="stream-sw sfx-sw"><input type="checkbox" id="sfxToggle" checked> 効果音（カウントダウン・発表のファンファーレ）</label>
-  <details class="view-open" id="viewOpen">
-    <summary>OBSの取り込み方（くわしく）</summary>
-    <p class="hint">ふつうはこのウィンドウを「ウィンドウキャプチャ」で取り込むだけ（役は小窓に出るので映りません）。操作ボタンも隠したいときは、表示ページを取り込みます</p>
-    <button type="button" class="np-link" id="viewOpenBtn">OBS用の表示ページを開く</button>
-    <button type="button" class="np-link" id="viewCopyBtn">URLをコピー</button>
-    <p class="hint">縦型（9:16）は <code>https://haa.kkpwebninja.com/view/?layout=v</code> を取り込みます</p>
-  </details>
   <p class="hint stream-note" id="streamNote">1人ずつ交代で演じて、リスナーはコメントで番号を当てます</p>
   <!-- 名前は任意。色だけだと誰の番か分かりにくい（itoと同じ作り）。入れなければ色の名前のまま。この端末にだけ保存 -->
   <details class="names-box" id="namesBox">
@@ -1833,6 +1955,15 @@ function renderActorPick(){
       b.addEventListener('click', ()=>{ S.rot = i; renderActorPick(); track('haa_actor_pick',{at:id==='apFirst'?'setup':'next',players:S.players}); });
       row.appendChild(b);
     }
+    // 2026-10-22 配信モードの答え合わせで狭いとき（body.cmp1）は、選んだ人だけを出して ◀ ▶ で送る（8人の名前の段をたたむ）
+    if (id === 'apNext'){
+      const step = d => { S.rot = ((S.rot + d) % S.players + S.players) % S.players; renderActorPick(); track('haa_actor_pick',{at:'next',players:S.players}); };
+      [['ap-prev','◀','前の人'],['ap-next','▶','次の人']].forEach(([c,t,l],k)=>{
+        const x = document.createElement('button'); x.type = 'button'; x.className = 'ap-step '+c; x.textContent = t; x.setAttribute('aria-label', '次に演じる人を'+l+'に');
+        x.addEventListener('click', ()=>step(k ? 1 : -1));
+        if (k) row.appendChild(x); else row.insertBefore(x, row.firstChild);
+      });
+    }
   });
 }
 $('actInc').addEventListener('click', ()=>setActors(actorsN()+1));
@@ -1963,6 +2094,8 @@ function renderPick(forceWord){
 
 // ===== 配役 =====
 function startGame(){
+  // 「続きから」を選ばずに新しく始めたときは、前回の続きを消す（kit の KKit.resume）
+  RES.dismiss();
   if (S.cat === MY_KEY){ checkMine(); if (!S.theme){ $('myMsg').scrollIntoView({block:'center'}); return; } }
   if (!S.theme) renderPick();
   const t = S.theme;
@@ -2386,17 +2519,14 @@ $('revealClose').addEventListener('click', ()=>{
 $('toPerform').addEventListener('click', ()=>{
   renderPerform(); show('perform');
 });
-// 配ったあとに戻ると、この回の役が消える。押しまちがいに備えて2回目で戻る（ワンクッション）
-$('dealBack').addEventListener('click', ()=>{
-  const b = $('dealBack');
-  if (!b.dataset.ask){ b.dataset.ask = '1'; b.textContent = 'この回の役が消えます。戻る？（もう一度押す）'; setTimeout(()=>{ delete b.dataset.ask; b.textContent = '↺ Back to setup'; }, 4000); return; }
-  delete b.dataset.ask; b.textContent = '↺ Back to setup'; show('setup');
-});
+// 配ったあとに戻ると、この回の役が消える。押しまちがいに備えて2回目で戻る（ワンクッション・kit の KKit.twice）
+KKit.twice($('dealBack'), { text:'この回の役が消えます。もう一度押すと戻ります', ok:()=>show('setup') });
+// 2度押しの「連打の2回目は数えない」（400ms）・出た直後は効かない・画面が切り替わった直後は効かない（armGuard → KKit.twice.block）は kit の KKit.twice（2026-10-22 第4波）
 
 // 画面が切り替わった直後の押しまちがい防止。新しく出た「答えが出る」ボタンは 0.8 秒は押しても効かない
 // （2026-10-19 るはね配信：「Everyone has looked → perform」を押した2秒以内に、同じ位置に出た「答えだけ見る」→「すぐ発表する」が押されて、演じる前に答えが出た）
 const GUARD_MS = 800; let GUARD_AT = 0;
-function armGuard(){ GUARD_AT = Date.now(); }
+function armGuard(){ GUARD_AT = Date.now(); KKit.twice.block(GUARD_MS); }
 function guarded(){ return Date.now() - GUARD_AT < GUARD_MS; }
 
 const NUMS = ['①','②','③','④','⑤','⑥','⑦','⑧'];
@@ -2441,28 +2571,19 @@ function renderPerform(){
     w.appendChild(row);
   });
 }
-$('toVote').addEventListener('click', ()=>{ S.voter=0; S.target=-1; S.voteShownAt = Date.now(); nextVote(); show('vote'); });
+$('toVote').addEventListener('click', ()=>{ S.voter=0; S.target=-1; nextVote(); show('vote'); });
 // 投票は人数×(人数−1)回スマホを回す（6人で30回）。そこで止まる人が多いので、口で当て合って答えだけ見る道を用意する
 // 配信モードでは2回押し（1回目で「もう一度押すと答えが出ます」）。演じる前に答えが出ると、その回が遊べなくなる（2026-10-19）
-$('toReveal').addEventListener('click', ()=>{
-  if (guarded()) return;
-  const b = $('toReveal');
-  if (STREAM_MQ.matches){
-    if (!b.dataset.ask){
-      b.dataset.ask = String(Date.now()); b.dataset.label = b.textContent; b.textContent = 'もう一度押すと答えが出ます';
-      clearTimeout(b._askT); b._askT = setTimeout(resetRevealAsk, 4000); return;
-    }
-    if (Date.now() - +b.dataset.ask < 400) return; // 連打の2回目は数えない
-  }
-  resetRevealAsk();
-  // 回答コードが届いていれば、その予想は答え合わせに出す（手元の人は口で当てる）
-  S.votes = {}; finish(rcCount() ? 'partial' : 'quick'); countdownReveal();
-});
-function resetRevealAsk(){
-  const b = $('toReveal'); clearTimeout(b._askT);
-  if (b.dataset.ask){ delete b.dataset.ask; if (b.dataset.label) b.textContent = b.dataset.label; }
-}
-$('voteSkip').addEventListener('click', ()=>{ if (guarded()) return; finish(useGrid() && voteDoneN() >= voteTotalN() ? 'vote' : 'partial'); });
+const TW_REVEAL = KKit.twice($('toReveal'), { text:'もう一度押すと答えが出ます', when:()=>STREAM_MQ.matches,
+  ok:()=>{
+    // 回答コードが届いていれば、その予想は答え合わせに出す（手元の人は口で当てる）
+    S.votes = {}; finish(rcCount() ? 'partial' : 'quick'); countdownReveal();
+  } });
+function resetRevealAsk(){ TW_REVEAL.disarm(); }
+// 2026-10-21 配信モードで投票が済む前に押すと、残りの投票が消える。2度押しで確かめる
+const voteAllDone = ()=>useGrid() && voteDoneN() >= voteTotalN();
+KKit.twice($('voteSkip'), { text:'まだの人がいます。もう一度押すと答えへ', when:()=>STREAM_MQ.matches && !voteAllDone(),
+  ok:()=>finish(voteAllDone() ? 'vote' : 'partial') });
 
 // ===== 投票（カード版でいちばん面倒なところ） =====
 function nextVote(){
@@ -2481,16 +2602,17 @@ function renderVote(){
   if (useGrid()) return renderVoteGrid();
   const vw = $('voteWho'); if (vw){ vw.classList.remove('swap'); void vw.offsetWidth; vw.classList.add('swap'); }
   if (STREAM_MQ.matches) $('voteHint').innerHTML = '離れた人の答えは、聞いて代わりに押してください。<br>視聴者のみなさんはコメントで。';
-  $('voteWho').textContent = '📱 '+pLabel(S.voter)+', your turn';
+  $('voteWho').textContent = pLabel(S.voter)+', your turn';
   $('voteTarget').innerHTML = 'How did <b>'+esc(pLabel(S.act[S.target]))+'</b> feel?';
-  const w = $('voteList'); w.innerHTML=''; const shownAt = Date.now();
+  // 出た直後（次の人の番に切り替わった直後）の押しまちがいは数えない（2026-10-22 手書きの 350ms を kit の KKit.settle に）
+  const w = $('voteList'); w.innerHTML=''; KKit.settle(w, 350).block();
   const used = S.pool.slice().sort((a,b)=>a-b);
   used.forEach(ai=>{
     const b = document.createElement('button');
     b.type='button'; b.className='vote-item';
     b.innerHTML = '<span class="no">'+numOf(ai)+'</span>'+esc(S.theme.acts[ai]);
     b.addEventListener('click', ()=>{
-      if (w.dataset.busy || Date.now() - shownAt < 350) return; w.dataset.busy = '1';
+      if (w.dataset.busy) return; w.dataset.busy = '1';
       b.classList.add('picked'); sfx('pick');
       S.votes[S.voter] = S.votes[S.voter] || {};
       S.votes[S.voter][S.target] = ai;
@@ -2531,6 +2653,7 @@ function applyStream(){
 }
 function finish(mode){
   mode = mode || 'vote';
+  if (!RESUMING) { try { RUN_PRE = JSON.parse(JSON.stringify(S)); } catch(e){ RUN_PRE = null; } }   // 続きから用：数える前の状態
   rcMerge();
   const body = $('resultBody'); body.innerHTML='';
   // 配信向けの広い画面では「答えを見る」で一拍おく（視聴者が当ててから開ける）
@@ -2568,8 +2691,8 @@ function finish(mode){
         va.chips.push({name:pName(v), ok:g===ai, no:numOf(g), mk:mk});
         const mkh = mk ? '<small class="vc-mk">'+esc(mk)+'</small>' : '';
         chips.push(g === ai
-          ? '<span class="vc ok">○ '+esc(pName(v))+mkh+'</span>'
-          : '<span class="vc ng">× '+esc(pName(v))+mkh+' <small>'+numOf(g)+'</small></span>');
+          ? '<span class="vc ok">○ <span class="vc-n">'+esc(pName(v))+'</span>'+mkh+'</span>'
+          : '<span class="vc ng">× <span class="vc-n">'+esc(pName(v))+'</span>'+mkh+' <small>'+numOf(g)+'</small></span>');
       });
       // リスナー（多かった番号）。プレイヤーと同じ並びで最後に
       const lg = S.lis && S.lv ? S.lv[i] : undefined;
@@ -2596,10 +2719,10 @@ function finish(mode){
   }
   const box = $('scoreBox');
   const max = Math.max.apply(null, sc);
-  logRound(mode, sc);
+  if (!RESUMING) logRound(mode, sc);
   if (mode === 'quick'){
     box.innerHTML = '<p class="quick-note">' + (document.body.classList.contains('stream') ? 'コメントの番号と比べてみてください。' : 'No votes this round. Check the answers against your guesses.') + '</p>';
-    track('haa_finish',{word:S.theme.word,players:S.players,hits:0,mode:mode});
+    if (!RESUMING) track('haa_finish',{word:S.theme.word,players:S.players,hits:0,mode:mode});
     show('result');
     return;
   }
@@ -2631,13 +2754,13 @@ function finish(mode){
     if (o.v !== prev){ rank = n+1; prev = o.v; }
     const w = tmaxL > 0 ? Math.round(o.v / tmaxL * 100) : 0;
     if (o.i < 0){
-      h += '<div class="sr lis'+(rank===1&&tmaxL>0?' top':'')+'"><span class="sr-rk">#'+rank+'</span><span class="sr-nm">リスナー<small class="sr-hit">'+lisLine()+'</small></span>'
+      h += '<div class="sr lis'+(rank===1&&tmaxL>0?' top':'')+'"><span class="sr-rk">#'+rank+'</span><span class="sr-nm"><span class="sr-n">リスナー</span><small class="sr-hit">'+lisLine()+'</small></span>'
         + '<span class="sr-bar"><i style="width:'+w+'%;background:'+LIS_COLOR+'"></i></span><b>'+o.v+(S.rounds > 1 ? '<small class="sr-add">+'+S.lAdd+'</small>' : '')+'</b></div>';
       return;
     }
     const pp = ppl[pName(o.i)];
     const hitTxt = '<small class="sr-hit">'+ptLine(S.ptHit[o.i], S.ptGot[o.i], pp ? pp.tries : null)+'</small>';
-    h += '<div class="sr'+(rank===1&&tmaxL>0?' top':'')+'"><span class="sr-rk">#'+rank+'</span><span class="sr-nm">'+esc(pName(o.i))+hitTxt+'</span>'
+    h += '<div class="sr'+(rank===1&&tmaxL>0?' top':'')+'"><span class="sr-rk">#'+rank+'</span><span class="sr-nm"><span class="sr-n">'+esc(pName(o.i))+'</span>'+hitTxt+'</span>'
       + '<span class="sr-bar"><i style="width:'+w+'%;background:'+COLORS[o.i%COLORS.length].bg+'"></i></span><b>'+o.v+(S.rounds > 1 ? '<small class="sr-add">+'+sc[o.i]+'</small>' : '')+'</b></div>';
   });
   S.lastScores = {rounds:S.rounds, rows:S.total.map((v,i)=>{ const pp = ppl[pName(i)]; return {name:pName(i), color:COLORS[i%COLORS.length].bg, total:v, add:sc[i], hit:S.ptHit[i], tries:pp?pp.tries:null, got:S.ptGot[i], pt:ptLine(S.ptHit[i], S.ptGot[i], pp ? pp.tries : null)}; })};
@@ -2654,7 +2777,7 @@ function finish(mode){
     S.total = []; S.rounds = 0; S.sid = newSid(); rb.textContent = '0に戻しました。次の回から数えます'; rb.disabled = true;
   });
   const hits = sc.reduce((t,v)=>t+v,0);
-  track('haa_finish',{word:S.theme.word,players:S.players,hits:hits,mode:mode});
+  if (!RESUMING) track('haa_finish',{word:S.theme.word,players:S.players,hits:hits,mode:mode});
   show('result');
 }
 
@@ -2662,9 +2785,24 @@ function finish(mode){
 function lisLine(){ return '当てた＋'+S.lTot; }
 function ptLine(hit, got){ return 'guessed +'+hit+' · read +'+got; }
 // ===== OBS表示用ページ（/view/）へ今の状態を送る =====
-// 同じパソコンの中だけ（BroadcastChannel＋localStorage）。外へは送らない。役（だれがどの気持ちか）は答えが出るまで送らない
-let VIEW_CH = null; try { VIEW_CH = new BroadcastChannel('haa-view'); } catch(e){}
+// 同じパソコンの中だけ（kit の KKit.live＝BroadcastChannel＋localStorage）。外へは送らない。役（だれがどの気持ちか）は答えが出るまで送らない
+// 2026-10-22 kit に置き換え（保存のキーは k-live:haa-view。前の haa-view-state は消す）
+try { localStorage.removeItem('haa-view-state'); } catch(e){}
+var LIVE = null;
+function live(){ return LIVE || (LIVE = KKit.live({ ch:'haa-view', role:'op' })); }
+function viewSend(st){ live().send(st); }
+// ===== 2026-10-21 続きから（配信・オンラインだけ）。回の中身をこの端末に12時間置く。選ぶまでは /view/ に送らない =====
+// 2026-10-22 kit の KKit.resume に置き換え（選ぶまで kit が live を止める＝表示ページは前の画面のまま。その間は保存も消しもしない）
+// 配信モード以外は続きからを使わない。startGame が RES.dismiss() を呼ぶので空の dismiss も持たせる（2026-10-22 これが無くて、ふつうのモードで「始める」が止まっていた）
+var RES = { pending:false, save(){}, clear(){}, dismiss(){ return false; } }, RUN_PRE = null, RESUMING = false;
+function runSave(){
+  if (!document.body.classList.contains('stream') || RES.pending) return;
+  const step = S.step || 'setup';
+  if (step === 'setup'){ RES.clear(); return; }
+  RES.save({ step:step, S:S, pre:step === 'result' ? RUN_PRE : null, veiling:document.body.classList.contains('veiling'), mode:S.lastMode || '' });
+}
 function pushView(extra){
+  runSave();
   const st = {t:Date.now(), step:S.step||'setup', site:'haa.kkpwebninja.com'};
   if (S.theme && st.step !== 'setup'){
     st.word = S.theme.word;
@@ -2692,8 +2830,7 @@ function pushView(extra){
   if (typeof LOG_KEY === 'string' && st.step !== 'setup' && !(st.step === 'result' && st.veiling)) st.recent = recentRounds(5);
   if (typeof LOG_UI === 'object' && LOG_UI && LOG_UI.open && LOG_UI.cast) st.summary = summaryData();
   if (extra) Object.assign(st, extra);
-  try { localStorage.setItem('haa-view-state', JSON.stringify(st)); } catch(e){}
-  try { VIEW_CH && VIEW_CH.postMessage(st); } catch(e){}
+  if (document.body.classList.contains('stream')) viewSend(st);
   if (typeof LOG_KEY === 'string') fitStream();
 }
 // 効果音（配信モードだけ・ブラウザで合成。音のファイルは使わない）
@@ -2808,8 +2945,9 @@ function revealNow(){
   updateNow();
   setTimeout(pushResultAd, 60);
   $('resultBody').querySelectorAll('.ans-card').forEach((r,k)=>{ r.style.animationDelay = (k*0.12)+'s'; r.classList.add('pop'); });
-  confetti(); sfx('fanfare');
-  S.ask = nextAsk(); if ($('ctaComment')) $('ctaComment').textContent = S.ask;
+  if (!RESUMING){ confetti(); sfx('fanfare'); }
+  if (!(RESUMING && S.ask)) S.ask = nextAsk();
+  if ($('ctaComment')) $('ctaComment').textContent = S.ask;
   renderRecStrip(true);
   pushView();
 }
@@ -2867,9 +3005,14 @@ function show(name){
   // Advertisementは答えが出てから（隠れたまま push すると幅0で枠が死ぬ）
   if (name === 'result' && !document.body.classList.contains('veiling')) pushResultAd();
   document.body.classList.toggle('playing', name!=='setup');
+  $('haaLive').hidden = !(document.body.classList.contains('stream') && castOn() && name !== 'setup');
   window.scrollTo({top:0,behavior:'smooth'});
   pushView();
 }
+$('haaLiveOpen').addEventListener('click', ()=>{
+  if (KKit.openView({ url:'/view/', ch:'haa-view', name:'haaView' })) track('haa_view_open',{});
+  else { const m = $('dockMsg'); if (m){ m.hidden = false; m.textContent = 'ポップアップを許可して、もう一度押してください'; } }
+});
 
 // FAQ は build.py が静的HTMLと構造化データの両方に差し込む（ここでは描画しない）
 
@@ -2938,6 +3081,9 @@ function renderRecStrip(fresh){
   const list = recentRounds(5);
   el.innerHTML = list.length ? '<span class="rs-h">直近</span>' + list.map(recHtml).join('') : '';
   if (fresh && el.lastElementChild) el.lastElementChild.classList.add('new');
+  // 帯に入る分だけ（古い方から外す。全部入らなければ「直近」ごと出さない）
+  while (el.children.length > 1 && el.scrollWidth > el.clientWidth + 1) el.children[1].remove();
+  if (el.children.length === 1) el.innerHTML = '';
 }
 // 今日のまとめ（配信の締め用）・これまでの記録
 function logScoped(){
@@ -3006,12 +3152,19 @@ $('logClear').addEventListener('click', ()=>{
 
 // 配信モードの遊んでいる画面は、スクロールなしで1画面に収める（足りなければ --fit で文字と余白をまとめて縮める）。進行役メニューや記録を開いている間は縮めない
 function fitStream(){
-  const b = document.body, r = document.documentElement;
+  const b = document.body, r = document.documentElement, CMP = ['cmp1','cmp2','cmp3'];
   if (!b.classList.contains('stream')) return;
   // 開いている進行役メニューが見えているときだけ縮めない（隠れた場面のメニューが開いたままだと、縮めずにはみ出していた）
-  if (!b.classList.contains('playing') || [...document.querySelectorAll('.host-menu[open],.join-menu[open]')].some(d=>d.getClientRects().length > 0) || (LOG_UI && LOG_UI.open)){ r.style.removeProperty('--fit'); return; }
-  let f = 1; r.style.setProperty('--fit', '1');
-  for (let i=0; i<16 && r.scrollHeight > innerHeight + 1 && f > 0.42; i++){ f -= 0.04; r.style.setProperty('--fit', f.toFixed(2)); }
+  if (!b.classList.contains('playing') || [...document.querySelectorAll('.host-menu[open],.join-menu[open]')].some(d=>d.getClientRects().length > 0) || (LOG_UI && LOG_UI.open)){ r.style.removeProperty('--fit'); if (!b.classList.contains('playing')) CMP.forEach(c=>b.classList.remove(c)); return; }
+  // 2026-10-22 本文（3*--u）が14pxの下限に届くところまでは --fit で縮める（大きい窓はこれで入る）。それでも入らなければ、それ以上は縮めずに並べ方を変える（cmp1→cmp2→cmp3。小さい窓）。
+  // 下限より先は字が縮まず余白とボタンだけが潰れるので、最後の手段にする
+  const u0 = Math.min(innerWidth / 100, innerHeight * 1.32 / 100), floor = Math.min(1, Math.max(0.42, 4.8 / u0));
+  const over = () => r.scrollHeight > innerHeight;
+  const shrink = lo => { let f = 1; r.style.setProperty('--fit', '1'); for (let i=0; i<16 && over() && f > lo + 0.001; i++){ f = Math.max(lo, f - 0.04); r.style.setProperty('--fit', f.toFixed(2)); } };
+  CMP.forEach(c=>b.classList.remove(c));
+  shrink(floor);
+  for (let k=0; k<CMP.length && over(); k++){ b.classList.add(CMP[k]); shrink(floor); }
+  if (over()) shrink(0.42);
 }
 window.addEventListener('resize', ()=>{ clearTimeout(window.__fitT); window.__fitT = setTimeout(fitStream, 120); });
 document.addEventListener('toggle', e=>{ if (e.target.classList && e.target.classList.contains('host-menu')) fitStream(); }, true);
@@ -3061,9 +3214,10 @@ function voteGridTail(one, used){
   $('voteUndo').hidden = !(S.voteHist && S.voteHist.length);
   $('voteSkip').textContent = done >= total ? '予想がそろった → 答え合わせへ' : '予想をここまでにして答え合わせへ';
 }
+// 予想の表が出た直後の押しまちがいは数えない（2026-10-22 手書きの 350ms を kit の KKit.settle に。出た瞬間は kit が見る）
+KKit.settle('#voteGrid', 350);
 $('voteGrid').addEventListener('click', e=>{
   const b = e.target.closest('.vg-b'); if (!b) return;
-  if (Date.now() - (S.voteShownAt||0) < 350) return; // 画面が出た直後の押しまちがいは数えない
   const t = +b.dataset.t, ai = +b.dataset.a;
   if (b.dataset.v === 'L'){
     const pv = S.lv[t]; if (pv === ai) return;
@@ -3398,8 +3552,43 @@ function setupHostMenus(){
   res.insertBefore(rm, $('resCands'));
   const main = res.querySelector('.res-main');
   if (main) ['apNext','nextPick','resultBack'].forEach(id=>{ const el = $(id); if (el) main.appendChild(el); });
+  // 2026-10-22 小さい窓でも1画面に：サイト名の帯の右に「直近」と「表示ページ：つながっています」を並べる（3行→1行）
+  const hb = document.querySelector('header .hbar');
+  if (hb){ ['recStrip','haaLive'].forEach(id=>{ const el = $(id); if (el) hb.appendChild(el); }); }
 }
 
+// 続きから：読み込んですぐ /view/ に「設定」を送らないよう、ほかの初期化より先に決める
+// 2026-10-22 続きから は kit の KKit.resume。前の形（{at, step, S, pre, veiling, mode}）は最初の1回だけ {at, data} に移す
+if (window.__haaStream){
+  try { const o = JSON.parse(localStorage.getItem('haa-run') || 'null'); if (o && o.S && !o.data) localStorage.setItem('haa-run', JSON.stringify({ at:o.at, data:{ step:o.step, S:o.S, pre:o.pre, veiling:o.veiling, mode:o.mode } })); } catch(e){}
+  live();
+  RES = KKit.resume({ key:'haa-run', box:'#haaResume', live:live(),
+    valid: d => !!(d && d.S && d.S.theme && d.step && d.step !== 'setup' && !(d.step === 'result' && !d.pre)),
+    label: d => '第' + (d.S.gno || 1) + '回・' + ({deal:'配る', perform:'演じる', vote:'投票', result: d.veiling ? '答え合わせの前' : '答え合わせ'}[d.step] || ''),
+    onResume: R => {
+      RESUMING = true;
+      try {
+        if (R.step === 'result'){
+          // 数える前の状態に戻してから答え合わせを作り直す（得点を二重に足さない・記録も二重に書かない）
+          Object.assign(S, R.pre); RUN_PRE = R.pre;
+          $('dealWord').textContent = S.theme.word; $('performWord').textContent = S.theme.word;
+          finish(R.mode || 'vote');
+          S.ask = R.S.ask || '';
+          if (!R.veiling) revealNow();
+        } else {
+          Object.assign(S, R.S);
+          $('dealWord').textContent = S.theme.word; $('performWord').textContent = S.theme.word;
+          if (R.step === 'deal'){ renderDeal(); show('deal'); }
+          else if (R.step === 'perform'){ renderPerform(); show('perform'); }
+          else { show('vote'); renderVote(); }
+        }
+      } finally { RESUMING = false; }
+      pushView();
+      track('haa_resume', {step:R.step});
+    },
+    onDiscard: () => pushView()
+  });
+}
 // Init
 renderStats();
 applyStream();
@@ -3407,6 +3596,8 @@ renderActorPick();
 setupHostMenus();
 if (document.body.classList.contains('stream')) setupCodeMenu();
 renderRecStrip();
+// テスト用（状態を読むだけ・ものさしの __moDebug と同じ）
+window.__haaDebug = () => S;
 const GUIDE_KEY = 'haa-guide-seen';
 try { if ($('firstGuide')) $('firstGuide').open = !localStorage.getItem(GUIDE_KEY); } catch(e){ if ($('firstGuide')) $('firstGuide').open = true; }
 if (document.body.classList.contains('stream') && $('namesBox')) $('namesBox').open = true;
@@ -3415,8 +3606,7 @@ if (document.body.classList.contains('stream')){
   const sm = document.querySelector('.shop-mini'), dock = $('dock');
   if (sm && dock) dock.parentNode.insertBefore(sm, dock.nextSibling);
 }
-$('viewOpenBtn').addEventListener('click', ()=>{ pushView(); window.open('/view/', 'haaView', 'width=1280,height=720'); track('haa_view_open',{}); });
-$('viewCopyBtn').addEventListener('click', ()=>{ const u = location.origin + '/view/'; try { navigator.clipboard.writeText(u).then(()=>{ $('viewCopyBtn').textContent = 'コピーしました'; }); } catch(e){ window.prompt('このURLを、操作する画面と同じブラウザで開いてください', u); } });
+$('viewOpenKit').addEventListener('k-view-open', e=>{ if (e.detail && e.detail.ok) track('haa_view_open',{}); });
 (function(){
   // 遊び方（3つから1つ）。今までの記録（haa-stream・haa-stream-cast）をそのまま読み替える
   const cur = !window.__haaStream ? 'room' : (castOn() ? 'cast' : 'online');
@@ -3425,12 +3615,11 @@ $('viewCopyBtn').addEventListener('click', ()=>{ const u = location.origin + '/v
     r.addEventListener('change', ()=>{
       if (!r.checked) return;
       const v = r.value, wasStream = !!window.__haaStream, toStream = v !== 'room';
-      if (toStream){ try { localStorage.setItem(CAST_KEY, v === 'cast' ? 'on' : 'off'); localStorage.setItem(STREAM_KEY, '1'); } catch(e){} track('haa_stream_cast',{cast: v === 'cast' ? 'on' : 'off'}); }
+      if (toStream){ try { localStorage.setItem(CAST_KEY, v === 'cast' ? 'on' : 'off'); } catch(e){} track('haa_stream_cast',{cast: v === 'cast' ? 'on' : 'off'}); }
       if (toStream !== wasStream){
-        try{ localStorage.setItem(STREAM_KEY, toStream ? '1' : '0'); }catch(_){}
+        // 配信モードのオン・オフは kit の KKit.stream（URL の # と mode= を消して読み直す）
         track('haa_stream_toggle',{on:toStream});
-        const u = new URL(location.href); u.searchParams.delete('mode');
-        setTimeout(()=>location.replace(u.pathname + u.search), 150);
+        setTimeout(()=>KKit.stream.set(toStream), 150);
         return;
       }
       // オンライン⇔配信の切り替えは読み直さない（?mode=stream が付いていたら外して、選んだ方を優先する）
@@ -3503,8 +3692,7 @@ function gView(st){
   const base = G.ann || G.cur; if (!base) return;
   const s = Object.assign({t:Date.now(), site:'haa.kkpwebninja.com', word:base.w,
     cands:base.c.map((t,i)=>({no:gNo(i), text:t})), actors:base.A.map(x=>x[0])}, st);
-  try { localStorage.setItem('haa-view-state', JSON.stringify(s)); } catch(e){}
-  try { VIEW_CH && VIEW_CH.postMessage(s); } catch(e){}
+  viewSend(s);
 }
 function gTargets(o){ const t = []; for (let i=0;i<o.A.length;i++) if (i !== o.me) t.push(i); return t; }
 function gRenderRound(){
@@ -3728,7 +3916,8 @@ $('gPaste').addEventListener('keydown', e=>{ if (e.key === 'Enter'){ e.preventDe
 $('gViewOpen').addEventListener('click', ()=>{
   try { sessionStorage.setItem(GV_KEY, '1'); } catch(e){}
   if (G.ann && G.revealed) gReveal(true); else gView({step:'perform'});
-  window.open('/view/', 'haaView', 'width=1280,height=720'); track('haa_view_open',{guest:1});
+  if (KKit.openView({ url:'/view/', ch:'haa-view', name:'haaView' })) track('haa_view_open',{guest:1});
+  else KKit.toast('ポップアップを許可して、もう一度押してください', 4000);
 });
 
 // 届いたリンク（?r= 演じる人／?j= 当てる人／?a= 発表）。開いたらURLから消す
