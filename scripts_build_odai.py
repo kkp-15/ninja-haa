@@ -34,6 +34,20 @@ for cid, label, desc, body in cats:
         data[cid] = items
 
 N_WORD = sum(len(v) for v in data.values())
+# 年末年始のお題ページ（/odai/nenmatsu/）に載せるカテゴリ。場面の名前と説明はページ用に別に持つ
+SEASON = [
+ ('bounen', '会社の忘年会・新年会のお題', '会社の忘年会・新年会',
+  '乾杯から締めの一本締めまで。上司も新人もいる席で言っても角が立たない一言です。'),
+ ('xmas', 'クリスマス会のお題', 'クリスマス会',
+  'クリスマス会やホームパーティーで。後半の「ゆき」「あけていい」「ねむれない」は、ひらがなで小さな子も言えます。'),
+ ('nenmatsu', 'お正月・親戚の集まりのお題', 'お正月・親戚の集まり',
+  '帰省して親戚がそろったときに。子どもからおじいちゃん・おばあちゃんまで、3世代で同じ一言を言い合えます。'),
+]
+for cid, *_ in SEASON:
+    if cid not in data:
+        raise SystemExit(f'[NG] 年末年始ページのカテゴリ {cid} が data.js にありません')
+N_SEASON = sum(len(data[c]) for c, *_ in SEASON)
+N_SEASON_ACT = sum(len(a) for c, *_ in SEASON for _, a in data[c])
 N_ACT  = sum(len(a) for v in data.values() for _, a in v)
 
 def esc(t): return html.escape(t, quote=True)
@@ -80,26 +94,26 @@ TITLE = f'はぁって言うゲーム風のオリジナルお題一覧【全{N_W
 DESC  = (f'はぁって言うゲームのように、同じ一言を演じ分けて当て合う遊びのお題一覧。「はぁ」「えっ」など{N_WORD}のお題に8通りずつ、'
          f'全{N_ACT}通り。すべてオリジナル（非公式・市販品のお題は含みません）。忘年会・新年会、クリスマス会、お正月の帰省で使えるお題、学級レクや授業での進め方も。')
 
-out = f'''<!DOCTYPE html>
+def page_head(title, desc, path, lds):
+    return f'''<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{TITLE}</title>
-<meta name="description" content="{DESC}">
-<link rel="canonical" href="{SITE}/odai/">
+<title>{title}</title>
+<meta name="description" content="{desc}">
+<link rel="canonical" href="{SITE}{path}">
 <meta name="robots" content="index,follow,max-image-preview:large">
-<meta property="og:title" content="{TITLE}">
-<meta property="og:description" content="{DESC}">
+<meta property="og:title" content="{title}">
+<meta property="og:description" content="{desc}">
 <meta property="og:type" content="article">
-<meta property="og:url" content="{SITE}/odai/">
+<meta property="og:url" content="{SITE}{path}">
 <meta property="og:site_name" content="声と表情で当てるゲーム">
 <meta property="og:image" content="{SITE}/ogp.jpg?d=20261023b">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<script type="application/ld+json">{page_ld}</script>
-<script type="application/ld+json">{faq_ld}</script>
+{lds}
 <script async src="https://www.googletagmanager.com/gtag/js?id={GA}"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -171,45 +185,9 @@ details.block summary{{min-height:48px}}
 <body class="k-page d4-read d4-odai">
 <div class="wrap">
 
-<h1>はぁって言うゲーム風のオリジナルお題一覧<span class="c">【全{N_WORD}お題・{N_ACT}通り】声と表情で演じる・非公式</span></h1>
-<p class="upd">更新日 <time datetime="{UPDATED}">{UPDATED}</time></p>
-<p class="lead">『はぁって言うゲーム』のように、同じ一言をそれぞれ違う気持ちで演じ分けて当て合う遊びのお題です。
-1つのお題につき8通りのシチュエーションを用意しています。
-お題はすべて当サイトのオリジナルで、市販のカードのお題は含みません（非公式のページです）。</p>
+'''
 
-<a class="cta" href="{SITE}/">このお題でいますぐ遊ぶ（無料・登録不要）</a>
-
-<nav class="toc" aria-label="カテゴリ目次">{toc}</nav>
-
-<section class="sec" id="class">
-<h2>学級レク・授業で使うとき</h2>
-<ol>
-<li>3〜8人の班に分かれ、班ごとにスマホかタブレットを1台用意して<a href="{SITE}/">ツール</a>を開きます。配役の配布から投票・得点まで端末がやるので、カードやチップの準備は要りません。</li>
-<li>カテゴリは<a href="#gakkou">「学校」（{len(data['gakkou'])}お題）</a>か<a href="#kodomo">「こども」（{len(data['kodomo'])}お題）</a>から選びます。</li>
-<li>演じるのは声と表情だけで、身振りは使いません。全員が演じ終わったら端末を回して投票します。</li>
-<li>端末が教室に1台だけのときは、この一覧をスクリーンに映し、演じる人にだけ番号を伝えて、見ている全員が何番かを当てる形でも進められます。</li>
-</ol>
-<p>お題は紙やカードに書き写して使ってかまいません。</p>
-</section>
-
-{''.join(blocks)}
-
-<details class="block">
-  <summary><h2>お題選びのコツ</h2></summary>
-  <div>
-    <p><b>はじめての人がいる</b>なら「定番」から。日常でよく聞く言い方ばかりなので、演じ方に迷いません。</p>
-    <p><b>職場の懇親会</b>では「仕事」が安全です。誰も傷つけずに、共通の場面で笑えます。</p>
-    <p><b>子どもと</b>遊ぶなら「学校」「あいさつ」。短い言葉なので低学年でも演じられます。</p>
-    <p><b>慣れてきたら</b>「表情だけ」。声を使わないので難易度が上がり、当てにくくなります。</p>
-  </div>
-</details>
-
-<details class="block">
-  <summary><h2>よくある質問</h2></summary>
-  <div><dl>{faq_html}</dl></div>
-</details>
-
-<div class="ad-slot">
+TAIL = f'''<div class="ad-slot">
   <div class="ad-label">広告</div>
   <ins class="adsbygoogle" style="display:block"
        data-ad-client="{PUB}" data-ad-slot="2937937957"
@@ -243,6 +221,49 @@ details.block summary{{min-height:48px}}
 </body>
 </html>
 '''
+
+MAIN_ODAI = f'''<h1>はぁって言うゲーム風のオリジナルお題一覧<span class="c">【全{N_WORD}お題・{N_ACT}通り】声と表情で演じる・非公式</span></h1>
+<p class="upd">更新日 <time datetime="{UPDATED}">{UPDATED}</time></p>
+<p class="lead">『はぁって言うゲーム』のように、同じ一言をそれぞれ違う気持ちで演じ分けて当て合う遊びのお題です。
+1つのお題につき8通りのシチュエーションを用意しています。
+お題はすべて当サイトのオリジナルで、市販のカードのお題は含みません（非公式のページです）。</p>
+
+<a class="cta" href="{SITE}/">このお題でいますぐ遊ぶ（無料・登録不要）</a>
+
+<nav class="toc" aria-label="カテゴリ目次">{toc}</nav>
+<p class="season">忘年会・クリスマス・お正月に使うなら：<a href="/odai/nenmatsu/">年末年始のお題（場面別・{N_SEASON}お題）</a></p>
+
+<section class="sec" id="class">
+<h2>学級レク・授業で使うとき</h2>
+<ol>
+<li>3〜8人の班に分かれ、班ごとにスマホかタブレットを1台用意して<a href="{SITE}/">ツール</a>を開きます。配役の配布から投票・得点まで端末がやるので、カードやチップの準備は要りません。</li>
+<li>カテゴリは<a href="#gakkou">「学校」（{len(data['gakkou'])}お題）</a>か<a href="#kodomo">「こども」（{len(data['kodomo'])}お題）</a>から選びます。</li>
+<li>演じるのは声と表情だけで、身振りは使いません。全員が演じ終わったら端末を回して投票します。</li>
+<li>端末が教室に1台だけのときは、この一覧をスクリーンに映し、演じる人にだけ番号を伝えて、見ている全員が何番かを当てる形でも進められます。</li>
+</ol>
+<p>お題は紙やカードに書き写して使ってかまいません。</p>
+</section>
+
+{''.join(blocks)}
+
+<details class="block">
+  <summary><h2>お題選びのコツ</h2></summary>
+  <div>
+    <p><b>はじめての人がいる</b>なら「定番」から。日常でよく聞く言い方ばかりなので、演じ方に迷いません。</p>
+    <p><b>職場の懇親会</b>では「仕事」が安全です。誰も傷つけずに、共通の場面で笑えます。</p>
+    <p><b>子どもと</b>遊ぶなら「学校」「あいさつ」。短い言葉なので低学年でも演じられます。</p>
+    <p><b>慣れてきたら</b>「表情だけ」。声を使わないので難易度が上がり、当てにくくなります。</p>
+  </div>
+</details>
+
+<details class="block">
+  <summary><h2>よくある質問</h2></summary>
+  <div><dl>{faq_html}</dl></div>
+</details>
+
+'''
+
+out = page_head(TITLE, DESC, '/odai/', '<script type="application/ld+json">' + page_ld + '</script>\n<script type="application/ld+json">' + faq_ld + '</script>') + MAIN_ODAI + TAIL
 # D4: 筆（h1・h2）と太字（遊ぶボタン）で描く字だけを Google Fonts の text= で読む。見出しやボタンの文言を変えても作り直せば追従する
 def d4_fonts(html):
     import urllib.parse
@@ -259,3 +280,87 @@ if '<!-- kkp-rel-d4:start -->' not in out: out = out.replace('</head>', REL_D4 +
 os.makedirs(os.path.join(ROOT,'odai'), exist_ok=True)
 open(os.path.join(ROOT,'odai','index.html'),'w',encoding='utf-8').write(out)
 print(f'[ok] odai/index.html  {N_WORD}お題 / {N_ACT}通り / {len(order)}カテゴリ  {len(out)} bytes')
+
+
+# ---- 年末年始のお題ページ /odai/nenmatsu/（2026-10-27）---------------------------------
+# 「はぁって言うゲーム お題 忘年会／クリスマス／お正月」の上位は公式カードのお題紹介と「ゲーム〜選」の記事で、
+# 季節のお題を場面別に並べたページは無かった（Googleの AI 概要は「会社・友人・家族のどれか」を聞き返していた）。
+# 半歩: 場面（会社・クリスマス会・親戚）で分け、どれも職場や親戚の前で気まずくならない一言だけにし、1タップでそのお題から遊べる。
+# お題は data.js の bounen / xmas / nenmatsu をそのまま使う（ここに直書きしない）。
+S_PUBLISHED, S_UPDATED = '2026-10-27', '2026-10-27'
+S_PATH = '/odai/nenmatsu/'
+S_TITLE = f'はぁって言うゲーム お題【忘年会・クリスマス・お正月】場面別{N_SEASON}お題｜職場や親戚の前でも気まずくない（非公式）'
+S_DESC = (f'はぁって言うゲームのように遊べる年末年始のお題を、会社の忘年会・新年会、クリスマス会、お正月の親戚の集まりに分けて{N_SEASON}お題・{N_SEASON_ACT}通り。'
+          'いじり・下ネタ・政治や宗教の話は入れていません。すべてオリジナル（非公式）で、スマホ1台でそのまま配役・投票・得点まで遊べます。')
+S_FAQ = [
+ ('会社の忘年会で使っても気まずくなりませんか？',
+  '「会社の忘年会・新年会のお題」は、乾杯・あいさつ・ビンゴ・二次会など、その場で誰もが口にする一言だけにしています。誰かをいじる形のもの、下ネタ、政治や宗教、特定の会社や芸能人の名前は入れていません。'),
+ ('子どもやおじいちゃん・おばあちゃんも一緒に遊べますか？',
+  '遊べます。「お正月・親戚の集まりのお題」は3世代で言える一言にしています。クリスマス会のお題の後半（ゆき・あけていい・ねむれない）は、ひらがなで小さな子も言えます。'),
+ ('9人以上でも遊べますか？',
+  '1回に演じられるのは8人までです。9人以上のときは2人1組で1つの役を受け持ち、相談して1人が演じる形にすると全員が参加できます（人数は組の数で設定・16人まで）。'),
+ ('市販の『はぁって言うゲーム』のお題ですか？',
+  '違います。このページのお題はすべて当サイトのオリジナルで、市販のカードのお題は含みません（非公式のページです）。'),
+]
+s_faq_ld = json.dumps({'@context':'https://schema.org','@type':'FAQPage','mainEntity':[
+  {'@type':'Question','name':q,'acceptedAnswer':{'@type':'Answer','text':a}} for q,a in S_FAQ]}, ensure_ascii=False)
+s_page_ld = json.dumps({'@context':'https://schema.org','@type':'Article',
+  'headline': f'はぁって言うゲームのお題【忘年会・クリスマス・お正月】場面別{N_SEASON}お題・{N_SEASON_ACT}通り',
+  'datePublished': S_PUBLISHED, 'dateModified': S_UPDATED, 'inLanguage':'ja',
+  'mainEntityOfPage': f'{SITE}{S_PATH}',
+  'image': f'{SITE}/ogp.jpg?d=20261023b',
+  'author':{'@type':'Organization','name':'web忍者の砦','url':'https://kkpwebninja.com/'},
+  'publisher':{'@type':'Organization','name':'web忍者の砦','url':'https://kkpwebninja.com/'}}, ensure_ascii=False)
+s_toc = ''.join(f'<a href="#{cid}">{esc(short)}<span>{len(data[cid])}</span></a>' for cid, _, short, _ in SEASON)
+s_blocks = []
+for cid, h2, short, intro in SEASON:
+    rows = ''.join(
+        f'<div class="w"><h3>「{esc(w)}」<a class="pw" href="{SITE}/?cat={cid}&word={quote(w)}">このお題で遊ぶ</a></h3><ol>' +
+        ''.join(f'<li>{esc(a)}</li>' for a in acts) + '</ol></div>'
+        for w, acts in data[cid])
+    s_blocks.append(
+        f'<section class="cat" id="{cid}"><h2>{esc(h2)}<span class="n">{len(data[cid])}お題</span></h2>'
+        f'<p class="cd">{esc(intro)}</p>{rows}'
+        f'<p class="play"><a class="btn" href="{SITE}/?cat={cid}">{esc(short)}のお題で遊ぶ</a></p></section>')
+s_faq_html = ''.join(f'<dt>{esc(q)}</dt><dd>{esc(a)}</dd>' for q,a in S_FAQ)
+MAIN_SEASON = f'''<h1>はぁって言うゲームのお題【忘年会・クリスマス・お正月】<span class="c">場面別{N_SEASON}お題・{N_SEASON_ACT}通り　声と表情で演じる・非公式</span></h1>
+<p class="upd">更新日 <time datetime="{S_UPDATED}">{S_UPDATED}</time></p>
+<p class="lead">年末年始の集まりで使える、『はぁって言うゲーム』のように同じ一言を演じ分けるお題です。
+会社の忘年会・新年会、クリスマス会、お正月の親戚の集まりに分けました。
+どれも職場や親戚の前で言って気まずくならない一言だけで、すべて当サイトのオリジナルです。</p>
+
+<a class="cta" href="{SITE}/?cat=bounen">いますぐ遊ぶ（無料・登録不要）</a>
+
+<nav class="toc" aria-label="場面の目次">{s_toc}</nav>
+
+<section class="sec" id="erabu">
+<h2>入れていないもの</h2>
+<p>誰かをいじる形のもの、下ネタ、お酒を勧めるもの、政治や宗教、特定の会社や芸能人の名前。上司・新人・子ども・おじいちゃんおばあちゃんが同じ席にいても使えるようにしています。</p>
+</section>
+
+{''.join(s_blocks)}
+
+<section class="sec" id="ooninzu">
+<h2>9人以上の忘年会で遊ぶとき</h2>
+<ol>
+<li>2人1組で1つの役を受け持ちます。人数は組の数で設定します（16人まで）。</li>
+<li>役は2人で見て、相談して1人が演じます。当てる側も組で相談して投票します。</li>
+<li>設定の「1回に演じる人」を減らすと、演じる人を交代しながら短く回せます。</li>
+</ol>
+</section>
+
+<details class="block">
+  <summary><h2>よくある質問</h2></summary>
+  <div><dl>{s_faq_html}</dl></div>
+</details>
+
+<p>ほかの場面のお題は<a href="/odai/">お題一覧（全{N_WORD}お題）</a>にあります。</p>
+
+'''
+s_lds = '<script type="application/ld+json">' + s_page_ld + '</script>\n<script type="application/ld+json">' + s_faq_ld + '</script>'
+s_out = page_head(S_TITLE, S_DESC, S_PATH, s_lds) + MAIN_SEASON + TAIL
+s_out = d4_fonts(s_out)
+s_out = s_out.replace('</head>', REL_D4 + '</head>', 1)
+os.makedirs(os.path.join(ROOT,'odai','nenmatsu'), exist_ok=True)
+open(os.path.join(ROOT,'odai','nenmatsu','index.html'),'w',encoding='utf-8').write(s_out)
+print(f'[ok] odai/nenmatsu/index.html  {N_SEASON}お題 / {N_SEASON_ACT}通り  {len(s_out)} bytes')
