@@ -692,6 +692,10 @@ body[data-players="1"] #toVote{display:none!important}
 #dockMsg{display:none;text-align:center;font-size:.92rem;font-weight:700;line-height:1.3;padding:8px 0}
 #dock[data-step=deal] #dockMsg:not([hidden]){display:block}
 body:not(.at-result) #postOnly{display:none}
+/* 年末年始の1行（12/1〜1/5だけ・2026-10-28） */
+.season-line{margin:.4rem 0 .6rem;font-size:.875rem;line-height:1.8;color:var(--muted)}
+.season-line a{color:var(--orange-d);text-decoration:underline;display:inline-block;min-height:28px}
+body.stream .season-line{display:none!important}
 #postOnly .ad-slot{margin-top:24px}
 .deal-card::before,.deal-card.done::after{white-space:nowrap}
 @media(max-width:340px){#postOnly .ad-slot{margin-left:-14px;margin-right:-14px}}
@@ -1605,6 +1609,8 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
     <h3>もっと遊びたくなったら</h3>
     <span class="pr">PR・アフィリエイト広告を含みます</span>
     <p>このゲームの原型になっている市販のカードゲームです。お題がさらに多く、カードを配るだけで遊べます。</p>
+    <!-- 2026-10-28 年末年始（12/1〜1/5）だけ出す1行。期間外・配信モードでは中身を作らない（下の kkpSeasonLine） -->
+    <p class="season-line" id="seasonLine" hidden></p>
     <a class="buy" href="https://www.amazon.co.jp/s?k=%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazonで探す</a>
     <a class="buy alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F" target="_blank" rel="nofollow sponsored noopener">楽天で探す</a>
   </div>
@@ -4229,6 +4235,33 @@ syncDock('setup');
 // 広告は結果画面が表示されてから1回だけ読み込む。
 // 読み込み時に押すと、枠が非表示（幅0）のままなので広告が入らず、枠が死んでいた（2026-09-20 修正）。
 })();
+</script>
+<script>
+/* 2026-10-28 年末年始（12/1〜1/5）だけ、遊び終わりの市販版紹介に1行足す。並びは 公式 → Amazon → 楽天。
+   期間外と配信モード（広告なし）では何も作らない。日付を変えて試すときは kkpSeasonLine(new Date('2026-12-15')) */
+function kkpSeasonOn(d){ var m = d.getMonth() + 1, day = d.getDate(); return m === 12 || (m === 1 && day <= 5); }
+function kkpSeasonLine(now){
+  var box = document.getElementById('seasonLine');
+  if (!box) return;
+  var stream = document.body.classList.contains('stream') || (window.KKit && KKit.stream && KKit.stream.on);
+  box.textContent = '';
+  if (stream || !kkpSeasonOn(now || new Date())) { box.hidden = true; return; }
+  var links = [
+    ['公式ページ', 'https://www.gentosha.co.jp/s/haa-game/', 'noopener', 'official'],
+    ['Amazon（PR）', 'https://www.amazon.co.jp/s?k=%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22', 'sponsored noopener', 'amazon'],
+    ['楽天（PR）', 'https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F', 'sponsored noopener', 'rakuten']
+  ];
+  box.appendChild(document.createTextNode('お正月や帰省先でも遊ぶなら、本家のカードが1箱あると電波や充電を気にせず遊べます。'));
+  links.forEach(function(l, i){
+    box.appendChild(document.createTextNode(i ? ' ／ ' : ' '));
+    var a = document.createElement('a');
+    a.href = l[1]; a.target = '_blank'; a.rel = l[2]; a.textContent = l[0];
+    a.addEventListener('click', function(){ if (typeof gtag === 'function') gtag('event', 'haa_season_click', { shop: l[3] }); });
+    box.appendChild(a);
+  });
+  box.hidden = false;
+}
+kkpSeasonLine();
 </script>
 </body>
 </html>
