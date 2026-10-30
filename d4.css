@@ -131,3 +131,15 @@ body.d4-play:not(.stream) button.btn-eq:active{transform:translate(3px,3px);box-
 .d4-read .w h3{background:var(--k-kinari);border-left:3px solid var(--k-sumi)}
 .d4-read .note-b{background:var(--k-kinari);border-left-color:var(--k-sumi)}
 .d4-read code{overflow-wrap:anywhere}
+
+/* 配色の見直し 2026-10-30（ワードウルフで先に試したものを横展開）: 押す所＝はっきりしたオレンジ、選んでいる所＝紺。
+   根拠と計測は ~/test/デザイン調査_2026-10-30/提案.md。結果が悪ければこの塊を消せば元に戻る */
+:root{--kc-navy:#2b3768;--kc-orange:#f26a1b}
+body .k-btn-main{padding:0 22px}
+body .k-btn.k-btn-main,body .k-btn.k-btn-main:hover,body .k-btn.k-btn-main:hover:not([disabled]),body .k-btn.k-btn-main:disabled,body .k-btn.k-btn-main[disabled]{border:3px solid var(--k-sumi);border-image:none;border-radius:14px;background:var(--kc-orange)}
+body .k-btn.k-btn-main::after{inset:0;top:0;left:0;width:auto;height:auto;-webkit-mask:none;mask:none;border-radius:11px}
+.k-page.d4-play:not(.stream) span.step-label{background:var(--kc-navy)}
+.k-page.d4-play:not(.stream) button.cat-btn.active,.k-page.d4-play:not(.stream) .ap-btn[aria-pressed="true"],.k-page.d4-play .g-nb[aria-pressed="true"],
+.k-page .log-scope button[aria-pressed="true"]{background:var(--kc-navy);color:#fff}
+html body.d4-play:not(.stream) :is(#dock,#step-setup,#step-deal,#step-perform,#step-vote,#step-result) button.btn-primary:not(.unveil-skip),
+html body.d4-play:not(.stream) #dock #toPerform:not(:disabled){border:3px solid var(--k-sumi);border-image:none;border-radius:14px;background:var(--kc-orange)}
