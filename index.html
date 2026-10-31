@@ -3135,11 +3135,43 @@ document.addEventListener('pointerdown', e=>{
   r.style.left = e.clientX+'px'; r.style.top = e.clientY+'px';
   document.body.appendChild(r); setTimeout(()=>r.remove(), 500);
 }, {passive:true});
-function pushResultAd(){
-  if (window.__adPushed || window.__haaStream || window.__haaGuestNoAd) return;
-  window.__adPushed = true;
-  try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
+// 結果画面の広告（2026-10-31 ito の型を移植）: 1回ごとに、枠が画面に入ったら1回だけ読み込む。
+// 以前はページを開いてから最初の1回だけ（__adPushed）。ito は同じ直しで結果画面の表示が完了の24%→92%、RPM が約2倍になった。
+// 一度 push した ins には2回 push できないので、2回目からは未使用の ins に差し替える。前回の読み込みから30秒未満なら前の広告のまま。
+// GA4 haa_result_ad_show は1回に1つ: reload = push（読み込んだ）／skip（30秒未満）／notseen（見ずに離れた）
+const RESULT_AD_MIN_GAP = 30000;
+let _raTpl = null, _raLast = 0, _raIO = null, _raWait = null, _raKey = null;
+function resultAdStopWaiting(){
+  if (_raIO){ _raIO.disconnect(); _raIO = null; }
+  if (_raWait){ track('haa_result_ad_show',{round:_raWait,reload:'notseen'}); _raWait = null; }
 }
+function resultAdSeen(){
+  const r = _raWait; if (!r) return;
+  _raWait = null;
+  if (_raIO){ _raIO.disconnect(); _raIO = null; }
+  let slot = document.querySelector('#postOnly .ad-slot ins'); if (!slot) return;
+  const now = Date.now();
+  if (_raLast && now - _raLast < RESULT_AD_MIN_GAP){ track('haa_result_ad_show',{round:r,reload:'skip'}); return; }
+  if (slot.hasAttribute('data-adsbygoogle-status')){ const f = _raTpl.cloneNode(false); slot.replaceWith(f); slot = f; }
+  _raLast = now;
+  const go = ()=> setTimeout(()=>{ try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){} track('haa_result_ad_show',{round:r,reload:'push'}); }, 60);
+  if (window.__haaLoadAds) window.__haaLoadAds(go); else go();
+}
+function pushResultAd(){
+  if (window.__haaStream || window.__haaGuestNoAd) return;
+  const key = (S.gid||'') + '-' + (S.gno||0);   // 答えが出た時と結果画面に移った時の2か所から呼ばれる。1回につき1度だけ
+  if (key === _raKey) return;
+  _raKey = key;
+  const ad = document.querySelector('#postOnly .ad-slot'); const slot = ad && ad.querySelector('ins'); if (!slot) return;
+  if (!_raTpl && !slot.hasAttribute('data-adsbygoogle-status')) _raTpl = slot.cloneNode(false);   // 未使用の状態を控えておく
+  if (!_raTpl) return;
+  resultAdStopWaiting();
+  _raWait = S.gno || 1;
+  if (!('IntersectionObserver' in window)){ resultAdSeen(); return; }
+  _raIO = new IntersectionObserver(es=>{ es.forEach(e=>{ if (e.isIntersecting) resultAdSeen(); }); });
+  _raIO.observe(ad);
+}
+window.addEventListener('pagehide', resultAdStopWaiting);
 // 配信モードは「最終予想タイム」10秒 → 3・2・1。リスナーがコメントを書く時間を作る（「すぐ発表する」で飛ばせる）
 let LAST_T = null;
 function startLastCall(){
