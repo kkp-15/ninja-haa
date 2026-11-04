@@ -525,6 +525,23 @@ button:active{transform:scale(.95)}
 @keyframes wordBounce{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.12);opacity:1}100%{transform:scale(1)}}
 .vote-item.picked{background:var(--orange)!important;color:#1f1a17!important;border-color:var(--orange)!important;transform:scale(1.03)}
 .vote-item.picked .no{color:#fff}
+/* 押した瞬間に色を変え「票が入った」と出す（2026-11-04）。出た直後で押しても数えない間は薄く */
+.vote-item.press{background:#fff3e2;border-color:var(--orange)}
+/* 色は待たずに変える（背景の0.2秒のにじみをやめる） */
+.vote-item.press,.vote-item.picked{transition:transform .12s}
+.vote-item .vk{float:right;font-size:.875rem;font-weight:800;color:#1f1a17}
+.vote-list{transition:opacity .12s}
+.vote-list.wait{opacity:.55}
+.vote-prog.ok b{color:var(--orange-d)}
+/* 名演技賞：いちばん多く当ててもらえた人（同数なら全員）（2026-11-04） */
+.mvp{display:flex;flex-wrap:wrap;align-items:baseline;gap:.2rem .7rem;padding:.1rem 0 .6rem;margin:0 0 .55rem;border-bottom:2px solid var(--orange)}
+.mvp-k{background:var(--orange);color:#1f1a17;font-weight:900;font-size:.875rem;padding:.1rem .5rem;border-radius:4px}
+.mvp-n{font-size:1.7rem;font-weight:900;color:var(--orange-d);line-height:1.25;overflow-wrap:anywhere}
+.mvp-w{color:var(--muted);font-size:.875rem}
+html body.stream .mvp{padding:0 0 calc(.4*var(--u));margin:0 0 calc(.5*var(--u));border-bottom:calc(.3*var(--u)) solid var(--sumi);gap:calc(.3*var(--u)) calc(1.2*var(--u))}
+html body.stream .mvp-k{background:var(--shu);color:#fff;font-size:max(14px,calc(2*var(--u)))}
+html body.stream .mvp-n{font-size:max(16px,calc(3.6*var(--u)));color:var(--sumi)}
+html body.stream .mvp-w{font-size:max(14px,calc(1.9*var(--u)))}
 .vote-who.swap{animation:labelPop .45s cubic-bezier(.2,.9,.3,1.6) both}
 .pick-item[aria-pressed="true"]{animation:pickPop .35s cubic-bezier(.2,.9,.3,1.6)}
 @keyframes pickPop{0%{transform:scale(.96)}60%{transform:scale(1.03)}100%{transform:none}}
@@ -2847,14 +2864,21 @@ function renderVote(){
   $('voteTarget').innerHTML = '<b>'+esc(pLabel(S.act[S.target]))+'</b> さんは、どの気持ちだった？';
   // 出た直後（次の人の番に切り替わった直後）の押しまちがいは数えない（2026-10-22 手書きの 350ms を kit の KKit.settle に）
   const w = $('voteList'); w.innerHTML=''; KKit.settle(w, 350).block();
+  // 出た直後の 350ms は押しても数えない（前の人の連打よけ）。その間は薄くして「まだ」と分かるように
+  w.classList.add('wait'); clearTimeout(w._waitT); w._waitT = setTimeout(()=>w.classList.remove('wait'), 350);
   const used = S.pool.slice().sort((a,b)=>a-b);
   used.forEach(ai=>{
     const b = document.createElement('button');
     b.type='button'; b.className='vote-item';
     b.innerHTML = '<span class="no">'+numOf(ai)+'</span>'+esc(S.theme.acts[ai]);
+    // 指が触れた瞬間に色を変える（数えられる時だけ。数えない間に色が変わると「入った」と誤解する）
+    b.addEventListener('pointerdown', ()=>{ if (!w.dataset.busy && !w.classList.contains('wait')) b.classList.add('press'); });
+    ['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev, ()=>b.classList.remove('press')));
     b.addEventListener('click', ()=>{
       if (w.dataset.busy) return; w.dataset.busy = '1';
-      b.classList.add('picked'); sfx('pick');
+      b.classList.remove('press'); b.classList.add('picked'); sfx('pick');
+      b.insertAdjacentHTML('beforeend', '<span class="vk">票が入りました</span>');
+      S.voteOk = pLabel(S.voter);
       S.votes[S.voter] = S.votes[S.voter] || {};
       S.votes[S.voter][S.target] = ai;
       (S.voteHist = S.voteHist || []).push({voter:S.voter, target:S.target});
@@ -2865,7 +2889,11 @@ function renderVote(){
   const total = S.players*S.k - S.k;
   let done = 0;
   Object.values(S.votes).forEach(v=>done += Object.keys(v).length);
-  $('voteProg').textContent = '投票 '+done+' / '+total;
+  const vp = $('voteProg');
+  // 直前の票が入ったことを次の画面にも残す（連打で入らなかった票に気づけるように）
+  if (S.voteOk && done){ vp.innerHTML = '<b>'+esc(S.voteOk)+' さんの票が入りました</b><br>投票 '+done+' / '+total; vp.classList.add('ok'); }
+  else { vp.textContent = '投票 '+done+' / '+total; vp.classList.remove('ok'); }
+  S.voteOk = '';
   $('voteUndo').hidden = !(S.voteHist && S.voteHist.length);
 }
 // 押し間違えたときだけ、1つ前の票に戻ってやり直す（押す回数は増やさない・2026-10-17）
@@ -2984,7 +3012,15 @@ function finish(mode){
   S.lTot += lsc; S.lAdd = lsc;
   S.rounds++;
   const tmax = Math.max.apply(null, S.total);
-  let h = '<h3>'+(S.rounds > 1 ? '合計得点<span class="sr-rd">'+S.rounds+'回目まで</span>' : '得点')+'</h3>', rank = 0, prev = null;
+  // 名演技賞：この回いちばん多く当ててもらえた人（同数なら全員）。1人も当てられなかった回は出さない
+  const got = S.act.slice(0, S.k).map((p,t)=>{ let c = 0; for (let v=0; v<S.players; v++){ if (v === p) continue; const g = S.votes[v] && S.votes[v][t]; if (g !== undefined && g === S.assign[t]) c++; } return {p, c}; });
+  const gmax = got.reduce((m,x)=>Math.max(m, x.c), 0);
+  let mvp = '';
+  if (gmax > 0){
+    const names = got.filter(x=>x.c === gmax).map(x=>esc(pName(x.p))+' さん').join('・');
+    mvp = '<div class="mvp"><span class="mvp-k">名演技賞</span><span class="mvp-n">'+names+'</span><small class="mvp-w">'+gmax+'人に伝わりました</small></div>';
+  }
+  let h = mvp + '<h3>'+(S.rounds > 1 ? '合計得点<span class="sr-rd">'+S.rounds+'回目まで</span>' : '得点')+'</h3>', rank = 0, prev = null;
   const ppl = logPeople(logLoad().r.filter(r=>r.sid === S.sid));
   // リスナーは一度でも入れたら、プレイヤーと同じように並べる
   const lisRow = S.lis && S.lTries > 0;
