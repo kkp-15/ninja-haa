@@ -538,6 +538,9 @@ button:active{transform:scale(.95)}
 .mvp-k{background:var(--orange);color:#1f1a17;font-weight:900;font-size:.875rem;padding:.1rem .5rem;border-radius:4px}
 .mvp-n{font-size:1.7rem;font-weight:900;color:var(--orange-d);line-height:1.25;overflow-wrap:anywhere}
 .mvp-w{color:var(--muted);font-size:.875rem}
+.mvp-shop{display:flex;flex-wrap:wrap;align-items:center;gap:0 .8rem;margin:-.3rem 0 .7rem;font-size:.875rem;line-height:1.6;color:var(--muted)}
+.mvp-shop a{display:inline-flex;align-items:center;min-height:44px;color:var(--orange-d);text-decoration:underline}
+body.stream .mvp-shop{display:none!important}
 html body.stream .mvp{padding:0 0 calc(.4*var(--u));margin:0 0 calc(.5*var(--u));border-bottom:calc(.3*var(--u)) solid var(--sumi);gap:calc(.3*var(--u)) calc(1.2*var(--u))}
 html body.stream .mvp-k{background:var(--shu);color:#fff;font-size:max(14px,calc(2*var(--u)))}
 html body.stream .mvp-n{font-size:max(16px,calc(3.6*var(--u)));color:var(--sumi)}
@@ -3019,6 +3022,8 @@ function finish(mode){
   if (gmax > 0){
     const names = got.filter(x=>x.c === gmax).map(x=>esc(pName(x.p))+' さん').join('・');
     mvp = '<div class="mvp"><span class="mvp-k">名演技賞</span><span class="mvp-n">'+names+'</span><small class="mvp-w">'+gmax+'人に伝わりました</small></div>';
+    // 2026-11-05 名演技賞の直下に本家のカードへの1行（下の「もっと遊びたくなったら」と同じリンク）。配信モードでは出さない
+    if (!document.body.classList.contains('stream')) mvp += '<p class="mvp-shop"><span>本家『はぁって言うゲーム』のカードで続きを</span><a href="'+MVP_AMZ+'" target="_blank" rel="nofollow sponsored noopener" data-shop="amazon">Amazon（PR）</a><a href="'+MVP_RAK+'" target="_blank" rel="nofollow sponsored noopener" data-shop="rakuten">楽天（PR）</a></p>';
   }
   let h = mvp + '<h3>'+(S.rounds > 1 ? '合計得点<span class="sr-rd">'+S.rounds+'回目まで</span>' : '得点')+'</h3>', rank = 0, prev = null;
   const ppl = logPeople(logLoad().r.filter(r=>r.sid === S.sid));
@@ -3058,6 +3063,9 @@ function finish(mode){
   show('result');
 }
 
+const MVP_AMZ = 'https://www.amazon.co.jp/s?k=%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22';
+const MVP_RAK = 'https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F';
+document.addEventListener('click', e=>{ const a = e.target.closest && e.target.closest('.mvp-shop a'); if (a && typeof gtag === 'function') gtag('event', 'haa_mvp_shop', { shop: a.dataset.shop }); });
 // 点の内訳を1行で：当てた＋2・伝わった＋1（合計点と同じ数え方。何回中かは「今日のまとめ」で）
 function lisLine(){ return '当てた＋'+S.lTot; }
 function ptLine(hit, got){ return '当てた＋'+hit+'・伝わった＋'+got; }
