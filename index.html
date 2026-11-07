@@ -744,6 +744,13 @@ body.stream .ann-btn{font-size:1.1rem}body.stream .ann-h{font-size:.95rem}body.s
 .reveal .act.masked{color:transparent;text-shadow:none;user-select:none;-webkit-user-select:none;background:repeating-linear-gradient(45deg,#fff 0 10px,#fff3e2 10px 20px)}
 .reveal .act.masked::after{content:"タップで表示";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--orange-d);font-size:1.15rem;font-weight:900}
 .reveal .tapnote{margin-top:.5rem;font-size:.875rem;opacity:.85}
+/* 2026-11-07 言い方のコツ（気持ちの中身には触れない一般のコツ。演じる前の「どう言えば？」を減らす） */
+.reveal .act-tip{margin:.7rem 0 0;font-size:.875rem;line-height:1.6;max-width:22rem;opacity:.92}
+.reveal .act-tip b{color:#ffd8a8}
+body.stream .reveal .act-tip{font-size:1.15rem;max-width:40rem}
+/* 得点の数え上げ（答えが出た瞬間に0から伸びる） */
+.sr-bar i{transition:width .7s ease-out}
+@media (prefers-reduced-motion:reduce){.sr-bar i{transition:none}}
 .reveal .tapnote[hidden]{display:none}
 /* QRで渡す（2026-10-16）: 配信モードの小窓はまずQRだけ。ふだんのモードはその場で小窓（モーダル）。/view/ と配信画面には出さない */
 .reveal.has-qr{justify-content:flex-start;overflow-y:auto}
@@ -1714,6 +1721,7 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
   <button type="button" class="btn-w btn-show" id="revealShow" hidden>どんな気持ちで言うか見る</button>
   <div class="act" id="revealAct"></div>
   <div class="tapnote" id="revealTapNote" hidden>もう一度タップで隠せます</div>
+  <p class="act-tip" id="revealTip"></p>
   <div class="warn" id="revealWarn">ほかの人には内緒にしておいてね</div>
   <div class="warn" id="revealSoft" hidden>配信に映っているときは、この画面は映さないでね</div>
   <div class="warn stream-only">配信に映すときは、この画面のあいだだけ映像を隠しておいてね</div>
@@ -2736,6 +2744,7 @@ function openReveal(i){
   $('revealWho').textContent = pLabel(S.act[i])+' さん';
   $('revealWordLine').textContent = '言う言葉は「'+S.theme.word+'」';
   $('revealAct').textContent = S.theme.acts[S.assign[i]];
+  setActTip();
   $('revealAct').classList.remove('maskable','masked'); $('revealTapNote').hidden = true;
   $('revealAct').hidden = false; $('revealShow').hidden = true; $('revealShow').onclick = null;
   // 配信モードで小窓が止められたときは、気持ちを最初は隠しておく（配信画面に映らないように・2026-10-17）
@@ -2789,6 +2798,38 @@ function guarded(){ return Date.now() - GUARD_AT < GUARD_MS; }
 const NUMS = ['①','②','③','④','⑤','⑥','⑦','⑧'];
 // 候補の番号（並びは pool の昇順で固定）。視聴者がコメントで「②」と当てられる
 function numOf(ai){ const i = S.pool.slice().sort((a,b)=>a-b).indexOf(ai); return NUMS[i] || ''; }
+// 2026-11-07 言い方のコツ。1つだけ出す（全部並べると読まれない）。どの気持ちかは分からない一般のコツだけ
+const ACT_TIPS = [
+  ['声の高さ','を変えると伝わりやすい（高く／低く）'],
+  ['速さ','を変えてみる（ゆっくり／早口）'],
+  ['言う前の「間」','を長めに。一呼吸おくだけで気持ちが出ます'],
+  ['声の大きさ','を大げさに（ささやく／張る）'],
+  ['先に表情','を作ってから言うと、声もついてきます'],
+  ['語尾','で変える（のばす／ぷつっと切る／上げる）'],
+  ['ため息や笑い','を言葉の前後に少しだけ足してもOK']
+];
+function setActTip(){
+  const t = $('revealTip'); if (!t) return;
+  const x = ACT_TIPS[Math.floor(Math.random()*ACT_TIPS.length)];
+  t.innerHTML = 'コツ：<b>'+x[0]+'</b>'+x[1];
+}
+// 2026-11-07 答えが出た瞬間に、得点を前回の合計から数え上げる（棒も0から伸びる）
+function countUpScores(){
+  const rows = document.querySelectorAll('#scoreBox .sr');
+  if (!rows.length) return;
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  rows.forEach(r=>{
+    const b = r.querySelector(':scope > b'), bar = r.querySelector('.sr-bar i');
+    if (bar && !reduce){ const w = bar.style.width; bar.style.width = '0%'; void bar.offsetWidth; requestAnimationFrame(()=>{ bar.style.width = w; }); }
+    const tn = b && b.firstChild; if (!tn || tn.nodeType !== 3) return;
+    const to = parseInt(tn.nodeValue, 10); if (!(to > 0) || reduce) return;
+    const add = b.querySelector('.sr-add'); const from = add ? Math.max(0, to - (parseInt(add.textContent.replace('+',''),10)||0)) : 0;
+    if (from === to) return;
+    const t0 = performance.now(), dur = 700;
+    const step = now=>{ const k = Math.min(1, (now - t0)/dur); tn.nodeValue = Math.round(from + (to-from)*k) + '点'; if (k < 1) requestAnimationFrame(step); };
+    tn.nodeValue = from + '点'; requestAnimationFrame(step);
+  });
+}
 function renderPerform(){
   const st = $('performStage');
   st.classList.remove('drop'); void st.offsetWidth; st.classList.add('drop'); sfx('drop');
@@ -3258,7 +3299,7 @@ function revealNow(){
   updateNow();
   setTimeout(pushResultAd, 60);
   $('resultBody').querySelectorAll('.ans-card').forEach((r,k)=>{ r.style.animationDelay = (k*0.12)+'s'; r.classList.add('pop'); });
-  if (!RESUMING){ confetti(); sfx('fanfare'); }
+  if (!RESUMING){ confetti(); sfx('fanfare'); countUpScores(); }
   if (!(RESUMING && S.ask)) S.ask = nextAsk();
   if ($('ctaComment')) $('ctaComment').textContent = S.ask;
   renderRecStrip(true);
@@ -4196,7 +4237,7 @@ function guestOpen(k, o, how){
     if (k === 'r' && how !== 'store'){
       $('revealWho').textContent = (o.n || '') + ' さん';
       $('revealWordLine').textContent = '言う言葉は「' + o.w + '」';
-      $('revealAct').textContent = o.a;
+      $('revealAct').textContent = o.a; setActTip();
       $('revealAct').classList.add('maskable','masked'); $('revealTapNote').hidden = true;
       $('revealClose').textContent = '覚えた！閉じる';
       $('revealNow').textContent = '下をタップして気持ちを見たら、その気持ちで「' + o.w + '」と言ってね'; $('revealNow').hidden = false;
