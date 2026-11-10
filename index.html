@@ -2420,7 +2420,8 @@ function renderDeal(){
     const key = 'r'+i, st = S.sent && S.sent[key];
     const ln = document.createElement('button');
     ln.type='button'; ln.className='deal-link'+(st?' sent':'');
-    ln.textContent = st === 'copied' ? 'コピーしました' : st === 'qr' ? 'QRで渡した（送る）' : st ? '送った（もう一度）' : pName(p)+'さんに送る';
+    if (st) ln.textContent = st === 'copied' ? 'コピーしました' : st === 'qr' ? 'QRで渡した（送る）' : '送った（もう一度）';
+    else { ln.textContent = pName(p)+'さんに'; const sv=document.createElement('span'); sv.style.display='inline-block'; sv.textContent='送る'; ln.appendChild(sv); } // 「送る」を途中で折り返さない
     ln.setAttribute('aria-label', pLabel(p)+' さんに演技カードのリンクを送る');
     ln.addEventListener('click', ()=>sendLink(roleUrl(i), 'はぁの演技カードです（開くまで見えません）', ln, key, ()=>{ S.seen[i] = true; track('haa_role_link',{players:S.players}); }));
     cell.appendChild(ln);
