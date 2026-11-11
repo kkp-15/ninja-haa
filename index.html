@@ -1345,6 +1345,60 @@ html body.stream.cmp2 #step-vote .stage.sm .vote-who{display:none}
 html body.stream.playing.cmp3 main .card>h2{display:none}
 html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
 </style>
+<style id="haa-2026-11-11">
+/* 2026-11-11 本文の字を15px以上に（補足の .hint も読みやすく）。配信モードは別の大きさがあるので触らない */
+body:not(.stream) header .hero-t p, body:not(.stream) header .hero-t p.hero-fan{font-size:15px}
+body:not(.stream) .hint, body:not(.stream) .cat-desc, body:not(.stream) .quick-note{font-size:15px}
+.note{font-size:15px}
+@media (min-width:1024px){ .note{font-size:16px} }
+/* いまの番（STEP 4・演じる人が2人以上の回） */
+.turn-box{margin:.4rem 0 .5rem;padding:.6rem .8rem;border:2px solid var(--orange);border-radius:6px;background:#fff;text-align:left}
+.turn-now{margin:0;font-size:1.05rem;font-weight:800;color:var(--ink);line-height:1.5}
+.turn-now b{font-size:1.7rem;color:var(--orange-d);overflow-wrap:anywhere}
+.turn-now small{margin-left:.6rem;font-size:15px;color:var(--muted);font-weight:700}
+.turn-last{margin:.2rem 0 0;font-size:15px;color:var(--muted)}
+#performList .turn-next{display:block;width:100%;max-width:none;min-height:48px;margin:.45rem 0 0;font-size:1rem}
+.turn-back{display:inline-flex;align-items:center;min-height:44px;margin-top:.2rem;padding:0 4px;background:none;border:0;color:var(--muted);font:inherit;font-size:15px;text-decoration:underline;cursor:pointer}
+.turn-row.cur{background:#fff3e2;box-shadow:inset 4px 0 0 var(--orange)}
+.turn-row.cur .act{color:var(--orange-d)}
+.turn-row.done .act,.turn-row.done .nm{color:var(--muted);font-weight:500}
+/* 口で当てた数（投票なしの回） */
+.hit-btn{display:block;width:100%;min-height:44px;margin:.55rem 0 0;border:2px solid #fff;border-radius:6px;background:rgba(255,255,255,.12);color:#fff;font:inherit;font-weight:800;font-size:1rem;cursor:pointer}
+.hit-btn[aria-pressed="true"]{background:#fff;color:var(--ink)}
+.hit-sum{margin:.4rem 0 0;font-size:1.05rem;font-weight:800;color:var(--ink)}
+.hit-sum b{font-size:1.6rem;color:var(--orange-d)}
+/* いちばん上手だった人（名演技） */
+.meien{margin:0 0 .8rem;padding:.2rem 0 .7rem;border-bottom:1px solid var(--line);text-align:left}
+.meien-h{margin:0 0 .35rem;font-weight:800;font-size:1rem;color:var(--ink)}
+.meien-h small{margin-left:.5rem;font-size:14px;color:var(--muted);font-weight:500}
+.meien-row{display:flex;flex-wrap:wrap;gap:.4rem}
+.meien-btn{min-height:44px;min-width:44px;padding:0 .9rem;border:2px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);font:inherit;font-weight:700;font-size:1rem;cursor:pointer}
+.meien-btn.on{border-color:var(--orange);background:var(--orange);color:#1f1a17}
+.meien-t{margin:.5rem 0 0;font-size:15px;line-height:1.6;color:var(--ink)}
+.meien-t b{color:var(--orange-d)}
+.meien-clear{display:inline-flex;align-items:center;min-height:44px;padding:0 4px;background:none;border:0;color:var(--muted);font:inherit;font-size:14px;text-decoration:underline;cursor:pointer}
+body.veiling #meienBox{display:none}
+body.stream .meien-h{font-size:1.35rem}
+body.stream .meien-btn{font-size:1.25rem;min-height:56px;padding:0 1.2rem}
+body.stream .meien-t{font-size:1.15rem}
+/* PCの2列（1024px以上・配信モード以外）：左に操作、右にお題や結果 */
+@media (min-width:1024px){
+  body:not(.stream):not(.gmode) .wrap{max-width:1040px}
+  body:not(.stream):not(.gmode) .setup-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:32px;align-items:start}
+  body:not(.stream):not(.gmode) .setup-two>.pc-r>h2:first-child{margin-top:0!important}
+  body:not(.stream):not(.gmode) .perf-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);grid-template-rows:auto auto 1fr;column-gap:28px;align-items:start}
+  body:not(.stream):not(.gmode) .perf-two>#performList{grid-column:1;grid-row:1 / 4}
+  body:not(.stream):not(.gmode) .perf-two>#performStage{grid-column:2;grid-row:1}
+  body:not(.stream):not(.gmode) .perf-two>.perf-hint{grid-column:2;grid-row:2}
+  body:not(.stream):not(.gmode) .perf-two>#performCands{grid-column:2;grid-row:3}
+  body:not(.stream):not(.gmode) .perf-two>#performList:empty{display:none}
+  body:not(.stream):not(.gmode) .perf-two:has(>#performList:empty){grid-template-columns:minmax(0,1fr)}
+  body:not(.stream):not(.gmode) .perf-two:has(>#performList:empty)>#performStage,body:not(.stream):not(.gmode) .perf-two:has(>#performList:empty)>.perf-hint,body:not(.stream):not(.gmode) .perf-two:has(>#performList:empty)>#performCands{grid-column:1}
+  body:not(.stream):not(.gmode) .res-pair{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);column-gap:28px;align-items:start}
+  body:not(.stream):not(.gmode) #step-deal .deal-grid{max-width:760px;margin-left:auto;margin-right:auto}
+  body:not(.stream):not(.gmode) #step-vote>*{max-width:640px;margin-left:auto;margin-right:auto}
+}
+</style>
 </head>
 <body class="k-page d4-play">
 <div class="wrap">
@@ -1468,6 +1522,8 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
     <div class="k-view-open" id="viewOpenKit" data-k-view="/view/" data-k-ch="haa-view" data-k-name="haaView"></div>
     <details class="vo-more"><summary>くわしく</summary><p class="hint">操作するのと同じパソコン・同じブラウザで開いてください（OBS の「ブラウザ」ソースではつながりません）。縦型（9:16）は URL の末尾に <code>?layout=v</code></p></details>
   </div>
+  <!-- 2026-11-11 PC（1024px以上・配信モード以外）は左に人数、右にお題の2列。スマホでは並びそのまま -->
+  <div class="pc-two setup-two"><div class="pc-l">
   <h2><span class="step-label">STEP 1</span>人数を選ぶ</h2>
   <div class="num">
     <button class="btn-ghost" id="dec" aria-label="1人減らす">−</button>
@@ -1504,7 +1560,7 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
   </details>
   <!-- 1回に演じる人が1人のとき（配信モードはいつも）：最初に演じる人を選ぶ（参加人数が1人のときは出さない） -->
   <div class="actor-pick" id="apFirst"><p class="ap-h">最初に演じる人</p><div class="ap-row" role="group" aria-label="最初に演じる人"></div></div>
-
+  </div><div class="pc-r">
   <h2 style="margin-top:1rem"><span class="step-label">STEP 2</span>お題を選ぶ</h2>
   <div class="cat-scroll">
     <div class="cat-grid" id="catGrid" role="tablist" aria-label="お題のカテゴリ"></div>
@@ -1514,8 +1570,9 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
   <!-- 3つだけ出している。別の3つが出ることを文字で示す（↺の記号だけでは伝わらない） -->
   <button type="button" class="redraw" id="redraw">ほかの3つを見る ↺</button>
 
+  </div></div>
   <button class="btn-primary" id="startGame">おまかせで始める</button>
-  <p style="text-align:center;font-size:.875rem;margin-top:.8rem">
+  <p style="text-align:center;font-size:15px;margin-top:.8rem">
     <a href="/odai/" id="odaiLink" style="color:var(--orange-d);font-weight:bold;text-decoration:none;">
       お題一覧はこちら（全<span data-word-count>226</span>お題・1808通り）</a>
   </p>
@@ -1552,11 +1609,14 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
 <!-- STEP 3 演技 -->
 <section class="card hidden" id="step-perform">
   <h2><span class="step-label">STEP 4</span>順番に演じる</h2>
+  <!-- 2026-11-11 PC（1024px以上・配信モード以外）は左に「いまの番」と順番、右にお題と候補。スマホでは並びそのまま -->
+  <div class="perf-two">
   <div class="stage k-reveal-bg" id="performStage"></div>
   <p class="hint perf-hint">身振りは使わず、<b>声と表情だけ</b>で。1人ずつ「<b id="performWord"></b>」と言ってください。</p>
   <div id="performList"></div>
   <!-- 気持ちの候補。カード版でも全員がカードの候補を見ながら当てる。配信では視聴者がここを見て当てる -->
   <div class="cands" id="performCands"></div>
+  </div>
   <!-- 配信モード：回答コードで届いた人（名前と受付の印だけ。答えは答え合わせまで出さない） -->
   <div class="rc-strip" id="rcStrip" hidden aria-live="polite"></div>
   <button class="btn-primary" id="toVote">全員演じ終わった → 投票へ</button>
@@ -1600,6 +1660,8 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
       <img class="win-pic" src="/img/result-win.webp?v=2" width="700" height="470" alt="" loading="lazy" decoding="async">
     </div>
     <div class="res-side">
+      <!-- 2026-11-11 いちばん上手だった人を1タップで選ぶ（回数はこの端末だけ・haa-meien）。演じた人が2人以上の回だけ -->
+      <div class="meien" id="meienBox" hidden></div>
       <div class="score" id="scoreBox"></div>
       <!-- 振り返り（端末内の記録）。ふだんは小さい文字ボタン1つ。配信モードは「今日のまとめ」を大きく出せる -->
       <div class="log-links" id="logLinks"><button type="button" class="np-link" id="logOpen">これまでの記録（振り返り）</button><button type="button" class="np-link" id="sumOpen">今日のまとめを出す</button></div>
@@ -2862,13 +2924,30 @@ function renderPerform(){
   if (S.vf){ document.body.classList.remove('perform-eq'); vfDock(); }
   const w = $('performList'); w.innerHTML='';
   if (S.k === 1) return;
+  // 2026-11-11 いまの番を1人ずつ大きく出し、「次の人」で進める（最後の人のあとは下の「投票へ」）。一覧はそのまま下に残す
+  S.turn = 0;
+  const tb = document.createElement('div'); tb.className = 'turn-box'; tb.id = 'turnBox'; tb.setAttribute('aria-live','polite');
+  w.appendChild(tb);
   S.order.forEach((j,n)=>{
     const p = S.act[j];
     const row = document.createElement('div');
-    row.className='res-row';
+    row.className='res-row turn-row';
     row.innerHTML = '<span class="nm">'+(n+1)+'番目</span><span class="act">'+esc(pLabel(p))+'</span>';
     w.appendChild(row);
   });
+  renderTurn();
+}
+function renderTurn(){
+  const tb = $('turnBox'); if (!tb || !S.order) return;
+  const n = Math.min(S.turn||0, S.k-1), last = n >= S.k-1;
+  const nm = j=>esc(pName(S.act[S.order[j]]));
+  tb.innerHTML = '<p class="turn-now">いまの番：<b>'+nm(n)+'</b> さん<small>'+(n+1)+'/'+S.k+'</small></p>'
+    + (last ? '<p class="turn-last">最後の人です。演じ終わったら下のボタンへ</p>'
+            : '<button type="button" class="btn-sub turn-next" id="turnNext">次の人（'+nm(n+1)+' さん）</button>')
+    + (n > 0 ? '<button type="button" class="turn-back" id="turnBack">↶ 前の人に戻す</button>' : '');
+  $('performList').querySelectorAll('.turn-row').forEach((r,k)=>{ r.classList.toggle('cur', k === n); r.classList.toggle('done', k < n); });
+  const nx = $('turnNext'); if (nx) nx.addEventListener('click', ()=>{ S.turn = n+1; renderTurn(); });
+  const bk = $('turnBack'); if (bk) bk.addEventListener('click', ()=>{ S.turn = n-1; renderTurn(); });
 }
 $('toVote').addEventListener('click', ()=>{ S.voter=0; S.target=-1; nextVote(); show('vote'); });
 // 投票は人数×(人数−1)回スマホを回す（6人で30回）。そこで止まる人が多いので、口で当て合って答えだけ見る道を用意する
@@ -3012,9 +3091,11 @@ function finish(mode){
       }
       if (chips.length) who = '<div class="ans-votes">'+chips.join('')+'</div>';
     }
+    // 2026-11-11 投票なし（口で当てた）回は、カードごとに「当たった」を押して数える（この回だけ・送信なし）
+    const hitBtn = mode === 'quick' && !document.body.classList.contains('stream') ? '<button type="button" class="hit-btn" aria-pressed="false">当たった</button>' : '';
     card.innerHTML = '<div class="ans-top"><span class="ans-dot"></span><span class="ans-name">'+esc(pName(p))+'</span><span class="ans-word">「'+esc(S.theme.word)+'」</span></div>'
       + '<div class="ans-main"><span class="ans-kick">正解</span><span class="ans-no">'+numOf(ai)+'</span><span class="ans-act">'+esc(S.theme.acts[ai])+'</span></div>'
-      + who;
+      + who + hitBtn;
     body.appendChild(card);
   }
   // 得点：当てた人に1点、当ててもらえた人にも1点（カード版と同じ考え方）
@@ -3030,8 +3111,10 @@ function finish(mode){
   const box = $('scoreBox');
   const max = Math.max.apply(null, sc);
   if (!RESUMING) logRound(mode, sc);
+  renderMeien();
   if (mode === 'quick'){
-    box.innerHTML = '<p class="quick-note">' + (document.body.classList.contains('stream') ? 'コメントの番号と比べてみてください。' : '投票なしで答え合わせしました。口で当てた答えと比べてみてください。') + '</p>';
+    box.innerHTML = '<p class="quick-note">' + (document.body.classList.contains('stream') ? 'コメントの番号と比べてみてください。' : '口で当てた人がいたら、そのカードの「当たった」を押してください。') + '</p>'
+      + (document.body.classList.contains('stream') ? '' : '<p class="hit-sum" id="hitSum" aria-live="polite">みんなで <b>0</b>/'+S.k+' 当てた</p>');
     if (!RESUMING) track('haa_finish',{word:S.theme.word,players:S.players,hits:0,mode:mode});
     show('result');
     return;
@@ -3103,6 +3186,43 @@ function finish(mode){
 
 const MVP_AMZ = 'https://www.amazon.co.jp/s?k=%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22';
 const MVP_RAK = 'https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F';
+// 2026-11-11 口で当てた数（投票なしの回）。カードの「当たった」を押した数を数えるだけ（この回だけ・保存も送信もしない）
+document.addEventListener('click', e=>{
+  const b = e.target.closest && e.target.closest('.hit-btn'); if (!b) return;
+  const on = b.getAttribute('aria-pressed') !== 'true';
+  b.setAttribute('aria-pressed', on ? 'true' : 'false'); b.textContent = on ? '○ 当たった' : '当たった';
+  b.closest('.ans-card').classList.toggle('hit', on);
+  const n = $('resultBody').querySelectorAll('.hit-btn[aria-pressed="true"]').length, hs = $('hitSum');
+  if (hs) hs.innerHTML = 'みんなで <b>'+n+'</b>/'+S.k+' 当てた';
+});
+// 2026-11-11 いちばん上手だった人（名演技）を1タップで選ぶ。回数は名前ごとにこの端末だけに保存（haa-meien）。演じた人が2人以上の回だけ
+const MEIEN_KEY = 'haa-meien';
+function meienLoad(){ try { const o = JSON.parse(localStorage.getItem(MEIEN_KEY) || '{}'); return o && typeof o === 'object' ? o : {}; } catch(e){ return {}; } }
+function meienSave(o){ try { localStorage.setItem(MEIEN_KEY, JSON.stringify(o)); } catch(e){} }
+function renderMeien(keepPick){
+  const box = $('meienBox'); if (!box) return;
+  if (!keepPick) S.meienPick = null;
+  if (!S.act || S.k < 2){ box.hidden = true; box.innerHTML = ''; return; }
+  const names = S.act.slice(0, S.k).map(p=>pName(p));
+  const cnt = meienLoad();
+  const tally = Object.keys(cnt).filter(k=>cnt[k] > 0).sort((a,b)=>cnt[b]-cnt[a]);
+  box.hidden = false;
+  box.innerHTML = '<p class="meien-h">いちばん上手だった人は？<small>1人を選ぶ</small></p>'
+    + '<div class="meien-row" role="group" aria-label="いちばん上手だった人">' + names.map(n=>'<button type="button" class="meien-btn'+(S.meienPick === n ? ' on' : '')+'" aria-pressed="'+(S.meienPick === n)+'" data-n="'+esc(n)+'">'+esc(n)+'</button>').join('') + '</div>'
+    + (tally.length ? '<p class="meien-t">名演技に選ばれた回数：'+tally.map(k=>esc(k)+' <b>'+cnt[k]+'</b>回').join('・')+'</p><button type="button" class="meien-clear" id="meienClear">記録を消す</button>' : '');
+  box.querySelectorAll('.meien-btn').forEach(b=>b.addEventListener('click', ()=>{
+    const n = b.dataset.n, o = meienLoad();
+    if (S.meienPick) o[S.meienPick] = Math.max(0, (o[S.meienPick]||0) - 1);
+    if (S.meienPick === n){ S.meienPick = null; } else { o[n] = (o[n]||0) + 1; S.meienPick = n; track('haa_meien',{}); }
+    meienSave(o); renderMeien(true);
+  }));
+  const cl = $('meienClear');
+  if (cl) cl.addEventListener('click', ()=>{
+    if (!cl.dataset.ask){ cl.dataset.ask = '1'; cl.textContent = '本当に消す？（もう一度押す）'; setTimeout(()=>{ if (cl.isConnected){ delete cl.dataset.ask; cl.textContent = '記録を消す'; } }, 4000); return; }
+    try { localStorage.removeItem(MEIEN_KEY); } catch(e){}
+    S.meienPick = null; renderMeien(true);
+  });
+}
 document.addEventListener('click', e=>{ const a = e.target.closest && e.target.closest('.mvp-shop a'); if (a && typeof gtag === 'function') gtag('event', 'haa_mvp_shop', { shop: a.dataset.shop }); });
 // 点の内訳を1行で：当てた＋2・伝わった＋1（合計点と同じ数え方。何回中かは「今日のまとめ」で）
 function lisLine(){ return '当てた＋'+S.lTot; }
