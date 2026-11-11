@@ -1321,7 +1321,7 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
 
 <header>
   <div class="hero">
-    <img class="hero-pic" src="/img/hero-duo.webp?v=2" width="900" height="604" alt="" decoding="async">
+    <img class="hero-pic" src="/img/shiba-hero.webp" width="420" height="445" alt="Shiba ninja" loading="lazy" decoding="async">
     <div class="hero-t">
       <h1>Emotion Charades<span class="h1-sub">Say one line with a secret feeling</span></h1>
       <p>Everyone says the same line with a different feeling.<br>One phone runs the roles, votes and score. No app, no sign-up.</p>
@@ -1562,7 +1562,7 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
     <div class="res-main">
       <div id="resultBody"></div>
       <p class="cta-comment" id="ctaComment"></p>
-      <img class="win-pic" src="/img/result-win.webp?v=2" width="700" height="470" alt="" loading="lazy" decoding="async">
+      <img class="win-pic" src="/img/shiba-win.webp" width="260" height="313" alt="Shiba ninja" loading="lazy" decoding="async">
     </div>
     <div class="res-side">
       <div class="score" id="scoreBox"></div>
@@ -1603,7 +1603,7 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
   <summary><h2>How to play (30 seconds)</h2></summary>
   <div>
     <!-- 挿し絵（2026-09-25・Codex制作・シリーズ共通の2人）。ルールどおり手は使わず、表情と声だけで演じている -->
-    <img class="howto-pic" src="/img/howto-duo.webp" width="400" height="328" alt="A boy saying one line with a big expression, and a girl tilting her head as she listens" loading="lazy" decoding="async">
+    <img class="howto-pic" src="/img/shiba-howto.webp" width="400" height="427" alt="Shiba ninja" loading="lazy" decoding="async">
     <p>1. Pick the number of players and a line. The lines are short — "Huh?", "Oh.", "Sure."</p>
     <p>2. Pass the phone around. Each player privately checks the <b>feeling</b> they were given. Everyone gets a different one.</p>
     <p>3. Take turns saying that one line. <b>No gestures</b> — voice and face only.</p>
@@ -2535,7 +2535,7 @@ function numOf(ai){ const i = S.pool.slice().sort((a,b)=>a-b).indexOf(ai); retur
 function renderPerform(){
   const st = $('performStage');
   st.classList.remove('drop'); void st.offsetWidth; st.classList.add('drop'); sfx('drop');
-  st.innerHTML = '<img class="st-pic" src="/img/stage-mic.webp?v=2" width="600" height="600" alt="" decoding="async">'
+  st.innerHTML = '<img class="st-pic" src="/img/shiba-stage.webp" width="455" height="600" alt="Shiba ninja" decoding="async">'
     + '<div class="st-who">'+(S.k===1 ? esc(pLabel(S.act[0]))+', your turn' : S.k+' players take turns')+'</div>'
     + '<div class="st-word">\u201c'+esc(S.theme.word)+'\u201d</div>'
     + '<div class="st-sub">Voice and face only. Let them guess the feeling</div>'
