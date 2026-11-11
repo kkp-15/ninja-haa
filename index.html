@@ -505,7 +505,7 @@ body.veiling .cta-comment{display:none}
 .cdown.last{font-size:6rem;color:var(--navy,#16213a)}
 .cdown.last small{display:block;font-size:1.3rem;font-weight:900;color:var(--orange-d);margin-bottom:.2rem}
 body.stream .cdown.last{font-size:7rem}
-.win-pic{display:block;width:min(240px,60%);height:auto;margin:.4rem auto 0}
+.win-pic{display:block;width:min(130px,40%);height:auto;margin:.4rem auto 0}
 body.veiling .win-pic{display:none}
 body.stream .win-pic{width:300px}
 /* ===== 押した手応えと画面の切り替わり（楽しくハデに。動きを減らす設定の人には出さない） ===== */
@@ -1657,7 +1657,7 @@ body.stream .meien-t{font-size:1.15rem}
     <div class="res-main">
       <div id="resultBody"></div>
       <p class="cta-comment" id="ctaComment"></p>
-      <img class="win-pic" src="/img/result-win.webp?v=2" width="700" height="470" alt="" loading="lazy" decoding="async">
+      <img class="win-pic" src="/img/shiba-win.webp" width="260" height="313" alt="柴犬の忍者" loading="lazy" decoding="async">
     </div>
     <div class="res-side">
       <!-- 2026-11-11 いちばん上手だった人を1タップで選ぶ（回数はこの端末だけ・haa-meien）。演じた人が2人以上の回だけ -->
@@ -2896,7 +2896,7 @@ function countUpScores(){
 function renderPerform(){
   const st = $('performStage');
   st.classList.remove('drop'); void st.offsetWidth; st.classList.add('drop'); sfx('drop');
-  st.innerHTML = '<img class="st-pic" src="/img/stage-mic.webp?v=2" width="600" height="600" alt="" decoding="async">'
+  st.innerHTML = '<img class="st-pic" src="/img/shiba-stage.webp" width="455" height="600" alt="柴犬の忍者" decoding="async">'
     + '<div class="st-who">'+(S.k===1 ? esc(pLabel(S.act[0]))+' さんの番' : S.k+'人が順番に演じます')+'</div>'
     + '<div class="st-word">「'+esc(S.theme.word)+'」</div>'
     + '<div class="st-sub">声と表情だけで。どの気持ちかを当ててもらう</div>'
