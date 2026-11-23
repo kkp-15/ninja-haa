@@ -2929,7 +2929,7 @@ function finish(mode){
     const names = got.filter(x=>x.c === gmax).map(x=>esc(pName(x.p))).join(' & ');
     mvp = '<div class="mvp"><span class="mvp-k">Best actor</span><span class="mvp-n">'+names+'</span><small class="mvp-w">read by '+gmax+(gmax === 1 ? ' player' : ' players')+'</small></div>';
     // 2026-11-05 名演技賞の直下に本家のカードへの1行（下の「If you want more」と同じリンク）。配信モードでは出さない
-    if (!document.body.classList.contains('stream')) mvp += '<p class="mvp-shop"><span>本家『はぁって言うゲーム』のカードで続きを</span><a href="'+MVP_AMZ+'" target="_blank" rel="nofollow sponsored noopener" data-shop="amazon">Amazon（PR）</a><a href="'+MVP_RAK+'" target="_blank" rel="nofollow sponsored noopener" data-shop="rakuten">楽天（PR）</a></p>';
+    if (!document.body.classList.contains('stream')) mvp += '<p class="mvp-shop"><span>本家『はぁって言うゲーム』のカードで続きを</span><a href="'+MVP_AMZ+'" target="_blank" rel="nofollow sponsored noopener" data-shop="amazon">Amazonで評価を見る（PR）</a><a href="'+MVP_RAK+'" target="_blank" rel="nofollow sponsored noopener" data-shop="rakuten">楽天（PR）</a></p>';
   }
   let h = mvp + '<h3>'+(S.rounds > 1 ? 'Total score<span class="sr-rd">after '+S.rounds+' rounds</span>' : 'Score')+'</h3>', rank = 0, prev = null;
   const ppl = logPeople(logLoad().r.filter(r=>r.sid === S.sid));

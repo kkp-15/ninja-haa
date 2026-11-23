@@ -1722,8 +1722,8 @@ body.stream .meien-t{font-size:1.15rem}
     <p>このゲームの原型になっている市販のカードゲームです。お題がさらに多く、カードを配るだけで遊べます。</p>
     <!-- 2026-10-28 年末年始（12/1〜1/5）だけ出す1行。期間外・配信モードでは中身を作らない（下の kkpSeasonLine） -->
     <p class="season-line" id="seasonLine" hidden></p>
-    <a class="buy" href="https://www.amazon.co.jp/s?k=%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazonで探す</a>
-    <a class="buy alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F" target="_blank" rel="nofollow sponsored noopener">楽天で探す</a>
+    <a class="buy" href="https://www.amazon.co.jp/s?k=%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazonで評価を見る</a>
+    <a class="buy alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F" target="_blank" rel="nofollow sponsored noopener">楽天で値段をくらべる</a>
   </div>
 </div>
 
@@ -3166,7 +3166,7 @@ function finish(mode){
     const names = got.filter(x=>x.c === gmax).map(x=>esc(pName(x.p))+' さん').join('・');
     mvp = '<div class="mvp"><span class="mvp-k">名演技賞</span><span class="mvp-n">'+names+'</span><small class="mvp-w">'+gmax+'人に伝わりました</small></div>';
     // 2026-11-05 名演技賞の直下に本家のカードへの1行（下の「もっと遊びたくなったら」と同じリンク）。配信モードでは出さない
-    if (!document.body.classList.contains('stream')) mvp += '<p class="mvp-shop"><span>本家『はぁって言うゲーム』のカードで続きを</span><a href="'+MVP_AMZ+'" target="_blank" rel="nofollow sponsored noopener" data-shop="amazon">Amazon（PR）</a><a href="'+MVP_RAK+'" target="_blank" rel="nofollow sponsored noopener" data-shop="rakuten">楽天（PR）</a></p>';
+    if (!document.body.classList.contains('stream')) mvp += '<p class="mvp-shop"><span>本家『はぁって言うゲーム』のカードで続きを</span><a href="'+MVP_AMZ+'" target="_blank" rel="nofollow sponsored noopener" data-shop="amazon">Amazonで評価を見る（PR）</a><a href="'+MVP_RAK+'" target="_blank" rel="nofollow sponsored noopener" data-shop="rakuten">楽天（PR）</a></p>';
   }
   let h = mvp + '<h3>'+(S.rounds > 1 ? '合計得点<span class="sr-rd">'+S.rounds+'回目まで</span>' : '得点')+'</h3>', rank = 0, prev = null;
   const ppl = logPeople(logLoad().r.filter(r=>r.sid === S.sid));
