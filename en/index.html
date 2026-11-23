@@ -5,8 +5,8 @@
 <meta name="msvalidate.01" content="EF6E7C7B123A3218DAE3B152F5B0764D" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Emotion Charades Online — Say One Line With a Secret Feeling (Free, One Phone)</title>
-<meta name="description" content="Emotion charades for teens, adults and ESL classes. Everyone says the same line, each with a secret emotion — pass one phone around, act it out, then guess the emotion. Roles, voting and scoring are handled for you. 47 prompts, 376 ways to say them. Free, no sign-up, no app.">
+<title>Emotion Charades Online — Like The Game of Saying &quot;Huh&quot; (Free, One Phone)</title>
+<meta name="description" content="Emotion charades for teens, adults and ESL classes — plays like The Game of Saying &quot;Huh&quot;. Everyone says the same line, each with a secret emotion — pass one phone around, act it out, then guess the emotion. Roles, voting and scoring are handled for you. 47 prompts, 376 ways to say them. Free, no sign-up, no app.">
 <link rel="canonical" href="https://haa.kkpwebninja.com/en/">
 <link rel="alternate" hreflang="ja" href="https://haa.kkpwebninja.com/">
 <link rel="alternate" hreflang="en" href="https://haa.kkpwebninja.com/en/">
@@ -14,7 +14,7 @@
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#e8843a">
 
-<meta property="og:title" content="Emotion Charades Online — one phone, one line, a secret feeling">
+<meta property="og:title" content="Emotion Charades Online — like The Game of Saying &quot;Huh&quot;, on one phone">
 <meta property="og:description" content="Say the same word eight different ways and see who can tell them apart. Roles, voting and scoring on a single phone.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://haa.kkpwebninja.com/en/">
@@ -211,6 +211,21 @@ body.stream .act-lbl,body.stream #actDec,body.stream #actInc,body.stream #actorC
 body[data-players="1"] .act-lbl:not(.cand-n .act-lbl),body[data-players="1"] #actHint,body[data-players="1"] .act-lbl:not(.cand-n .act-lbl)+.num{display:none}
 body.stream #postOnly{display:none!important}
 .sfx-sw{display:none!important}
+/* 2026-11-24 答えが出た瞬間、下の帯に「当たり◯票・はずれ◯票」をひと目で（ユーザー承認B・人気アプリの型）。色だけに頼らず ○× と文字で */
+#dockRes{display:none}
+#dock[data-step=result] #dockRes:not([hidden]){display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;min-height:40px;padding:4px 8px;border:2px solid var(--k-sumi,#1f1a17);border-radius:8px;background:#fffdf8;font-weight:800;font-size:16px;line-height:1.3;animation:k-rv .32s ease-out both}
+#dockRes .dr-ok{color:#2f6b3f}#dockRes .dr-ng{color:#c93b23}
+#dockRes.all{background:#8cbf3f;color:#1f1a17;border-color:#1f1a17}#dockRes.all .dr-ok{color:#1f1a17}
+body.stream #dockRes{display:none!important}
+/* 2026-11-24 ホーム画面に追加の帯は下の固定バー（#dock）にかぶせない */
+#haaInstall{bottom:calc(var(--dock-h,76px) + 10px)!important}
+/* 2026-11-24 スマホは開いてすぐ「人数を選ぶ」（ユーザー承認①A）。上の説明は題名と1文だけにし、
+   非公式の一言は市販版の欄の下へ（.fan-sp）、「パソコンで開いて」は始めるボタンの下へ移す */
+.fan-sp{display:none}
+@media(max-width:559px){
+  header .hero-fan{display:none}
+  .fan-sp{display:block;margin:.4rem 0 0;font-size:.8125rem;color:#6b5d4f;line-height:1.6}
+}
 /* 2026-10-21 遊び方（3つから1つ）。オンライン・配信はPC幅768以上だけ。スマホは1行の案内だけ */
 .play-mode{display:none}
 .pm-sp{margin:.6rem 0 .2rem}
@@ -501,7 +516,7 @@ body.veiling .cta-comment{display:none}
 .cdown.last{font-size:6rem;color:var(--navy,#16213a)}
 .cdown.last small{display:block;font-size:1.3rem;font-weight:900;color:var(--orange-d);margin-bottom:.2rem}
 body.stream .cdown.last{font-size:7rem}
-.win-pic{display:block;width:min(240px,60%);height:auto;margin:.4rem auto 0}
+.win-pic{display:block;width:min(130px,40%);height:auto;margin:.4rem auto 0}
 body.veiling .win-pic{display:none}
 body.stream .win-pic{width:300px}
 /* ===== 押した手応えと画面の切り替わり（楽しくハデに。動きを減らす設定の人には出さない） ===== */
@@ -521,6 +536,26 @@ button:active{transform:scale(.95)}
 @keyframes wordBounce{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.12);opacity:1}100%{transform:scale(1)}}
 .vote-item.picked{background:var(--orange)!important;color:#1f1a17!important;border-color:var(--orange)!important;transform:scale(1.03)}
 .vote-item.picked .no{color:#fff}
+/* 押した瞬間に色を変え「票が入った」と出す（2026-11-04）。出た直後で押しても数えない間は薄く */
+.vote-item.press{background:#fff3e2;border-color:var(--orange)}
+/* 色は待たずに変える（背景の0.2秒のにじみをやめる） */
+.vote-item.press,.vote-item.picked{transition:transform .12s}
+.vote-item .vk{float:right;font-size:.875rem;font-weight:800;color:#1f1a17}
+.vote-list{transition:opacity .12s}
+.vote-list.wait{opacity:.55}
+.vote-prog.ok b{color:var(--orange-d)}
+/* 名演技賞：いちばん多く当ててもらえた人（同数なら全員）（2026-11-04） */
+.mvp{display:flex;flex-wrap:wrap;align-items:baseline;gap:.2rem .7rem;padding:.1rem 0 .6rem;margin:0 0 .55rem;border-bottom:2px solid var(--orange)}
+.mvp-k{background:var(--orange);color:#1f1a17;font-weight:900;font-size:.875rem;padding:.1rem .5rem;border-radius:4px}
+.mvp-n{font-size:1.7rem;font-weight:900;color:var(--orange-d);line-height:1.25;overflow-wrap:anywhere}
+.mvp-w{color:var(--muted);font-size:.875rem}
+.mvp-shop{display:flex;flex-wrap:wrap;align-items:center;gap:0 .8rem;margin:-.3rem 0 .7rem;font-size:.875rem;line-height:1.6;color:var(--muted)}
+.mvp-shop a{display:inline-flex;align-items:center;min-height:44px;color:var(--orange-d);text-decoration:underline}
+body.stream .mvp-shop{display:none!important}
+html body.stream .mvp{padding:0 0 calc(.4*var(--u));margin:0 0 calc(.5*var(--u));border-bottom:calc(.3*var(--u)) solid var(--sumi);gap:calc(.3*var(--u)) calc(1.2*var(--u))}
+html body.stream .mvp-k{background:var(--shu);color:#fff;font-size:max(14px,calc(2*var(--u)))}
+html body.stream .mvp-n{font-size:max(16px,calc(3.6*var(--u)));color:var(--sumi)}
+html body.stream .mvp-w{font-size:max(14px,calc(1.9*var(--u)))}
 .vote-who.swap{animation:labelPop .45s cubic-bezier(.2,.9,.3,1.6) both}
 .pick-item[aria-pressed="true"]{animation:pickPop .35s cubic-bezier(.2,.9,.3,1.6)}
 @keyframes pickPop{0%{transform:scale(.96)}60%{transform:scale(1.03)}100%{transform:none}}
@@ -688,6 +723,10 @@ body[data-players="1"] #toVote{display:none!important}
 #dockMsg{display:none;text-align:center;font-size:.92rem;font-weight:700;line-height:1.3;padding:8px 0}
 #dock[data-step=deal] #dockMsg:not([hidden]){display:block}
 body:not(.at-result) #postOnly{display:none}
+/* 年末年始の1行（12/1〜1/5だけ・2026-10-28） */
+.season-line{margin:.4rem 0 .6rem;font-size:.875rem;line-height:1.8;color:var(--muted)}
+.season-line a{color:var(--orange-d);text-decoration:underline;display:inline-block;min-height:28px}
+body.stream .season-line{display:none!important}
 #postOnly .ad-slot{margin-top:24px}
 .deal-card::before,.deal-card.done::after{white-space:nowrap}
 @media(max-width:340px){#postOnly .ad-slot{margin-left:-14px;margin-right:-14px}}
@@ -716,6 +755,13 @@ body.stream .ann-btn{font-size:1.1rem}body.stream .ann-h{font-size:.95rem}body.s
 .reveal .act.masked{color:transparent;text-shadow:none;user-select:none;-webkit-user-select:none;background:repeating-linear-gradient(45deg,#fff 0 10px,#fff3e2 10px 20px)}
 .reveal .act.masked::after{content:"タップで表示";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--orange-d);font-size:1.15rem;font-weight:900}
 .reveal .tapnote{margin-top:.5rem;font-size:.875rem;opacity:.85}
+/* 2026-11-07 言い方のコツ（気持ちの中身には触れない一般のコツ。演じる前の「どう言えば？」を減らす） */
+.reveal .act-tip{margin:.7rem 0 0;font-size:.875rem;line-height:1.6;max-width:22rem;opacity:.92}
+.reveal .act-tip b{color:#ffd8a8}
+body.stream .reveal .act-tip{font-size:1.15rem;max-width:40rem}
+/* 得点の数え上げ（答えが出た瞬間に0から伸びる） */
+.sr-bar i{transition:width .7s ease-out}
+@media (prefers-reduced-motion:reduce){.sr-bar i{transition:none}}
 .reveal .tapnote[hidden]{display:none}
 /* QRで渡す（2026-10-16）: 配信モードの小窓はまずQRだけ。ふだんのモードはその場で小窓（モーダル）。/view/ と配信画面には出さない */
 .reveal.has-qr{justify-content:flex-start;overflow-y:auto}
@@ -1188,6 +1234,8 @@ html body.stream.playing button.btn-sub:not(#dock>button),html body.stream.playi
 html body.stream.playing .score .sr-rk,html body.stream.playing .score .sr-hit,html body.stream.playing .sr-add,html body.stream.playing .sr-titles,html body.stream.playing .sr-ttl b{font-size:max(14px,calc(1.9*var(--u)))!important}
 html body.stream.playing .deal-card .who,html body.stream.playing .deal-link,html body.stream.playing .ds-p .ds-mk,html body.stream.playing .join-menu.done>summary,html body.stream.playing .ann.ann-out.done .ann-btn{font-size:max(14px,calc(1.8*var(--u)))!important}
 html body.stream .score .sr.top .sr-rk{color:#fff}
+/* 2026-11-24 主ボタンの文字は19px以上（白×オレンジでも大きな太字の見やすさの基準を満たす・ユーザー承認A） */
+body:not(.stream) .btn-primary{font-size:19px!important}
 </style>
 <link rel="stylesheet" href="/d4.css?v=20261030b">
 <!-- kkp-rel-d4:start -->
@@ -1310,9 +1358,63 @@ html body.stream.cmp2 #step-vote .stage.sm .vote-who{display:none}
 html body.stream.playing.cmp3 main .card>h2{display:none}
 html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
 </style>
+<style id="haa-2026-11-11">
+/* 2026-11-11 本文の字を15px以上に（補足の .hint も読みやすく）。配信モードは別の大きさがあるので触らない */
+body:not(.stream) header .hero-t p, body:not(.stream) header .hero-t p.hero-fan{font-size:15px}
+body:not(.stream) .hint, body:not(.stream) .cat-desc, body:not(.stream) .quick-note{font-size:15px}
+.note{font-size:15px}
+@media (min-width:1024px){ .note{font-size:16px} }
+/* いまの番（STEP 4・演じる人が2人以上の回） */
+.turn-box{margin:.4rem 0 .5rem;padding:.6rem .8rem;border:2px solid var(--orange);border-radius:6px;background:#fff;text-align:left}
+.turn-now{margin:0;font-size:1.05rem;font-weight:800;color:var(--ink);line-height:1.5}
+.turn-now b{font-size:1.7rem;color:var(--orange-d);overflow-wrap:anywhere}
+.turn-now small{margin-left:.6rem;font-size:15px;color:var(--muted);font-weight:700}
+.turn-last{margin:.2rem 0 0;font-size:15px;color:var(--muted)}
+#performList .turn-next{display:block;width:100%;max-width:none;min-height:48px;margin:.45rem 0 0;font-size:1rem}
+.turn-back{display:inline-flex;align-items:center;min-height:44px;margin-top:.2rem;padding:0 4px;background:none;border:0;color:var(--muted);font:inherit;font-size:15px;text-decoration:underline;cursor:pointer}
+.turn-row.cur{background:#fff3e2;box-shadow:inset 4px 0 0 var(--orange)}
+.turn-row.cur .act{color:var(--orange-d)}
+.turn-row.done .act,.turn-row.done .nm{color:var(--muted);font-weight:500}
+/* 口で当てた数（投票なしの回） */
+.hit-btn{display:block;width:100%;min-height:44px;margin:.55rem 0 0;border:2px solid #fff;border-radius:6px;background:rgba(255,255,255,.12);color:#fff;font:inherit;font-weight:800;font-size:1rem;cursor:pointer}
+.hit-btn[aria-pressed="true"]{background:#fff;color:var(--ink)}
+.hit-sum{margin:.4rem 0 0;font-size:1.05rem;font-weight:800;color:var(--ink)}
+.hit-sum b{font-size:1.6rem;color:var(--orange-d)}
+/* いちばん上手だった人（名演技） */
+.meien{margin:0 0 .8rem;padding:.2rem 0 .7rem;border-bottom:1px solid var(--line);text-align:left}
+.meien-h{margin:0 0 .35rem;font-weight:800;font-size:1rem;color:var(--ink)}
+.meien-h small{margin-left:.5rem;font-size:14px;color:var(--muted);font-weight:500}
+.meien-row{display:flex;flex-wrap:wrap;gap:.4rem}
+.meien-btn{min-height:44px;min-width:44px;padding:0 .9rem;border:2px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);font:inherit;font-weight:700;font-size:1rem;cursor:pointer}
+.meien-btn.on{border-color:var(--orange);background:var(--orange);color:#1f1a17}
+.meien-t{margin:.5rem 0 0;font-size:15px;line-height:1.6;color:var(--ink)}
+.meien-t b{color:var(--orange-d)}
+.meien-clear{display:inline-flex;align-items:center;min-height:44px;padding:0 4px;background:none;border:0;color:var(--muted);font:inherit;font-size:14px;text-decoration:underline;cursor:pointer}
+body.veiling #meienBox{display:none}
+body.stream .meien-h{font-size:1.35rem}
+body.stream .meien-btn{font-size:1.25rem;min-height:56px;padding:0 1.2rem}
+body.stream .meien-t{font-size:1.15rem}
+/* PCの2列（1024px以上・配信モード以外）：左に操作、右にお題や結果 */
+@media (min-width:1024px){
+  body:not(.stream):not(.gmode) .wrap{max-width:1040px}
+  body:not(.stream):not(.gmode) .setup-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:32px;align-items:start}
+  body:not(.stream):not(.gmode) .setup-two>.pc-r>h2:first-child{margin-top:0!important}
+  body:not(.stream):not(.gmode) .perf-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);grid-template-rows:auto auto 1fr;column-gap:28px;align-items:start}
+  body:not(.stream):not(.gmode) .perf-two>#performList{grid-column:1;grid-row:1 / 4}
+  body:not(.stream):not(.gmode) .perf-two>#performStage{grid-column:2;grid-row:1}
+  body:not(.stream):not(.gmode) .perf-two>.perf-hint{grid-column:2;grid-row:2}
+  body:not(.stream):not(.gmode) .perf-two>#performCands{grid-column:2;grid-row:3}
+  body:not(.stream):not(.gmode) .perf-two>#performList:empty{display:none}
+  body:not(.stream):not(.gmode) .perf-two:has(>#performList:empty){grid-template-columns:minmax(0,1fr)}
+  body:not(.stream):not(.gmode) .perf-two:has(>#performList:empty)>#performStage,body:not(.stream):not(.gmode) .perf-two:has(>#performList:empty)>.perf-hint,body:not(.stream):not(.gmode) .perf-two:has(>#performList:empty)>#performCands{grid-column:1}
+  body:not(.stream):not(.gmode) .res-pair{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);column-gap:28px;align-items:start}
+  body:not(.stream):not(.gmode) #step-deal .deal-grid{max-width:760px;margin-left:auto;margin-right:auto}
+  body:not(.stream):not(.gmode) #step-vote>*{max-width:640px;margin-left:auto;margin-right:auto}
+}
+</style>
 <style id="en-hide">
 /* 英語版では出さない：配信モード・離れて遊ぶリンク・市販版（日本の商品）・振り返りの記録・はじめての方へ・配信から来た人への一言 */
-#streamSw,#castSw,#playMode,.pm-sp,.cand-n,.sfx-sw,#viewOpen,#streamNote,#firstGuide,#fromStream,.shop-mini,
+#streamSw,#castSw,#playMode,.pm-sp,.mvp-shop,.cand-n,.sfx-sw,#viewOpen,#streamNote,#firstGuide,#fromStream,.shop-mini,
 .deal-link,.deal-qr,#joinBox,#sentHint,.deal-remote,#annBox,#logLinks,#recStrip,.deal-scroll{display:none!important}
 </style>
 </head>
@@ -1428,7 +1530,6 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
     <label class="pm-o"><input type="radio" name="haaMode" value="online"><span class="pm-t">オンラインで<small>（PCで進める・配信はしない）</small></span><span class="pm-d">お題はリンクで各自のスマホへ</span></label>
     <label class="pm-o"><input type="radio" name="haaMode" value="cast"><span class="pm-t">配信する<small>（PCで進めて OBS に映す）</small></span><span class="pm-d">答えは配信に映らない・リスナーも当てられる</span></label>
   </div>
-  <p class="hint pm-sp">オンライン・配信はパソコンで開いてください</p>
   <!-- 2026-10-21 OBS は表示ページ（/view/）を取り込むのが基本（操作画面だと参加リンクや未回答の人の名前まで映る）。開くボタンは折りたたまずに出す -->
   <div class="view-open" id="viewOpen">
     <p class="vo-h">OBS には<b>表示ページ</b>を「ウィンドウキャプチャ」で取り込みます（お題・候補・答え・得点だけが映ります）</p>
@@ -1437,6 +1538,8 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
     <div class="k-view-open" id="viewOpenKit" data-k-view="/view/" data-k-ch="haa-view" data-k-name="haaView"></div>
     <details class="vo-more"><summary>くわしく</summary><p class="hint">操作するのと同じパソコン・同じブラウザで開いてください（OBS の「ブラウザ」ソースではつながりません）。縦型（9:16）は URL の末尾に <code>?layout=v</code></p></details>
   </div>
+  <!-- 2026-11-11 PC（1024px以上・配信モード以外）は左に人数、右にお題の2列。スマホでは並びそのまま -->
+  <div class="pc-two setup-two"><div class="pc-l">
   <h2><span class="step-label">STEP 1</span>Players</h2>
   <div class="num">
     <button class="btn-ghost" id="dec" aria-label="one fewer player">−</button>
@@ -1473,7 +1576,7 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
   </details>
   <!-- 1回に演じる人が1人のとき（配信モードはいつも）：最初に演じる人を選ぶ（参加人数が1人のときは出さない） -->
   <div class="actor-pick" id="apFirst"><p class="ap-h">Who acts first</p><div class="ap-row" role="group" aria-label="Who acts first"></div></div>
-
+  </div><div class="pc-r">
   <h2 style="margin-top:1rem"><span class="step-label">STEP 2</span>Pick a line</h2>
   <div class="cat-scroll">
     <div class="cat-grid" id="catGrid" role="tablist" aria-label="prompt categories"></div>
@@ -1483,7 +1586,9 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
   <!-- 3つだけ出している。別の3つが出ることを文字で示す（↺の記号だけでは伝わらない） -->
   <button type="button" class="redraw" id="redraw">Show three others ↺</button>
 
+  </div></div>
   <button class="btn-primary" id="startGame">Start</button>
+  <p class="hint pm-sp">オンライン・配信はパソコンで開いてください</p>
   <!-- 市販のカード版（幻冬舎）。このツールは非公式なので、カードで遊びたい人は公式へ（2026-10-15 ユーザー指示で途中に置く） -->
   <div class="shop-mini">
     <div class="sm-h">カードで遊ぶなら市販版も（幻冬舎・全7作） <span class="pr">PR</span></div>
@@ -1495,6 +1600,7 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
     <div class="sm-row"><span class="sm-name">青春のはぁって言うゲーム</span><span class="sm-note">2023年</span><span class="sm-links"><a class="sm-link" href="https://www.amazon.co.jp/s?k=%E9%9D%92%E6%98%A5%E3%81%AE%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazon</a><a class="sm-link alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E9%259D%2592%25E6%2598%25A5%25E3%2581%25AE%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E9%259D%2592%25E6%2598%25A5%25E3%2581%25AE%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F" target="_blank" rel="nofollow sponsored noopener">楽天</a></span></div>
     <div class="sm-row"><span class="sm-name">こどものはぁって言うゲーム</span><span class="sm-note">こども向け・2025年</span><span class="sm-links"><a class="sm-link" href="https://www.amazon.co.jp/s?k=%E3%81%93%E3%81%A9%E3%82%82%E3%81%AE%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazon</a><a class="sm-link alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%2593%25E3%2581%25A9%25E3%2582%2582%25E3%2581%25AE%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%2593%25E3%2581%25A9%25E3%2582%2582%25E3%2581%25AE%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F" target="_blank" rel="nofollow sponsored noopener">楽天</a></span></div>
     <div class="sm-row"><span class="sm-name">信長のはぁって言うゲーム</span><span class="sm-note">最新作・2026年</span><span class="sm-links"><a class="sm-link" href="https://www.amazon.co.jp/s?k=%E4%BF%A1%E9%95%B7%E3%81%AE%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22" target="_blank" rel="nofollow sponsored noopener">Amazon</a><a class="sm-link alt" href="https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E4%25BF%25A1%25E9%2595%25B7%25E3%2581%25AE%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E4%25BF%25A1%25E9%2595%25B7%25E3%2581%25AE%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F" target="_blank" rel="nofollow sponsored noopener">楽天</a></span></div>
+    <p class="fan-sp">このツールは非公式です。本家のカードは<a href="https://www.gentosha.co.jp/s/haa-game/" target="_blank" rel="noopener">幻冬舎の公式ページ</a>へ</p>
   </div>
 </section>
 
@@ -1517,11 +1623,14 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
 <!-- STEP 3 演技 -->
 <section class="card hidden" id="step-perform">
   <h2><span class="step-label">STEP 4</span>Perform in turn</h2>
+  <!-- 2026-11-11 PC（1024px以上・配信モード以外）は左に「いまの番」と順番、右にお題と候補。スマホでは並びそのまま -->
+  <div class="perf-two">
   <div class="stage k-reveal-bg" id="performStage"></div>
   <p class="hint perf-hint"><b>Voice and face only</b> — no gestures. Take turns saying "<b id="performWord"></b>".</p>
   <div id="performList"></div>
   <!-- 気持ちの候補。カード版でも全員がカードの候補を見ながら当てる。配信では視聴者がここを見て当てる -->
   <div class="cands" id="performCands"></div>
+  </div>
   <!-- 配信モード：回答コードで届いた人（名前と受付の印だけ。答えは答え合わせまで出さない） -->
   <div class="rc-strip" id="rcStrip" hidden aria-live="polite"></div>
   <button class="btn-primary" id="toVote">Everyone has performed → vote</button>
@@ -1565,6 +1674,8 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
       <img class="win-pic" src="/img/shiba-win.webp" width="260" height="313" alt="Shiba ninja" loading="lazy" decoding="async">
     </div>
     <div class="res-side">
+      <!-- 2026-11-11 いちばん上手だった人を1タップで選ぶ（回数はこの端末だけ・haa-meien）。演じた人が2人以上の回だけ -->
+      <div class="meien" id="meienBox" hidden></div>
       <div class="score" id="scoreBox"></div>
       <!-- 振り返り（端末内の記録）。ふだんは小さい文字ボタン1つ。配信モードは「今日のまとめ」を大きく出せる -->
       <div class="log-links" id="logLinks"><button type="button" class="np-link" id="logOpen">これまでの記録（振り返り）</button><button type="button" class="np-link" id="sumOpen">今日のまとめを出す</button></div>
@@ -1585,7 +1696,7 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
 
 </section>
 <!-- 主な操作は画面下のここに集める（ボタンはJSで各画面から移す）。main の外のAdvertisementまでは付いていかない -->
-<div id="dock" data-step="setup"><div id="dockMsg"></div></div>
+<div id="dock" data-step="setup"><div id="dockMsg"></div><div id="dockRes" hidden role="status"></div></div>
 </main>
 <!-- Advertisementと紹介は答え合わせのあとだけ出す（主ボタンの #dock より下・離して置く） -->
 <div class="post-only" id="postOnly">
@@ -1615,7 +1726,7 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
 <details class="block">
   <summary><h2>Questions</h2></summary>
   <div><dl id="faqBody">
-    <dt>Do we need the card game to play?</dt><dd>No. Pass one phone around and each player sees their role privately. Voting and scoring are automatic, so there are no chips or paper to keep track of.</dd>
+    <dt>Do we need the card game to play?</dt><dd>No. It plays like The Game of Saying "Huh", but you do not need the box: pass one phone around and each player sees their role privately. Voting and scoring are automatic, so there are no chips or paper to keep track of.</dd>
     <dt>How many players?</dt><dd>Three to eight. Four to six is the sweet spot — hard to read, easy to run. The number of roles adjusts to your group.</dd>
     <dt>How does it actually work?</dt><dd>Everyone says the same short line, but each player is secretly given a different feeling to put behind it. Voice and face only, no gestures. Then everyone votes on who had which feeling.</dd>
     <dt>Can I use this in an English class?</dt><dd>Yes — that is what the school and greetings sets are for. It drills intonation and emotional register with real speaking time for every student, and the phone handles the admin.</dd>
@@ -1627,8 +1738,8 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
 </details>
 
 <p class="note" style="margin-top:1.2rem">
-  An unofficial tool that puts this acting-and-guessing game on a single phone.<br>
-  Every prompt here is our own writing.
+  An unofficial tool that puts this acting-and-guessing game — the kind of play you know from The Game of Saying &quot;Huh&quot; — on a single phone.<br>
+  Not affiliated with TOMY, Gentosha or the makers of the card game. Every prompt here is our own writing — if you enjoy it, the boxed game is worth getting.
 </p>
 
 <!-- WEBNINJA_RELATED_APPS -->
@@ -1664,6 +1775,7 @@ html body.stream.cmp3 .vc.ng .vc-n{max-width:4.5em}
   <button type="button" class="btn-w btn-show" id="revealShow" hidden>どんな気持ちで言うか見る</button>
   <div class="act" id="revealAct"></div>
   <div class="tapnote" id="revealTapNote" hidden>もう一度タップで隠せます</div>
+  <p class="act-tip" id="revealTip"></p>
   <div class="warn" id="revealWarn">Keep this to yourself</div>
   <div class="warn" id="revealSoft" hidden>配信に映っているときは、この画面は映さないでね</div>
   <div class="warn stream-only">配信に映すときは、この画面のあいだだけ映像を隠しておいてね</div>
@@ -2155,7 +2267,8 @@ function renderDeal(){
     const key = 'r'+i, st = S.sent && S.sent[key];
     const ln = document.createElement('button');
     ln.type='button'; ln.className='deal-link'+(st?' sent':'');
-    ln.textContent = st === 'copied' ? 'コピーしました' : st === 'qr' ? 'QRで渡した（送る）' : st ? '送った（もう一度）' : pName(p)+'さんに送る';
+    if (st) ln.textContent = st === 'copied' ? 'コピーしました' : st === 'qr' ? 'QRで渡した（送る）' : '送った（もう一度）';
+    else { ln.textContent = pName(p)+'さんに'; const sv=document.createElement('span'); sv.style.display='inline-block'; sv.textContent='送る'; ln.appendChild(sv); } // 「送る」を途中で折り返さない
     ln.setAttribute('aria-label', pLabel(p)+' さんに演技カードのリンクを送る');
     ln.addEventListener('click', ()=>sendLink(roleUrl(i), 'はぁの演技カードです（開くまで見えません）', ln, key, ()=>{ S.seen[i] = true; track('haa_role_link',{players:S.players}); }));
     cell.appendChild(ln);
@@ -2479,6 +2592,7 @@ function openReveal(i){
   $('revealWho').textContent = pLabel(S.act[i]);
   $('revealWordLine').textContent = 'Your line: \u201c'+S.theme.word+'\u201d';
   $('revealAct').textContent = S.theme.acts[S.assign[i]];
+  setActTip();
   $('revealAct').classList.remove('maskable','masked'); $('revealTapNote').hidden = true;
   $('revealAct').hidden = false; $('revealShow').hidden = true; $('revealShow').onclick = null;
   // 配信モードで小窓が止められたときは、気持ちを最初は隠しておく（配信画面に映らないように・2026-10-17）
@@ -2532,6 +2646,38 @@ function guarded(){ return Date.now() - GUARD_AT < GUARD_MS; }
 const NUMS = ['①','②','③','④','⑤','⑥','⑦','⑧'];
 // 候補の番号（並びは pool の昇順で固定）。視聴者がコメントで「②」と当てられる
 function numOf(ai){ const i = S.pool.slice().sort((a,b)=>a-b).indexOf(ai); return NUMS[i] || ''; }
+// 2026-11-07 言い方のコツ。1つだけ出す（全部並べると読まれない）。どの気持ちかは分からない一般のコツだけ
+const ACT_TIPS = [
+  ['Pitch',' — go higher or lower than usual'],
+  ['Speed',' — try it slow, then try it fast'],
+  ['A pause',' before you speak. One breath is enough to show a feeling'],
+  ['Volume',' — overdo it: whisper or project'],
+  ['Face first',' — make the expression, then speak. The voice follows'],
+  ['The ending',' — stretch it, cut it short, or lift it up'],
+  ['A sigh or a laugh',' just before or after the line is fine']
+];
+function setActTip(){
+  const t = $('revealTip'); if (!t) return;
+  const x = ACT_TIPS[Math.floor(Math.random()*ACT_TIPS.length)];
+  t.innerHTML = 'Tip: <b>'+x[0]+'</b>'+x[1];
+}
+// 2026-11-07 答えが出た瞬間に、得点を前回の合計から数え上げる（棒も0から伸びる）
+function countUpScores(){
+  const rows = document.querySelectorAll('#scoreBox .sr');
+  if (!rows.length) return;
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  rows.forEach(r=>{
+    const b = r.querySelector(':scope > b'), bar = r.querySelector('.sr-bar i');
+    if (bar && !reduce){ const w = bar.style.width; bar.style.width = '0%'; void bar.offsetWidth; requestAnimationFrame(()=>{ bar.style.width = w; }); }
+    const tn = b && b.firstChild; if (!tn || tn.nodeType !== 3) return;
+    const to = parseInt(tn.nodeValue, 10); if (!(to > 0) || reduce) return;
+    const add = b.querySelector('.sr-add'); const from = add ? Math.max(0, to - (parseInt(add.textContent.replace('+',''),10)||0)) : 0;
+    if (from === to) return;
+    const t0 = performance.now(), dur = 700;
+    const step = now=>{ const k = Math.min(1, (now - t0)/dur); tn.nodeValue = String(Math.round(from + (to-from)*k)); if (k < 1) requestAnimationFrame(step); };
+    tn.nodeValue = String(from); requestAnimationFrame(step);
+  });
+}
 function renderPerform(){
   const st = $('performStage');
   st.classList.remove('drop'); void st.offsetWidth; st.classList.add('drop'); sfx('drop');
@@ -2563,13 +2709,30 @@ function renderPerform(){
   if (S.vf){ document.body.classList.remove('perform-eq'); vfDock(); }
   const w = $('performList'); w.innerHTML='';
   if (S.k === 1) return;
+  // 2026-11-11 いまの番を1人ずつ大きく出し、「次の人」で進める（最後の人のあとは下の「投票へ」）。一覧はそのまま下に残す
+  S.turn = 0;
+  const tb = document.createElement('div'); tb.className = 'turn-box'; tb.id = 'turnBox'; tb.setAttribute('aria-live','polite');
+  w.appendChild(tb);
   S.order.forEach((j,n)=>{
     const p = S.act[j];
     const row = document.createElement('div');
-    row.className='res-row';
+    row.className='res-row turn-row';
     row.innerHTML = '<span class="nm">#'+(n+1)+'</span><span class="act">'+esc(pLabel(p))+'</span>';
     w.appendChild(row);
   });
+  renderTurn();
+}
+function renderTurn(){
+  const tb = $('turnBox'); if (!tb || !S.order) return;
+  const n = Math.min(S.turn||0, S.k-1), last = n >= S.k-1;
+  const nm = j=>esc(pName(S.act[S.order[j]]));
+  tb.innerHTML = '<p class="turn-now">Now: <b>'+nm(n)+'</b><small>'+(n+1)+'/'+S.k+'</small></p>'
+    + (last ? '<p class="turn-last">Last one. When they are done, tap the button below</p>'
+            : '<button type="button" class="btn-sub turn-next" id="turnNext">Next: '+nm(n+1)+'</button>')
+    + (n > 0 ? '<button type="button" class="turn-back" id="turnBack">↶ Back one</button>' : '');
+  $('performList').querySelectorAll('.turn-row').forEach((r,k)=>{ r.classList.toggle('cur', k === n); r.classList.toggle('done', k < n); });
+  const nx = $('turnNext'); if (nx) nx.addEventListener('click', ()=>{ S.turn = n+1; renderTurn(); });
+  const bk = $('turnBack'); if (bk) bk.addEventListener('click', ()=>{ S.turn = n-1; renderTurn(); });
 }
 $('toVote').addEventListener('click', ()=>{ S.voter=0; S.target=-1; nextVote(); show('vote'); });
 // 投票は人数×(人数−1)回スマホを回す（6人で30回）。そこで止まる人が多いので、口で当て合って答えだけ見る道を用意する
@@ -2606,14 +2769,21 @@ function renderVote(){
   $('voteTarget').innerHTML = 'How did <b>'+esc(pLabel(S.act[S.target]))+'</b> feel?';
   // 出た直後（次の人の番に切り替わった直後）の押しまちがいは数えない（2026-10-22 手書きの 350ms を kit の KKit.settle に）
   const w = $('voteList'); w.innerHTML=''; KKit.settle(w, 350).block();
+  // 出た直後の 350ms は押しても数えない（前の人の連打よけ）。その間は薄くして「まだ」と分かるように
+  w.classList.add('wait'); clearTimeout(w._waitT); w._waitT = setTimeout(()=>w.classList.remove('wait'), 350);
   const used = S.pool.slice().sort((a,b)=>a-b);
   used.forEach(ai=>{
     const b = document.createElement('button');
     b.type='button'; b.className='vote-item';
     b.innerHTML = '<span class="no">'+numOf(ai)+'</span>'+esc(S.theme.acts[ai]);
+    // 指が触れた瞬間に色を変える（数えられる時だけ。数えない間に色が変わると「入った」と誤解する）
+    b.addEventListener('pointerdown', ()=>{ if (!w.dataset.busy && !w.classList.contains('wait')) b.classList.add('press'); });
+    ['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev, ()=>b.classList.remove('press')));
     b.addEventListener('click', ()=>{
       if (w.dataset.busy) return; w.dataset.busy = '1';
-      b.classList.add('picked'); sfx('pick');
+      b.classList.remove('press'); b.classList.add('picked'); sfx('pick');
+      b.insertAdjacentHTML('beforeend', '<span class="vk">票が入りました</span>');
+      S.voteOk = pLabel(S.voter);
       S.votes[S.voter] = S.votes[S.voter] || {};
       S.votes[S.voter][S.target] = ai;
       (S.voteHist = S.voteHist || []).push({voter:S.voter, target:S.target});
@@ -2624,7 +2794,11 @@ function renderVote(){
   const total = S.players*S.k - S.k;
   let done = 0;
   Object.values(S.votes).forEach(v=>done += Object.keys(v).length);
-  $('voteProg').textContent = 'votes '+done+' / '+total;
+  const vp = $('voteProg');
+  // 直前の票が入ったことを次の画面にも残す（連打で入らなかった票に気づけるように）
+  if (S.voteOk && done){ vp.innerHTML = '<b>'+esc(S.voteOk)+'\u2019s vote is in</b><br>votes '+done+' / '+total; vp.classList.add('ok'); }
+  else { vp.textContent = 'votes '+done+' / '+total; vp.classList.remove('ok'); }
+  S.voteOk = '';
   $('voteUndo').hidden = !(S.voteHist && S.voteHist.length);
 }
 // 押し間違えたときだけ、1つ前の票に戻ってやり直す（押す回数は増やさない・2026-10-17）
@@ -2702,9 +2876,11 @@ function finish(mode){
       }
       if (chips.length) who = '<div class="ans-votes">'+chips.join('')+'</div>';
     }
+    // 2026-11-11 投票なし（口で当てた）回は、カードごとに「当たった」を押して数える（この回だけ・送信なし）
+    const hitBtn = mode === 'quick' && !document.body.classList.contains('stream') ? '<button type="button" class="hit-btn" aria-pressed="false">Got it</button>' : '';
     card.innerHTML = '<div class="ans-top"><span class="ans-dot"></span><span class="ans-name">'+esc(pName(p))+'</span><span class="ans-word">\u201c'+esc(S.theme.word)+'\u201d</span></div>'
       + '<div class="ans-main"><span class="ans-kick">Answer</span><span class="ans-no">'+numOf(ai)+'</span><span class="ans-act">'+esc(S.theme.acts[ai])+'</span></div>'
-      + who;
+      + who + hitBtn;
     body.appendChild(card);
   }
   // 得点：当てた人に1点、当ててもらえた人にも1点（カード版と同じ考え方）
@@ -2720,8 +2896,10 @@ function finish(mode){
   const box = $('scoreBox');
   const max = Math.max.apply(null, sc);
   if (!RESUMING) logRound(mode, sc);
+  renderMeien();
   if (mode === 'quick'){
-    box.innerHTML = '<p class="quick-note">' + (document.body.classList.contains('stream') ? 'コメントの番号と比べてみてください。' : 'No votes this round. Check the answers against your guesses.') + '</p>';
+    box.innerHTML = '<p class="quick-note">' + (document.body.classList.contains('stream') ? 'コメントの番号と比べてみてください。' : 'If someone guessed a card out loud, tap \u201cGot it\u201d on that card.') + '</p>'
+      + (document.body.classList.contains('stream') ? '' : '<p class="hit-sum" id="hitSum" aria-live="polite">Guessed <b>0</b> of '+S.k+'</p>');
     if (!RESUMING) track('haa_finish',{word:S.theme.word,players:S.players,hits:0,mode:mode});
     show('result');
     return;
@@ -2743,7 +2921,17 @@ function finish(mode){
   S.lTot += lsc; S.lAdd = lsc;
   S.rounds++;
   const tmax = Math.max.apply(null, S.total);
-  let h = '<h3>'+(S.rounds > 1 ? 'Total score<span class="sr-rd">after '+S.rounds+' rounds</span>' : 'Score')+'</h3>', rank = 0, prev = null;
+  // 名演技賞：この回いちばん多く当ててもらえた人（同数なら全員）。1人も当てられなかった回は出さない
+  const got = S.act.slice(0, S.k).map((p,t)=>{ let c = 0; for (let v=0; v<S.players; v++){ if (v === p) continue; const g = S.votes[v] && S.votes[v][t]; if (g !== undefined && g === S.assign[t]) c++; } return {p, c}; });
+  const gmax = got.reduce((m,x)=>Math.max(m, x.c), 0);
+  let mvp = '';
+  if (gmax > 0){
+    const names = got.filter(x=>x.c === gmax).map(x=>esc(pName(x.p))).join(' & ');
+    mvp = '<div class="mvp"><span class="mvp-k">Best actor</span><span class="mvp-n">'+names+'</span><small class="mvp-w">read by '+gmax+(gmax === 1 ? ' player' : ' players')+'</small></div>';
+    // 2026-11-05 名演技賞の直下に本家のカードへの1行（下の「If you want more」と同じリンク）。配信モードでは出さない
+    if (!document.body.classList.contains('stream')) mvp += '<p class="mvp-shop"><span>本家『はぁって言うゲーム』のカードで続きを</span><a href="'+MVP_AMZ+'" target="_blank" rel="nofollow sponsored noopener" data-shop="amazon">Amazon（PR）</a><a href="'+MVP_RAK+'" target="_blank" rel="nofollow sponsored noopener" data-shop="rakuten">楽天（PR）</a></p>';
+  }
+  let h = mvp + '<h3>'+(S.rounds > 1 ? 'Total score<span class="sr-rd">after '+S.rounds+' rounds</span>' : 'Score')+'</h3>', rank = 0, prev = null;
   const ppl = logPeople(logLoad().r.filter(r=>r.sid === S.sid));
   // リスナーは一度でも入れたら、プレイヤーと同じように並べる
   const lisRow = S.lis && S.lTries > 0;
@@ -2781,6 +2969,46 @@ function finish(mode){
   show('result');
 }
 
+const MVP_AMZ = 'https://www.amazon.co.jp/s?k=%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22';
+const MVP_RAK = 'https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F';
+// 2026-11-11 口で当てた数（投票なしの回）。カードの「当たった」を押した数を数えるだけ（この回だけ・保存も送信もしない）
+document.addEventListener('click', e=>{
+  const b = e.target.closest && e.target.closest('.hit-btn'); if (!b) return;
+  const on = b.getAttribute('aria-pressed') !== 'true';
+  b.setAttribute('aria-pressed', on ? 'true' : 'false'); b.textContent = on ? '○ 当たった' : '当たった';
+  b.closest('.ans-card').classList.toggle('hit', on);
+  const n = $('resultBody').querySelectorAll('.hit-btn[aria-pressed="true"]').length, hs = $('hitSum');
+  if (hs) hs.innerHTML = 'Guessed <b>'+n+'</b> of '+S.k;
+});
+// 2026-11-11 いちばん上手だった人（名演技）を1タップで選ぶ。回数は名前ごとにこの端末だけに保存（haa-meien）。演じた人が2人以上の回だけ
+const MEIEN_KEY = 'haa-meien';
+function meienLoad(){ try { const o = JSON.parse(localStorage.getItem(MEIEN_KEY) || '{}'); return o && typeof o === 'object' ? o : {}; } catch(e){ return {}; } }
+function meienSave(o){ try { localStorage.setItem(MEIEN_KEY, JSON.stringify(o)); } catch(e){} }
+function renderMeien(keepPick){
+  const box = $('meienBox'); if (!box) return;
+  if (!keepPick) S.meienPick = null;
+  if (!S.act || S.k < 2){ box.hidden = true; box.innerHTML = ''; return; }
+  const names = S.act.slice(0, S.k).map(p=>pName(p));
+  const cnt = meienLoad();
+  const tally = Object.keys(cnt).filter(k=>cnt[k] > 0).sort((a,b)=>cnt[b]-cnt[a]);
+  box.hidden = false;
+  box.innerHTML = '<p class="meien-h">Who acted best?<small>pick one</small></p>'
+    + '<div class="meien-row" role="group" aria-label="Who acted best">' + names.map(n=>'<button type="button" class="meien-btn'+(S.meienPick === n ? ' on' : '')+'" aria-pressed="'+(S.meienPick === n)+'" data-n="'+esc(n)+'">'+esc(n)+'</button>').join('') + '</div>'
+    + (tally.length ? '<p class="meien-t">Best actor so far: '+tally.map(k=>esc(k)+' <b>'+cnt[k]+'</b>').join(' · ')+'</p><button type="button" class="meien-clear" id="meienClear">Clear</button>' : '');
+  box.querySelectorAll('.meien-btn').forEach(b=>b.addEventListener('click', ()=>{
+    const n = b.dataset.n, o = meienLoad();
+    if (S.meienPick) o[S.meienPick] = Math.max(0, (o[S.meienPick]||0) - 1);
+    if (S.meienPick === n){ S.meienPick = null; } else { o[n] = (o[n]||0) + 1; S.meienPick = n; track('haa_meien',{}); }
+    meienSave(o); renderMeien(true);
+  }));
+  const cl = $('meienClear');
+  if (cl) cl.addEventListener('click', ()=>{
+    if (!cl.dataset.ask){ cl.dataset.ask = '1'; cl.textContent = 'Clear it? (tap again)'; setTimeout(()=>{ if (cl.isConnected){ delete cl.dataset.ask; cl.textContent = 'Clear'; } }, 4000); return; }
+    try { localStorage.removeItem(MEIEN_KEY); } catch(e){}
+    S.meienPick = null; renderMeien(true);
+  });
+}
+document.addEventListener('click', e=>{ const a = e.target.closest && e.target.closest('.mvp-shop a'); if (a && typeof gtag === 'function') gtag('event', 'haa_mvp_shop', { shop: a.dataset.shop }); });
 // 点の内訳を1行で：当てた＋2・伝わった＋1（合計点と同じ数え方。何回中かは「今日のまとめ」で）
 function lisLine(){ return '当てた＋'+S.lTot; }
 function ptLine(hit, got){ return 'guessed +'+hit+' · read +'+got; }
@@ -2834,28 +3062,15 @@ function pushView(extra){
   if (typeof LOG_KEY === 'string') fitStream();
 }
 // 効果音（配信モードだけ・ブラウザで合成。音のファイルは使わない）
-let AC = null;
+// 2026-11-24 音は kit の KKit.sfx が1つの音の部品で鳴らす
 const SFX_KEY = 'haa-sfx';
 function sfxOn(){ if (!document.body.classList.contains('stream')) return false; const t = $('sfxToggle'); return !t || t.checked; }
-function tone(freq, t0, dur, type, vol){
-  const o = AC.createOscillator(), g = AC.createGain();
-  o.type = type || 'sine'; o.frequency.setValueAtTime(freq, AC.currentTime + t0);
-  g.gain.setValueAtTime(0.0001, AC.currentTime + t0);
-  g.gain.exponentialRampToValueAtTime(vol || 0.2, AC.currentTime + t0 + 0.01);
-  g.gain.exponentialRampToValueAtTime(0.0001, AC.currentTime + t0 + dur);
-  o.connect(g); g.connect(AC.destination); o.start(AC.currentTime + t0); o.stop(AC.currentTime + t0 + dur + 0.05);
-}
+
 function sfx(kind, force){
   if (!force && !sfxOn()) return;
-  try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); } catch(e){ return; }
-  if (kind === 'tick') tone(880, 0, 0.08, 'square', 0.06);
-  else if (kind === 'last') tone(660, 0, 0.06, 'triangle', 0.08);
-  else if (kind === 'cd') { tone(523, 0, 0.18, 'square', 0.12); }
-  else if (kind === 'pick') { tone(740, 0, 0.07, 'triangle', 0.12); tone(988, 0.06, 0.09, 'triangle', 0.12); }
-  else if (kind === 'open') { [392,523,659].forEach((f,i)=>tone(f, i*0.05, 0.16, 'triangle', 0.14)); tone(784, 0.18, 0.3, 'sine', 0.1); }
-  else if (kind === 'drop') { tone(330, 0, 0.12, 'sine', 0.15); tone(495, 0.08, 0.14, 'sine', 0.12); }
-  else if (kind === 'fanfare') { [523,659,784,1047].forEach((f,i)=>tone(f, i*0.11, 0.22, 'triangle', 0.18)); tone(1047, 0.44, 0.6, 'triangle', 0.16); tone(1319, 0.44, 0.6, 'sine', 0.08); }
-}
+    // 2026-11-24 kit の共通の音（KKit.sfx）に。配信は少し大きめ
+    window.KKit && KKit.sfx && KKit.sfx(({fanfare:'win', open:'reveal', drop:'land'})[kind] || kind, { vol: 1.3 });
+  }
 try { const v = localStorage.getItem(SFX_KEY); if (v !== null) $('sfxToggle').checked = v === '1'; } catch(e){}
 // リスナーの行（配信モードで「配信する」のときだけ・既定はオン・この端末に覚える）
 const LIS_KEY = 'haa-listener';
@@ -2894,9 +3109,9 @@ document.addEventListener('pointerdown', e=>{
   r.style.left = e.clientX+'px'; r.style.top = e.clientY+'px';
   document.body.appendChild(r); setTimeout(()=>r.remove(), 500);
 }, {passive:true});
-// 結果画面の広告（2026-10-31 ito の型を移植）: 1回ごとに、枠が画面に入ったら1回だけ読み込む。
+// 結果画面のAdvertisement（2026-10-31 ito の型を移植）: 1回ごとに、枠が画面に入ったら1回だけ読み込む。
 // 以前はページを開いてから最初の1回だけ（__adPushed）。ito は同じ直しで結果画面の表示が完了の24%→92%、RPM が約2倍になった。
-// 一度 push した ins には2回 push できないので、2回目からは未使用の ins に差し替える。前回の読み込みから30秒未満なら前の広告のまま。
+// 一度 push した ins には2回 push できないので、2回目からは未使用の ins に差し替える。前回の読み込みから30秒未満なら前のAdvertisementのまま。
 // GA4 haa_result_ad_show は1回に1つ: reload = push（読み込んだ）／skip（30秒未満）／notseen（見ずに離れた）
 const RESULT_AD_MIN_GAP = 30000;
 let _raTpl = null, _raLast = 0, _raIO = null, _raWait = null, _raKey = null;
@@ -2921,6 +3136,8 @@ function pushResultAd(){
   const key = (S.gid||'') + '-' + (S.gno||0);   // 答えが出た時と結果画面に移った時の2か所から呼ばれる。1回につき1度だけ
   if (key === _raKey) return;
   _raKey = key;
+  // 2026-11-24 ホーム画面に追加（ユーザー承認③A）：1回目の答え合わせのあとにだけ出す。閉じたら二度と出さない（配信・参加者画面では出さない＝上で戻る）
+  try { const ib = document.getElementById('haaInstall'); if (ib && window.KKit && KKit.install){ if (typeof setDockH === 'function') setDockH(); KKit.install(ib, { key:'haa_install_dismissed' }); KKit.installReady(); } } catch(e){}
   const ad = document.querySelector('#postOnly .ad-slot'); const slot = ad && ad.querySelector('ins'); if (!slot) return;
   if (!_raTpl && !slot.hasAttribute('data-adsbygoogle-status')) _raTpl = slot.cloneNode(false);   // 未使用の状態を控えておく
   if (!_raTpl) return;
@@ -2969,6 +3186,20 @@ function countdownReveal(){
   track('haa_unveil',{players:S.players});
 }
 // 答えが出る瞬間（3・2・1 のあと）
+// 2026-11-24 答えが出たら下の帯に当たり・はずれの票数（配信モードは出さない）
+// 下の帯の高さを --dock-h に入れる（ホーム画面に追加の帯をその上に出すため）
+function setDockH(){ const dk = document.getElementById('dock'); if (dk) document.documentElement.style.setProperty('--dock-h', Math.round(dk.getBoundingClientRect().height)+'px'); }
+try { const dk = document.getElementById('dock'); if (dk && window.ResizeObserver) new ResizeObserver(setDockH).observe(dk); } catch(e){}
+function dockResult(){
+  const el = $('dockRes'); if (!el) return;
+  const ok = document.querySelectorAll('#resultBody .vc.ok').length, ng = document.querySelectorAll('#resultBody .vc.ng').length;
+  if (document.body.classList.contains('stream') || ok + ng === 0){ el.hidden = true; return; }
+  el.className = (ng === 0) ? 'all' : '';
+  el.innerHTML = (ng === 0) ? '<span class="dr-ok">○ All right! '+ok+(ok === 1 ? ' vote' : ' votes')+', every one correct</span>'
+    : '<span class="dr-ok">○ Right '+ok+'</span><span class="dr-ng">× Wrong '+ng+'</span>';
+  el.hidden = false;
+  setDockH();
+}
 function revealNow(){
   $('cdown').hidden = true; $('cdown').classList.remove('last');
   $('unveil').hidden = true; $('unveilMsg').hidden = true;
@@ -2976,8 +3207,9 @@ function revealNow(){
   document.body.classList.remove('veiling');
   updateNow();
   setTimeout(pushResultAd, 60);
+  dockResult();
   $('resultBody').querySelectorAll('.ans-card').forEach((r,k)=>{ r.style.animationDelay = (k*0.12)+'s'; r.classList.add('pop'); });
-  if (!RESUMING){ confetti(); sfx('fanfare'); }
+  if (!RESUMING){ confetti(); sfx('fanfare'); countUpScores(); }
   if (!(RESUMING && S.ask)) S.ask = nextAsk();
   if ($('ctaComment')) $('ctaComment').textContent = S.ask;
   renderRecStrip(true);
@@ -3029,6 +3261,7 @@ function show(name){
   const cur = $('step-'+name);
   if (cur && changed){ cur.classList.remove('enter'); void cur.offsetWidth; cur.classList.add('enter'); }
   document.body.classList.toggle('at-result', name==='result');
+  if (name !== 'result' && $('dockRes')) $('dockRes').hidden = true;
   if (name === 'result') renderNextPick();
   if (name === 'result' || name === 'setup') renderActorPick();
   rcPlace(name);
@@ -3865,7 +4098,7 @@ function gReveal(instant){
       if (i !== me && picks[i] !== undefined){ tot++; const ok = picks[i] === o.X[i]; if (ok) hit++;
         chip = '<div class="ans-votes"><span class="vc '+(ok?'ok':'ng')+'">'+(ok?'○ あなたの予想 ':'× あなたの予想 ')+gNo(picks[i])+'</span></div>'; }
       card.innerHTML = '<div class="ans-top"><span class="ans-dot"></span><span class="ans-name">'+esc(x[0])+(i === me ? '（あなた）' : '')+'</span><span class="ans-word">「'+esc(o.w)+'」</span></div>'
-        + '<div class="ans-main"><span class="ans-kick">正解</span><span class="ans-no">'+gNo(o.X[i])+'</span><span class="ans-act">'+esc(o.c[o.X[i]])+'</span></div>' + chip;
+        + '<div class="ans-main"><span class="ans-kick">Answer</span><span class="ans-no">'+gNo(o.X[i])+'</span><span class="ans-act">'+esc(o.c[o.X[i]])+'</span></div>' + chip;
       $('gAns').appendChild(card);
     });
     // 同じ回を2回数えない（開き直し・貼り直し）
@@ -3915,7 +4148,7 @@ function guestOpen(k, o, how){
     if (k === 'r' && how !== 'store'){
       $('revealWho').textContent = (o.n || '') + ' さん';
       $('revealWordLine').textContent = '言う言葉は「' + o.w + '」';
-      $('revealAct').textContent = o.a;
+      $('revealAct').textContent = o.a; setActTip();
       $('revealAct').classList.add('maskable','masked'); $('revealTapNote').hidden = true;
       $('revealClose').textContent = '覚えた！閉じる';
       $('revealNow').textContent = '下をタップして気持ちを見たら、その気持ちで「' + o.w + '」と言ってね'; $('revealNow').hidden = false;
@@ -4027,5 +4260,40 @@ syncDock('setup');
 // 読み込み時に押すと、枠が非表示（幅0）のままなのでAdvertisementが入らず、枠が死んでいた（2026-09-20 修正）。
 })();
 </script>
+<script>
+/* 2026-10-28 年末年始（12/1〜1/5）だけ、遊び終わりの市販版紹介に1行足す。並びは 公式 → Amazon → 楽天。
+   期間外と配信モード（Advertisementなし）では何も作らない。日付を変えて試すときは kkpSeasonLine(new Date('2026-12-15')) */
+function kkpSeasonOn(d){ var m = d.getMonth() + 1, day = d.getDate(); return m === 12 || (m === 1 && day <= 5); }
+function kkpSeasonLine(now){
+  var box = document.getElementById('seasonLine');
+  if (!box) return;
+  var stream = document.body.classList.contains('stream') || (window.KKit && KKit.stream && KKit.stream.on);
+  box.textContent = '';
+  if (stream || !kkpSeasonOn(now || new Date())) { box.hidden = true; return; }
+  var links = [
+    ['公式ページ', 'https://www.gentosha.co.jp/s/haa-game/', 'noopener', 'official'],
+    ['Amazon（PR）', 'https://www.amazon.co.jp/s?k=%E3%81%AF%E3%81%81%E3%81%A3%E3%81%A6%E8%A8%80%E3%81%86%E3%82%B2%E3%83%BC%E3%83%A0&tag=kkp15-22', 'sponsored noopener', 'amazon'],
+    ['楽天（PR）', 'https://hb.afl.rakuten.co.jp/hgc/11008fdf.72a391c0.11008fe0.307a7b09/_RTLink144151?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2581%25AF%25E3%2581%2581%25E3%2581%25A3%25E3%2581%25A6%25E8%25A8%2580%25E3%2581%2586%25E3%2582%25B2%25E3%2583%25BC%25E3%2583%25A0%2F', 'sponsored noopener', 'rakuten']
+  ];
+  box.appendChild(document.createTextNode('お正月や帰省先でも遊ぶなら、本家のカードが1箱あると電波や充電を気にせず遊べます。'));
+  links.forEach(function(l, i){
+    box.appendChild(document.createTextNode(i ? ' ／ ' : ' '));
+    var a = document.createElement('a');
+    a.href = l[1]; a.target = '_blank'; a.rel = l[2]; a.textContent = l[0];
+    a.addEventListener('click', function(){ if (typeof gtag === 'function') gtag('event', 'haa_season_click', { shop: l[3] }); });
+    box.appendChild(a);
+  });
+  box.hidden = false;
+}
+kkpSeasonLine();
+</script>
+<!-- 2026-11-24 ホーム画面に追加（kit の k-install）。自動では出さず、答え合わせのあとに pushResultAd から呼ぶ -->
+<div class="k-install" id="haaInstall" role="dialog" aria-label="ホーム画面に追加" hidden>
+  <span class="k-seal" aria-hidden="true">砦</span>
+  <div class="k-install-t"><b>ホーム画面に追加</b><span>次の集まりでも1タップで開けます</span></div>
+  <button type="button" class="k-btn k-btn-sm k-install-go">追加</button>
+  <button type="button" class="k-install-x" aria-label="閉じる">×</button>
+  <ol class="k-install-how" hidden><li>画面下の共有ボタン（□↑）を押す</li><li>「ホーム画面に追加」を選ぶ</li><li>右上の「追加」を押す</li></ol>
+</div>
 </body>
 </html>

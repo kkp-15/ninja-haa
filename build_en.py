@@ -33,8 +33,8 @@ n_word = len(re.findall(r"word: '", data))
 n_act  = sum(len(re.findall(r"'[^']*'", m)) for m in re.findall(r'acts: \[([^\]]+)\]', data))
 
 # ---- 2. head をまるごと英語版に ------------------------------------------
-HEAD = '''<title>Emotion Charades Online — Say One Line With a Secret Feeling (Free, One Phone)</title>
-<meta name="description" content="Emotion charades for teens, adults and ESL classes. Everyone says the same line, each with a secret emotion — pass one phone around, act it out, then guess the emotion. Roles, voting and scoring are handled for you. %d prompts, %d ways to say them. Free, no sign-up, no app.">
+HEAD = '''<title>Emotion Charades Online — Like The Game of Saying &quot;Huh&quot; (Free, One Phone)</title>
+<meta name="description" content="Emotion charades for teens, adults and ESL classes — plays like The Game of Saying &quot;Huh&quot;. Everyone says the same line, each with a secret emotion — pass one phone around, act it out, then guess the emotion. Roles, voting and scoring are handled for you. %d prompts, %d ways to say them. Free, no sign-up, no app.">
 <link rel="canonical" href="https://haa.kkpwebninja.com/en/">
 <link rel="alternate" hreflang="ja" href="https://haa.kkpwebninja.com/">
 <link rel="alternate" hreflang="en" href="https://haa.kkpwebninja.com/en/">
@@ -42,7 +42,7 @@ HEAD = '''<title>Emotion Charades Online — Say One Line With a Secret Feeling 
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#e8843a">
 
-<meta property="og:title" content="Emotion Charades Online — one phone, one line, a secret feeling">
+<meta property="og:title" content="Emotion Charades Online — like The Game of Saying &quot;Huh&quot;, on one phone">
 <meta property="og:description" content="Say the same word eight different ways and see who can tell them apart. Roles, voting and scoring on a single phone.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://haa.kkpwebninja.com/en/">
@@ -114,9 +114,9 @@ T = [
   '5. Reveal. You score for guessing right, and for being guessed right.'),
  ('よくある質問', 'Questions'),
  ('『はぁって言うゲーム』のような、声と表情で演じ分けて当て合う遊びを、スマホ1台でできるようにした非公式のツールです。<br>',
-  'An unofficial tool that puts this acting-and-guessing game on a single phone.<br>'),
+  'An unofficial tool that puts this acting-and-guessing game — the kind of play you know from The Game of Saying &quot;Huh&quot; — on a single phone.<br>'),
  ('幻冬舎および公式とは関係ありません。お題はすべて当サイトのオリジナルで、市販品の内容は含みません。',
-  'Every prompt here is our own writing.'),
+  'Not affiliated with TOMY, Gentosha or the makers of the card game. Every prompt here is our own writing — if you enjoy it, the boxed game is worth getting.'),
  # 画面
  ('STEP 1</span>人数を選ぶ</h2>', 'STEP 1</span>Players</h2>'),
  ('STEP 2</span>お題を選ぶ</h2>', 'STEP 2</span>Pick a line</h2>'),
@@ -168,6 +168,7 @@ T = [
  ("'<b>'+(S.target+1)+'人目・'+tc.n+'</b> さんは、どの気持ちだった？'",
   "'How did <b>player '+(S.target+1)+' · '+tc.n+'</b> feel?'"),
  ("'投票 '+done+' / '+total", "'votes '+done+' / '+total"),
+ ("vp.innerHTML = '<b>'+esc(S.voteOk)+' さんの票が入りました</b><br>投票 '+done+' / '+total;", "vp.innerHTML = '<b>'+esc(S.voteOk)+'\\u2019s vote is in</b><br>votes '+done+' / '+total;"),
  ("'<span class=\"nm\">'+(i+1)+'人目</span>'", "'<span class=\"nm\">player '+(i+1)+'</span>'"),
  ("'<h3>得点</h3>'", "'<h3>Score</h3>'"),
  ("'</span><b>'+o.v+'点</b></div>'", "'</span><b>'+o.v+'</b></div>'"),
@@ -308,6 +309,36 @@ T2 = [
  ("rb.textContent = '合計を0に戻す';", "rb.textContent = 'Reset the total';"),
  ("$('newGame').textContent = on ? '「'+t.word+'」で始める' : 'Play again';", "$('newGame').textContent = on ? 'Start with \\u201c'+t.word+'\\u201d' : 'Play again';"),
  ("b.innerHTML = '<span class=\"pi-w\">「'+esc(t.word)+'」</span>", "b.innerHTML = '<span class=\"pi-w\">\\u201c'+esc(t.word)+'\\u201d</span>"),
+ # 2026-11-24 日本語版で増えた所（名演技賞・「当たった」ボタン・番の案内・言い方のコツ・下の帯の票数）
+ ("const ACT_TIPS = [\n  ['声の高さ','を変えると伝わりやすい（高く／低く）'],\n  ['速さ','を変えてみる（ゆっくり／早口）'],\n  ['言う前の「間」','を長めに。一呼吸おくだけで気持ちが出ます'],\n  ['声の大きさ','を大げさに（ささやく／張る）'],\n  ['先に表情','を作ってから言うと、声もついてきます'],\n  ['語尾','で変える（のばす／ぷつっと切る／上げる）'],\n  ['ため息や笑い','を言葉の前後に少しだけ足してもOK']\n];",
+  "const ACT_TIPS = [\n  ['Pitch',' — go higher or lower than usual'],\n  ['Speed',' — try it slow, then try it fast'],\n  ['A pause',' before you speak. One breath is enough to show a feeling'],\n  ['Volume',' — overdo it: whisper or project'],\n  ['Face first',' — make the expression, then speak. The voice follows'],\n  ['The ending',' — stretch it, cut it short, or lift it up'],\n  ['A sigh or a laugh',' just before or after the line is fine']\n];"),
+ ("t.innerHTML = 'コツ：<b>'+x[0]+'</b>'+x[1];", "t.innerHTML = 'Tip: <b>'+x[0]+'</b>'+x[1];"),
+ ("'<button type=\"button\" class=\"hit-btn\" aria-pressed=\"false\">当たった</button>'", "'<button type=\"button\" class=\"hit-btn\" aria-pressed=\"false\">Got it</button>'"),
+ ("<span class=\"ans-kick\">正解</span>", "<span class=\"ans-kick\">Answer</span>"),
+ ("'口で当てた人がいたら、そのカードの「当たった」を押してください。'", "'If someone guessed a card out loud, tap \\u201cGot it\\u201d on that card.'"),
+ ("'<p class=\"hit-sum\" id=\"hitSum\" aria-live=\"polite\">みんなで <b>0</b>/'+S.k+' 当てた</p>'", "'<p class=\"hit-sum\" id=\"hitSum\" aria-live=\"polite\">Guessed <b>0</b> of '+S.k+'</p>'"),
+ ("hs.innerHTML = 'みんなで <b>'+n+'</b>/'+S.k+' 当てた';", "hs.innerHTML = 'Guessed <b>'+n+'</b> of '+S.k;"),
+ ("const names = got.filter(x=>x.c === gmax).map(x=>esc(pName(x.p))+' さん').join('・');", "const names = got.filter(x=>x.c === gmax).map(x=>esc(pName(x.p))).join(' & ');"),
+ ("'<div class=\"mvp\"><span class=\"mvp-k\">名演技賞</span><span class=\"mvp-n\">'+names+'</span><small class=\"mvp-w\">'+gmax+'人に伝わりました</small></div>'",
+  "'<div class=\"mvp\"><span class=\"mvp-k\">Best actor</span><span class=\"mvp-n\">'+names+'</span><small class=\"mvp-w\">read by '+gmax+(gmax === 1 ? ' player' : ' players')+'</small></div>'"),
+ ("let h = mvp + '<h3>'+(S.rounds > 1 ? '合計得点<span class=\"sr-rd\">'+S.rounds+'回目まで</span>' : '得点')+'</h3>', rank = 0, prev = null;",
+  "let h = mvp + '<h3>'+(S.rounds > 1 ? 'Total score<span class=\"sr-rd\">after '+S.rounds+' rounds</span>' : 'Score')+'</h3>', rank = 0, prev = null;"),
+ ("tn.nodeValue = Math.round(from + (to-from)*k) + '点';", "tn.nodeValue = String(Math.round(from + (to-from)*k));"),
+ ("tn.nodeValue = from + '点';", "tn.nodeValue = String(from);"),
+ ("'<p class=\"meien-h\">いちばん上手だった人は？<small>1人を選ぶ</small></p>'", "'<p class=\"meien-h\">Who acted best?<small>pick one</small></p>'"),
+ ("aria-label=\"いちばん上手だった人\"", "aria-label=\"Who acted best\""),
+ ("'<p class=\"meien-t\">名演技に選ばれた回数：'+tally.map(k=>esc(k)+' <b>'+cnt[k]+'</b>回').join('・')+'</p><button type=\"button\" class=\"meien-clear\" id=\"meienClear\">記録を消す</button>'",
+  "'<p class=\"meien-t\">Best actor so far: '+tally.map(k=>esc(k)+' <b>'+cnt[k]+'</b>').join(' · ')+'</p><button type=\"button\" class=\"meien-clear\" id=\"meienClear\">Clear</button>'"),
+ ("cl.textContent = '本当に消す？（もう一度押す）'; setTimeout(()=>{ if (cl.isConnected){ delete cl.dataset.ask; cl.textContent = '記録を消す'; } }, 4000);",
+  "cl.textContent = 'Clear it? (tap again)'; setTimeout(()=>{ if (cl.isConnected){ delete cl.dataset.ask; cl.textContent = 'Clear'; } }, 4000);"),
+ ("'<p class=\"turn-now\">いまの番：<b>'+nm(n)+'</b> さん<small>'+(n+1)+'/'+S.k+'</small></p>'", "'<p class=\"turn-now\">Now: <b>'+nm(n)+'</b><small>'+(n+1)+'/'+S.k+'</small></p>'"),
+ ("'<p class=\"turn-last\">最後の人です。演じ終わったら下のボタンへ</p>'", "'<p class=\"turn-last\">Last one. When they are done, tap the button below</p>'"),
+ ("'<button type=\"button\" class=\"btn-sub turn-next\" id=\"turnNext\">次の人（'+nm(n+1)+' さん）</button>'", "'<button type=\"button\" class=\"btn-sub turn-next\" id=\"turnNext\">Next: '+nm(n+1)+'</button>'"),
+ ("'<button type=\"button\" class=\"turn-back\" id=\"turnBack\">↶ 前の人に戻す</button>'", "'<button type=\"button\" class=\"turn-back\" id=\"turnBack\">↶ Back one</button>'"),
+ ("'<span class=\"dr-ok\">○ 全員正解！ '+ok+'票ぜんぶ当たり</span>'", "'<span class=\"dr-ok\">○ All right! '+ok+(ok === 1 ? ' vote' : ' votes')+', every one correct</span>'"),
+ ("'<span class=\"dr-ok\">○ 当たり '+ok+'票</span><span class=\"dr-ng\">× はずれ '+ng+'票</span>'", "'<span class=\"dr-ok\">○ Right '+ok+'</span><span class=\"dr-ng\">× Wrong '+ng+'</span>'"),
+ ("alt=\"柴犬の忍者\"", "alt=\"Shiba ninja\""),
+ ("STEP 3</span><span><span style=\"display:inline-block\">順番にタップして</span><span style=\"display:inline-block\">自分の役を見る</span></span></h2>", "STEP 3</span>Tap in turn to see your role</h2>"),
 ]
 # 日本語版の文言が変わってペアが見つからないときは、止めずに飛ばして最後に一覧を出す
 # （その所は日本語のまま残る。英語版を日本語版に追いつかせるときに、この一覧を見てペアを直す）
@@ -321,7 +352,7 @@ for a, b in T2:
 # 英語版で出さない部品（日本語向けの機能）。要素は残して隠す（JS が id で触るため）
 EN_HIDE = ('<style id="en-hide">\n'
   '/* 英語版では出さない：配信モード・離れて遊ぶリンク・市販版（日本の商品）・振り返りの記録・はじめての方へ・配信から来た人への一言 */\n'
-  '#streamSw,#castSw,#playMode,.pm-sp,.cand-n,.sfx-sw,#viewOpen,#streamNote,#firstGuide,#fromStream,.shop-mini,\n'
+  '#streamSw,#castSw,#playMode,.pm-sp,.mvp-shop,.cand-n,.sfx-sw,#viewOpen,#streamNote,#firstGuide,#fromStream,.shop-mini,\n'
   '.deal-link,.deal-qr,#joinBox,#sentHint,.deal-remote,#annBox,#logLinks,#recStrip,.deal-scroll{display:none!important}\n'
   '</style>\n</head>')
 html = html.replace('</head>', EN_HIDE, 1)
@@ -332,12 +363,12 @@ if n_st != 1:
     sys.exit('[NG] 配信モードの判定（mode=stream）が見つかりません')
 
 # お題一覧ページへのリンクは英語版にまだ無いので、行ごと落とす
-html = re.sub(r'\s*<p style="text-align:center;font-size:\.875?rem;margin-top:\.8rem">\s*<a href="/odai/".*?</a>\s*</p>', '', html, flags=re.S)
+html = re.sub(r'\s*<p style="text-align:center;font-size:(?:\.875?rem|15px);margin-top:\.8rem">\s*<a href="/odai/".*?</a>\s*</p>', '', html, flags=re.S)
 
 # FAQ を差し替え（日本語版は build.py が静的HTMLで差し込んでいるので、そのブロックごと英語に置き換える）
 FAQ = [
  ('Do we need the card game to play?',
-  'No. Pass one phone around and each player sees their role privately. Voting and scoring are automatic, so there are no chips or paper to keep track of.'),
+  'No. It plays like The Game of Saying "Huh", but you do not need the box: pass one phone around and each player sees their role privately. Voting and scoring are automatic, so there are no chips or paper to keep track of.'),
  ('How many players?',
   'Three to eight. Four to six is the sweet spot — hard to read, easy to run. The number of roles adjusts to your group.'),
  ('How does it actually work?',
