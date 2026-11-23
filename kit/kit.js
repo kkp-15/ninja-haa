@@ -55,7 +55,8 @@
      KKit.countdown(n, { onDone, sound, step })  3・2・1 を真ん中に出す（step は1つの長さ ms・既定 800）。sound(数) で呼び出し側が鳴らす
      KKit.reveal(要素)             .k-reveal / .k-reveal-fuda / .k-reveal-stamp を出し直す（hidden も外す）
      KKit.share({ url, title, text })  端末の共有画面。なければ URL をコピーして toast。URL に ?d=YYYYMMDD を付ける
-     KKit.install(要素, { key, desktop })  ホーム画面に追加バナー。.k-install[data-k-key] は自動で呼ばれる */
+     KKit.install(要素, { key, desktop })  ホーム画面に追加バナー。.k-install[data-k-key] は自動で呼ばれる
+     KKit.sfx(種類, { vol })        効果音（全サイト共通の音の決まり。種類は下の SFX を見る） */
   function helpers() {
     var K = window.KKit = window.KKit || {};
     var toastEl = null, toastT = 0;
@@ -165,6 +166,56 @@
     };
 
     // 1回遊び終えたら呼ぶ（結果の画面など）。まだ出していないホーム画面追加の帯を、少し待ってから出す
+    /* 効果音（2026-11-24）。KKit.sfx(種類, { vol })。全サイトで同じ音の決まりにそろえる。
+       - 1つの AudioContext を使い回す（鳴らすたびに作ると、数回で鳴らなくなるブラウザがある）
+       - 音色はやわらかい三角波・正弦波だけ（矩形波・のこぎり波は耳に刺さるので使わない）。最後に軽いコンプレッサーで割れを防ぐ
+       - 大きさは控えめ。終わりの合図（alarm）だけ少し大きい。画面が裏に回っているときは鳴らさない
+       - 鳴らすかどうか（オン・オフの切り替え・配信モードの扱い）は各サイトで決める。ここは鳴らすだけ
+       種類: tap（軽く押した）・pick（選んだ）・flip（めくった）・close（閉じた）・land（置いた）・tick（時計の1秒）・last（最後の数秒）
+             cd（3・2・1）・reveal（答えが出る）・win（成功・ファンファーレ）・miss（失敗。下がる3音・やさしく）・alarm（時間切れ）・drum（ドラムロール） */
+    var AC = null, OUT = null;
+    function ac() {
+      if (!AC) {
+        var C = window.AudioContext || window.webkitAudioContext; if (!C) return null;
+        AC = new C();
+        var comp = AC.createDynamicsCompressor(); comp.threshold.value = -14; comp.knee.value = 12; comp.ratio.value = 4;
+        OUT = AC.createGain(); OUT.gain.value = 0.9; OUT.connect(comp); comp.connect(AC.destination);
+      }
+      if (AC.state === 'suspended') { try { AC.resume(); } catch (e) {} }
+      return AC;
+    }
+    function note(f, t0, dur, type, vol) {
+      var o = AC.createOscillator(), g = AC.createGain(), t = AC.currentTime + 0.01 + t0;
+      o.type = type || 'triangle'; o.frequency.setValueAtTime(f, t);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(vol, t + Math.min(0.012, dur / 4));
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(OUT); o.start(t); o.stop(t + dur + 0.03);
+    }
+    var SFX = {
+      tap:    function (v) { note(1175, 0, 0.05, 'triangle', 0.05 * v); },
+      pick:   function (v) { note(784, 0, 0.08, 'triangle', 0.09 * v); note(1047, 0.06, 0.1, 'triangle', 0.08 * v); },
+      flip:   function (v) { note(659, 0, 0.07, 'triangle', 0.08 * v); note(880, 0.05, 0.09, 'triangle', 0.08 * v); },
+      close:  function (v) { note(988, 0, 0.07, 'sine', 0.07 * v); note(1319, 0.08, 0.09, 'sine', 0.05 * v); },
+      land:   function (v) { note(784, 0, 0.12, 'triangle', 0.08 * v); },
+      tick:   function (v) { note(1047, 0, 0.04, 'sine', 0.035 * v); },
+      last:   function (v) { note(880, 0, 0.08, 'triangle', 0.07 * v); },
+      cd:     function (v) { note(523, 0, 0.18, 'triangle', 0.1 * v); },
+      reveal: function (v) { [523, 659, 784].forEach(function (f, i) { note(f, i * 0.1, 0.28, 'sine', 0.11 * v); }); },
+      win:    function (v) { [523, 659, 784, 1047].forEach(function (f, i) { note(f, i * 0.1, 0.22, 'triangle', 0.12 * v); }); note(1047, 0.4, 0.6, 'triangle', 0.11 * v); note(1319, 0.4, 0.6, 'sine', 0.05 * v); },
+      miss:   function (v) { note(523, 0, 0.18, 'triangle', 0.1 * v); note(415, 0.17, 0.2, 'triangle', 0.1 * v); note(349, 0.36, 0.42, 'triangle', 0.09 * v); },
+      alarm:  function (v) { [0, 0.32, 0.64].forEach(function (t) { note(880, t, 0.24, 'sine', 0.18 * v); note(1320, t, 0.24, 'sine', 0.05 * v); }); },
+      drum:   function (v) { var t = 0; for (var k = 0; k < 11; k++) { note(196 + k * 10, t, 0.05, 'triangle', 0.08 * v); t += Math.max(0.05, 0.13 - k * 0.009); } }
+    };
+    K.sfx = function (kind, o) {
+      if (document.hidden || !SFX[kind]) return;
+      try { if (!ac()) return; SFX[kind]((o && o.vol) || 1); } catch (e) {}
+    };
+    // iPhone は「最初に触った時」に音の準備をしないと、あとで鳴らない。1回だけ起こしておく
+    ['pointerdown', 'keydown'].forEach(function (ev) {
+      document.addEventListener(ev, function once() { document.removeEventListener(ev, once, true); try { ac(); } catch (e) {} }, true);
+    });
+
     K.installReady = function () { (K._installRelease || []).forEach(function (f) { setTimeout(f, 1200); }); };
     document.addEventListener('kkp:done', function () { K.installReady(); });
 
