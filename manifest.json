@@ -1,0 +1,17 @@
+{
+  "name": "声と表情で当てるゲーム",
+  "short_name": "声と表情で当てる",
+  "description": "同じ一言を声と表情だけで演じ分けて当て合う遊びを、スマホ1台で進める非公式の無料ツール。配役の配布・投票・得点まで。",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fffaf0",
+  "theme_color": "#e8843a",
+  "lang": "ja",
+  "icons": [
+    { "src": "/favicon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/favicon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
+  ]
+}
