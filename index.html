@@ -219,6 +219,12 @@ body.stream .act-lbl,body.stream #actDec,body.stream #actInc,body.stream #actorC
 body[data-players="1"] .act-lbl:not(.cand-n .act-lbl),body[data-players="1"] #actHint,body[data-players="1"] .act-lbl:not(.cand-n .act-lbl)+.num{display:none}
 body.stream #postOnly{display:none!important}
 .sfx-sw{display:none!important}
+/* 2026-11-24 答えが出た瞬間、下の帯に「当たり◯票・はずれ◯票」をひと目で（ユーザー承認B・人気アプリの型）。色だけに頼らず ○× と文字で */
+#dockRes{display:none}
+#dock[data-step=result] #dockRes:not([hidden]){display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;min-height:40px;padding:4px 8px;border:2px solid var(--k-sumi,#1f1a17);border-radius:8px;background:#fffdf8;font-weight:800;font-size:16px;line-height:1.3;animation:k-rv .32s ease-out both}
+#dockRes .dr-ok{color:#2f6b3f}#dockRes .dr-ng{color:#c93b23}
+#dockRes.all{background:#8cbf3f;color:#1f1a17;border-color:#1f1a17}#dockRes.all .dr-ok{color:#1f1a17}
+body.stream #dockRes{display:none!important}
 /* 2026-11-24 ホーム画面に追加の帯は下の固定バー（#dock）にかぶせない */
 #haaInstall{bottom:calc(var(--dock-h,76px) + 10px)!important}
 /* 2026-11-24 スマホは開いてすぐ「人数を選ぶ」（ユーザー承認①A）。上の説明は題名と1文だけにし、
@@ -1698,7 +1704,7 @@ body.stream .meien-t{font-size:1.15rem}
 
 </section>
 <!-- 主な操作は画面下のここに集める（ボタンはJSで各画面から移す）。main の外の広告までは付いていかない -->
-<div id="dock" data-step="setup"><div id="dockMsg"></div></div>
+<div id="dock" data-step="setup"><div id="dockMsg"></div><div id="dockRes" hidden role="status"></div></div>
 </main>
 <!-- 広告と紹介は答え合わせのあとだけ出す（主ボタンの #dock より下・離して置く） -->
 <div class="post-only" id="postOnly">
@@ -3381,7 +3387,7 @@ function pushResultAd(){
   if (key === _raKey) return;
   _raKey = key;
   // 2026-11-24 ホーム画面に追加（ユーザー承認③A）：1回目の答え合わせのあとにだけ出す。閉じたら二度と出さない（配信・参加者画面では出さない＝上で戻る）
-  try { const ib = document.getElementById('haaInstall'); if (ib && window.KKit && KKit.install){ KKit.install(ib, { key:'haa_install_dismissed' }); KKit.installReady(); } } catch(e){}
+  try { const ib = document.getElementById('haaInstall'); if (ib && window.KKit && KKit.install){ if (typeof setDockH === 'function') setDockH(); KKit.install(ib, { key:'haa_install_dismissed' }); KKit.installReady(); } } catch(e){}
   const ad = document.querySelector('#postOnly .ad-slot'); const slot = ad && ad.querySelector('ins'); if (!slot) return;
   if (!_raTpl && !slot.hasAttribute('data-adsbygoogle-status')) _raTpl = slot.cloneNode(false);   // 未使用の状態を控えておく
   if (!_raTpl) return;
@@ -3430,6 +3436,20 @@ function countdownReveal(){
   track('haa_unveil',{players:S.players});
 }
 // 答えが出る瞬間（3・2・1 のあと）
+// 2026-11-24 答えが出たら下の帯に当たり・はずれの票数（配信モードは出さない）
+// 下の帯の高さを --dock-h に入れる（ホーム画面に追加の帯をその上に出すため）
+function setDockH(){ const dk = document.getElementById('dock'); if (dk) document.documentElement.style.setProperty('--dock-h', Math.round(dk.getBoundingClientRect().height)+'px'); }
+try { const dk = document.getElementById('dock'); if (dk && window.ResizeObserver) new ResizeObserver(setDockH).observe(dk); } catch(e){}
+function dockResult(){
+  const el = $('dockRes'); if (!el) return;
+  const ok = document.querySelectorAll('#resultBody .vc.ok').length, ng = document.querySelectorAll('#resultBody .vc.ng').length;
+  if (document.body.classList.contains('stream') || ok + ng === 0){ el.hidden = true; return; }
+  el.className = (ng === 0) ? 'all' : '';
+  el.innerHTML = (ng === 0) ? '<span class="dr-ok">○ 全員正解！ '+ok+'票ぜんぶ当たり</span>'
+    : '<span class="dr-ok">○ 当たり '+ok+'票</span><span class="dr-ng">× はずれ '+ng+'票</span>';
+  el.hidden = false;
+  setDockH();
+}
 function revealNow(){
   $('cdown').hidden = true; $('cdown').classList.remove('last');
   $('unveil').hidden = true; $('unveilMsg').hidden = true;
@@ -3437,6 +3457,7 @@ function revealNow(){
   document.body.classList.remove('veiling');
   updateNow();
   setTimeout(pushResultAd, 60);
+  dockResult();
   $('resultBody').querySelectorAll('.ans-card').forEach((r,k)=>{ r.style.animationDelay = (k*0.12)+'s'; r.classList.add('pop'); });
   if (!RESUMING){ confetti(); sfx('fanfare'); countUpScores(); }
   if (!(RESUMING && S.ask)) S.ask = nextAsk();
@@ -3490,6 +3511,7 @@ function show(name){
   const cur = $('step-'+name);
   if (cur && changed){ cur.classList.remove('enter'); void cur.offsetWidth; cur.classList.add('enter'); }
   document.body.classList.toggle('at-result', name==='result');
+  if (name !== 'result' && $('dockRes')) $('dockRes').hidden = true;
   if (name === 'result') renderNextPick();
   if (name === 'result' || name === 'setup') renderActorPick();
   rcPlace(name);
