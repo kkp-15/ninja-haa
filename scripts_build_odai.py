@@ -94,6 +94,10 @@ TITLE = f'はぁって言うゲーム風のオリジナルお題一覧【全{N_W
 DESC  = (f'はぁって言うゲームのように、同じ一言を演じ分けて当て合う遊びのお題一覧。「はぁ」「えっ」など{N_WORD}のお題に8通りずつ、'
          f'全{N_ACT}通り。すべてオリジナル（非公式・市販品のお題は含みません）。忘年会・新年会、クリスマス会、お正月の帰省で使えるお題、学級レクや授業での進め方も。')
 
+# d4.css の版はアプリ本体（index.html）に合わせる（2026-11-25。本体と一覧の手直しが再生成で消えていたので生成元に入れた）
+_m = re.search(r'href="/d4\.css(\?v=[^"]*)?"', open(os.path.join(ROOT, 'index.html'), encoding='utf-8').read())
+D4_Q = (_m.group(1) or '') if _m else ''
+
 def page_head(title, desc, path, lds):
     return f'''<!DOCTYPE html>
 <html lang="ja">
@@ -113,6 +117,10 @@ def page_head(title, desc, path, lds):
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="声と表情で当てる">
 {lds}
 <script async src="https://www.googletagmanager.com/gtag/js?id={GA}"></script>
 <script>
@@ -153,6 +161,10 @@ h2{{font-size:20px;line-height:1.5;margin:0 0 .5rem;padding-left:.6rem;border-le
 .cd{{margin:0 0 .8rem}}
 .sec ol{{margin:0 0 .8rem;padding-left:1.4rem}}
 .sec li{{margin:0 0 .3rem}}
+/* 2026-11-25 公式の版を探している人への案内 */
+.kousiki{{padding:.2rem 0 .6rem;border-top:2px solid var(--orange);border-bottom:1px solid var(--line)}}
+.kousiki ul{{margin:0 0 .8rem;padding-left:1.4rem}}
+.kousiki .near li{{margin:0 0 .5rem;line-height:1.9}}
 .w{{margin:0 0 1.2rem}}
 .w h3{{margin:0 0 .3rem;font-size:1.1rem;line-height:1.5;background:var(--cream);padding:.25rem .6rem}}
 .w h3 .pw{{float:right;font-size:.875rem;font-weight:700;color:#b3541a;text-decoration:none;padding:.15rem .55rem;border:1px solid var(--orange);border-radius:6px;background:#fff;margin:.1rem 0 0 .6rem}}
@@ -180,7 +192,7 @@ body{{line-height:1.7}}
 .play .btn{{min-height:44px;line-height:1.4;padding:.6rem 1rem}}
 details.block summary{{min-height:48px}}
 </style>
-<link rel="stylesheet" href="/d4.css">
+<link rel="stylesheet" href="/d4.css{D4_Q}">
 </head>
 <body class="k-page d4-read d4-odai">
 <div class="wrap">
@@ -218,9 +230,33 @@ TAIL = f'''<div class="ad-slot">
 <script>
 (function(){{ try {{ (adsbygoogle = window.adsbygoogle || []).push({{}}); }} catch(e) {{}} }})();
 </script>
+<script>document.addEventListener('click',function(e){{var a=e.target.closest&&e.target.closest('a[data-ga]');if(!a)return;try{{if(typeof gtag==='function')gtag('event','haa_odai_link',{{to:a.dataset.ga}});}}catch(_){{}}}});</script>
 </body>
 </html>
 '''
+
+# 2026-11-25 「夜の／青春の／2 … お題一覧」で探して来る人への案内（GSC 5〜9位）。
+# 公式のお題の中身は載せない。版の名前と公式ページへの案内、近い雰囲気のオリジナルお題へのリンクだけ。アフィリリンクは付けない。
+# 版の一覧は幻冬舎の特設ページの掲載どおり（確認日はメモリ project_haa_2026_09.md に記録）。新作が出たらここに足す
+OFFICIAL_URL = 'https://www.gentosha.co.jp/s/haa-game/'
+OFFICIAL_SERIES = ['はぁって言うゲーム', 'はぁって言うゲーム2', 'はぁって言うゲーム3', 'はぁって言うゲーム4',
+                   '青春のはぁって言うゲーム', 'こどものはぁって言うゲーム', '信長のはぁって言うゲーム']
+def _near(*cids):
+    return '・'.join(f'<a href="#{c}" data-ga="near_{c}">{esc(dict((k, l) for k, l, _ in order)[c])}（{len(data[c])}お題）</a>' for c in cids)
+OFFICIAL_BLOCK = f'''<section class="sec kousiki" id="koushiki">
+<h2>公式の「夜の」「青春の」「2」などのお題を探している人へ</h2>
+<p>『はぁって言うゲーム』は幻冬舎のカードゲームです。公式のシリーズは次の{len(OFFICIAL_SERIES)}作です。</p>
+<ul class="series">{''.join(f'<li>{esc(t)}</li>' for t in OFFICIAL_SERIES)}</ul>
+<p>「夜のはぁって言うゲーム」という名前の版は、公式ページの一覧にはありません。</p>
+<p><b>このページは非公式で、公式カードのお題の中身は載せていません。</b>ここにあるお題はすべて当サイトのオリジナルです。公式のお題で遊びたい人は、<a href="{OFFICIAL_URL}" target="_blank" rel="noopener" data-ga="official">幻冬舎の公式ページ</a>でカードを確かめてください。</p>
+<p>近い雰囲気のオリジナルお題なら、ここから選べます。</p>
+<ul class="near">
+<li>大人の集まり・夜の飲みの席に：{_near('koi', 'nomikai', 'tere')}</li>
+<li>学生どうし・青春っぽく：{_near('gakkou', 'koi')}</li>
+<li>はじめての人と：{_near('teiban', 'aisatsu')}</li>
+<li>子どもと：{_near('kodomo')}</li>
+</ul>
+</section>'''
 
 MAIN_ODAI = f'''<h1>はぁって言うゲーム風のオリジナルお題一覧<span class="c">【全{N_WORD}お題・{N_ACT}通り】声と表情で演じる・非公式</span></h1>
 <p class="upd">更新日 <time datetime="{UPDATED}">{UPDATED}</time></p>
@@ -232,6 +268,8 @@ MAIN_ODAI = f'''<h1>はぁって言うゲーム風のオリジナルお題一覧
 
 <nav class="toc" aria-label="カテゴリ目次">{toc}</nav>
 <p class="season">忘年会・クリスマス・お正月に使うなら：<a href="/odai/nenmatsu/">年末年始のお題（場面別・{N_SEASON}お題）</a></p>
+
+{OFFICIAL_BLOCK}
 
 <section class="sec" id="class">
 <h2>学級レク・授業で使うとき</h2>
