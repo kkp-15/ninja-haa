@@ -247,7 +247,7 @@ OFFICIAL_BLOCK = f'''<section class="sec kousiki" id="koushiki">
 <h2>公式の「夜の」「青春の」「2」などのお題を探している人へ</h2>
 <p>『はぁって言うゲーム』は幻冬舎のカードゲームです。公式のシリーズは次の{len(OFFICIAL_SERIES)}作です。</p>
 <ul class="series">{''.join(f'<li>{esc(t)}</li>' for t in OFFICIAL_SERIES)}</ul>
-<p>「夜のはぁって言うゲーム」という名前の版は、公式ページの一覧にはありません。</p>
+<p>「夜のはぁって言うゲーム」という名前の版は、2026年11月25日の時点で幻冬舎の公式ページの一覧には見当たりませんでした。</p>
 <p><b>このページは非公式で、公式カードのお題の中身は載せていません。</b>ここにあるお題はすべて当サイトのオリジナルです。公式のお題で遊びたい人は、<a href="{OFFICIAL_URL}" target="_blank" rel="noopener" data-ga="official">幻冬舎の公式ページ</a>でカードを確かめてください。</p>
 <p>近い雰囲気のオリジナルお題なら、ここから選べます。</p>
 <ul class="near">
