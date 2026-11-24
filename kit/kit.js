@@ -173,39 +173,97 @@
        - 鳴らすかどうか（オン・オフの切り替え・配信モードの扱い）は各サイトで決める。ここは鳴らすだけ
        種類: tap（軽く押した）・pick（選んだ）・flip（めくった）・close（閉じた）・land（置いた）・tick（時計の1秒）・last（最後の数秒）
              cd（3・2・1）・reveal（答えが出る）・win（成功・ファンファーレ）・miss（失敗。下がる3音・やさしく）・alarm（時間切れ）・drum（ドラムロール） */
-    var AC = null, OUT = null;
+    var AC = null, OUT = null, VERB = null, NOISE = null;
+    // 2026-11-24 作り直し: 1音の「ピッ」をやめ、響き（ホールの残響）・木の打楽器・ベル・金管の和音・シンバルを重ねる。音のファイルは使わない
     function ac() {
       if (!AC) {
         var C = window.AudioContext || window.webkitAudioContext; if (!C) return null;
-        AC = new C();
-        var comp = AC.createDynamicsCompressor(); comp.threshold.value = -14; comp.knee.value = 12; comp.ratio.value = 4;
-        OUT = AC.createGain(); OUT.gain.value = 0.9; OUT.connect(comp); comp.connect(AC.destination);
+        AC = new C(); build(AC);
       }
       if (AC.state === 'suspended') { try { AC.resume(); } catch (e) {} }
       return AC;
     }
-    function note(f, t0, dur, type, vol) {
-      var o = AC.createOscillator(), g = AC.createGain(), t = AC.currentTime + 0.01 + t0;
-      o.type = type || 'triangle'; o.frequency.setValueAtTime(f, t);
-      g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(vol, t + Math.min(0.012, dur / 4));
-      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-      o.connect(g); g.connect(OUT); o.start(t); o.stop(t + dur + 0.03);
+    function build(c) {
+      var comp = c.createDynamicsCompressor(); comp.threshold.value = -16; comp.knee.value = 10; comp.ratio.value = 5; comp.attack.value = 0.003; comp.release.value = 0.2;
+      OUT = c.createGain(); OUT.gain.value = 0.95; OUT.connect(comp); comp.connect(c.destination);
+      // 残響: ノイズを指数で減らした短いホール（1.4秒）。左右で少し変えて広がりを出す
+      var len = Math.floor(c.sampleRate * 1.4), ir = c.createBuffer(2, len, c.sampleRate);
+      for (var ch = 0; ch < 2; ch++) { var d = ir.getChannelData(ch); for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3.2); }
+      var conv = c.createConvolver(); conv.buffer = ir;
+      VERB = c.createGain(); VERB.gain.value = 0.32; VERB.connect(conv); conv.connect(OUT);
+      var nl = c.sampleRate; NOISE = c.createBuffer(1, nl, c.sampleRate); var nd = NOISE.getChannelData(0); for (var j = 0; j < nl; j++) nd[j] = Math.random() * 2 - 1;
+    }
+    function T(t0) { return AC.currentTime + 0.01 + t0; }
+    function dest(node, wet) { node.connect(OUT); if (wet) { var w = AC.createGain(); w.gain.value = wet; node.connect(w); w.connect(VERB); } }
+    function env(g, t, a, peak, dur) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + dur); }
+    // 正弦波の1音（倍音つき）。parts: [[倍率, 大きさ, 減り方(秒)], ...]
+    function tone(f, t0, dur, vol, parts, wet, type) {
+      var t = T(t0), bus = AC.createGain(); bus.gain.value = 1; dest(bus, wet);
+      (parts || [[1, 1, dur]]).forEach(function (p) {
+        var o = AC.createOscillator(), g = AC.createGain(); o.type = type || 'sine'; o.frequency.setValueAtTime(f * p[0], t);
+        env(g, t, 0.004, Math.max(0.0002, vol * p[1]), Math.min(dur, p[2])); o.connect(g); g.connect(bus); o.start(t); o.stop(t + dur + 0.05);
+      });
+    }
+    var MARIMBA = [[1, 1, 0.5], [3.98, 0.35, 0.12], [9.2, 0.12, 0.05]];
+    var BELL = [[1, 1, 1.6], [2.76, 0.45, 0.9], [5.4, 0.25, 0.5], [8.93, 0.12, 0.3]];
+    var WOOD = [[1, 1, 0.09], [2.57, 0.5, 0.05]];
+    function marimba(f, t0, vol, wet) { tone(f, t0, 0.6, vol, MARIMBA, wet == null ? 0.5 : wet); }
+    function bell(f, t0, vol, dur, wet) { tone(f, t0, dur || 1.6, vol, BELL, wet == null ? 0.8 : wet); }
+    // ノイズ（シンバル・スネア・紙の音）。type: highpass / bandpass / lowpass
+    function noise(t0, dur, vol, type, freq, q, wet, sweepTo) {
+      var t = T(t0), s = AC.createBufferSource(), f = AC.createBiquadFilter(), g = AC.createGain();
+      s.buffer = NOISE; s.loop = true; f.type = type; f.frequency.setValueAtTime(freq, t); if (sweepTo) f.frequency.exponentialRampToValueAtTime(sweepTo, t + dur); f.Q.value = q || 0.7;
+      env(g, t, 0.003, vol, dur); s.connect(f); f.connect(g); dest(g, wet || 0); s.start(t, Math.random() * 0.5); s.stop(t + dur + 0.05);
+    }
+    // 金管っぽい和音（のこぎり波を低い所だけ通して、こもらせて柔らかく）
+    function brass(freqs, t0, dur, vol, wet) {
+      var t = T(t0);
+      freqs.forEach(function (f) {
+        [-6, 6].forEach(function (cents) {
+          var o = AC.createOscillator(), lp = AC.createBiquadFilter(), g = AC.createGain();
+          o.type = 'sawtooth'; o.frequency.setValueAtTime(f, t); o.detune.value = cents;
+          lp.type = 'lowpass'; lp.Q.value = 1.2; lp.frequency.setValueAtTime(300, t); lp.frequency.exponentialRampToValueAtTime(2400, t + 0.06); lp.frequency.exponentialRampToValueAtTime(1100, t + dur);
+          g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol / freqs.length, t + 0.04); g.gain.setValueAtTime(vol / freqs.length, t + dur * 0.6); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+          o.connect(lp); lp.connect(g); dest(g, wet == null ? 0.45 : wet); o.start(t); o.stop(t + dur + 0.05);
+        });
+      });
+    }
+    // 下がる音（太鼓の胴・ドスン）
+    function thump(f0, f1, t0, dur, vol, wet) {
+      var t = T(t0), o = AC.createOscillator(), g = AC.createGain(); o.type = 'sine';
+      o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + dur); env(g, t, 0.003, vol, dur); o.connect(g); dest(g, wet || 0.2); o.start(t); o.stop(t + dur + 0.05);
+    }
+    // ずり下がる「ぽわわ〜ん」（失敗。やさしく、笑える方へ）
+    function slide(f0, f1, t0, dur, vol) {
+      var t = T(t0), o = AC.createOscillator(), lp = AC.createBiquadFilter(), g = AC.createGain(), lfo = AC.createOscillator(), lg = AC.createGain();
+      o.type = 'sawtooth'; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+      lfo.frequency.value = 6; lg.gain.value = 9; lfo.connect(lg); lg.connect(o.frequency);
+      lp.type = 'lowpass'; lp.frequency.setValueAtTime(1400, t); lp.frequency.exponentialRampToValueAtTime(500, t + dur); lp.Q.value = 2;
+      env(g, t, 0.03, vol, dur); o.connect(lp); lp.connect(g); dest(g, 0.4); o.start(t); lfo.start(t); o.stop(t + dur + 0.05); lfo.stop(t + dur + 0.05);
     }
     var SFX = {
-      tap:    function (v) { note(1175, 0, 0.05, 'triangle', 0.05 * v); },
-      pick:   function (v) { note(784, 0, 0.08, 'triangle', 0.09 * v); note(1047, 0.06, 0.1, 'triangle', 0.08 * v); },
-      flip:   function (v) { note(659, 0, 0.07, 'triangle', 0.08 * v); note(880, 0.05, 0.09, 'triangle', 0.08 * v); },
-      close:  function (v) { note(988, 0, 0.07, 'sine', 0.07 * v); note(1319, 0.08, 0.09, 'sine', 0.05 * v); },
-      land:   function (v) { note(784, 0, 0.12, 'triangle', 0.08 * v); },
-      tick:   function (v) { note(1047, 0, 0.04, 'sine', 0.035 * v); },
-      last:   function (v) { note(880, 0, 0.08, 'triangle', 0.07 * v); },
-      cd:     function (v) { note(523, 0, 0.18, 'triangle', 0.1 * v); },
-      reveal: function (v) { [523, 659, 784].forEach(function (f, i) { note(f, i * 0.1, 0.28, 'sine', 0.11 * v); }); },
-      win:    function (v) { [523, 659, 784, 1047].forEach(function (f, i) { note(f, i * 0.1, 0.22, 'triangle', 0.12 * v); }); note(1047, 0.4, 0.6, 'triangle', 0.11 * v); note(1319, 0.4, 0.6, 'sine', 0.05 * v); },
-      miss:   function (v) { note(523, 0, 0.18, 'triangle', 0.1 * v); note(415, 0.17, 0.2, 'triangle', 0.1 * v); note(349, 0.36, 0.42, 'triangle', 0.09 * v); },
-      alarm:  function (v) { [0, 0.32, 0.64].forEach(function (t) { note(880, t, 0.24, 'sine', 0.18 * v); note(1320, t, 0.24, 'sine', 0.05 * v); }); },
-      drum:   function (v) { var t = 0; for (var k = 0; k < 11; k++) { note(196 + k * 10, t, 0.05, 'triangle', 0.08 * v); t += Math.max(0.05, 0.13 - k * 0.009); } }
+      tap:    function (v) { tone(1600, 0, 0.09, 0.09 * v, WOOD, 0.15); noise(0, 0.02, 0.03 * v, 'highpass', 4000); },
+      pick:   function (v) { marimba(784, 0, 0.16 * v); marimba(1175, 0.07, 0.13 * v); },
+      flip:   function (v) { noise(0, 0.16, 0.09 * v, 'bandpass', 900, 1.2, 0.2, 5200); marimba(1047, 0.08, 0.12 * v); },
+      close:  function (v) { marimba(1175, 0, 0.11 * v); marimba(784, 0.07, 0.1 * v); },
+      land:   function (v) { thump(170, 70, 0, 0.22, 0.32 * v); tone(880, 0, 0.1, 0.05 * v, WOOD, 0.2); },
+      tick:   function (v) { tone(1400, 0, 0.08, 0.07 * v, WOOD, 0.1); },
+      last:   function (v) { tone(1900, 0, 0.1, 0.1 * v, WOOD, 0.2); tone(950, 0, 0.1, 0.05 * v, WOOD, 0.2); },
+      cd:     function (v) { bell(523, 0, 0.16 * v, 1.0); thump(110, 55, 0, 0.3, 0.25 * v); },
+      reveal: function (v) { noise(0, 0.5, 0.05 * v, 'highpass', 3000, 0.7, 0.6, 9000); [784, 988, 1175, 1568].forEach(function (f, i) { bell(f, 0.05 + i * 0.07, 0.09 * v, 1.4); }); },
+      win:    function (v) {
+        thump(150, 60, 0, 0.35, 0.35 * v);
+        brass([392, 523, 659], 0, 0.16, 0.22 * v); brass([392, 523, 659], 0.17, 0.16, 0.22 * v); brass([523, 659, 784, 1047], 0.34, 1.0, 0.3 * v);
+        noise(0.34, 1.6, 0.07 * v, 'highpass', 6000, 0.5, 0.5);
+        [1568, 2093, 2637, 3136].forEach(function (f, i) { bell(f, 0.45 + i * 0.08, 0.05 * v, 1.2); });
+      },
+      miss:   function (v) { slide(392, 370, 0, 0.32, 0.12 * v); slide(370, 349, 0.36, 0.32, 0.12 * v); slide(349, 262, 0.72, 0.9, 0.13 * v); },
+      alarm:  function (v) { [0, 0.42, 0.84].forEach(function (t) { bell(988, t, 0.22 * v, 0.9, 0.5); bell(1319, t, 0.08 * v, 0.6, 0.5); }); },
+      drum:   function (v) {
+        var t = 0, n = 26;
+        for (var k = 0; k < n; k++) { var a = 0.025 + 0.11 * (k / n); noise(t, 0.07, a * v, 'bandpass', 1800, 0.8, 0.2); thump(220, 160, t, 0.06, a * 0.6 * v, 0); t += Math.max(0.035, 0.09 - k * 0.003); }
+        thump(140, 55, t, 0.4, 0.4 * v, 0.3); noise(t, 1.2, 0.08 * v, 'highpass', 5000, 0.5, 0.5);
+      }
     };
     K.sfx = function (kind, o) {
       if (document.hidden || !SFX[kind]) return;
