@@ -59,6 +59,15 @@
      KKit.sfx(種類, { vol })        効果音（全サイト共通の音の決まり。種類は下の SFX を見る） */
   function helpers() {
     var K = window.KKit = window.KKit || {};
+    // 商品カード（.k-aff）のクリック計測。砦の手本（/block/・年末ゲーム記事）と同じ toride_click で送る（2026-11-26）
+    document.addEventListener('click', function (e) {
+      var a = e.target && e.target.closest ? e.target.closest('.k-aff a[href]') : null;
+      if (!a) return;
+      var box = a.closest('.k-aff');
+      try {
+        if (window.gtag) gtag('event', 'toride_click', { link_class: (box && box.getAttribute('data-zone')) || 'affiliate', link_url: a.href, store: a.getAttribute('data-store') || '', item: a.getAttribute('data-item') || '' });
+      } catch (err) {}
+    }, true);
     var toastEl = null, toastT = 0;
     K.toast = function (msg, ms) {
       if (!toastEl) {
