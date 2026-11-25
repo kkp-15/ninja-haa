@@ -54,12 +54,17 @@
   });
 })();
 </script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2LM85GJN0L"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-2LM85GJN0L');
+  // 本番ドメインだけで計測する（*.pages.dev に来るボットの0秒訪問で数字が崩れていたため）
+  if (/(^|\.)kkpwebninja\.com$/.test(location.hostname)) {
+    var gs = document.createElement('script'); gs.async = true;
+    gs.src = 'https://www.googletagmanager.com/gtag/js?id=G-2LM85GJN0L';
+    document.head.appendChild(gs);
+    gtag('js', new Date());
+    gtag('config', 'G-2LM85GJN0L');
+  }
 </script>
 <!-- 共通部品 kit（kkp-kit を kit/ にコピーしたもの）。配信モードの判定（KKit.stream）をAdvertisementより先に使うので defer なしで読む -->
 <script src="/kit/kit.js?v=f44ca53"></script>

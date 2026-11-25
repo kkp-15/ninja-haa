@@ -122,12 +122,17 @@ def page_head(title, desc, path, lds):
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="声と表情で当てる">
 {lds}
-<script async src="https://www.googletagmanager.com/gtag/js?id={GA}"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){{dataLayer.push(arguments);}}
-  gtag('js', new Date());
-  gtag('config', '{GA}');
+  // 本番ドメインだけで計測する（*.pages.dev に来るボットの0秒訪問で数字が崩れていたため）
+  if (/(^|\\.)kkpwebninja\\.com$/.test(location.hostname)) {{
+    var gs = document.createElement('script'); gs.async = true;
+    gs.src = 'https://www.googletagmanager.com/gtag/js?id={GA}';
+    document.head.appendChild(gs);
+    gtag('js', new Date());
+    gtag('config', '{GA}');
+  }}
 </script>
 <script async data-overlays="bottom" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={PUB}" crossorigin="anonymous"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
