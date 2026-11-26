@@ -802,7 +802,7 @@ button,[role=button],.k-btn{-webkit-user-select:none;user-select:none;-webkit-to
 .k-aff-pr{flex:none;font-size:12px;border:1px solid #8a7d6b;color:#5b5047;padding:0 4px;border-radius:3px;line-height:1.5;font-weight:400;letter-spacing:0}
 .k-aff-lead{margin:0 0 6px;font-size:14px;line-height:1.6;color:#3d3427}
 .k-aff-item{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px dashed #e4d8c4}
-.k-aff-h+.k-aff-item{border-top:0}
+.k-aff-h+.k-aff-item,.k-aff>.k-aff-item:first-child{border-top:0}
 .k-aff-img{flex:none;display:block;width:88px;height:88px;border-radius:4px;background:#fff;overflow:hidden;line-height:0}
 .k-aff-img img{width:100%;height:100%;object-fit:contain;display:block;margin:0;border:0}
 .k-aff-txt{flex:1;min-width:0;font-size:14px;line-height:1.5;color:#3d3427}
