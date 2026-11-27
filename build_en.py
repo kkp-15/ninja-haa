@@ -81,6 +81,7 @@ html = re.sub(r'<!-- WEBNINJA_RELATED_APPS -->.*?\n</div>', RELATED, html, count
 FOOTER = '''<!-- WEBNINJA_UNIFIED_FOOTER -->
 <footer style="text-align:center;padding:2rem 1rem 2.5rem;font-size:.875rem;color:#5f6b7a;line-height:2;border-top:1px solid #f0e6d2;margin-top:2.5rem;background:#fffcf7;">
   <div style="font-weight:800;color:#6e5530;font-size:.875rem;margin-bottom:0.4rem;">web忍者の砦</div>
+  <div class="kkp-anshin">No sign-up or login. No fields for email or passwords. | <a href="https://privacypolicy.kkpwebninja.com/en/#input" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;display:inline-block;padding:10px 2px;">How your input is handled</a></div>
   <div>
     <a href="https://kkpwebninja.com/" target="_blank" rel="noopener" style="color:#6e5530;text-decoration:none;margin:0 0.5rem;">All our free web apps</a>·
     <a href="https://privacypolicy.kkpwebninja.com/en/" target="_blank" rel="noopener" style="color:#6e5530;text-decoration:none;margin:0 0.5rem;">Privacy policy</a>
