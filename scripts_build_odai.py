@@ -248,6 +248,12 @@ TAIL = f'''<div class="ad-slot">
   <a href="https://pinch.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">みんなのピンチ脱出 — 道具3つで切り抜ける話をする（2〜8人）</a>
   <a href="https://gesture.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ジェスチャーおでこ当て — 言葉を使わずお題を伝える</a>
   <a href="https://kkpwebninja.com/blog/party/nenmatsu-game" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">忘年会・お正月に使えるゲームを人数で選ぶ — 年末の集まり向け早見表</a>
+  <a href="https://kyoutsu.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">共通点探しゲーム — 初対面のアイスブレイクに</a>
+  <a href="https://monosashi.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">みんなのものさし — みんなの答えの平均を当てる</a>
+  <a href="https://smarpassstory.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">スマホパスストーリー — 回して作る爆笑文章ゲーム</a>
+  <a href="https://bingomachine.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ビンゴマシン — 忘年会・クリスマス会の景品に</a>
+  <a href="https://kuji.kkpwebninja.com/present/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">プレゼント交換くじ — 自分のが当たらない</a>
+  <a href="https://kkpwebninja.com/blog/party/bingo-keihin" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ビンゴの景品の予算は？ — 人数別の個数の目安（web忍者の砦）</a>
 </div>
 
 <!-- WEBNINJA_UNIFIED_FOOTER -->
