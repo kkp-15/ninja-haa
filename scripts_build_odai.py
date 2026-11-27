@@ -65,6 +65,33 @@ for cid, label, desc in order:
         f'<p class="cd">{esc(desc)}</p>{rows}'
         f'<p class="play"><a class="btn" href="{SITE}/?cat={cid}">「{esc(label)}」のお題で遊ぶ</a></p></section>')
 
+# 2026-11-27 ユーザー承認（11/3「増やす」・確認待ち 旧#12）: お題一覧の広告を末尾1枠→4枠に。
+# ito の /odai/ と同じ形で、カテゴリの切れ目に3枠（お題の途中は割らない）。標準の長方形・高さ予約・ラベルつき。
+# 手前300pxに来た枠だけ class を付けて1回 push（push は「最初の未使用の枠」を埋めるため、それまでは adsbygoogle-later）。
+# 遊ぶ画面（本体）と年末年始ページには足さない
+MID_AD = ('<div class="ad-slot ad-mid"><div class="ad-label">広告</div>'
+          f'<ins class="adsbygoogle-later" style="display:block" data-ad-client="{PUB}" data-ad-slot="2937937957" '
+          'data-ad-format="rectangle" data-full-width-responsive="false"></ins></div>')
+MID_AD_JS = '''<script>
+(function(){
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.ad-mid'));
+  function load(box){
+    var ins = box.querySelector('ins.adsbygoogle-later'); if (!ins) return;
+    ins.className = 'adsbygoogle';
+    var done = false, push = function(){ if (done) return; done = true; try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {} };
+    requestAnimationFrame(push); setTimeout(push, 120);
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting) { io.unobserve(e.target); load(e.target); } }); }, { rootMargin: '300px 0px' });
+    boxes.forEach(function(b){ io.observe(b); });
+  } else boxes.forEach(load);
+})();
+</script>'''
+_n = len(blocks)
+for _i in sorted({round(_n / 4), round(_n / 2), round(_n * 3 / 4)}, reverse=True):
+    blocks.insert(_i, MID_AD)
+blocks.append(MID_AD_JS)
+
 FAQ = [
  ('お題は自由に使えますか？',
   'この一覧のお題はすべて当サイトのオリジナルです。紙に書き写して遊んでいただいてかまいません。ただし、そのまま転載して配布することはご遠慮ください。'),
@@ -190,7 +217,9 @@ a{{color:#1565c0}}
   border-top:1px dashed var(--line);border-bottom:1px dashed var(--line)}}
 .ad-label{{font-size:10.5px;letter-spacing:.14em;color:var(--muted);margin-bottom:6px}}
 .ad-slot ins.adsbygoogle{{display:block;width:300px;height:250px;margin:0 auto}}
-@media(min-width:760px){{h2{{font-size:22px}}.ad-slot ins.adsbygoogle{{width:336px;height:280px}}}}
+.ad-mid{{min-height:288px;box-sizing:content-box}}
+.ad-mid ins{{display:block;width:300px;height:250px;margin:0 auto}}
+@media(min-width:760px){{h2{{font-size:22px}}.ad-slot ins.adsbygoogle{{width:336px;height:280px}}.ad-mid{{min-height:318px}}.ad-mid ins{{width:336px;height:280px}}}}
 /* 2026-10-03 UI/UX指針: 行間を1.7に、「遊ぶ」ボタンは44px以上 */
 body{{line-height:1.7}}
 .cta{{min-height:48px}}
