@@ -830,3 +830,50 @@ button,[role=button],.k-btn{-webkit-user-select:none;user-select:none;-webkit-to
 .k-aff-hint{margin:0;font-size:14px;color:#5b5047}
 @media (max-width:360px){.k-aff-img{width:72px;height:72px}}
 @media print{.k-aff{display:none}}
+
+/* =====================================================================
+   2026-11-27 録画モード（k-rec・?rec=1）。画面録画してインスタに載せやすい縦9:16の画面
+   手本はマッスルタイピング（90712ed）。kit.js の KKit.rec が <html data-k-rec> を付ける。使い方は README の「録画モード」
+   <body> の直下に <div class="k-rec-stage"> を1つ置き、録画モードの場面はその中にサイトごとに書く。
+   録画モードでは body の直下の .k-rec-stage 以外（広告・説明・フッター）を消す。外側は黒、PC では中央に 9:16 の枠。
+   安全地帯（インスタの表示に隠れる所）: 上 --k-rec-top 14% ／ 下 --k-rec-bottom 20% ／ 右端 --k-rec-right 12%。大事な字はここに置かない
+   ===================================================================== */
+.k-rec-only{display:none!important}
+.k-rec-link{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;font-size:14px;font-weight:700;color:var(--k-sumi);text-decoration:underline;text-decoration-color:var(--k-orange);text-underline-offset:4px}
+.k-rec-link-note{margin:0;font-size:14px;color:var(--k-text-2,#5b5047)}
+html[data-k-rec] .k-rec-link,html[data-k-rec] .k-rec-link-note,html[data-k-rec] .k-rec-hide{display:none!important}
+html[data-k-rec] .k-rec-only{display:revert!important}
+/* 枠を置いていないページ（下層ページなど）に ?rec=1 が付いても白紙にしないよう、.k-rec-stage があるときだけ */
+html[data-k-rec]:has(>body>.k-rec-stage),html[data-k-rec] body:has(>.k-rec-stage){height:100%;overflow:hidden;overscroll-behavior:none}
+html[data-k-rec] body:has(>.k-rec-stage){margin:0;padding:0;background:#000!important}
+html[data-k-rec] body:has(>.k-rec-stage)>*:not(.k-rec-stage):not(script):not(style):not(noscript){display:none!important}
+.k-rec-stage{display:none}
+html[data-k-rec] .k-rec-stage{
+  --k-rec-top:14cqh;--k-rec-bottom:20cqh;--k-rec-right:12cqw;--k-rec-side:5cqw;
+  --k-rec-out:2px 2px 0 #000,-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,0 2px 0 #000,2px 0 0 #000,0 -2px 0 #000,-2px 0 0 #000;
+  display:block;position:fixed;inset:0;margin:auto;box-sizing:border-box;
+  width:min(100vw,calc(100dvh * 9 / 16));height:min(100dvh,calc(100vw * 16 / 9));
+  container-type:size;overflow:hidden;background:var(--k-kinari);color:var(--k-sumi);
+  font-family:var(--k-body,"M PLUS Rounded 1c",sans-serif);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+/* 安全地帯の中だけを使う入れ物（上14%・下20%・右12%をあける）。スマホのキーボードが出たら下をその分あける */
+.k-rec-safe{position:absolute;top:var(--k-rec-top);left:var(--k-rec-side);right:var(--k-rec-right);bottom:max(var(--k-rec-bottom),var(--k-rec-kb,0px));display:flex;flex-direction:column;min-height:0}
+/* 太字＋黒ふち（字の上に白か金）。録画を縮めて見ても読める */
+.k-rec-big{font-family:var(--k-bold,"RocknRoll One",sans-serif);font-weight:400;color:#fff;text-shadow:var(--k-rec-out);line-height:1.15;letter-spacing:.02em}
+/* はじめの見出し（KKit.rec.title）。上14%の下に帯で1.8秒 */
+.k-rec-title{position:absolute;left:0;right:0;top:var(--k-rec-top);height:24cqh;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:rgba(31,26,23,.78);pointer-events:none;animation:k-rec-title 1.8s ease-out forwards}
+.k-rec-title b{font-family:var(--k-bold,"RocknRoll One",sans-serif);font-weight:400;font-size:9cqw;line-height:1.15;color:#ffd27a;text-shadow:var(--k-rec-out);white-space:nowrap}
+.k-rec-title span{margin-top:.8cqh;font-size:4.4cqw;font-weight:800;color:#fff;text-shadow:var(--k-rec-out)}
+@keyframes k-rec-title{0%{opacity:0;transform:scale(.85)}12%{opacity:1;transform:scale(1)}80%{opacity:1}100%{opacity:0}}
+/* 終わりのサイト名（結果の下・下20%より上に置く） */
+.k-rec-credit{display:block;text-align:center;font-size:2.1cqh;font-weight:800;letter-spacing:.03em;color:var(--k-sumi)}
+.k-rec-credit small{display:block;font-size:1.7cqh;font-weight:700;color:var(--k-text-2,#5b5047)}
+/* ふつうの画面に戻る（スタートの場面だけに置く。録画中の画面には出さない） */
+.k-rec-exit{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 3cqw;font-size:max(14px,3.4cqw);font-weight:700;color:var(--k-sumi);text-decoration:underline;text-decoration-color:var(--k-orange);text-underline-offset:4px}
+/* 確かめ用（?recguide=1）: 隠れる所を赤く */
+.k-rec-guide{position:absolute;inset:0;z-index:999;pointer-events:none}
+.k-rec-guide i{position:absolute;background:rgba(255,0,0,.22)}
+.k-rec-guide .t{left:0;right:0;top:0;height:var(--k-rec-top)}
+.k-rec-guide .b{left:0;right:0;bottom:0;height:var(--k-rec-bottom)}
+.k-rec-guide .r{right:0;top:var(--k-rec-top);bottom:var(--k-rec-bottom);width:var(--k-rec-right)}
+@media (prefers-reduced-motion:reduce){.k-rec-title{animation:k-rec-title-still 1.8s step-end forwards}}
+@keyframes k-rec-title-still{0%,99%{opacity:1}100%{opacity:0}}
