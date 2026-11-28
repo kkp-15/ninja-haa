@@ -372,7 +372,7 @@ for a, b in T2:
 EN_HIDE = ('<style id="en-hide">\n'
   '/* 英語版では出さない：配信モード・離れて遊ぶリンク・市販版（日本の商品）・振り返りの記録・はじめての方へ・配信から来た人への一言 */\n'
   '#streamSw,#castSw,#playMode,.pm-sp,.mvp-shop,.cand-n,.sfx-sw,#viewOpen,#streamNote,#firstGuide,#fromStream,.shop-mini,\n'
-  '.deal-link,.deal-qr,#joinBox,#sentHint,.deal-remote,#annBox,#logLinks,#recStrip,.deal-scroll{display:none!important}\n'
+  '.deal-link,.deal-qr,#joinBox,#sentHint,.deal-remote,#annBox,#logLinks,#recStrip,.deal-scroll,.rec-link-row,#resultLine{display:none!important}\n'
   '</style>\n</head>')
 html = html.replace('</head>', EN_HIDE, 1)
 # 配信モードは英語版では使わない（PCでも配信モードにしない）
